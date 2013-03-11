@@ -4,7 +4,7 @@
   <title><![CDATA[Category: markdown | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/markdown/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-03-12T01:24:03+09:00</updated>
+  <updated>2013-03-12T02:00:05+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -20,11 +20,15 @@
     <id>http://moonstruckdrops.github.com/blog/2013/03/11/octpress</id>
     <content type="html"><![CDATA[<p>今までBloggerでブログを書いていました。<br/>
 どうにも書きづらいところも出てきたので移行しようかどうしようか検討しています。<br/>
-移行の検討材料として、以下があります。
-+ コードが貼り付けやすい
-+ 記事のストックができる
-+ 記事が書きやすい
-+ バージョン管理までとは行かなくても手元に記事を残せる(もしくは復元も容易)</p>
+移行の検討材料として、以下があります。</p>
+
+<ul>
+<li>コードが貼り付けやすい</li>
+<li>記事のストックができる</li>
+<li>記事が書きやすい</li>
+<li>バージョン管理までとは行かなくても手元に記事を残せる(もしくは復元も容易)</li>
+</ul>
+
 
 <p>今回は、移行するにあたって記法の基礎から書いてみます。</p>
 
