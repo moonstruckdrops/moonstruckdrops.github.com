@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: markdown - kurobaraのブログ</title>
+  <title>octopressのサイドバーにタグクラウドを表示する - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Category: markdown">
+  <meta name="description" content="Octpressのデフォルト設定では、タグクラウドがありません。
+ですが、pluginを組み込むことで、タグクラウドを実現することができます。
+無かったら困るというほどでもないけれど、あったほうが何かと便利なので自分のブログに組み込んでみます。 プラグインの組み込み &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.comblog/categories/markdown/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/17/octopress-sidebar/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -68,49 +70,141 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Markdown</h1>
+    
+      <h1 class="entry-title">Octopressのサイドバーにタグクラウドを表示する</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-17T01:33:00+09:00" pubdate data-updated="true">Mar 17<span>th</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>Octpressのデフォルト設定では、タグクラウドがありません。<br/>
+ですが、pluginを組み込むことで、タグクラウドを実現することができます。<br/>
+無かったら困るというほどでもないけれど、あったほうが何かと便利なので自分のブログに組み込んでみます。</p>
 
-  
-  <h2>2013</h2>
+<h3>プラグインの組み込み</h3>
 
-<article>
-  
-<h1><a href="/blog/2013/03/17/octopress-sidebar/">octopressのサイドバーにタグクラウドを表示する</a></h1>
-<time datetime="2013-03-17T01:33:00+09:00" pubdate><span class='month'>Mar</span> <span class='day'>17</span> <span class='year'>2013</span></time>
+<hr />
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
+<p>手順は以下の順序で行なっていきます。</p>
 
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/03/11/octpress/">markdown記法のメモ</a></h1>
-<time datetime="2013-03-11T23:42:00+09:00" pubdate><span class='month'>Mar</span> <span class='day'>11</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/markdown/'>markdown</a></span>
-</footer>
+<ol>
+<li>Githubからプラグインをダウンロード
+<code>
+$git clone git://github.com/tokkonopapa/octopress-tagcloud.git
+</code></li>
+<li>ダウンロードしたファイルをpluginディレクトリと_asidesディレクトリにコピー
+<code>
+$cp plugins/tag_cloud.rb ~/Projects/rails/fakestarbaby.github.com/plugins/tag_cloud.rb
+</code>
+<code>
+$cp source/_includes/custom/asides/* ~/Projects/rails/fakestarbaby.github.com/source/_includes/custom/asides/
+</code></li>
+<li>_config.ymlを編集
+<code>
+default_asides: [custom/asides/about.html, asides/recent_posts.html, custom/asides/tag_cloud.html, asides/github.html, asides/twitter.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+</code></li>
+</ol>
 
 
-</article>
+<p>これだけ</p>
 
+<h3>タグクラウドを表示するHTMLファイルの変更</h3>
+
+<hr />
+
+<p>必要に応じて編集します。<br/>
+以下のファイルに記載されているcounter:trueをcounter:falseに変更することでタグ件数を非表示にできます。<br/>
+デフォルトは表示する設定になっています。(デフォルト設定のままでよいと思いますが・・・)</p>
+
+<ul>
+<li>source/_includes/custom/asides/category_list.html</li>
+<li>source/_includes/custom/asides/tag_cloud.html</li>
+</ul>
+
+
+<h3>参考サイト</h3>
+
+<hr />
+
+<p><a href="http://tokkonopapa.github.com/blog/2012/01/04/octopress-plugin-for-categories-cloud/">作者の導入手順記事</a><br/>
+<a href="http://qiita.com/items/944db11e257782749270">Quiitaの記事</a></p>
+
+<p>Octopressもいいけど、Quiitaをブログ代わりにするのもいいかも。<br/>
+悩ましいなぁ。。。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-17T01:33:00+09:00" pubdate data-updated="true">Mar 17<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/markdown/'>markdown</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/17/octopress-sidebar/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/17/octopress-sidebar/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/11/octpress/" title="Previous Post: markdown記法のメモ">&laquo; markdown記法のメモ</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

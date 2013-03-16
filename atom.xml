@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-03-12T02:00:05+09:00</updated>
+  <updated>2013-03-17T01:59:21+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[octopressのサイドバーにタグクラウドを表示する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/03/17/octopress-sidebar/"/>
+    <updated>2013-03-17T01:33:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/03/17/octopress-sidebar</id>
+    <content type="html"><![CDATA[<p>Octpressのデフォルト設定では、タグクラウドがありません。<br/>
+ですが、pluginを組み込むことで、タグクラウドを実現することができます。<br/>
+無かったら困るというほどでもないけれど、あったほうが何かと便利なので自分のブログに組み込んでみます。</p>
+
+<h3>プラグインの組み込み</h3>
+
+<hr />
+
+<p>手順は以下の順序で行なっていきます。</p>
+
+<ol>
+<li>Githubからプラグインをダウンロード
+<code>
+$git clone git://github.com/tokkonopapa/octopress-tagcloud.git
+</code></li>
+<li>ダウンロードしたファイルをpluginディレクトリと_asidesディレクトリにコピー
+<code>
+$cp plugins/tag_cloud.rb ~/Projects/rails/fakestarbaby.github.com/plugins/tag_cloud.rb
+</code>
+<code>
+$cp source/_includes/custom/asides/* ~/Projects/rails/fakestarbaby.github.com/source/_includes/custom/asides/
+</code></li>
+<li>_config.ymlを編集
+<code>
+default_asides: [custom/asides/about.html, asides/recent_posts.html, custom/asides/tag_cloud.html, asides/github.html, asides/twitter.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+</code></li>
+</ol>
+
+
+<p>これだけ</p>
+
+<h3>タグクラウドを表示するHTMLファイルの変更</h3>
+
+<hr />
+
+<p>必要に応じて編集します。<br/>
+以下のファイルに記載されているcounter:trueをcounter:falseに変更することでタグ件数を非表示にできます。<br/>
+デフォルトは表示する設定になっています。(デフォルト設定のままでよいと思いますが・・・)</p>
+
+<ul>
+<li>source/_includes/custom/asides/category_list.html</li>
+<li>source/_includes/custom/asides/tag_cloud.html</li>
+</ul>
+
+
+<h3>参考サイト</h3>
+
+<hr />
+
+<p><a href="http://tokkonopapa.github.com/blog/2012/01/04/octopress-plugin-for-categories-cloud/">作者の導入手順記事</a><br/>
+<a href="http://qiita.com/items/944db11e257782749270">Quiitaの記事</a></p>
+
+<p>Octopressもいいけど、Quiitaをブログ代わりにするのもいいかも。<br/>
+悩ましいなぁ。。。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[markdown記法のメモ]]></title>
