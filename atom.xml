@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-03-22T00:51:36+09:00</updated>
+  <updated>2013-03-22T01:03:23+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -131,126 +131,6 @@
 
 <p>意外と簡単に導入できるので、おすすめです。<br/>
 マークダウン記法が使えて楽に書けるところもいいですね。(bloggerが書きにくすぎるのが問題だと思うのですけど)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Start Octpress]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/"/>
-    <updated>2013-03-21T00:00:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress</id>
-    <content type="html"><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
-<title>2013-03-21-start-octpress.html</title>
-
-</head>
-
-<body>
-
-<hr />
-
-<p>layout: post
-title: &#8220;Octpress始めました&#8221;
-date: 2013-03-21 23:36
-comments: true</p>
-
-<h2>categories: markdown</h2>
-
-<p><a href="http://moonstruckdrops.blogspot.jp/">旧ブログ</a>から移行しますよっと。  </p>
-
-<p>正直なところ、旧ブログは記事を書くのが大変でした。 <br />
-マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。 <br />
-旧ブログの記事はおいおい引っ越すことにします。  </p>
-
-<p>という訳で、Octpressの使い方メモを書いておきます。(主に自分用ですがw)  </p>
-
-<h2>####インストール</h2>
-
-<p><a href="http://octopress.org/docs/setup/">公式サイト</a>を見ながら実行します。 <br />
-特に難しいことはないです。 <br />
-強いて挙げるとすると、rubyのバージョンを1.9.3にしておくことでしょうか。 <br />
-が、それもrbenv使用していれば問題無いでしょう。</p>
-
-<h2>####テーマの変更</h2>
-
-<p>これは、結構めんどかったような記憶がしています。 <br />
-といってもコマンド打つだけですがw</p>
-
-<ol>
-<li><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">ここから</a>テーマの選択を行います。自分は、justin-kellyを選択しました。</li>
-<li>以下のコマンドを実行します。
-<code>
-$ git clone git@github.com:wallace/justin-kelly-theme.git .themes/greyshade
-$ rake install['greyshade']
-$ rake generate
-</code></li>
-</ol>
-
-<h2>####ブログの設定変更</h2>
-
-<p>_config.ymlで行います。 <br />
-<a href="http://octopress.org/docs/configuring/">公式</a>に設定方法が書いてありますので、問題は無いでしょう。(多分)</p>
-
-<h2>####記事の作成</h2>
-
-<p>投稿用のテンプレートを作成します。 <br />
-指定する文字列はURLに使われるので、英数だけで指定します。</p>
-
-<p><code>
-rake new_post['post title']
-</code></p>
-
-<p>コマンドを実行すると、以下のような感じでテンプレートができます。</p>
-
-<p>・ source/_posts/yyyy-MM-dd-post-title.markdown</p>
-
-<p>テンプレートができるので、好きなエディタで編集します。 <br />
-おすすめのエディタは、以下のものです。</p>
-
-<p>・ Mou(リアルタイムでプレビューできます)
-・ Emacs+markdown-mode(コマンドを実行すればプレビューできます)</p>
-
-<p>※Emacsのmarkdown-modeはそのうち記事を書くつもりです。</p>
-
-<h2>####記事の生成</h2>
-
-<p>以下のコマンドを実行して、htmlファイルを生成します。  </p>
-
-<p><code>
-rake generate
-</code></p>
-
-<h4>記事のプレビュー</h4>
-
-<p>以下のコマンドを実行して<a href="http;//localhost:4000">localhost:4000</a>にアクセスします。</p>
-
-<p><code>
-rake preview
-</code></p>
-
-<p>エディタのプレビューで書きながら確認しつつ、記事投稿前の最終確認で使用するとよいと思います。 <br />
-プレビュー状態だと、投稿してないですからね。</p>
-
-<h2>####記事を投稿</h2>
-
-<p>以下のコマンドを実行して投稿(デプロイ)します。</p>
-
-<p><code>
-rake deploy
-</code></p>
-
-<h2>####まとめ</h2>
-
-<p>意外と簡単に導入できるので、おすすめです。 <br />
-マークダウン記法が使えて楽に書けるところもいいですね。(bloggerが書きにくすぎるのが問題だと思うのですけど)</p>
-
-</body>
-</html>
 ]]></content>
   </entry>
   
