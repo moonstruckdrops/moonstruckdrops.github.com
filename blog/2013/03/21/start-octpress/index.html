@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Octpress始めました - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
+
+  
+  <meta name="description" content="旧ブログから移行しますよっと。 正直なところ、旧ブログは記事を書くのが大変でした。
+マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。
+旧ブログの記事はおいおい引っ越すことにします。 という訳で、Octpressの使い方メモを書いておきます。( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About me</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Octpress始めました</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-21T23:36:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://moonstruckdrops.blogspot.jp/">旧ブログ</a>から移行しますよっと。</p>
+
+<p>正直なところ、旧ブログは記事を書くのが大変でした。<br/>
+マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。<br/>
+旧ブログの記事はおいおい引っ越すことにします。</p>
+
+<p>という訳で、Octpressの使い方メモを書いておきます。(主に自分用ですがw)</p>
+
+<h4>インストール</h4>
+
+<hr />
+
+<p><a href="http://octopress.org/docs/setup/">公式サイト</a>を見ながら実行します。<br/>
+特に難しいことはないです。<br/>
+強いて挙げるとすると、rubyのバージョンを1.9.3にしておくことでしょうか。<br/>
+が、それもrbenv使用していれば問題無いでしょう。</p>
+
+<h4>テーマの変更</h4>
+
+<hr />
+
+<p>これは、結構めんどかったような記憶がしています。<br/>
+といってもコマンド打つだけですがw</p>
+
+<ol>
+<li><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">ここから</a>テーマの選択を行います。自分は、justin-kellyを選択しました。</li>
+<li>以下のコマンドを実行します。</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone git@github.com:wallace/justin-kelly-theme.git .themes/justin-kelly
+</span><span class='line'>$ rake install['justin-kelly']
+</span><span class='line'>$ rake generate</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あ、ちなみにテーマ変更したら何か初期化されてしまって面倒なことになった覚えがあるので気を付けましょう。</p>
+
+<h4>ブログの設定変更</h4>
+
+<hr />
+
+<p>_config.ymlで行います。<br/>
+<a href="http://octopress.org/docs/configuring/">公式</a>に設定方法が書いてありますので、問題は無いでしょう。(多分)</p>
+
+<h4>記事の作成</h4>
+
+<hr />
+
+<p>投稿用のテンプレートを作成します。<br/>
+指定する文字列はURLに使われるので、英数だけで指定します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake new_post['post title']</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コマンドを実行すると、以下のような感じでテンプレートができます。</p>
+
+<ul>
+<li>source/_posts/yyyy-MM-dd-post-title.markdown</li>
+</ul>
+
+
+<p>テンプレートができるので、好きなエディタで編集します。<br/>
+おすすめのエディタは、以下のものです。</p>
+
+<ul>
+<li>Mou(リアルタイムでプレビューできます)</li>
+<li>Emacs+markdown-mode(コマンドを実行すればプレビューできます)</li>
+</ul>
+
+
+<p>※Emacsのmarkdown-modeはそのうち記事を書くつもりです。</p>
+
+<h4>記事の生成</h4>
+
+<hr />
+
+<p>以下のコマンドを実行して、htmlファイルを生成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake generate</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>記事のプレビュー</h4>
+
+<p>以下のコマンドを実行して<a href="http;//localhost:4000">localhost:4000</a>にアクセスします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake preview</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エディタのプレビューで書きながら確認しつつ、記事投稿前の最終確認で使用するとよいと思います。<br/>
+プレビュー状態だと、投稿してないですからね。</p>
+
+<h4>記事を投稿</h4>
+
+<hr />
+
+<p>以下のコマンドを実行して投稿(デプロイ)します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake deploy</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>まとめ</h4>
+
+<hr />
+
+<p>意外と簡単に導入できるので、おすすめです。<br/>
+マークダウン記法が使えて楽に書けるところもいいですね。(bloggerが書きにくすぎるのが問題だと思うのですけど)</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-21T23:36:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/markdown/'>markdown</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/21/start-octpress/" title="Previous Post: Start Octpress">&laquo; Start Octpress</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/21/start-octpress/">Octpress始めました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/21/start-octpress/">Start Octpress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/17/octopress-sidebar/">octopressのサイドバーにタグクラウドを表示する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/11/octpress/">markdown記法のメモ</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(3)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
