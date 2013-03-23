@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Emacs | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/emacs/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2013-03-24T01:12:30+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Emacsでmarkdown-modeを使用する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode/"/>
+    <updated>2013-03-24T00:38:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode</id>
+    <content type="html"><![CDATA[<p>Emacsでmarkdown-modeを使用してみます。<br/>
+markdownの編集で使えるモードで結構便利なので紹介してみます。</p>
+
+<h4>インストール</h4>
+
+<hr />
+
+<p>Emacsのパッケージインストーラからインストールをします。<br/>
+以下を実行します。<br/>
+<code>
+M-x package-list-packages
+</code>
+markdown-modeを選択してインストールを実施します。</p>
+
+<p>他にmarkdownコマンドが使用できるようにする必要がありますので、合わせてインストールします。<br/>
+MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
+<code>
+$brew install markdown
+</code></p>
+
+<h4>設定</h4>
+
+<hr />
+
+<ul>
+<li>markdown-modeを使用できるように「.emacs.d/init.el」に以下を追加</li>
+</ul>
+
+
+<p><code>
+(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
+</code></p>
+
+<ul>
+<li>markdown-modeで使用できる拡張子を追加</li>
+</ul>
+
+
+<p><code>
+(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))
+</code></p>
+
+<p>上の設定では、.markdownと付くファイルは、markdown-modeを使用する設定です。<br/>
+他に使用したいmarkdown-modeを使用したい拡張子があれば、同じようにして追加します。(下は.txtと付くファイルをmarkdown-modeで開きます)<br/>
+<code>
+(setq auto-mode-alist (cons '("\\.txt" . markdown-mode) auto-mode-alist))
+</code></p>
+
+<h4>エラー対処</h4>
+
+<hr />
+
+<p>プレビューを実行しようとすると、以下のようなエラーが発生します。<br/>
+<code>
+/bin/bash: markdown: command not found
+</code></p>
+
+<p>原因は、以下の２点が考えられます。</p>
+
+<ol>
+<li>markdownコマンドがインストールされていない</li>
+<li>Emacsが認識しているパスと環境変数のパスが異なる</li>
+</ol>
+
+
+<p>1に関しては、markdownコマンドをインストールをすれば解決します。<br/>
+2に関してですが、以下のようにしてEmacs側にパスを通してやれば解決できます。
+```
+(dolist (dir (list</p>
+
+<pre><code>          "/sbin"
+          "/usr/sbin"
+          "/bin"
+          "/usr/bin"
+          "/opt/local/bin"
+          "/sw/bin"
+          "/usr/local/bin"
+          (expand-file-name "~/bin")
+          (expand-file-name "~/.emacs.d/bin")
+          ))
+</code></pre>
+
+<p> (when (and (file-exists-p dir) (not (member dir exec-path)))
+   (setenv "PATH" (concat dir ":" (getenv "PATH")))
+   (setq exec-path (append (list dir) exec-path))))
+```</p>
+
+<h4>プレビュー</h4>
+
+<hr />
+
+<ul>
+<li><em>markdown-output</em>バッファでプレビューを確認する
+<code>
+C-c C-c m
+</code></li>
+<li>ブラウザでプレビューを確認する(一時ファイルを作成します)
+<code>
+C-c C-c v
+</code></li>
+</ul>
+
+
+<p><a href="http://jblevins.org/projects/markdown-mode/">公式</a>にその他の使用方法が掲載されていますので、その他の機能はそちらを参照してください。</p>
+
+<p>ブラウザでプレビューしていて、かつOctpress用の記事を編集する場合、注意してください。</p>
+
+<p>そのままデプロイするとhtmlファイルまでアップロードされてしまうので、２重投稿になるので気をつけてください。</p>
+]]></content>
+  </entry>
+  
+</feed>

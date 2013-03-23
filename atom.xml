@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-03-22T01:08:27+09:00</updated>
+  <updated>2013-03-24T01:12:30+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,144 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Emacsでmarkdown-modeを使用する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode/"/>
+    <updated>2013-03-24T00:38:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode</id>
+    <content type="html"><![CDATA[<p>Emacsでmarkdown-modeを使用してみます。<br/>
+markdownの編集で使えるモードで結構便利なので紹介してみます。</p>
+
+<h4>インストール</h4>
+
+<hr />
+
+<p>Emacsのパッケージインストーラからインストールをします。<br/>
+以下を実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x package-list-packages</span></code></pre></td></tr></table></div></figure>
+
+
+<p>markdown-modeを選択してインストールを実施します。</p>
+
+<p>他にmarkdownコマンドが使用できるようにする必要がありますので、合わせてインストールします。<br/>
+MacOSXだとHomebrewを使用すれば一発でインストール出来ます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install markdown</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>設定</h4>
+
+<hr />
+
+<ul>
+<li>markdown-modeを使用できるように「.emacs.d/init.el」に以下を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>markdown-modeで使用できる拡張子を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上の設定では、.markdownと付くファイルは、markdown-modeを使用する設定です。<br/>
+他に使用したいmarkdown-modeを使用したい拡張子があれば、同じようにして追加します。(下は.txtと付くファイルをmarkdown-modeで開きます)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.txt" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>エラー対処</h4>
+
+<hr />
+
+<p>プレビューを実行しようとすると、以下のようなエラーが発生します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/bin/bash: markdown: command not found</span></code></pre></td></tr></table></div></figure>
+
+
+<p>原因は、以下の２点が考えられます。</p>
+
+<ol>
+<li>markdownコマンドがインストールされていない</li>
+<li>Emacsが認識しているパスと環境変数のパスが異なる</li>
+</ol>
+
+
+<p>1に関しては、markdownコマンドをインストールをすれば解決します。<br/>
+2に関してですが、以下のようにしてEmacs側にパスを通してやれば解決できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(dolist (dir (list
+</span><span class='line'>              "/sbin"
+</span><span class='line'>              "/usr/sbin"
+</span><span class='line'>              "/bin"
+</span><span class='line'>              "/usr/bin"
+</span><span class='line'>              "/opt/local/bin"
+</span><span class='line'>              "/sw/bin"
+</span><span class='line'>              "/usr/local/bin"
+</span><span class='line'>              (expand-file-name "~/bin")
+</span><span class='line'>              (expand-file-name "~/.emacs.d/bin")
+</span><span class='line'>              ))
+</span><span class='line'> (when (and (file-exists-p dir) (not (member dir exec-path)))
+</span><span class='line'>   (setenv "PATH" (concat dir ":" (getenv "PATH")))
+</span><span class='line'>   (setq exec-path (append (list dir) exec-path))))</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>プレビュー</h4>
+
+<hr />
+
+<ul>
+<li><em>markdown-output</em>バッファでプレビューを確認する</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c m</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>ブラウザでプレビューを確認する(一時ファイルを作成します)</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c v</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://jblevins.org/projects/markdown-mode/">公式</a>にその他の使用方法が掲載されていますので、その他の機能はそちらを参照してください。</p>
+
+<p>ブラウザでプレビューしていて、かつOctpress用の記事を編集する場合、注意してください。</p>
+
+<p>そのままデプロイするとhtmlファイルまでアップロードされてしまうので、２重投稿になるので気をつけてください。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Octpress始めました]]></title>
