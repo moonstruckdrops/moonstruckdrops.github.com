@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Androidのソースコード検索サービスを構築してみる - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
+
+  
+  <meta name="description" content="色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。
+とりあえず、aospのmasterで構築してみます。 環境 Ubuntu12.04 x86_64
+GNU Global 6.2.8
+Apache2 GNU Globalのバージョンは、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/25/gnu-global/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About me</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Androidのソースコード検索サービスを構築してみる</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-25T12:17:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。<br/>
+とりあえず、aospのmasterで構築してみます。</p>
+
+<h4>環境</h4>
+
+<hr />
+
+<ul>
+<li>Ubuntu12.04 x86_64</li>
+<li><a href="http://www.gnu.org/software/global/">GNU Global 6.2.8</a></li>
+<li>Apache2</li>
+</ul>
+
+
+<p>GNU Globalのバージョンは、なるべく新しいものを入れるようにします。。。<br/>
+Ubuntuのapt-getでインストールもできますが、ソースコードを解析した結果が正しくgenerateされません。<br/>
+6.2.8だと正しく解析できました。(公式もdebianで配布しているパッケージは古いと記載があったので、Ubuntuも同じ感じでしょう)</p>
+
+<h4>事前準備</h4>
+
+<hr />
+
+<p>事前準備として、以下を実施します。</p>
+
+<ul>
+<li>GNU Globalのインストール</li>
+<li>Apache2のインストール</li>
+<li>Androidのソースコードをダウンロード</li>
+</ul>
+
+
+<h6>GNU Globalのインストール</h6>
+
+<hr />
+
+<p>前述のように、UbuntuのリポジトリにあるGNU Globalは古いのでソースコードの解析が正しく行われません。<br/>
+そのため、ビルドしてインストールします。</p>
+
+<ol>
+<li>ソースコードの取得(<a href="http://www.gnu.org/software/global/">ここ</a>からダウンロード)</li>
+<li>ビルド(ここではデフォルト設定で行います)</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$./configure --prefix=/usr/local/global
+</span><span class='line'>$make</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>インストール</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo make install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ビルドの際に付与するオプションはご自身で設定してください。</p>
+
+<h6>Apache2のインストール</h6>
+
+<hr />
+
+<p>普通にインストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo apt-get install apache2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>UbuntuっていうかDebian系使いづらいなぁ・・・。</p>
+
+<h6>Androidのソースコード取得</h6>
+
+<hr />
+
+<p>(公式)[]にしたがって実施します。<br/>
+今回は「/var/aosp」のディレクトリ配下に保存することとします。</p>
+
+<h4>コード解析(タグ作成)の実施</h4>
+
+<hr />
+
+<p>以下のコマンドで実行します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/aosp
+</span><span class='line'>$gtags -v</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>タグのHtml化</h4>
+
+<hr />
+
+<p>以下のコマンドで実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/aosp
+</span><span class='line'>$htags -afsnDvo --title Android --item-order=s --show-position --fixed-guid --auto-completion
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>非常に長いオプションですが、ソースコード検索フォームのhtmlが生成されます。<br/>
+検索に加えて、検索フォームの上で入力補完をできるようにしていますので、CGIの実行が必要です。</p>
+
+<h4>Apache2の設定</h4>
+
+<hr />
+
+<p>以下のコマンドでブラウザから参照可能なディレクトリを作成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mkdir -p /var/www/aosp</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンテンツの配備を実施します。<br/>
+特に意図はないですが、コピーだとめんどいのでシンボリックリンクにします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/www/aosp
+</span><span class='line'>$ln -s ../aosp/HTML HTML</span></code></pre></td></tr></table></div></figure>
+
+
+<p>/etc/apache2/sites-enable/defaultsを編集します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ScriptAlias /cgi-bin/ /var/www/aosp/HTML
+</span><span class='line'>&lt;Directory "&lt;/var/www/aosp/HTML/cgi-bin"&gt;
+</span><span class='line'>    AllowOverride None
+</span><span class='line'>    Options +ExecCGI
+</span><span class='line'>    AddHandler cgi-script .cgi .pl
+</span><span class='line'>    Order allow,deny
+</span><span class='line'>    Allow from all
+</span><span class='line'>&lt;/Directory&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>編集完了後、apache2を再起動します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$/etc/init.d/apache2 restart</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ブラウザ上で<a href="http://localhost/aosp">http://localhost/aosp</a>にアクセスして、画面が表示されることを確認します。</p>
+
+<h4>感想</h4>
+
+<hr />
+
+<p><a href="https://sites.google.com/site/devcollaboration/codesearch">こういうサービス</a>が、既に世の中にある訳で・・・</p>
+
+<p>自分がやる必要ってあんまりないんじゃないかなーとか。。。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-25T12:17:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>Android</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/25/gnu-global/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/25/gnu-global/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/24/markdown-mode/" title="Previous Post: Emacsでmarkdown-modeを使用する">&laquo; Emacsでmarkdown-modeを使用する</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/25/gnu-global/">Androidのソースコード検索サービスを構築してみる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/24/markdown-mode/">Emacsでmarkdown-modeを使用する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/21/start-octpress/">Octpress始めました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/17/octopress-sidebar/">octopressのサイドバーにタグクラウドを表示する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/11/octpress/">markdown記法のメモ</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(1)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(3)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
