@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-03-25T16:34:15+09:00</updated>
+  <updated>2013-03-25T18:33:16+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,32 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[JavaのHashmapを使ったiteratorの実装]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator/"/>
+    <updated>2013-03-25T18:29:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator</id>
+    <content type="html"><![CDATA[<p>偶に忘れるのでメモしておきます。<br/>
+iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Map map = new HashMap();
+</span><span class='line'>for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
+</span><span class='line'>    Map.Entry entry = (Map.Entry)it.next();
+</span><span class='line'>    Object key = entry.getKey();
+</span><span class='line'>    Object value = entry.getValue();
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Javaを書かなくなると忘れてしまいますねw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Androidのソースコード検索サービスを構築してみる]]></title>
