@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-03-25T18:33:16+09:00</updated>
+  <updated>2013-03-28T23:44:24+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,74 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rubyで画像ファイルをダウンロードする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file/"/>
+    <updated>2013-03-28T23:34:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file</id>
+    <content type="html"><![CDATA[<p>少しばかり、やることがあったのでやってみた。<br/>
+煩悩丸出しですいませんw</p>
+
+<h3>HTTP Responseのbodyを利用する</h3>
+
+<hr />
+
+<p>直感的ではないけど、素直なやりかた</p>
+
+<ol>
+<li>書き込みモードでファイルを開く</li>
+<li>urlで接続したbodyデータをファイルに書き込む</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
+</span><span class='line'>   filename = File.basename(url)
+</span><span class='line'>   open(filename, "wb") do  |file|
+</span><span class='line'>          file.puts Net::HTTP.get_response(URI.parse(url)).body
+</span><span class='line'>   end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>open-uriを使用する方法</h3>
+
+<hr />
+
+<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
+
+<ol>
+<li>書き込みモードでファイルを開く</li>
+<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
+</span><span class='line'>    filename = File.basename(url)
+</span><span class='line'>    open(filename, 'wb') do |file|
+</span><span class='line'>        open(url) do |data|
+</span><span class='line'>            file.write(data.read)
+</span><span class='line'>      end
+</span><span class='line'>    end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JavaのHashmapを使ったiteratorの実装]]></title>

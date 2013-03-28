@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2013-03-28T23:44:24+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rubyで画像ファイルをダウンロードする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file/"/>
+    <updated>2013-03-28T23:34:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file</id>
+    <content type="html"><![CDATA[<p>少しばかり、やることがあったのでやってみた。<br/>
+煩悩丸出しですいませんw</p>
+
+<h3>HTTP Responseのbodyを利用する</h3>
+
+<hr />
+
+<p>直感的ではないけど、素直なやりかた</p>
+
+<ol>
+<li>書き込みモードでファイルを開く</li>
+<li>urlで接続したbodyデータをファイルに書き込む</li>
+</ol>
+
+
+<p>```
+def save_file(url)
+   filename = File.basename(url)
+   open(filename, "wb") do  |file|</p>
+
+<pre><code>      file.puts Net::HTTP.get_response(URI.parse(url)).body
+</code></pre>
+
+<p>   end
+end
+```</p>
+
+<h3>open-uriを使用する方法</h3>
+
+<hr />
+
+<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
+
+<ol>
+<li>書き込みモードでファイルを開く</li>
+<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
+</ol>
+
+
+<p>```
+def save_file(url)</p>
+
+<pre><code>filename = File.basename(url)
+open(filename, 'wb') do |file|
+    open(url) do |data|
+        file.write(data.read)
+  end
+end
+</code></pre>
+
+<p>end
+```</p>
+
+<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
+]]></content>
+  </entry>
+  
+</feed>
