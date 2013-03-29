@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-03-29T01:02:06+09:00</updated>
+  <updated>2013-03-30T02:22:19+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,90 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Octpressで画像ファイルを扱う]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/03/30/octpress-image-tag/"/>
+    <updated>2013-03-30T01:47:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/03/30/octpress-image-tag</id>
+    <content type="html"><![CDATA[<p>Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。</p>
+
+<h3>画像の格納ディレクトリ</h3>
+
+<hr />
+
+<p>画像の格納場所は、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>~source/images</span></code></pre></td></tr></table></div></figure>
+
+
+<p>に格納すればよい</p>
+
+<p>imagesディレクトリの配下にも、blogというディレクトリがあるのでブログ用の画像はそちらに格納すればよいっぽい。</p>
+
+<h3>Octpress公式の手順</h3>
+
+<hr />
+
+<p><a href="http://octopress.org/docs/plugins/image-tag/">公式の手順</a></p>
+
+<p>以下の書式に従って記載すれば、いいらしい。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img [class names] /path/to/image [width] [height] [title text [alt text]] \%}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>そのため、画像サイズを640x480で表示させたい場合、以下のように書くことができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img left /images/picture.png 640 480 \%}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コード上の「\」は不要です。(何故か、エスケープが正しく動作しなかった)</p>
+
+<h3>markdownを使用した方法</h3>
+
+<hr />
+
+<p>これは、前にも書いたように以下のようにすればよいでしょう。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[テスト画像](/images/picture.png "title")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但し、画像サイズは指定できないという欠点があります。<br/>
+画像は、加工するしかないようですね。</p>
+
+<h3>htmlを直接記載する方法</h3>
+
+<hr />
+
+<p>以下のような感じで、htmlを使用した書き方もできるようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;img src="http://moonstruckdrops.github.com/images/picture.png" alt="alt" title="title" width="640" height="480"&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意する点があるとすれば、必ず前後に<p>タグが挿入されてしまうことです。<br/>
+インラインで使用することは、できないっぽいです。</p>
+
+<h3>まとめ</h3>
+
+<hr />
+
+<p>個人的な見解は以下のような感じ</p>
+
+<ul>
+<li>基本はmarkdown記法で記載</li>
+<li>画像サイズを変更したい場合、Octpressの記法に従う</li>
+<li>汎用的にしたい場合、htmlで記載する</li>
+<li>ブログ記事用の画像の場合、「souce/images/blog」の下に格納する</li>
+<li>ブログ記事以外の画像の場合、「source/images」の下に格納する</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubyで画像ファイルをダウンロードする]]></title>
