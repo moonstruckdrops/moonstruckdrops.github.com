@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。 画像の格納ディレクトリ 画像の格納場所は、 1
-~source/images に格納すればよい imagesディレクトリの配下にも、 &hellip;">
+  <meta name="description" content="普段から常用しているコマンドなのですが、今更という感じです。 滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。
+※今回、使ったのは日時オプションです コマンドオプション 機能 -name [filename] 指定した文字でファイル、ディレクトリを検索 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,129 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/31/find-command/">Findコマンドのメモ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-31T00:04:00+09:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>普段から常用しているコマンドなのですが、今更という感じです。</p>
+
+<p>滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。<br/>
+※今回、使ったのは日時オプションです</p>
+
+<table>
+<thead>
+<tr>
+<th align="left"> コマンドオプション    </th>
+<th align="center"> 機能          </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> -name [filename]    </td>
+<td align="center"> 指定した文字でファイル、ディレクトリを検索</td>
+</tr>
+<tr>
+<td align="left"> -user [username]    </td>
+<td align="center"> 指定したユーザーが所有するファイル、ディレクトリを検索</td>
+</tr>
+<tr>
+<td align="left"> -group [groupname]  </td>
+<td align="center"> 指定したグループが所有するファイル、ディレクトリを検索</td>
+</tr>
+<tr>
+<td align="left"> -type [type]        </td>
+<td align="center"> ファイルの種類を指定して検索(b：ブロック型特殊ファイル　c：キャラクタ型特殊ファイル　d：ディレクトリ　l：シンボリックリンク　f：通常ファイル)</td>
+</tr>
+<tr>
+<td align="left"> -atime (+/-)n       </td>
+<td align="center"> 最後にアクセスしたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
+</tr>
+<tr>
+<td align="left"> -ctime (+/-)n       </td>
+<td align="center"> 最後にステータスが変更されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
+</tr>
+<tr>
+<td align="left"> -mtime (+/-)n       </td>
+<td align="center"> 最後にデータが修正されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
+</tr>
+<tr>
+<td align="left"> -mmin (+/-)n        </td>
+<td align="center"> 最後にデータが修正されたのがn分前で検索(+をつけると~日以上、-をつけると~日以下)</td>
+</tr>
+<tr>
+<td align="left"> -newer [filename]   </td>
+<td align="center"> 指定したファイルよりも後に更新されているものを検索対象にする</td>
+</tr>
+<tr>
+<td align="left"> -size n[c/k/b]      </td>
+<td align="center"> nのサイズのファイルを検索(c:バイト、k:キロバイト、b:ブロック)</td>
+</tr>
+<tr>
+<td align="left"> -ls                 </td>
+<td align="center"> 検索結果のファイル、ディレクトリの詳細を表示する(lsコマンドと同じ)</td>
+</tr>
+<tr>
+<td align="left"> -print              </td>
+<td align="center"> 検索結果を標準出力に出す(元々結果表示されるんで不要かも)</td>
+</tr>
+<tr>
+<td align="left"> -fprint [filename]  </td>
+<td align="center"> 検索結果をファイルに出力する(>でファイル出力できるので不要かも)</td>
+</tr>
+<tr>
+<td align="left"> -exec [command] {}\;</td>
+<td align="center"> 検索結果を指定コマンドにの引数に設定して実行する</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>(例)カレントディレクトリ配下のファイルに「hogehoge」という文字が含まれているかどうか調べる</p>
+
+<p>以下のコマンドで調べることができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f -exec grep hogehoge {}\;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こちらでも同じ結果を得られます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f |xargs grep "hogehoge"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どちらでもいいと思いますが、自分はよく後者を利用しますね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1329,6 +1452,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/03/31/find-command/">findコマンドのメモ</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/30/octpress-image-tag/">Octpressで画像ファイルを扱う</a>
       </li>
     
@@ -1344,15 +1471,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2013/03/25/gnu-global/">Androidのソースコード検索サービスを構築してみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/03/24/markdown-mode/">Emacsでmarkdown-modeを使用する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 115.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(1)</a> <a href='/blog/categories/java' style='font-size: 115.0%'>Java(1)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(4)</a> <a href='/blog/categories/ruby' style='font-size: 115.0%'>Ruby(1)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 115.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(1)</a> <a href='/blog/categories/java' style='font-size: 115.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 115.0%'>Linux(1)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(4)</a> <a href='/blog/categories/ruby' style='font-size: 115.0%'>Ruby(1)</a> </span>
 </section
 
 
