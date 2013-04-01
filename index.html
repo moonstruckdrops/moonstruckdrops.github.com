@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="普段から常用しているコマンドなのですが、今更という感じです。 滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。
-※今回、使ったのは日時オプションです コマンドオプション 機能 -name [filename] 指定した文字でファイル、ディレクトリを検索 &hellip;">
+  <meta name="description" content="大したことはないし、そこらへんに構築メモは転がってるので要らないと思うけど・・・ という訳で、一から最低限の機能のみを構築しますという体で進めます。
+日本語の文字化け対策にエンコーディングを入れてーみたいなことはしません。 動かすことのみに注力します。 環境 ・CentOS6.3 x86_64 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,163 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/02/httpd-webdav/">3分で認証とか考慮しないWebDavを構築してみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-02T00:30:00+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>大したことはないし、そこらへんに構築メモは転がってるので要らないと思うけど・・・</p>
+
+<p>という訳で、一から最低限の機能のみを構築しますという体で進めます。<br/>
+日本語の文字化け対策にエンコーディングを入れてーみたいなことはしません。</p>
+
+<p>動かすことのみに注力します。</p>
+
+<h3>環境</h3>
+
+<hr />
+
+<p>・CentOS6.3 x86_64</p>
+
+<h3>Apacheのインストール</h3>
+
+<hr />
+
+<p>以下のコマンドでApacheをインストールします。<br/>
+このとき、インストールするパッケージはdevelにします。(色々必要なものが一緒に入るので)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo yum install httpd-devel</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>モジュールの確認</h3>
+
+<hr />
+
+<p>WebDavは、Apacheの追加モジュールです。<br/>
+develパッケージでインストールした場合、自動でインストールされますが念の為に確認します。<br/>
+以下の２つが、「/etc/httpd/conf/httpd.conf」に記載されているか確認します。</p>
+
+<ul>
+<li>LoadModule dav_module modules/mod_dav.so</li>
+<li>LoadModule dav_fs_module modules/mod_dav_fs.so</li>
+</ul>
+
+
+<p>記載が無ければ、「/usr/lib/httpd/modules/」に上記モジュールがあるか確認します。<br/>
+モジュールが存在していれば、追加しましょう。</p>
+
+<h3>WebDavの設定</h3>
+
+<hr />
+
+<p>以下の内容で、「/etc/httpd/conf.d/webdav.conf」を作成します。<br/>
+ACLやBasic認証とかもここで設定できますが、最低限動作なので実施しません。<br/>
+因みに、ディレクトリに対して細かい設定ができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#
+</span><span class='line'># This is to permit URL access to WebDav.
+</span><span class='line'>#
+</span><span class='line'>Alias /webdav/ "/var/www/html/webdav/"
+</span><span class='line'>&lt;IfModule mod_dav.c&gt;
+</span><span class='line'>    DAVMinTimeout 600
+</span><span class='line'>    &lt;Location /webdav&gt;
+</span><span class='line'>        DAV On
+</span><span class='line'>    &lt;/Location&gt;
+</span><span class='line'>&lt;/IfModule&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>WebDav用のディレクトリ作成</h3>
+
+<hr />
+
+<p>WebDavとして共有するためのディレクトリを作成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo mkdir -p /var/www/html/webdav</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ディレクトリをApacheから制御できるように所有者・所有グループを「apache」に変更します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo chown apache:apache /var/www/html/webdav</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>iptablesの設定</h3>
+
+<hr />
+
+<p>iptablesを未設定のままにすると、iptablesによってアクセスできないので、80番ポートのアクセスを許可するように設定変更します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo emacs /etc/sysconfig/iptables</span></code></pre></td></tr></table></div></figure>
+
+
+<p>80番での通信を許可するよう、以下の内容をREJECTの前に追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT</span></code></pre></td></tr></table></div></figure>
+
+
+<p>iptablesを再起動します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo /etc/init.d/iptables restart</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Apacheの起動</h3>
+
+<hr />
+
+<p>以下のコマンドで起動します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo /etc/init.d/httpd start</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://localhost/webdav">http://localhost/webdav</a>にアクセス出来れば完了です。</p>
+
+<p>この程度だと、大したことないし知ってれば３分要らないかもw</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1452,6 +1609,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/04/02/httpd-webdav/">3分で認証とか考慮しないWebDavを構築してみる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/31/find-command/">findコマンドのメモ</a>
       </li>
     
@@ -1467,15 +1628,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2013/03/25/java-map-iterator/">JavaのHashmapを使ったiteratorの実装</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/03/25/gnu-global/">Androidのソースコード検索サービスを構築してみる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 115.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(1)</a> <a href='/blog/categories/java' style='font-size: 115.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 115.0%'>Linux(1)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(4)</a> <a href='/blog/categories/ruby' style='font-size: 115.0%'>Ruby(1)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 115.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(1)</a> <a href='/blog/categories/java' style='font-size: 115.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(2)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(4)</a> <a href='/blog/categories/ruby' style='font-size: 115.0%'>Ruby(1)</a> </span>
 </section
 
 

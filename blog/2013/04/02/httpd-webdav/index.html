@@ -1,0 +1,375 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>3分で認証とか考慮しないWebDavを構築してみる - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
+
+  
+  <meta name="description" content="大したことはないし、そこらへんに構築メモは転がってるので要らないと思うけど・・・ という訳で、一から最低限の機能のみを構築しますという体で進めます。
+日本語の文字化け対策にエンコーディングを入れてーみたいなことはしません。 動かすことのみに注力します。 環境 ・CentOS6.3 x86_64 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/04/02/httpd-webdav/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <!--
+  <li><a href="/about">About me</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">3分で認証とか考慮しないWebDavを構築してみる</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-02T00:30:00+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>大したことはないし、そこらへんに構築メモは転がってるので要らないと思うけど・・・</p>
+
+<p>という訳で、一から最低限の機能のみを構築しますという体で進めます。<br/>
+日本語の文字化け対策にエンコーディングを入れてーみたいなことはしません。</p>
+
+<p>動かすことのみに注力します。</p>
+
+<h3>環境</h3>
+
+<hr />
+
+<p>・CentOS6.3 x86_64</p>
+
+<h3>Apacheのインストール</h3>
+
+<hr />
+
+<p>以下のコマンドでApacheをインストールします。<br/>
+このとき、インストールするパッケージはdevelにします。(色々必要なものが一緒に入るので)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo yum install httpd-devel</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>モジュールの確認</h3>
+
+<hr />
+
+<p>WebDavは、Apacheの追加モジュールです。<br/>
+develパッケージでインストールした場合、自動でインストールされますが念の為に確認します。<br/>
+以下の２つが、「/etc/httpd/conf/httpd.conf」に記載されているか確認します。</p>
+
+<ul>
+<li>LoadModule dav_module modules/mod_dav.so</li>
+<li>LoadModule dav_fs_module modules/mod_dav_fs.so</li>
+</ul>
+
+
+<p>記載が無ければ、「/usr/lib/httpd/modules/」に上記モジュールがあるか確認します。<br/>
+モジュールが存在していれば、追加しましょう。</p>
+
+<h3>WebDavの設定</h3>
+
+<hr />
+
+<p>以下の内容で、「/etc/httpd/conf.d/webdav.conf」を作成します。<br/>
+ACLやBasic認証とかもここで設定できますが、最低限動作なので実施しません。<br/>
+因みに、ディレクトリに対して細かい設定ができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#
+</span><span class='line'># This is to permit URL access to WebDav.
+</span><span class='line'>#
+</span><span class='line'>Alias /webdav/ "/var/www/html/webdav/"
+</span><span class='line'>&lt;IfModule mod_dav.c&gt;
+</span><span class='line'>    DAVMinTimeout 600
+</span><span class='line'>    &lt;Location /webdav&gt;
+</span><span class='line'>        DAV On
+</span><span class='line'>    &lt;/Location&gt;
+</span><span class='line'>&lt;/IfModule&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>WebDav用のディレクトリ作成</h3>
+
+<hr />
+
+<p>WebDavとして共有するためのディレクトリを作成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo mkdir -p /var/www/html/webdav</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ディレクトリをApacheから制御できるように所有者・所有グループを「apache」に変更します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo chown apache:apache /var/www/html/webdav</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>iptablesの設定</h3>
+
+<hr />
+
+<p>iptablesを未設定のままにすると、iptablesによってアクセスできないので、80番ポートのアクセスを許可するように設定変更します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo emacs /etc/sysconfig/iptables</span></code></pre></td></tr></table></div></figure>
+
+
+<p>80番での通信を許可するよう、以下の内容をREJECTの前に追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT</span></code></pre></td></tr></table></div></figure>
+
+
+<p>iptablesを再起動します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo /etc/init.d/iptables restart</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Apacheの起動</h3>
+
+<hr />
+
+<p>以下のコマンドで起動します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo /etc/init.d/httpd start</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://localhost/webdav">http://localhost/webdav</a>にアクセス出来れば完了です。</p>
+
+<p>この程度だと、大したことないし知ってれば３分要らないかもw</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-02T00:30:00+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>Linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/04/02/httpd-webdav/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/04/02/httpd-webdav/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/31/find-command/" title="Previous Post: findコマンドのメモ">&laquo; findコマンドのメモ</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/02/httpd-webdav/">3分で認証とか考慮しないWebDavを構築してみる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/31/find-command/">findコマンドのメモ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/30/octpress-image-tag/">Octpressで画像ファイルを扱う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/28/ruby-web-file/">Rubyで画像ファイルをダウンロードする</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/25/java-map-iterator/">JavaのHashmapを使ったiteratorの実装</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 115.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(1)</a> <a href='/blog/categories/java' style='font-size: 115.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(2)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(4)</a> <a href='/blog/categories/ruby' style='font-size: 115.0%'>Ruby(1)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
