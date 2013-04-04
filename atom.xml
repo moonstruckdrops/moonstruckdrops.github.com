@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-04-02T00:53:55+09:00</updated>
+  <updated>2013-04-05T08:21:48+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iPhoneのカレンダーアプリとGoogleCalendarを同期する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/04/05/iphone-google-calendar/"/>
+    <updated>2013-04-05T08:13:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/04/05/iphone-google-calendar</id>
+    <content type="html"><![CDATA[<p>iPhone/iPad購入後、１度しかやらないのでよく忘れます。<br/>
+そのため、端末を新しくするとやり方を忘れるのでキモだけメモ。</p>
+
+<h3>設定アプリ</h3>
+
+<hr />
+
+<ul>
+<li>メール/連絡先/カレンダーの設定項目で、Gmailアカウントを登録する</li>
+<li>作ったアカウントの設定項目で、カレンダーを「オン」にする</li>
+<li>その他の項目は、「オフ」でもよい</li>
+</ul>
+
+
+<h3>カレンダーアプリ</h3>
+
+<hr />
+
+<ul>
+<li>カレンダーの設定項目で、左下にある同期を押下する</li>
+<li>Gmail項目が出るので、同期したいものをチェックする</li>
+</ul>
+
+
+<h3>参考</h3>
+
+<hr />
+
+<ul>
+<li><a href="http://support.google.com/calendar/answer/151674?hl=ja&amp;ref_topic=13950">Google公式</a></li>
+<li><a href="http://oshiete.appbank.net/archives/1585">画像入りの設定方法</a></li>
+</ul>
+
+
+<p>偶にしかやらないと忘れてしまいますね。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[3分で認証とか考慮しないWebDavを構築してみる]]></title>

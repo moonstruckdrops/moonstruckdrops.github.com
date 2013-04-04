@@ -5,12 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Octpressで画像ファイルを扱う - kurobaraのブログ</title>
+  <title>iPhoneのカレンダーアプリとGoogleCalendarを同期する - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。 画像の格納ディレクトリ 画像の格納場所は、 1
-~source/images に格納すればよい imagesディレクトリの配下にも、 &hellip;">
+  <meta name="description" content="iPhone/iPad購入後、１度しかやらないのでよく忘れます。
+そのため、端末を新しくするとやり方を忘れるのでキモだけメモ。 設定アプリ メール/連絡先/カレンダーの設定項目で、Gmailアカウントを登録する
+作ったアカウントの設定項目で、カレンダーを「オン」にする
+その他の項目は、「オフ」 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/30/octpress-image-tag/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/04/05/iphone-google-calendar/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -75,7 +77,7 @@
   
   <header>
     
-      <h1 class="entry-title">Octpressで画像ファイルを扱う</h1>
+      <h1 class="entry-title">iPhoneのカレンダーアプリとGoogleCalendarを同期する</h1>
     
     
       <p class="meta">
@@ -91,89 +93,48 @@
   
 
 
-<time datetime="2013-03-30T01:47:00+09:00" pubdate data-updated="true">Mar 30<span>th</span>, 2013</time>
+<time datetime="2013-04-05T08:13:00+09:00" pubdate data-updated="true">Apr 5<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。</p>
+<div class="entry-content"><p>iPhone/iPad購入後、１度しかやらないのでよく忘れます。<br/>
+そのため、端末を新しくするとやり方を忘れるのでキモだけメモ。</p>
 
-<h3>画像の格納ディレクトリ</h3>
-
-<hr />
-
-<p>画像の格納場所は、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>~source/images</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に格納すればよい</p>
-
-<p>imagesディレクトリの配下にも、blogというディレクトリがあるのでブログ用の画像はそちらに格納すればよいっぽい。</p>
-
-<h3>Octpress公式の手順</h3>
+<h3>設定アプリ</h3>
 
 <hr />
-
-<p><a href="http://octopress.org/docs/plugins/image-tag/">公式の手順</a></p>
-
-<p>以下の書式に従って記載すれば、いいらしい。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img [class names] /path/to/image [width] [height] [title text [alt text]] \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>そのため、画像サイズを640x480で表示させたい場合、以下のように書くことができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img left /images/picture.png 640 480 \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コード上の「\」は不要です。(何故か、エスケープが正しく動作しなかった)</p>
-
-<h3>markdownを使用した方法</h3>
-
-<hr />
-
-<p>これは、前にも書いたように以下のようにすればよいでしょう。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[テスト画像](/images/picture.png "title")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但し、画像サイズは指定できないという欠点があります。<br/>
-画像は、加工するしかないようですね。</p>
-
-<h3>htmlを直接記載する方法</h3>
-
-<hr />
-
-<p>以下のような感じで、htmlを使用した書き方もできるようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;img src="/images/picture.png" alt="alt" title="title" width="640" height="480"&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意する点があるとすれば、必ず前後に<p>タグが挿入されてしまうことです。<br/>
-インラインで使用することは、できないっぽいです。</p>
-
-<h3>まとめ</h3>
-
-<hr />
-
-<p>個人的な見解は以下のような感じ</p>
 
 <ul>
-<li>基本はmarkdown記法で記載</li>
-<li>画像サイズを変更したい場合、Octpressの記法に従う</li>
-<li>汎用的にしたい場合、htmlで記載する</li>
-<li>ブログ記事用の画像の場合、「souce/images/blog」の下に格納する</li>
-<li>ブログ記事以外の画像の場合、「source/images」の下に格納する</li>
+<li>メール/連絡先/カレンダーの設定項目で、Gmailアカウントを登録する</li>
+<li>作ったアカウントの設定項目で、カレンダーを「オン」にする</li>
+<li>その他の項目は、「オフ」でもよい</li>
 </ul>
 
+
+<h3>カレンダーアプリ</h3>
+
+<hr />
+
+<ul>
+<li>カレンダーの設定項目で、左下にある同期を押下する</li>
+<li>Gmail項目が出るので、同期したいものをチェックする</li>
+</ul>
+
+
+<h3>参考</h3>
+
+<hr />
+
+<ul>
+<li><a href="http://support.google.com/calendar/answer/151674?hl=ja&amp;ref_topic=13950">Google公式</a></li>
+<li><a href="http://oshiete.appbank.net/archives/1585">画像入りの設定方法</a></li>
+</ul>
+
+
+<p>偶にしかやらないと忘れてしまいますね。</p>
 </div>
 
 
@@ -196,12 +157,12 @@
   
 
 
-<time datetime="2013-03-30T01:47:00+09:00" pubdate data-updated="true">Mar 30<span>th</span>, 2013</time>
+<time datetime="2013-04-05T08:13:00+09:00" pubdate data-updated="true">Apr 5<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/markdown/'>markdown</a>
+    <a class='category' href='/blog/categories/xi-yan/'>戯言</a>
   
 </span>
 
@@ -210,7 +171,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/30/octpress-image-tag/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/30/octpress-image-tag/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/04/05/iphone-google-calendar/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/04/05/iphone-google-calendar/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -223,10 +184,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/28/ruby-web-file/" title="Previous Post: Rubyで画像ファイルをダウンロードする">&laquo; Rubyで画像ファイルをダウンロードする</a>
+        <a class="basic-alignment left" href="/blog/2013/04/02/httpd-webdav/" title="Previous Post: 3分で認証とか考慮しないWebDavを構築してみる">&laquo; 3分で認証とか考慮しないWebDavを構築してみる</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/31/find-command/" title="Next Post: findコマンドのメモ">findコマンドのメモ &raquo;</a>
       
     </p>
   </footer>
