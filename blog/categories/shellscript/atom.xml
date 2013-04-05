@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ShellScript | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/shellscript/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2013-04-05T23:50:22+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[シェルスクリプトで引数を順次処理する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/04/05/shell-args/"/>
+    <updated>2013-04-05T23:36:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/04/05/shell-args</id>
+    <content type="html"><![CDATA[<p>表題のようなことをしたいときってありますよね。</p>
+
+<p>特にオレオレのスクリプトで、引数の数だけ処理を実行したいってときなんかがあると思います。<br/>
+まーいわゆる引数の回数分、forをグルグル回すだけですね。</p>
+
+<p>以下は、シェルの引数「$@」を変数「arg」に順次格納して、標準入出力に表示してます。<br/>
+```</p>
+
+<h1>!/bin/sh</h1>
+
+<p>for arg in $@
+do
+　　echo ${arg}
+done
+```</p>
+
+<p>簡単だけど、忘れがちなのでメモしておきました。</p>
+]]></content>
+  </entry>
+  
+</feed>
