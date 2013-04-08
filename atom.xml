@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-04-06T23:05:32+09:00</updated>
+  <updated>2013-04-08T22:01:10+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,112 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[rsyncを使って自前サーバでOctpressを運用する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/04/08/rsync-octpress/"/>
+    <updated>2013-04-08T21:35:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/04/08/rsync-octpress</id>
+    <content type="html"><![CDATA[<p>Octpressが便利すぎ。。。<br/>
+Bloggerとは何だったんだって感じです。</p>
+
+<p>どうも、どうもこんにちは。kurobaraです。</p>
+
+<p>便利すぎるんで、</p>
+
+<p>「ちょっと、外部に公開できないけどーみたいな感じで何でも書けるようなブログ」</p>
+
+<p>欲しくなるわけですよ。(主に会社で、ですが・・・)</p>
+
+<p>結論から先に言っちゃうと、自前サーバでOctpressを動かせます。<br/>
+Apacheのディレクトリ制限を噛ますことでアクセス制限なんてこともできます。</p>
+
+<p>という訳で、Octpressを自前サーバで動かす方法をやってみます。</p>
+
+<h3>準備</h3>
+
+<hr />
+
+<p>思いつく感じのこと</p>
+
+<ul>
+<li>クライアントから自前のサーバにSSHでアクセスできること</li>
+<li>クライアントにrsyncがあること</li>
+<li>クライアントでOctpressが動作すること</li>
+</ul>
+
+
+<p>こんな感じ、移行で設定します。</p>
+
+<h3>Rakefileの編集</h3>
+
+<hr />
+
+<p>Rakeコマンドを使ってる訳なので、deploy先を変更するため以下のように編集します。</p>
+
+<ul>
+<li>「ssh_user」を実際のユーザー名とサーバ名に変更します</li>
+<li>「document_root」でサーバ配置のディレクトリを指定します</li>
+<li>「ssh_port」はデフォルトで22ですが、必要に応じて変えます</li>
+<li>「deploy_default」をpushからrsyncに変更します。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh_user       = "user@server"
+</span><span class='line'>ssh_port       = 22
+</span><span class='line'>document_root  = "/var/www/html/"
+</span><span class='line'>rsync_delete   = true
+</span><span class='line'>deploy_default = "rsync"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ぶっちゃけ、自前サーバで動かすだけならこれで終わりです。<br/>
+が、これだけだと寂しいのでサブディレクトリで動作するようにしてみます。<br/>
+# 当たり前ですが、普通はサブディレクトリ単位でコンテンツをApacheに配備すると思います。</p>
+
+<h3>サブディレクトリ運用</h3>
+
+<hr />
+
+<p>http://＜サーバURL＞/hoge のようにサブディレクトリ運用する場合は、以下のようにします。</p>
+
+<ul>
+<li>サブディレクトリを作成します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake set_root_dir[hoge]</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>_config.yamlでサブディレクトリを追加します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>url: http://&lt;サーバURL&gt;/hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Rakefileのdocument_rootをサブディレクトリに変更します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>document_root = "/var/www/html/octopress"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは、Apache2でサブディレクトリの設定を施してやれば動作します。<br/>
+認証を付けたければ、認証の設定をすれば認証付きのBlogになります。</p>
+
+<p>これで、要件を満たせたので作業メモとか残せて幸せになれますね。(多分)</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[万葉.rbに参加してきました。#everyrb]]></title>

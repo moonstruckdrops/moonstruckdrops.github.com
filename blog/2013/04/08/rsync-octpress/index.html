@@ -5,14 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>シェルスクリプトで引数を順次処理する - kurobaraのブログ</title>
+  <title>rsyncを使って自前サーバでOctpressを運用する - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="表題のようなことをしたいときってありますよね。 特にオレオレのスクリプトで、引数の数だけ処理を実行したいってときなんかがあると思います。
-まーいわゆる引数の回数分、forをグルグル回すだけですね。 以下は、シェルの引数「$@」を変数「arg」に順次格納して、標準入出力に表示してます。 1
-2
-3 &hellip;">
+  <meta name="description" content="Octpressが便利すぎ。。。
+Bloggerとは何だったんだって感じです。 どうも、どうもこんにちは。kurobaraです。 便利すぎるんで、 「ちょっと、外部に公開できないけどーみたいな感じで何でも書けるようなブログ」 欲しくなるわけですよ。(主に会社で、ですが・・・) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/04/05/shell-args/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/04/08/rsync-octpress/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +75,7 @@
   
   <header>
     
-      <h1 class="entry-title">シェルスクリプトで引数を順次処理する</h1>
+      <h1 class="entry-title">rsyncを使って自前サーバでOctpressを運用する</h1>
     
     
       <p class="meta">
@@ -93,33 +91,111 @@
   
 
 
-<time datetime="2013-04-05T23:36:00+09:00" pubdate data-updated="true">Apr 5<span>th</span>, 2013</time>
+<time datetime="2013-04-08T21:35:00+09:00" pubdate data-updated="true">Apr 8<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>表題のようなことをしたいときってありますよね。</p>
+<div class="entry-content"><p>Octpressが便利すぎ。。。<br/>
+Bloggerとは何だったんだって感じです。</p>
 
-<p>特にオレオレのスクリプトで、引数の数だけ処理を実行したいってときなんかがあると思います。<br/>
-まーいわゆる引数の回数分、forをグルグル回すだけですね。</p>
+<p>どうも、どうもこんにちは。kurobaraです。</p>
 
-<p>以下は、シェルの引数「$@」を変数「arg」に順次格納して、標準入出力に表示してます。</p>
+<p>便利すぎるんで、</p>
+
+<p>「ちょっと、外部に公開できないけどーみたいな感じで何でも書けるようなブログ」</p>
+
+<p>欲しくなるわけですよ。(主に会社で、ですが・・・)</p>
+
+<p>結論から先に言っちゃうと、自前サーバでOctpressを動かせます。<br/>
+Apacheのディレクトリ制限を噛ますことでアクセス制限なんてこともできます。</p>
+
+<p>という訳で、Octpressを自前サーバで動かす方法をやってみます。</p>
+
+<h3>準備</h3>
+
+<hr />
+
+<p>思いつく感じのこと</p>
+
+<ul>
+<li>クライアントから自前のサーバにSSHでアクセスできること</li>
+<li>クライアントにrsyncがあること</li>
+<li>クライアントでOctpressが動作すること</li>
+</ul>
+
+
+<p>こんな感じ、移行で設定します。</p>
+
+<h3>Rakefileの編集</h3>
+
+<hr />
+
+<p>Rakeコマンドを使ってる訳なので、deploy先を変更するため以下のように編集します。</p>
+
+<ul>
+<li>「ssh_user」を実際のユーザー名とサーバ名に変更します</li>
+<li>「document_root」でサーバ配置のディレクトリを指定します</li>
+<li>「ssh_port」はデフォルトで22ですが、必要に応じて変えます</li>
+<li>「deploy_default」をpushからrsyncに変更します。</li>
+</ul>
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/sh
-</span><span class='line'>for arg in $@
-</span><span class='line'>do
-</span><span class='line'>　　echo ${arg}
-</span><span class='line'>done</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh_user       = "user@server"
+</span><span class='line'>ssh_port       = 22
+</span><span class='line'>document_root  = "/var/www/html/"
+</span><span class='line'>rsync_delete   = true
+</span><span class='line'>deploy_default = "rsync"</span></code></pre></td></tr></table></div></figure>
 
 
-<p>簡単だけど、忘れがちなのでメモしておきました。</p>
+<p>ぶっちゃけ、自前サーバで動かすだけならこれで終わりです。<br/>
+が、これだけだと寂しいのでサブディレクトリで動作するようにしてみます。<br/>
+# 当たり前ですが、普通はサブディレクトリ単位でコンテンツをApacheに配備すると思います。</p>
+
+<h3>サブディレクトリ運用</h3>
+
+<hr />
+
+<p>http://＜サーバURL＞/hoge のようにサブディレクトリ運用する場合は、以下のようにします。</p>
+
+<ul>
+<li>サブディレクトリを作成します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake set_root_dir[hoge]</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>_config.yamlでサブディレクトリを追加します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>url: http://&lt;サーバURL&gt;/hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Rakefileのdocument_rootをサブディレクトリに変更します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>document_root = "/var/www/html/octopress"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは、Apache2でサブディレクトリの設定を施してやれば動作します。<br/>
+認証を付けたければ、認証の設定をすれば認証付きのBlogになります。</p>
+
+<p>これで、要件を満たせたので作業メモとか残せて幸せになれますね。(多分)</p>
 </div>
 
 
@@ -142,12 +218,12 @@
   
 
 
-<time datetime="2013-04-05T23:36:00+09:00" pubdate data-updated="true">Apr 5<span>th</span>, 2013</time>
+<time datetime="2013-04-08T21:35:00+09:00" pubdate data-updated="true">Apr 8<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/shellscript/'>ShellScript</a>
+    <a class='category' href='/blog/categories/markdown/'>markdown</a>
   
 </span>
 
@@ -156,7 +232,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/04/05/shell-args/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/04/05/shell-args/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/04/08/rsync-octpress/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/04/08/rsync-octpress/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -169,10 +245,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/05/iphone-google-calendar/" title="Previous Post: iPhoneのカレンダーアプリとGoogleCalendarを同期する">&laquo; iPhoneのカレンダーアプリとGoogleCalendarを同期する</a>
+        <a class="basic-alignment left" href="/blog/2013/04/06/ranyo-rb/" title="Previous Post: 万葉.rbに参加してきました。#everyrb">&laquo; 万葉.rbに参加してきました。#everyrb</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/04/06/ranyo-rb/" title="Next Post: 万葉.rbに参加してきました。#everyrb">万葉.rbに参加してきました。#everyrb &raquo;</a>
       
     </p>
   </footer>
