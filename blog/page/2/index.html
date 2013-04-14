@@ -9,10 +9,15 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。
-とりあえず、aospのmasterで構築してみます。 環境 Ubuntu12.04 x86_64
-GNU Global 6.2.8
-Apache2 GNU Globalのバージョンは、 &hellip;">
+  <meta name="description" content="偶に忘れるのでメモしておきます。
+iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。 1
+2
+3
+4
+5
+6
+Map map = new HashMap();
+for (Iterator it = map.entrySet().iterator(); it. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +79,59 @@ Apache2 GNU Globalのバージョンは、 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/25/java-map-iterator/">JavaのHashmapを使ったiteratorの実装</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-25T18:29:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>偶に忘れるのでメモしておきます。<br/>
+iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Map map = new HashMap();
+</span><span class='line'>for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
+</span><span class='line'>    Map.Entry entry = (Map.Entry)it.next();
+</span><span class='line'>    Object key = entry.getKey();
+</span><span class='line'>    Object value = entry.getValue();
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Javaを書かなくなると忘れてしまいますねw</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1074,6 +1132,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/04/14/emacs-scratch-setting/">EmacsのScratchバッファに設定を追加してみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/04/13/gocon-spring/">Go Conference 2013 springに行って来ました。 #GoCon</a>
       </li>
     
@@ -1089,15 +1151,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2013/04/05/shell-args/">シェルスクリプトで引数を順次処理する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/04/05/iphone-google-calendar/">iPhoneのカレンダーアプリとGoogleCalendarを同期する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 112.0%'>Emacs(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/java' style='font-size: 112.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 124.0%'>Linux(2)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 124.0%'>Ruby(2)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 112.0%'>戯言(1)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 124.0%'>Emacs(2)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/java' style='font-size: 112.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 124.0%'>Linux(2)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 124.0%'>Ruby(2)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 112.0%'>戯言(1)</a> </span>
 </section
 
 

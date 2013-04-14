@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Emacs | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-04-13T18:31:18+09:00</updated>
+  <updated>2013-04-14T22:20:04+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[EmacsのScratchバッファに設定を追加してみた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/04/14/emacs-scratch-setting/"/>
+    <updated>2013-04-14T22:06:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/04/14/emacs-scratch-setting</id>
+    <content type="html"><![CDATA[<p>Emacsのscratchバッファってすごく便利ですよね。</p>
+
+<p>特に以下のことによく使います。</p>
+
+<ul>
+<li>ちょっとしたメモしたり</li>
+<li>URLメモを取ったり</li>
+<li>ちょっとした引用メモの整形とか</li>
+<li>マクロの実験とか</li>
+</ul>
+
+
+<p>まぁよく使うわけです・・・
+が、ついうっかりでEmacsを終了したりとか、Emacs本体がゾンビプロセスになったりとかでロストしてしまうことがあります。<br/>
+自分はこれでよく泣きました(> &lt;;)</p>
+
+<p>また、メモを保存しておこうと思った時にバッファの先頭にある初期メッセージが鬱陶しくなってきます。</p>
+
+<p>今回は、これらの問題を解決してしまいます。</p>
+
+<p>まずは、scratchの初期メッセージ消去します。<br/>
+以下の内容を「.emacs/init.el」に追加します。</p>
+
+<p><code>
+(setq initial-scratch-message "")
+</code></p>
+
+<p>この設定を加えて、Emacsを再起動するとscratchバッファの初期メッセージがなくなります。
+即座に反映したければ、評価してもいいとおもいます。</p>
+
+<p>次に、Emacsが終了してしまったときにScratchバッファの保存と再起動時にScratchバッファの内容を復元する方法ですが・・・</p>
+
+<p>以下の内容を「.emacs/init.el」に追加します。</p>
+
+<p>```
+(defun save-scratch-data ()
+  (let ((str (progn</p>
+
+<pre><code>           (set-buffer (get-buffer "*scratch*"))
+           (buffer-substring-no-properties
+            (point-min) (point-max))))
+    (file "~/.emacs.d/backups/.scratch"))
+(if (get-file-buffer (expand-file-name file))
+    (setq buf (get-file-buffer (expand-file-name file)))
+  (setq buf (find-file-noselect file)))
+(set-buffer buf)
+(erase-buffer)
+(insert str)
+(save-buffer)
+(kill-buffer buf)))
+</code></pre>
+
+<p>(defadvice save-buffers-kill-emacs
+  (before save-scratch-buffer activate)
+  (save-scratch-data))</p>
+
+<p>(defun read-scratch-data ()
+  (let ((file "~/.emacs.d/backups/.scratch"))</p>
+
+<pre><code>(when (file-exists-p file)
+  (set-buffer (get-buffer "*scratch*"))
+  (erase-buffer)
+  (insert-file-contents file))
+))
+</code></pre>
+
+<p>(read-scratch-data)
+```</p>
+
+<p>上のEmacsLispが何をやっているかと言うと・・・<br/>
+終了時にScratchの内容をファイルに書き込み、起動時に書き出したScratchバッファの内容を読み込みしているだけです。</p>
+
+<p>これで、Scratchバッファをちょっとしたメモ帳として大いに活用できますね。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Emacsでmarkdown-modeを使用する]]></title>
