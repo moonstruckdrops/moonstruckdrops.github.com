@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-04-14T22:20:04+09:00</updated>
+  <updated>2013-04-22T23:53:40+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,26 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[コマンドで暗号化Zipファイルを作成する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/04/22/zip-pass/"/>
+    <updated>2013-04-22T23:48:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/04/22/zip-pass</id>
+    <content type="html"><![CDATA[<h3>暗号化Zipファイル作成</h3>
+
+<hr />
+
+<p>大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。<br/>
+以下のようにzipコマンドのeオプションを使うだけで簡単にできます。</p>
+
+<p><code>
+$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt;
+</code></p>
+
+<p>恥ずかしながらあんまりやらないので、いざというときには忘れてしまいます。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[3分で認証とか考慮しないWebDavを構築してみる]]></title>
