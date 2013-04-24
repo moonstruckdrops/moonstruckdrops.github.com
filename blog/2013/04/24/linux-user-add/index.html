@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Ruby - kurobaraのブログ</title>
+  <title>Linux上にあるユーザーアカウントの追加と削除をする - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Category: Ruby">
+  <meta name="description" content="すごくド基礎なのですが・・・。
+ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。 ユーザーアカウントの追加 基本中の基本ですね。
+以下のコマンドのような感じで追加します。 1
+$useradd -u 500 -g wheel -m kurobara &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.comblog/categories/ruby/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -70,49 +73,160 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Ruby</h1>
+    
+      <h1 class="entry-title">Linux上にあるユーザーアカウントの追加と削除をする</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>すごくド基礎なのですが・・・。<br/>
+ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
 
-  
-  <h2>2013</h2>
+<h3>ユーザーアカウントの追加</h3>
 
-<article>
-  
-<h1><a href="/blog/2013/04/06/ranyo-rb/">万葉.rbに参加してきました。#everyrb</a></h1>
-<time datetime="2013-04-06T13:01:00+09:00" pubdate><span class='month'>Apr</span> <span class='day'>06</span> <span class='year'>2013</span></time>
+<hr />
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
+<p>基本中の基本ですね。<br/>
+以下のコマンドのような感じで追加します。</p>
 
-
-</article>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
 
 
+<p>以下の表によく使用するオプションを記載します。</p>
 
-<article>
-  
-<h1><a href="/blog/2013/03/28/ruby-web-file/">Rubyで画像ファイルをダウンロードする</a></h1>
-<time datetime="2013-03-28T23:34:00+09:00" pubdate><span class='month'>Mar</span> <span class='day'>28</span> <span class='year'>2013</span></time>
+<table>
+<thead>
+<tr>
+<th align="left">オプション</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">c コメント      </td>
+<td align="left">ユーザーのコメントを設定</td>
+</tr>
+<tr>
+<td align="left">d ディレクトリ  </td>
+<td align="left">ユーザーのログインディレクトリを指定</td>
+</tr>
+<tr>
+<td align="left">e mm/dd/yy </td>
+<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
+</tr>
+<tr>
+<td align="left">g グループ   </td>
+<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
+</tr>
+<tr>
+<td align="left">G グループ    </td>
+<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
+</tr>
+<tr>
+<td align="left">u ユーザーID </td>
+<td align="left">ユーザーのユーザーIDを指定</td>
+</tr>
+<tr>
+<td align="left">s シェル </td>
+<td align="left">ユーザーのログインシェルを指定</td>
+</tr>
+<tr>
+<td align="left">m        </td>
+<td align="left">ホームディレクトリの作成を自動で行う</td>
+</tr>
+</tbody>
+</table>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
+
+<h3>ユーザーアカウントの削除</h3>
+
+<hr />
+
+<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
+なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
+但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
-
+<p>常識ですね(ぉぃ</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>Linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/22/zip-pass/" title="Previous Post: コマンドで暗号化Zipファイルを作成する">&laquo; コマンドで暗号化Zipファイルを作成する</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

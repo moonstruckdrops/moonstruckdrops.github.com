@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-04-22T23:53:40+09:00</updated>
+  <updated>2013-04-24T23:58:04+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Linux上にあるユーザーアカウントの追加と削除をする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/"/>
+    <updated>2013-04-24T23:40:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add</id>
+    <content type="html"><![CDATA[<p>すごくド基礎なのですが・・・。<br/>
+ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
+
+<h3>ユーザーアカウントの追加</h3>
+
+<hr />
+
+<p>基本中の基本ですね。<br/>
+以下のコマンドのような感じで追加します。</p>
+
+<p><code>
+$useradd -u 500 -g wheel -m kurobara
+</code></p>
+
+<p>以下の表によく使用するオプションを記載します。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">オプション</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">c コメント      </td>
+<td align="left">ユーザーのコメントを設定</td>
+</tr>
+<tr>
+<td align="left">d ディレクトリ  </td>
+<td align="left">ユーザーのログインディレクトリを指定</td>
+</tr>
+<tr>
+<td align="left">e mm/dd/yy </td>
+<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
+</tr>
+<tr>
+<td align="left">g グループ   </td>
+<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
+</tr>
+<tr>
+<td align="left">G グループ    </td>
+<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
+</tr>
+<tr>
+<td align="left">u ユーザーID </td>
+<td align="left">ユーザーのユーザーIDを指定</td>
+</tr>
+<tr>
+<td align="left">s シェル </td>
+<td align="left">ユーザーのログインシェルを指定</td>
+</tr>
+<tr>
+<td align="left">m        </td>
+<td align="left">ホームディレクトリの作成を自動で行う</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>ユーザーアカウントの削除</h3>
+
+<hr />
+
+<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
+なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
+但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
+
+<p><code>
+$userdel &lt;ユーザーアカウント名&gt;
+</code></p>
+
+<p>常識ですね(ぉぃ</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[コマンドで暗号化Zipファイルを作成する]]></title>
