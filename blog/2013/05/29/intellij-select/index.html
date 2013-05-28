@@ -5,19 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>JavaのHashmapを使ったiteratorの実装 - kurobaraのブログ</title>
+  <title>IntelliJ IDEAで/usrディレクトリ配下のものが選択できなかった - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="偶に忘れるのでメモしておきます。
-iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。 1
-2
-3
-4
-5
-6
-Map map = new HashMap();
-for (Iterator it = map.entrySet().iterator(); it. &hellip;">
+  <meta name="description" content="そんなことがあったのでメモしておく。 どういうことかと ProjectStructureでSDKとか設定する訳なのだが・・・
+これ、MacだとSDKの場所をGUIで選べって方式なんですよね。 それはそれで便利だし楽でいいんだけども /usr/ディレクトリ配下にあるものは選択できない!! ( ﾟдﾟ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,7 +19,7 @@ for (Iterator it = map.entrySet().iterator(); it. &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/05/29/intellij-select/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -82,7 +75,7 @@ for (Iterator it = map.entrySet().iterator(); it. &hellip;">
   
   <header>
     
-      <h1 class="entry-title">JavaのHashmapを使ったiteratorの実装</h1>
+      <h1 class="entry-title">IntelliJ IDEAで/usrディレクトリ配下のものが選択できなかった</h1>
     
     
       <p class="meta">
@@ -98,31 +91,58 @@ for (Iterator it = map.entrySet().iterator(); it. &hellip;">
   
 
 
-<time datetime="2013-03-25T18:29:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+<time datetime="2013-05-29T00:32:00+09:00" pubdate data-updated="true">May 29<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>偶に忘れるのでメモしておきます。<br/>
-iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
+<div class="entry-content"><p>そんなことがあったのでメモしておく。</p>
+
+<h3>どういうことかと</h3>
+
+<hr />
+
+<p>ProjectStructureでSDKとか設定する訳なのだが・・・<br/>
+これ、MacだとSDKの場所をGUIで選べって方式なんですよね。</p>
+
+<p>それはそれで便利だし楽でいいんだけども</p>
+
+<h4>/usr/ディレクトリ配下にあるものは選択できない!!</h4>
+
+<p>( ﾟдﾟ)</p>
+
+<p>Macの隠しディレクトリを表示する以下のコマンドを実行しても選択することが出来なかった。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Map map = new HashMap();
-</span><span class='line'>for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
-</span><span class='line'>    Map.Entry entry = (Map.Entry)it.next();
-</span><span class='line'>    Object key = entry.getKey();
-</span><span class='line'>    Object value = entry.getValue();
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$defaults write com.apple.finder AppleShowAllFiles -boolean true
+</span><span class='line'>$killall</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Javaを書かなくなると忘れてしまいますねw</p>
+<h3>結局どうしたか</h3>
+
+<hr />
+
+<p>ものすごく力技ですが・・・</p>
+
+<h4>ホームディレクトリから/usr/ディレクトリまでシンボリックリンク張っちゃいました</h4>
+
+<p>とりあえずこの方法で解決しました。<br/>
+あんまりよくないというのは理解していますが、しょうもないことに時間取られるのも嫌だったのでこうしました。<br/>
+うまい解決方法あったら教えて下さい。</p>
+
+<h3>正直なところ</h3>
+
+<hr />
+
+<p>そんなところにファイル置いてるほうが悪いのでは？と言われるかもしれないですが、SDKとかって「/usr/local」の下に入れたくなるじゃないですか。<br/>
+特にLinuxとか弄ってると</p>
+
+<p>ぶっちゃけ、IDEAが悪いわけではきっとないと思っているし、ステマでもなんでもないです。</p>
+
+<p>本当だよ。</p>
 </div>
 
 
@@ -145,12 +165,12 @@ iterationは忘れたらダメだと思いつつも、偶にアレなんだっ�
   
 
 
-<time datetime="2013-03-25T18:29:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+<time datetime="2013-05-29T00:32:00+09:00" pubdate data-updated="true">May 29<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/java/'>Java</a>
+    <a class='category' href='/blog/categories/ide/'>IDE</a>
   
 </span>
 
@@ -159,7 +179,7 @@ iterationは忘れたらダメだと思いつつも、偶にアレなんだっ�
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/05/29/intellij-select/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/05/29/intellij-select/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -172,10 +192,8 @@ iterationは忘れたらダメだと思いつつも、偶にアレなんだっ�
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/25/gnu-global/" title="Previous Post: Androidのソースコード検索サービスを構築してみる">&laquo; Androidのソースコード検索サービスを構築してみる</a>
+        <a class="basic-alignment left" href="/blog/2013/05/28/git-talk/" title="Previous Post: Gitを教えたときの話">&laquo; Gitを教えたときの話</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/28/ruby-web-file/" title="Next Post: Rubyで画像ファイルをダウンロードする">Rubyで画像ファイルをダウンロードする &raquo;</a>
       
     </p>
   </footer>
