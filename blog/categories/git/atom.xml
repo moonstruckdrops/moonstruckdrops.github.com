@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2013-05-28T21:25:08+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Gitを教えたときの話]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/05/28/git-talk/"/>
+    <updated>2013-05-28T20:33:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/05/28/git-talk</id>
+    <content type="html"><![CDATA[<h3>前置き</h3>
+
+<hr />
+
+<p>事の発端はある人と作業してたことから始まりました。。。<br/>
+というのも、自分が海外に行ってるいる間、作業をお願いしていました。</p>
+
+<p>作業をお願いしていたのはいいのですが<br/>
+彼は普段使っていないGitを使ってみたかったようです。</p>
+
+<p>今回は、そのとき伝えたことをネタにします。<br/>
+もっとネタにするものはありますが(ぉぃ</p>
+
+<h3>基本操作以外に覚えて欲しいと伝えたこと</h3>
+
+<hr />
+
+<ul>
+<li>GitのGUIツールを捨てろ(言い過ぎだと思うし、賛否両論あると思っている)</li>
+<li>状態は常に確認するようにしよう</li>
+<li>ファイルを編集前状態に戻すやり方</li>
+<li>マージやリベースで、ファイル競合状態になったときの対処(エラーログとか読んでみる)</li>
+<li>ヘッド位置の意識</li>
+<li>ヘッドの操作方法やヘッドの位置がどこにあるのか</li>
+<li>落ち着いてブランチを切って、Git操作を試してみる(カジュアルに作れるので、作ったブランチで操作を試してみる)</li>
+<li>masterでのファイル編集をやめる</li>
+</ul>
+
+
+<p>コミットの取り消しや歴史の改変とかも覚えてて貰いたいけどな</p>
+
+<p>教えたはいいけど、自分もまだまだ使いこなせてないのでは？と思ったりしてます。</p>
+
+<h3>伝えた元に戻す系のコマンド類</h3>
+
+<hr />
+
+<p>元に戻し方とかそんな感じのことを以下にメモレベルで記載</p>
+
+<p>ファイルをインデックス(元々のヘッド状態)の状態に戻す
+<code>
+$git checkout -- &lt;元に戻したいファイル&gt;
+</code></p>
+
+<p>ワークツリーとインデックスをコミットIDに指定した状態に戻す
+<code>
+$git reset --hard &lt;コミットID&gt;
+</code></p>
+
+<p>現在のコミットからブランチを作成する<br/>
+作業はここでしちゃいましょう。
+<code>
+$git checkout -b &lt;ブランチ名&gt;
+</code></p>
+
+<p>リベースでおかしなこと(ファイルの競合とか)が起きた時に元に戻す
+<code>
+$git rebase --abort
+</code></p>
+
+<p>ここに書いた以外のやり方なんていくらでもあるので、参考程度で。</p>
+]]></content>
+  </entry>
+  
+</feed>
