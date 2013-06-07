@@ -9,12 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="今までBloggerでブログを書いていました。
-どうにも書きづらいところも出てきたので移行しようかどうしようか検討しています。
-移行の検討材料として、以下があります。 コードが貼り付けやすい
-記事のストックができる
-記事が書きやすい
-バージョン管理までとは行かなくても手元に記事を残せる( &hellip;">
+  <meta name="description" content="Octpressのデフォルト設定では、タグクラウドがありません。
+ですが、pluginを組み込むことで、タグクラウドを実現することができます。
+無かったら困るというほどでもないけれど、あったほうが何かと便利なので自分のブログに組み込んでみます。 プラグインの組み込み &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +73,95 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/17/octopress-sidebar/">Octopressのサイドバーにタグクラウドを表示する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-17T01:33:00+09:00" pubdate data-updated="true">Mar 17<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Octpressのデフォルト設定では、タグクラウドがありません。<br/>
+ですが、pluginを組み込むことで、タグクラウドを実現することができます。<br/>
+無かったら困るというほどでもないけれど、あったほうが何かと便利なので自分のブログに組み込んでみます。</p>
+
+<h3>プラグインの組み込み</h3>
+
+<hr />
+
+<p>手順は以下の順序で行なっていきます。</p>
+
+<ol>
+<li>Githubからプラグインをダウンロード
+<code>
+$git clone git://github.com/tokkonopapa/octopress-tagcloud.git
+</code></li>
+<li>ダウンロードしたファイルをpluginディレクトリと_asidesディレクトリにコピー
+<code>
+$cp plugins/tag_cloud.rb ~/Projects/rails/fakestarbaby.github.com/plugins/tag_cloud.rb
+</code>
+<code>
+$cp source/_includes/custom/asides/* ~/Projects/rails/fakestarbaby.github.com/source/_includes/custom/asides/
+</code></li>
+<li>_config.ymlを編集
+<code>
+default_asides: [custom/asides/about.html, asides/recent_posts.html, custom/asides/tag_cloud.html, asides/github.html, asides/twitter.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+</code></li>
+</ol>
+
+
+<p>これだけ</p>
+
+<h3>タグクラウドを表示するHTMLファイルの変更</h3>
+
+<hr />
+
+<p>必要に応じて編集します。<br/>
+以下のファイルに記載されているcounter:trueをcounter:falseに変更することでタグ件数を非表示にできます。<br/>
+デフォルトは表示する設定になっています。(デフォルト設定のままでよいと思いますが・・・)</p>
+
+<ul>
+<li>source/_includes/custom/asides/category_list.html</li>
+<li>source/_includes/custom/asides/tag_cloud.html</li>
+</ul>
+
+
+<h3>参考サイト</h3>
+
+<hr />
+
+<p><a href="http://tokkonopapa.github.com/blog/2012/01/04/octopress-plugin-for-categories-cloud/">作者の導入手順記事</a><br/>
+<a href="http://qiita.com/items/944db11e257782749270">Quiitaの記事</a></p>
+
+<p>Octopressもいいけど、Quiitaをブログ代わりにするのもいいかも。<br/>
+悩ましいなぁ。。。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -466,6 +552,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/07/vi-on-emacs/">Vi(Vim) on Emacsを思いつきでやってみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/05/31/oversea-travel/">初海外がGoogleI/Oだったので、準備とか苦労したことのメモ</a>
       </li>
     
@@ -481,15 +571,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2013/04/24/linux-user-add/">Linux上にあるユーザーアカウントの追加と削除をする</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/04/22/zip-pass/">コマンドで暗号化Zipファイルを作成する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 124.0%'>Emacs(2)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 112.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 124.0%'>Ruby(2)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(2)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 112.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 124.0%'>Ruby(2)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(2)</a> </span>
 </section
 
 
