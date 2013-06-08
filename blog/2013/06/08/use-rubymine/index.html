@@ -5,12 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>findコマンドのメモ - kurobaraのブログ</title>
+  <title>Rubymineを使ってみる - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="普段から常用しているコマンドなのですが、今更という感じです。 滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。
-※今回、使ったのは日時オプションです コマンドオプション 機能 -name [filename] 指定した文字でファイル、ディレクトリを検索 &hellip;">
+  <meta name="description" content="皆さんはRubyやRailsでアプリを書くときどのようなエディタを使いますでしょうか？ 僕は、Emacsで書いていることが多いです。。。 多いのですが・・・
+こんな感じで若干面倒な面もあってですね。 設定がともかく面倒くさい・・・。
+色々設定を追加しているので、重くなってきた( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/31/find-command/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/06/08/use-rubymine/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -75,7 +76,7 @@
   
   <header>
     
-      <h1 class="entry-title">Findコマンドのメモ</h1>
+      <h1 class="entry-title">Rubymineを使ってみる</h1>
     
     
       <p class="meta">
@@ -91,101 +92,95 @@
   
 
 
-<time datetime="2013-03-31T00:04:00+09:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
+<time datetime="2013-06-08T17:26:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>普段から常用しているコマンドなのですが、今更という感じです。</p>
+<div class="entry-content"><p>皆さんはRubyやRailsでアプリを書くときどのようなエディタを使いますでしょうか？</p>
 
-<p>滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。<br/>
-※今回、使ったのは日時オプションです</p>
+<h6>僕は、Emacsで書いていることが多いです。。。</h6>
 
-<table>
-<thead>
-<tr>
-<th align="left"> コマンドオプション    </th>
-<th align="center"> 機能          </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> -name [filename]    </td>
-<td align="center"> 指定した文字でファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -user [username]    </td>
-<td align="center"> 指定したユーザーが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -group [groupname]  </td>
-<td align="center"> 指定したグループが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -type [type]        </td>
-<td align="center"> ファイルの種類を指定して検索(b：ブロック型特殊ファイル　c：キャラクタ型特殊ファイル　d：ディレクトリ　l：シンボリックリンク　f：通常ファイル)</td>
-</tr>
-<tr>
-<td align="left"> -atime (+/-)n       </td>
-<td align="center"> 最後にアクセスしたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -ctime (+/-)n       </td>
-<td align="center"> 最後にステータスが変更されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mtime (+/-)n       </td>
-<td align="center"> 最後にデータが修正されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mmin (+/-)n        </td>
-<td align="center"> 最後にデータが修正されたのがn分前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -newer [filename]   </td>
-<td align="center"> 指定したファイルよりも後に更新されているものを検索対象にする</td>
-</tr>
-<tr>
-<td align="left"> -size n[c/k/b]      </td>
-<td align="center"> nのサイズのファイルを検索(c:バイト、k:キロバイト、b:ブロック)</td>
-</tr>
-<tr>
-<td align="left"> -ls                 </td>
-<td align="center"> 検索結果のファイル、ディレクトリの詳細を表示する(lsコマンドと同じ)</td>
-</tr>
-<tr>
-<td align="left"> -print              </td>
-<td align="center"> 検索結果を標準出力に出す(元々結果表示されるんで不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -fprint [filename]  </td>
-<td align="center"> 検索結果をファイルに出力する(>でファイル出力できるので不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -exec [command] {}\;</td>
-<td align="center"> 検索結果を指定コマンドにの引数に設定して実行する</td>
-</tr>
-</tbody>
-</table>
+<p>多いのですが・・・<br/>
+こんな感じで若干面倒な面もあってですね。</p>
+
+<ul>
+<li>設定がともかく面倒くさい・・・。</li>
+<li>色々設定を追加しているので、重くなってきた(僕の設定が悪いのかもしれませんが・・・)</li>
+<li>補完周りも効くのか効かないのか微妙な時も(僕の設定が悪いry)</li>
+<li>オムニ補完が・・・効きすぎてお節介すぎる(僕の設定がry)</li>
+<li>その他色々。。。</li>
+</ul>
 
 
-<p>(例)カレントディレクトリ配下のファイルに「hogehoge」という文字が含まれているかどうか調べる</p>
+<p>良い面もありまして、僕が思う良い面はこんな感じ。</p>
 
-<p>以下のコマンドで調べることができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f -exec grep hogehoge {}\;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こちらでも同じ結果を得られます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f |xargs grep "hogehoge"</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>キーバインドがカスタムできるよ</li>
+<li>画面が分割できるので、TDDにも向いてるよ</li>
+<li>オムニ補完が良い感じに効いたときは、さくさくコードが書ける</li>
+<li>タブやフォーマットとか「{ }」の自動補完とかきっちりやってくれる</li>
+<li>あとは、タグを使ってソースからソースへのコードジャンプができる</li>
+</ul>
 
 
-<p>どちらでもいいと思いますが、自分はよく後者を利用しますね。</p>
+<p>殆ど、Emacsの機能ですねw</p>
+
+<p>で、面倒くさい面もあるのでRuby開発に限ってはEmacsを卒業してもいいのではないかと最近思うようになりました。</p>
+
+<p>なので、Rubyをスムーズに開発できるエディタってなんだろうとか気になりだした訳です。<br/>
+エディタとして候補が挙げれたものは・・・</p>
+
+<ul>
+<li>Vim</li>
+<li>Text Mate</li>
+<li>Sublime text2</li>
+<li>Coda</li>
+<li>Aptana Studio(Eclipse)</li>
+<li>RubyMine</li>
+</ul>
+
+
+<p>自分が観測できた範囲だとこんだけ。</p>
+
+<p>色々ありますね。とりかえず今回はRubyMineを使ってみます。</p>
+
+<h6>Rails コマンド</h6>
+
+<p>「$rails migration」とか実行する場合、「Ctrl + Option + G」<br/>
+よく使いそうなものは大体実行できます。<br/>
+主に以下のようなことができる。(ここでは一部のみ記載)</p>
+
+<ul>
+<li>scaffold</li>
+<li>migration</li>
+<li>helper</li>
+<li>controller</li>
+<li>その他色々</li>
+</ul>
+
+
+<h6>Rails Server</h6>
+
+<p>サーバを起動する場合、「Option + Shift + F10」<br/>
+デバッグ実行やプロダクション起動、リリース</p>
+
+<h6>リファクタリング</h6>
+
+<p>変更箇所をカーソルで選択後「Shift + F6」<br/>
+プレビューが表示されるので、「Do Refactor」を実行しましょう。<br/>
+いちいち、「Do Refactor」ボタンを押さないといけないところに操作性のムカツキを感じる。</p>
+
+<h6>その他</h6>
+
+<p>エディタ自身の設定でデフォルトで有効になっている「フリーカーソール」をOFFにしたい。(余白をクリックすると、行の末尾にいかない)<br/>
+設定項目のエディタ設定で、「Vertual Space」を見つけます。</p>
+
+<h6>「Allow Placement of caret after the end of line」のチェックボックスを外します。</h6>
+
+<p>そうすると、余白をクリックしても行の末尾にいくようになります</p>
 </div>
 
 
@@ -208,12 +203,12 @@
   
 
 
-<time datetime="2013-03-31T00:04:00+09:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
+<time datetime="2013-06-08T17:26:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/linux/'>Linux</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -222,7 +217,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/31/find-command/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/31/find-command/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/06/08/use-rubymine/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/06/08/use-rubymine/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -235,10 +230,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/30/octpress-image-tag/" title="Previous Post: Octpressで画像ファイルを扱う">&laquo; Octpressで画像ファイルを扱う</a>
+        <a class="basic-alignment left" href="/blog/2013/06/07/vi-on-emacs/" title="Previous Post: Vi(Vim) on Emacsを思いつきでやってみた">&laquo; Vi(Vim) on Emacsを思いつきでやってみた</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/04/02/httpd-webdav/" title="Next Post: 3分で認証とか考慮しないWebDavを構築してみる">3分で認証とか考慮しないWebDavを構築してみる &raquo;</a>
       
     </p>
   </footer>
