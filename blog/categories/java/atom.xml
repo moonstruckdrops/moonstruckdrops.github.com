@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-06-27T22:20:35+09:00</updated>
+  <updated>2013-06-27T22:32:52+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Dependency Injectionについて]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/06/10/dependency-injection/"/>
-    <updated>2013-06-10T19:28:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/06/10/dependency-injection</id>
+    <link href="http://moonstruckdrops.github.com/blog/2013/06/27/dependency-injection/"/>
+    <updated>2013-06-27T19:28:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/06/27/dependency-injection</id>
     <content type="html"><![CDATA[<p>DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。</p>
 
 <p>簡単に言うと、よく言われる「依存性の注入」といいます。</p>

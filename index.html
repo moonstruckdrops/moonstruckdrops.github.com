@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="日経ソフトウェア7月号の特集「そのコードは古い!」を読んだ感想。 これとは別の技術書を書店まで買いに行きました。 そこで日経ソフトウェアを手に取りました。 いつもは、日経ソフトウェアを書店でパラパラ目を通す程度です(エンジニアに端くれかみたいな感想は兎も角)
-ただ、 &hellip;">
+  <meta name="description" content="DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。 簡単に言うと、よく言われる「依存性の注入」といいます。 が、なんのことかさっぱりわからないですね。
+少し言い換えてあげると 「 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T19:28:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。</p>
+
+<p>簡単に言うと、よく言われる「依存性の注入」といいます。</p>
+
+<p>が、なんのことかさっぱりわからないですね。
+少し言い換えてあげると</p>
+
+<h6>「依存性をモジュールもしくはクラス内部に抱え込まずに外部から依存内容を設定してあげる」</h6>
+
+<p>となります。</p>
+
+<p>擬似コードを出すとDI前にこんなコードとすると</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(){
+</span><span class='line'>    this.fuga = new Fuga("hogefuga");
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>DI後の擬似コードはこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(Fuga fuga){
+</span><span class='line'>    this.fuga = fuga;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンストラクタの引数Fugaを差し替えるだけで容易に設定内容を変更できます。<br/>
+依存前のコードだと、依存性はFugaコンストラクタの中にありますが、依存後のコードは依存性は外部にあります。(引数の内容次第)<br/>
+このFugaのコンストラクタがリソースに関わる何かだとDI前のコードであればユニットテストが大変になりますね。<br/>
+しかし、DI後のコードであれば引数を差し替えるだけでユニットテストができるようになります。</p>
+
+<p>なので、DIをするメリットというと(個人的に)以下が挙げられます。</p>
+
+<ul>
+<li>依存しているものが外部にあるので、ユニットテストで差し替えが簡単にできる(外部からモックにしやすい)</li>
+<li>IFさえ同じものであれば、別の実装を行ったものを設定として渡してやることができる(柔軟性)</li>
+</ul>
+
+
+<p>面倒になるのは、事前準備ですがメリットのほうが大きいと個人的には思ってます。<br/>
+面倒な事前処理(主にコンストラクタ生成ですが)をやってくれるのがDIコンテナですね。</p>
+
+<p>よく使うDIコンテナだと、有名なjavaのコンテナはこんなところですかね。</p>
+
+<ul>
+<li>GoogleGuice</li>
+<li>Seaser2</li>
+<li>SpringFramework</li>
+</ul>
+
+
+<p>自分が使うときの基準だと、以下になりますね。</p>
+
+<ul>
+<li>Seaser2なプロダクト(SAStrutsとか)を使っている、もしくは使う場合は、「Seaser2」のDIコンテナ</li>
+<li>Spring関係の何かを使っている、もしくは使う場合は、「SpringFramework」のDIコンテナ(尤も殆ど使ったことないです)</li>
+<li>それ以外の場合なら、大体「GoogleGuice」(どこかに事例とかあればいいですし、大体がWicketとかで使います)</li>
+</ul>
+
+
+<p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
+使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -333,108 +435,6 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
 
 <p>特集を読んだ感想は以上かなー。
 なんとなく、書籍のサンプルがアレな時があるって感じじゃねーの？みたいな感想でごめんなさい。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/10/dependency-injection/">Dependency Injectionについて</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-10T19:28:00+09:00" pubdate data-updated="true">Jun 10<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。</p>
-
-<p>簡単に言うと、よく言われる「依存性の注入」といいます。</p>
-
-<p>が、なんのことかさっぱりわからないですね。
-少し言い換えてあげると</p>
-
-<h6>「依存性をモジュールもしくはクラス内部に抱え込まずに外部から依存内容を設定してあげる」</h6>
-
-<p>となります。</p>
-
-<p>擬似コードを出すとDI前にこんなコードとすると</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(){
-</span><span class='line'>    this.fuga = new Fuga("hogefuga");
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>DI後の擬似コードはこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(Fuga fuga){
-</span><span class='line'>    this.fuga = fuga;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コンストラクタの引数Fugaを差し替えるだけで容易に設定内容を変更できます。<br/>
-依存前のコードだと、依存性はFugaコンストラクタの中にありますが、依存後のコードは依存性は外部にあります。(引数の内容次第)<br/>
-このFugaのコンストラクタがリソースに関わる何かだとDI前のコードであればユニットテストが大変になりますね。<br/>
-しかし、DI後のコードであれば引数を差し替えるだけでユニットテストができるようになります。</p>
-
-<p>なので、DIをするメリットというと(個人的に)以下が挙げられます。</p>
-
-<ul>
-<li>依存しているものが外部にあるので、ユニットテストで差し替えが簡単にできる(外部からモックにしやすい)</li>
-<li>IFさえ同じものであれば、別の実装を行ったものを設定として渡してやることができる(柔軟性)</li>
-</ul>
-
-
-<p>面倒になるのは、事前準備ですがメリットのほうが大きいと個人的には思ってます。<br/>
-面倒な事前処理(主にコンストラクタ生成ですが)をやってくれるのがDIコンテナですね。</p>
-
-<p>よく使うDIコンテナだと、有名なjavaのコンテナはこんなところですかね。</p>
-
-<ul>
-<li>GoogleGuice</li>
-<li>Seaser2</li>
-<li>SpringFramework</li>
-</ul>
-
-
-<p>自分が使うときの基準だと、以下になりますね。</p>
-
-<ul>
-<li>Seaser2なプロダクト(SAStrutsとか)を使っている、もしくは使う場合は、「Seaser2」のDIコンテナ</li>
-<li>Spring関係の何かを使っている、もしくは使う場合は、「SpringFramework」のDIコンテナ(尤も殆ど使ったことないです)</li>
-<li>それ以外の場合なら、大体「GoogleGuice」(どこかに事例とかあればいいですし、大体がWicketとかで使います)</li>
-</ul>
-
-
-<p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
-使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
 </div>
   
   
@@ -1428,11 +1428,11 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/06/18/nikkei-software-07/">日経ソフトウェア7月号の特集を読んだ感想</a>
+        <a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/06/10/dependency-injection/">Dependency Injectionについて</a>
+        <a href="/blog/2013/06/18/nikkei-software-07/">日経ソフトウェア7月号の特集を読んだ感想</a>
       </li>
     
       <li class="post">
