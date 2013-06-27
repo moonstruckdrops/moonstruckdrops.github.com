@@ -9,9 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="参加メモメモ。 オープニング Matzからの挨拶。
-楽しい設計の言語が真面目に仕事になって嬉しい。
-万葉をよろしく!! 基調公演(島田さん) 言葉は軽く聞こえるけど、会社経営だとすごい!! 最近思う「コミュニティと会社の私」 会社は孤立している。契約とか仕事程度(内側のつながりはない) &hellip;">
+  <meta name="description" content="午前中と午後はモクモクとコード書いてました。。。
+XML周りの処理とかちょっとしたい感じだったので書いてみました。 「XMLの構造が分かっていたら、 Unmarshal関数を使ったほうがいいね。」 というのが感想です。
+真面目にDOMを用意してみるとかなりコード書かないといけないので辛い感じ。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,434 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/13/gocon-spring/">Go Conference 2013 Springに行って来ました。 #GoCon</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-13T10:02:00+09:00" pubdate data-updated="true">Apr 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>午前中と午後はモクモクとコード書いてました。。。<br/>
+XML周りの処理とかちょっとしたい感じだったので書いてみました。</p>
+
+<p>「XMLの構造が分かっていたら、 Unmarshal関数を使ったほうがいいね。」</p>
+
+<p>というのが感想です。<br/>
+真面目にDOMを用意してみるとかなりコード書かないといけないので辛い感じ。<br/>
+個人的には、XMLをDOMで操作するならRubyを使います(ぉぃ</p>
+
+<p>動作速度まで測ってませんが、多分Goのほうが圧倒的速度で処理してくれるでしょう・・・。<br/>
+機会があればやってみます。</p>
+
+<p>以下、セッションメモ</p>
+
+<h3>Goでの思考方法</h3>
+
+<hr />
+
+<p>class = type
+object = value
+method attache any type
+interface はmethod(?)</p>
+
+<p># 途中から何かしてたので聞き逃した。
+# 何処かにスライド上がってないだろうか？</p>
+
+<h3>Go言語で作るWebアプリ</h3>
+
+<hr />
+
+<p>Webサーバ作るときは、以下のやり方が基本</p>
+
+<ul>
+<li>http.Serverに渡して、http.Handlerで処理する</li>
+<li>ListenAndServerで起動する</li>
+<li>複数のハンドラを設定できる(http.serverMux型)</li>
+<li>ハンドラを実装するのは大変なのでhttp.HandlerFuncを使う</li>
+<li>serverMuxを作るのがめんどいなら、DefaultServerMuxというグローバル変数を使うといい</li>
+<li>静的なhtmlを表示する場合は、http.FileServerを指定してやればいい</li>
+</ul>
+
+
+<p>Restful APIを作る</p>
+
+<ul>
+<li>GoWebを使えば、楽にできる</li>
+<li>リクエストの受け取りやレスポンスをxmlやjsonで返せる</li>
+<li>ルーティング管理ができる</li>
+<li>Controllerを作るだけでいい</li>
+<li>インタフェースを実装すればよい感じ</li>
+</ul>
+
+
+<p>テストパッケージやnginxと連携とかテンプレートエンジンとかあるので話したかった・・・</p>
+
+<h3>GAE/Goの話</h3>
+
+<hr />
+
+<ul>
+<li>main関数はAppEngineのRuntimeがやるので、実装しなくてもよい</li>
+<li>構造体にデータ(kind)を作ってしまう</li>
+<li>keyを作成する(AppEngineユーザーにはお馴染みの処理)</li>
+<li>それからデータストアにputする</li>
+<li>SDKはPythonが起動→Goで書いたアプリ起動の流れ</li>
+<li>PythonとGoが連動してるのでGo単体のテストは辛い</li>
+<li>AppEngineとGoは安心して使いづらい(単体テストが厳しいため)</li>
+<li>Spin-Upは相当早い(Python 約386ms,Go 約48ms)</li>
+<li>使用メモリは、Pythonに比べて少ない</li>
+<li>Spin-Upと省メモリなので、Goは優位かも</li>
+<li>I/O待ちがあるので、常にGoが早いと言えない</li>
+<li>最初からAppEngineに入る場合には選択肢に入るかも</li>
+<li>無理に既存のものを載せかる必要性はない</li>
+<li>Pythonでメイン処理を書いて、GoをBackground処理にするという方法もアリ</li>
+</ul>
+
+
+<p># AppEngineで動かしてるオレオレのサービスの追加機能はGoで実装してみようかなぁ</p>
+
+<h3>GoRoutine&amp;Channelでの並行処理</h3>
+
+<hr />
+
+<ul>
+<li>並行処理のアプローチは「メモリのシェア」、「メッセージパッシング」の２つが大体使われる</li>
+<li>GoはCSPとパイ計算がベースになっている</li>
+<li>slectとclosureも並行処理で使える</li>
+<li>ユーザーランドだと関数のまえにgoをつけると、goroutineが実行できる</li>
+<li>gotoutineの終了は、処理が最後まで行った時、return文やgo_exitでできる</li>
+<li>channelでgoroutine同士でメッセージできる</li>
+<li>メッセージのバッファサイズも決めれる</li>
+<li>goroutineを複数やる場合、waitegroupを使えばいい</li>
+<li>Worker</li>
+<li>Selectは読み出しがブロックするのを待っている</li>
+<li>channelにはバッファ機能があり、バッファサイズ以上を書き込もうとするとブロックする(セマフォっぽいイメージ)</li>
+<li>Goroutineでcoroutineっぽいものもできる</li>
+<li>複数コアを使う場合、自分で明示的にコア設定してやる必要がある</li>
+<li>netchanが昔はあったが、今はdeprecatedになっている。(I/Fが複雑になりすぎたかららしい。ノウハウ貯まれば復活するかも)</li>
+</ul>
+
+
+<p>\ # channelのcloseはレシーバ側で行うっぽい？</p>
+
+<h3>goroutineのスケジューラの話</h3>
+
+<hr />
+
+<ul>
+<li>スタックコントローラーやプロセスコントローラーで実行されてる</li>
+<li>上を実現するため、Goは一部’アセンブラで書かれている</li>
+<li>スケジューラ:G(goroutine),M(ワーカースレッド、マシン),P(プロセス。MAXPROCSに指定できる最大値はこいつ)</li>
+<li>GOMAXPROCSは、スレッド数と同じではない(異なることもある)</li>
+<li><a href="https://gist.github.com/methane/5377227">スケジューラを解析していた方のメモ</a>に詳しく流れが記載されています</li>
+<li>go buildにsオプションをつけるとどんなランタイム呼ばれてるのかわかるようになる</li>
+</ul>
+
+
+<h3>Goのよいところ</h3>
+
+<hr />
+
+<p>最初の気に入らないところ</p>
+
+<ul>
+<li>第一印象、人形もコードもキモい！！違和感があった</li>
+<li>似てるようで違うところが多くてキモい(C++/Java/Pythonと比較して)</li>
+</ul>
+
+
+<p>良かったところ</p>
+
+<ul>
+<li>読みやすい</li>
+<li>シンプルな仕様(最近の言語は、便利機能多いけど複雑すぎる)</li>
+</ul>
+
+
+<p>Goを書き慣れてくると・・・<br/>
+印象が変わる!!</p>
+
+<ul>
+<li>他の言語の複雑な型宣言にムカつく(複雑になってくるとGoのほうが有利)</li>
+<li>ダックタイピングも複雑になってくると、動くことはわかるけどコードを読むときによく分からなくなる(Goだとinteeface型を作ればややこしくなくなる)</li>
+<li>オブジェクト指向もGoのほうが便利(PythonもJavaもクラス設計をしっかりしないといけない)</li>
+<li>スコープも調べるのが大変だし、アクセスしたいものもアクセスできないとかある(Goは大文字だとpublicそれ以外はpackage private)</li>
+<li>未使用なコードもGoだとビルド時に検出してくれる(dependencyを残すと大規模開発になるとメンテが大変になる。どうしてものこしたければ「_」をつける)</li>
+<li>エラー処理は、javaとかpythonはExceptionにしたがる(変なGoToしてるだけ、それは多値返せば、処理の流れは破綻しないでしょ)</li>
+<li>panicは本当にどうしようもないときにだけ使用する。普通はエラーできっちり返してあげる設計にするべき</li>
+<li>Goで解決したいものの多くは、サーバとかのインフラの並列処理</li>
+</ul>
+
+
+<p># 話聞いてると頷ける話で、確かに個人的にJavaはうざいと思うのは事実・・・
+# 個人的にAPIのサンプルがドキュメントに載ってたらいいなぁなんて思いました。。。</p>
+
+<h3>goでゲームを作る</h3>
+
+<hr />
+
+<ul>
+<li>画面、音、入力のライブラリがある</li>
+<li>なんか似たようなもので複数あるっぽい(描画だけでもGoGLとかglとか)</li>
+<li>GoGL,go-flwでできる</li>
+</ul>
+
+
+<p>大まかな流れ</p>
+
+<p>1 初期化で、キー入力とウィンドウ処理をしてやる(main関数ではこれだけにする)
+2 初期化のタイミングでウィンドウの設定をしてやる
+3 初期化以降はメインループを実行する
+4 ゲームのランを行う(ウィンドウが開いてる間実行するように実装する)
+5 フレームに対して描画を行う
+6 ゲームを実装してる本体でキーボードとかの入力を受け取るようにする
+7 描画メソッドではひたすら描画の実装をしてやる</p>
+
+<h3>A Case Study</h3>
+
+<hr />
+
+<ul>
+<li>Rubyにはいいところもあるが良くないところもある</li>
+<li>CloudFundryでEventMachineをRubyでやっていた</li>
+<li>Rubyは特に好きだ</li>
+</ul>
+
+
+<p>設立したベンチャー企業では
++ 複数のOSサポート
++ システムのスケールもさせたい
++ そのためGo vs Node.jsになった</p>
+
+<p>Node.js</p>
+
+<ul>
+<li>v8ランタイム</li>
+<li>イベント駆動</li>
+<li>JSベース</li>
+<li>ランタイム依存</li>
+<li>JSベースなので(コールバック地獄)</li>
+<li>実験的な機能が・・・</li>
+</ul>
+
+
+<p>Go</p>
+
+<ul>
+<li>設計メンバーが良かった</li>
+<li>同期モデル</li>
+<li>プラットフォームのサポートがよかった</li>
+<li>新しい言語</li>
+<li>標準ライブラリはどう使えば？</li>
+<li>GCやスケジューラが隠れている</li>
+</ul>
+
+
+<p>いいところが多いので15分でGoを採用することになった(チームで決めた)</p>
+
+<ul>
+<li>学習が簡単だった</li>
+<li>標準でライブラリが揃っている</li>
+<li>なぜGoなのか(聞き取れなかった)</li>
+<li>GoのGCはスタックベースなので良かった。</li>
+<li>暗号化通信はOpenSSLのラッパーを用意した(パフォーマンスの問題？)</li>
+<li>文字列とバイト配列の変換</li>
+<li>SQLは低レベルすぎて辛いのでORMとドライバーは自前で用意した</li>
+<li>mapも遅い。多分1.1で治るはず・・・</li>
+<li>いけてない面もまだまだあるけど、Goを選択したのはよかった</li>
+<li>GoはIaaSやPaaSで主役になれる!!</li>
+</ul>
+
+
+<p>まとめ</p>
+
+<ul>
+<li>GoはGoogleが採用しているだけあってシステム書くには向いている</li>
+<li>Goは標準ライブラリが揃っている</li>
+<li>テストやドキュメントもビルトインである</li>
+<li>学習も楽にできる</li>
+<li>GCもStackベースなので遅延が起きることは少ない</li>
+<li>いくつかの問題は1.1で解決されることに期待!!</li>
+</ul>
+
+
+<p># 最後のセッションのこいつはうろ覚え(聞き取りながらで辛かった)</p>
+
+<h3>感想</h3>
+
+<hr />
+
+<p>Goに関してのいいところや悪いところを吸収できたかなーと思う。<br/>
+密度が濃い一日だったと思いました。　　
+なによりGoでモクモクできたのが良かったなーとおもいます。(まともに書いたのはアーリーアダプター以来だった思う。。。)
+コンパイルと実行が下のコマンドでできることには驚いた。(昔は8g,8lとかしてたコンパイルしてた記憶)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$go run &lt;プログラムファイル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>仕事でシステム周りの実装するならGo言語をぜひとも採用させたいですね。。。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/08/rsync-octpress/">rsyncを使って自前サーバでOctpressを運用する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-08T21:35:00+09:00" pubdate data-updated="true">Apr 8<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Octpressが便利すぎ。。。<br/>
+Bloggerとは何だったんだって感じです。</p>
+
+<p>どうも、どうもこんにちは。kurobaraです。</p>
+
+<p>便利すぎるんで、</p>
+
+<p>「ちょっと、外部に公開できないけどーみたいな感じで何でも書けるようなブログ」</p>
+
+<p>欲しくなるわけですよ。(主に会社で、ですが・・・)</p>
+
+<p>結論から先に言っちゃうと、自前サーバでOctpressを動かせます。<br/>
+Apacheのディレクトリ制限を噛ますことでアクセス制限なんてこともできます。</p>
+
+<p>という訳で、Octpressを自前サーバで動かす方法をやってみます。</p>
+
+<h3>準備</h3>
+
+<hr />
+
+<p>思いつく感じのこと</p>
+
+<ul>
+<li>クライアントから自前のサーバにSSHでアクセスできること</li>
+<li>クライアントにrsyncがあること</li>
+<li>クライアントでOctpressが動作すること</li>
+</ul>
+
+
+<p>こんな感じ、移行で設定します。</p>
+
+<h3>Rakefileの編集</h3>
+
+<hr />
+
+<p>Rakeコマンドを使ってる訳なので、deploy先を変更するため以下のように編集します。</p>
+
+<ul>
+<li>「ssh_user」を実際のユーザー名とサーバ名に変更します</li>
+<li>「document_root」でサーバ配置のディレクトリを指定します</li>
+<li>「ssh_port」はデフォルトで22ですが、必要に応じて変えます</li>
+<li>「deploy_default」をpushからrsyncに変更します。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh_user       = "user@server"
+</span><span class='line'>ssh_port       = 22
+</span><span class='line'>document_root  = "/var/www/html/"
+</span><span class='line'>rsync_delete   = true
+</span><span class='line'>deploy_default = "rsync"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ぶっちゃけ、自前サーバで動かすだけならこれで終わりです。<br/>
+が、これだけだと寂しいのでサブディレクトリで動作するようにしてみます。<br/>
+# 当たり前ですが、普通はサブディレクトリ単位でコンテンツをApacheに配備すると思います。</p>
+
+<h3>サブディレクトリ運用</h3>
+
+<hr />
+
+<p>http://＜サーバURL＞/hoge のようにサブディレクトリ運用する場合は、以下のようにします。</p>
+
+<ul>
+<li>サブディレクトリを作成します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake set_root_dir[hoge]</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>_config.yamlでサブディレクトリを追加します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>url: http://&lt;サーバURL&gt;/hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Rakefileのdocument_rootをサブディレクトリに変更します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>document_root = "/var/www/html/octopress"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは、Apache2でサブディレクトリの設定を施してやれば動作します。<br/>
+認証を付けたければ、認証の設定をすれば認証付きのBlogになります。</p>
+
+<p>これで、要件を満たせたので作業メモとか残せて幸せになれますね。(多分)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -877,368 +1305,6 @@ iterationは忘れたらダメだと思いつつも、偶にアレなんだっ�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/25/gnu-global/">Androidのソースコード検索サービスを構築してみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-25T12:17:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。<br/>
-とりあえず、aospのmasterで構築してみます。</p>
-
-<h4>環境</h4>
-
-<hr />
-
-<ul>
-<li>Ubuntu12.04 x86_64</li>
-<li><a href="http://www.gnu.org/software/global/">GNU Global 6.2.8</a></li>
-<li>Apache2</li>
-</ul>
-
-
-<p>GNU Globalのバージョンは、なるべく新しいものを入れるようにします。。。<br/>
-Ubuntuのapt-getでインストールもできますが、ソースコードを解析した結果が正しくgenerateされません。<br/>
-6.2.8だと正しく解析できました。(公式もdebianで配布しているパッケージは古いと記載があったので、Ubuntuも同じ感じでしょう)</p>
-
-<h4>事前準備</h4>
-
-<hr />
-
-<p>事前準備として、以下を実施します。</p>
-
-<ul>
-<li>GNU Globalのインストール</li>
-<li>Apache2のインストール</li>
-<li>Androidのソースコードをダウンロード</li>
-</ul>
-
-
-<h6>GNU Globalのインストール</h6>
-
-<hr />
-
-<p>前述のように、UbuntuのリポジトリにあるGNU Globalは古いのでソースコードの解析が正しく行われません。<br/>
-そのため、ビルドしてインストールします。</p>
-
-<ol>
-<li>ソースコードの取得(<a href="http://www.gnu.org/software/global/">ここ</a>からダウンロード)</li>
-<li>ビルド(ここではデフォルト設定で行います)</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$./configure --prefix=/usr/local/global
-</span><span class='line'>$make</span></code></pre></td></tr></table></div></figure>
-
-
-<ol>
-<li>インストール</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo make install</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ビルドの際に付与するオプションはご自身で設定してください。</p>
-
-<h6>Apache2のインストール</h6>
-
-<hr />
-
-<p>普通にインストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo apt-get install apache2</span></code></pre></td></tr></table></div></figure>
-
-
-<p>UbuntuっていうかDebian系使いづらいなぁ・・・。</p>
-
-<h6>Androidのソースコード取得</h6>
-
-<hr />
-
-<p>(公式)[]にしたがって実施します。<br/>
-今回は「/var/aosp」のディレクトリ配下に保存することとします。</p>
-
-<h4>コード解析(タグ作成)の実施</h4>
-
-<hr />
-
-<p>以下のコマンドで実行します</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/aosp
-</span><span class='line'>$gtags -v</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>タグのHtml化</h4>
-
-<hr />
-
-<p>以下のコマンドで実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/aosp
-</span><span class='line'>$htags -afsnDvo --title Android --item-order=s --show-position --fixed-guid --auto-completion
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>非常に長いオプションですが、ソースコード検索フォームのhtmlが生成されます。<br/>
-検索に加えて、検索フォームの上で入力補完をできるようにしていますので、CGIの実行が必要です。</p>
-
-<h4>Apache2の設定</h4>
-
-<hr />
-
-<p>以下のコマンドでブラウザから参照可能なディレクトリを作成します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mkdir -p /var/www/aosp</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コンテンツの配備を実施します。<br/>
-特に意図はないですが、コピーだとめんどいのでシンボリックリンクにします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/www/aosp
-</span><span class='line'>$ln -s ../aosp/HTML HTML</span></code></pre></td></tr></table></div></figure>
-
-
-<p>/etc/apache2/sites-enable/defaultsを編集します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ScriptAlias /cgi-bin/ /var/www/aosp/HTML
-</span><span class='line'>&lt;Directory "&lt;/var/www/aosp/HTML/cgi-bin"&gt;
-</span><span class='line'>    AllowOverride None
-</span><span class='line'>    Options +ExecCGI
-</span><span class='line'>    AddHandler cgi-script .cgi .pl
-</span><span class='line'>    Order allow,deny
-</span><span class='line'>    Allow from all
-</span><span class='line'>&lt;/Directory&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>編集完了後、apache2を再起動します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$/etc/init.d/apache2 restart</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ブラウザ上で<a href="http://localhost/aosp">http://localhost/aosp</a>にアクセスして、画面が表示されることを確認します。</p>
-
-<h4>感想</h4>
-
-<hr />
-
-<p><a href="https://sites.google.com/site/devcollaboration/codesearch">こういうサービス</a>が、既に世の中にある訳で・・・</p>
-
-<p>自分がやる必要ってあんまりないんじゃないかなーとか。。。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/24/markdown-mode/">Emacsでmarkdown-modeを使用する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-24T00:38:00+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Emacsでmarkdown-modeを使用してみます。<br/>
-markdownの編集で使えるモードで結構便利なので紹介してみます。</p>
-
-<h4>インストール</h4>
-
-<hr />
-
-<p>Emacsのパッケージインストーラからインストールをします。<br/>
-以下を実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x package-list-packages</span></code></pre></td></tr></table></div></figure>
-
-
-<p>markdown-modeを選択してインストールを実施します。</p>
-
-<p>他にmarkdownコマンドが使用できるようにする必要がありますので、合わせてインストールします。<br/>
-MacOSXだとHomebrewを使用すれば一発でインストール出来ます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install markdown</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>設定</h4>
-
-<hr />
-
-<ul>
-<li>markdown-modeを使用できるように「.emacs.d/init.el」に以下を追加</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>markdown-modeで使用できる拡張子を追加</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上の設定では、.markdownと付くファイルは、markdown-modeを使用する設定です。<br/>
-他に使用したいmarkdown-modeを使用したい拡張子があれば、同じようにして追加します。(下は.txtと付くファイルをmarkdown-modeで開きます)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.txt" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>エラー対処</h4>
-
-<hr />
-
-<p>プレビューを実行しようとすると、以下のようなエラーが発生します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/bin/bash: markdown: command not found</span></code></pre></td></tr></table></div></figure>
-
-
-<p>原因は、以下の２点が考えられます。</p>
-
-<ol>
-<li>markdownコマンドがインストールされていない</li>
-<li>Emacsが認識しているパスと環境変数のパスが異なる</li>
-</ol>
-
-
-<p>1に関しては、markdownコマンドをインストールをすれば解決します。<br/>
-2に関してですが、以下のようにしてEmacs側にパスを通してやれば解決できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(dolist (dir (list
-</span><span class='line'>              "/sbin"
-</span><span class='line'>              "/usr/sbin"
-</span><span class='line'>              "/bin"
-</span><span class='line'>              "/usr/bin"
-</span><span class='line'>              "/opt/local/bin"
-</span><span class='line'>              "/sw/bin"
-</span><span class='line'>              "/usr/local/bin"
-</span><span class='line'>              (expand-file-name "~/bin")
-</span><span class='line'>              (expand-file-name "~/.emacs.d/bin")
-</span><span class='line'>              ))
-</span><span class='line'> (when (and (file-exists-p dir) (not (member dir exec-path)))
-</span><span class='line'>   (setenv "PATH" (concat dir ":" (getenv "PATH")))
-</span><span class='line'>   (setq exec-path (append (list dir) exec-path))))</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>プレビュー</h4>
-
-<hr />
-
-<ul>
-<li><em>markdown-output</em>バッファでプレビューを確認する</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c m</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>ブラウザでプレビューを確認する(一時ファイルを作成します)</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c v</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://jblevins.org/projects/markdown-mode/">公式</a>にその他の使用方法が掲載されていますので、その他の機能はそちらを参照してください。</p>
-
-<p>ブラウザでプレビューしていて、かつOctpress用の記事を編集する場合、注意してください。</p>
-
-<p>そのままデプロイするとhtmlファイルまでアップロードされてしまうので、２重投稿になるので気をつけてください。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1260,6 +1326,14 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/18/nikkei-software-07/">日経ソフトウェア7月号の特集を読んだ感想</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/10/dependency-injection/">Dependency Injectionについて</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/08/use-rubymine/">Rubymineを使ってみる</a>
       </li>
     
@@ -1271,19 +1345,11 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
         <a href="/blog/2013/05/31/oversea-travel/">初海外がGoogleI/Oだったので、準備とか苦労したことのメモ</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/05/29/intellij-select/">IntelliJ IDEAで/usrディレクトリ配下のものが選択できなかった</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/28/git-talk/">Gitを教えたときの話</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 112.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 136.0%'>Ruby(3)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(2)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 124.0%'>Java(2)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 136.0%'>Ruby(3)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 136.0%'>戯言(3)</a> </span>
 </section
 
 

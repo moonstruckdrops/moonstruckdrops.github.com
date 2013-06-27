@@ -9,9 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="旧ブログから移行しますよっと。 正直なところ、旧ブログは記事を書くのが大変でした。
-マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。
-旧ブログの記事はおいおい引っ越すことにします。 という訳で、Octpressの使い方メモを書いておきます。( &hellip;">
+  <meta name="description" content="色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。
+とりあえず、aospのmasterで構築してみます。 環境 Ubuntu12.04 x86_64
+GNU Global 6.2.8
+Apache2 GNU Globalのバージョンは、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,368 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/25/gnu-global/">Androidのソースコード検索サービスを構築してみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-25T12:17:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。<br/>
+とりあえず、aospのmasterで構築してみます。</p>
+
+<h4>環境</h4>
+
+<hr />
+
+<ul>
+<li>Ubuntu12.04 x86_64</li>
+<li><a href="http://www.gnu.org/software/global/">GNU Global 6.2.8</a></li>
+<li>Apache2</li>
+</ul>
+
+
+<p>GNU Globalのバージョンは、なるべく新しいものを入れるようにします。。。<br/>
+Ubuntuのapt-getでインストールもできますが、ソースコードを解析した結果が正しくgenerateされません。<br/>
+6.2.8だと正しく解析できました。(公式もdebianで配布しているパッケージは古いと記載があったので、Ubuntuも同じ感じでしょう)</p>
+
+<h4>事前準備</h4>
+
+<hr />
+
+<p>事前準備として、以下を実施します。</p>
+
+<ul>
+<li>GNU Globalのインストール</li>
+<li>Apache2のインストール</li>
+<li>Androidのソースコードをダウンロード</li>
+</ul>
+
+
+<h6>GNU Globalのインストール</h6>
+
+<hr />
+
+<p>前述のように、UbuntuのリポジトリにあるGNU Globalは古いのでソースコードの解析が正しく行われません。<br/>
+そのため、ビルドしてインストールします。</p>
+
+<ol>
+<li>ソースコードの取得(<a href="http://www.gnu.org/software/global/">ここ</a>からダウンロード)</li>
+<li>ビルド(ここではデフォルト設定で行います)</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$./configure --prefix=/usr/local/global
+</span><span class='line'>$make</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>インストール</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo make install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ビルドの際に付与するオプションはご自身で設定してください。</p>
+
+<h6>Apache2のインストール</h6>
+
+<hr />
+
+<p>普通にインストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo apt-get install apache2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>UbuntuっていうかDebian系使いづらいなぁ・・・。</p>
+
+<h6>Androidのソースコード取得</h6>
+
+<hr />
+
+<p>(公式)[]にしたがって実施します。<br/>
+今回は「/var/aosp」のディレクトリ配下に保存することとします。</p>
+
+<h4>コード解析(タグ作成)の実施</h4>
+
+<hr />
+
+<p>以下のコマンドで実行します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/aosp
+</span><span class='line'>$gtags -v</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>タグのHtml化</h4>
+
+<hr />
+
+<p>以下のコマンドで実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/aosp
+</span><span class='line'>$htags -afsnDvo --title Android --item-order=s --show-position --fixed-guid --auto-completion
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>非常に長いオプションですが、ソースコード検索フォームのhtmlが生成されます。<br/>
+検索に加えて、検索フォームの上で入力補完をできるようにしていますので、CGIの実行が必要です。</p>
+
+<h4>Apache2の設定</h4>
+
+<hr />
+
+<p>以下のコマンドでブラウザから参照可能なディレクトリを作成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mkdir -p /var/www/aosp</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンテンツの配備を実施します。<br/>
+特に意図はないですが、コピーだとめんどいのでシンボリックリンクにします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/www/aosp
+</span><span class='line'>$ln -s ../aosp/HTML HTML</span></code></pre></td></tr></table></div></figure>
+
+
+<p>/etc/apache2/sites-enable/defaultsを編集します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ScriptAlias /cgi-bin/ /var/www/aosp/HTML
+</span><span class='line'>&lt;Directory "&lt;/var/www/aosp/HTML/cgi-bin"&gt;
+</span><span class='line'>    AllowOverride None
+</span><span class='line'>    Options +ExecCGI
+</span><span class='line'>    AddHandler cgi-script .cgi .pl
+</span><span class='line'>    Order allow,deny
+</span><span class='line'>    Allow from all
+</span><span class='line'>&lt;/Directory&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>編集完了後、apache2を再起動します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$/etc/init.d/apache2 restart</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ブラウザ上で<a href="http://localhost/aosp">http://localhost/aosp</a>にアクセスして、画面が表示されることを確認します。</p>
+
+<h4>感想</h4>
+
+<hr />
+
+<p><a href="https://sites.google.com/site/devcollaboration/codesearch">こういうサービス</a>が、既に世の中にある訳で・・・</p>
+
+<p>自分がやる必要ってあんまりないんじゃないかなーとか。。。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/24/markdown-mode/">Emacsでmarkdown-modeを使用する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-24T00:38:00+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Emacsでmarkdown-modeを使用してみます。<br/>
+markdownの編集で使えるモードで結構便利なので紹介してみます。</p>
+
+<h4>インストール</h4>
+
+<hr />
+
+<p>Emacsのパッケージインストーラからインストールをします。<br/>
+以下を実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x package-list-packages</span></code></pre></td></tr></table></div></figure>
+
+
+<p>markdown-modeを選択してインストールを実施します。</p>
+
+<p>他にmarkdownコマンドが使用できるようにする必要がありますので、合わせてインストールします。<br/>
+MacOSXだとHomebrewを使用すれば一発でインストール出来ます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install markdown</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>設定</h4>
+
+<hr />
+
+<ul>
+<li>markdown-modeを使用できるように「.emacs.d/init.el」に以下を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>markdown-modeで使用できる拡張子を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上の設定では、.markdownと付くファイルは、markdown-modeを使用する設定です。<br/>
+他に使用したいmarkdown-modeを使用したい拡張子があれば、同じようにして追加します。(下は.txtと付くファイルをmarkdown-modeで開きます)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.txt" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>エラー対処</h4>
+
+<hr />
+
+<p>プレビューを実行しようとすると、以下のようなエラーが発生します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/bin/bash: markdown: command not found</span></code></pre></td></tr></table></div></figure>
+
+
+<p>原因は、以下の２点が考えられます。</p>
+
+<ol>
+<li>markdownコマンドがインストールされていない</li>
+<li>Emacsが認識しているパスと環境変数のパスが異なる</li>
+</ol>
+
+
+<p>1に関しては、markdownコマンドをインストールをすれば解決します。<br/>
+2に関してですが、以下のようにしてEmacs側にパスを通してやれば解決できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(dolist (dir (list
+</span><span class='line'>              "/sbin"
+</span><span class='line'>              "/usr/sbin"
+</span><span class='line'>              "/bin"
+</span><span class='line'>              "/usr/bin"
+</span><span class='line'>              "/opt/local/bin"
+</span><span class='line'>              "/sw/bin"
+</span><span class='line'>              "/usr/local/bin"
+</span><span class='line'>              (expand-file-name "~/bin")
+</span><span class='line'>              (expand-file-name "~/.emacs.d/bin")
+</span><span class='line'>              ))
+</span><span class='line'> (when (and (file-exists-p dir) (not (member dir exec-path)))
+</span><span class='line'>   (setenv "PATH" (concat dir ":" (getenv "PATH")))
+</span><span class='line'>   (setq exec-path (append (list dir) exec-path))))</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>プレビュー</h4>
+
+<hr />
+
+<ul>
+<li><em>markdown-output</em>バッファでプレビューを確認する</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c m</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>ブラウザでプレビューを確認する(一時ファイルを作成します)</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c v</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://jblevins.org/projects/markdown-mode/">公式</a>にその他の使用方法が掲載されていますので、その他の機能はそちらを参照してください。</p>
+
+<p>ブラウザでプレビューしていて、かつOctpress用の記事を編集する場合、注意してください。</p>
+
+<p>そのままデプロイするとhtmlファイルまでアップロードされてしまうので、２重投稿になるので気をつけてください。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -711,6 +1074,14 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/18/nikkei-software-07/">日経ソフトウェア7月号の特集を読んだ感想</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/10/dependency-injection/">Dependency Injectionについて</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/08/use-rubymine/">Rubymineを使ってみる</a>
       </li>
     
@@ -722,19 +1093,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2013/05/31/oversea-travel/">初海外がGoogleI/Oだったので、準備とか苦労したことのメモ</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/05/29/intellij-select/">IntelliJ IDEAで/usrディレクトリ配下のものが選択できなかった</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/28/git-talk/">Gitを教えたときの話</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 112.0%'>Java(1)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 136.0%'>Ruby(3)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(2)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 124.0%'>Java(2)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 136.0%'>Ruby(3)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 136.0%'>戯言(3)</a> </span>
 </section
 
 
