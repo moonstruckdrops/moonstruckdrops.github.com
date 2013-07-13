@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-07-13T17:50:59+09:00</updated>
+  <updated>2013-07-13T18:41:22+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,396 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[GoogleAppsScript勉強会に行って来ました]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/13/kyoto-gas-study/"/>
+    <updated>2013-07-13T17:54:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/13/kyoto-gas-study</id>
+    <content type="html"><![CDATA[<p>GDG京都さんとKyotoGASさんが主催する勉強会に行って来ました。<br/>
+正直なところ今更感、漂う感じの記事ですが気にしないでください。<br/>
+実は、用事があって関西に行っていたのです。</p>
+
+<p>以下にメモを記載します。。。</p>
+
+<h3>GASとは</h3>
+
+<hr />
+
+<p>大雑把に言うとMSOfficeのVBAみたいなもの</p>
+
+<ul>
+<li>JS 1.8Base(既存のJS資産が使える)</li>
+<li>サーバサイド実行</li>
+<li>Googleのサービスと連携できるAPIがいっぱいある</li>
+<li>GoogleAppsの拡張</li>
+<li>Advanced Google Serviceが利用(API Keyが必要)</li>
+<li>Charts(グラフ)</li>
+<li>JDBCでクラウドSQL利用可</li>
+<li>ウェブアプリケーションの作成が可能</li>
+<li>スクリプトトリガーで、任意or一定間隔でスクリプト実行できる</li>
+</ul>
+
+
+<h5>制限</h5>
+
+<hr />
+
+<p>主にあげられる制限</p>
+
+<ul>
+<li>メールの本数など(GoogleAppsのユーザーや一般ユーザーの違いなど)</li>
+</ul>
+
+
+<h5>その他</h5>
+
+<hr />
+
+<ul>
+<li>GAEよりもお手軽にできる</li>
+<li>ソースの共有(ソースの共有を設定していれば)</li>
+<li>GAEよりも制限がゆるい</li>
+</ul>
+
+
+<h3>AppsScriptとクラウドBPM</h3>
+
+<hr />
+
+<ul>
+<li>GASの学習コストは低い</li>
+<li>GAS自身に足りないところはSpreadSheetで補う(最適な方法)</li>
+<li>サーバ処理、クライアント処理の連携がよい</li>
+</ul>
+
+
+<h4>連携例</h4>
+
+<h5>1.Sheetでマスタ管理</h5>
+
+<hr />
+
+<h6>(連携例)  サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>JSONPでデータを返してやればサイト側でJS処理をするだけでよい</p>
+
+<p>問題</p>
+
+<ul>
+<li>JSとGASお通信でクロスドメイン問題</li>
+<li>ブラウザの設定だけでやると戻すデータがカラになってしまう</li>
+</ul>
+
+
+<h5>2.リアルタイム集計</h5>
+
+<hr />
+
+<h6>(連携例) サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>データ送信してSheetで集計</p>
+
+<h5>3.帳票出力</h5>
+
+<hr />
+
+<h6>(連携例) サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>SpreadSheetを利用して、帳票を出す</p>
+
+<h5>4.一括処理</h5>
+
+<hr />
+
+<h6>(連携例) SpreadSheetからGASに投げ、GASからサイトのAPIを実行する</h6>
+
+<p>定期実行をするようにしてやる</p>
+
+<h5>5.Googleカレンダー連携</h5>
+
+<hr />
+
+<ul>
+<li>キーワードをGASで取得してやる</li>
+</ul>
+
+
+<h5>考慮点</h5>
+
+<hr />
+
+<ul>
+<li>セキュリティ(サーバからアクセスするので、GoogleApps認証ができない、Keyというパラメータをもたせる)</li>
+<li>運用監視(ログをspreadSheetへ)</li>
+<li>エラーの発生を極力回避するようにする</li>
+</ul>
+
+
+<h5>GASを使用していて困るところ</h5>
+
+<hr />
+
+<ul>
+<li>ソースコードの構成管理</li>
+<li>httpリクエストのデバッグ(実際に手動で実行してみてリクエストを送信するしかない)</li>
+<li>IP制限がない</li>
+<li>予期せぬエラーが出た場合の対処</li>
+</ul>
+
+
+<h3>GoogleAppsScriptを積極活用</h3>
+
+<hr />
+
+<p>GAS+SpreadSheetがすごいという事例紹介
+特に以下がやりやすい</p>
+
+<ul>
+<li>GASで勤怠管理</li>
+<li>集客ツール</li>
+</ul>
+
+
+<h5>勤怠管理</h5>
+
+<hr />
+
+<ul>
+<li>SpreadSheetをDBのように扱う</li>
+<li>SpreadSheetの変更管理が大変(ユーザーが大変)</li>
+<li>受託ではやらないほうがいいかもしれない。(予期せぬ問題が起きたときの解析などが大変)</li>
+<li>プログラムが得意ではない人でもGASは使いやすい(Excelユーザ向け)</li>
+<li>各種GoogleServiceとの連携に向いている</li>
+</ul>
+
+
+<h3>GoogleAppsScriptの新機能</h3>
+
+<hr />
+
+<p>GoogleAppSAPIは以下の使用方法がある</p>
+
+<ul>
+<li>DATA API</li>
+<li>AppsScript</li>
+</ul>
+
+
+<p>GAE vs GAS</p>
+
+<ul>
+<li>速さGAE</li>
+<li>柔軟GAE(なんでもできる)</li>
+<li>お仕事GAE(GASは不安定)</li>
+<li>お手軽GAS(GAEよりも圧倒的に楽にアプリが組める)</li>
+</ul>
+
+
+<p>GAS</p>
+
+<ul>
+<li>Forms + GAS</li>
+<li>Documents + GAS</li>
+<li>new UI Component(Dialog,sidebar)</li>
+<li>GoogleDriveIntegration</li>
+</ul>
+
+
+<p>新しくFormsにToolsというメニュー項目が追加</p>
+
+<h5>GASからフォーム作る</h5>
+
+<hr />
+
+<p>ソースから新しくFormを作成するソースコード</p>
+
+<ul>
+<li>フォームの作成</li>
+<li>メールの送信</li>
+<li>ログ出力</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function myFunction{
+</span><span class='line'>    // 空のフォーム
+</span><span class='line'>    var form = FormApp.create("アンケートひな形").setDescription("アンケート用のフォームです");    
+</span><span class='line'>    //入力フォーム
+</span><span class='line'>    form.addtextItem().setTitle("Email")
+</span><span class='line'>    // 1-5までのラジオボタンを作る
+</span><span class='line'>    form.addScaleItem().setTitle("評価").setBound(1,5).setHelpText("1..5");
+</span><span class='line'>    //  自由入力欄
+</span><span class='line'>    form.setParagrapheTextItem.setTitle("")
+</span><span class='line'>    // メールの送信
+</span><span class='line'>    MailApps.sendEmail("宛先","本文")
+</span><span class='line'>    // 公開用のアドレス
+</span><span class='line'>    Loger.log(form.getPublishedUrl())
+</span><span class='line'>    // 編集用のアドレス
+</span><span class='line'>    Loger.log(form.getEditUrl())
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Document + GAS</h5>
+
+<hr />
+
+<ul>
+<li>文章の構造化(DOM構造みたいにItemとか)を制御できるようになった</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function myFunction{
+</span><span class='line'>    //ドキュメント本体
+</span><span class='line'>    var body = DocumentApps.getActiveDocument().getBody();
+</span><span class='line'>    // インデックス
+</span><span class='line'>    body numChild = body.getNumChild();
+</span><span class='line'>
+</span><span class='line'>    var i = 0,chld,type,hending,html="&lt;div&gt;";
+</span><span class='line'>    for(;i&lt;numChild;i++){
+</span><span class='line'>        //  子要素
+</span><span class='line'>        child = body.getChild(i)
+</span><span class='line'>        type = child.getType()
+</span><span class='line'>
+</span><span class='line'>        if(type == DocumentApps.ElementType.PARAGRAPH){
+</span><span class='line'>            heading = child.getHeading()
+</span><span class='line'>            // 不要なHeadingが付いている。これは、文章自身もパラグラフと認識されてるためだったっけ(?)
+</span><span class='line'>            if(heading != DocumentApps.ParagraphHeding.Normal && child.getNumChild() &gt; 0){
+</span><span class='line'>                Logger.log(heading +" "+child.getChild(0).getText() )
+</span><span class='line'>                html + ="&lt;p&gt;" +heading +" "+child.getChild(0).getText()+"&lt;/p&gt;" 
+</span><span class='line'>            }
+</span><span class='line'>        }
+</span><span class='line'>    html +="&lt;/div&gt;"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ダイアログ表示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function showDialog(){
+</span><span class='line'>    var ui = HtmlService.createHtmlOutput(myFunction()).setWidth(400).setHeight(300)
+</span><span class='line'>    DocumnetApps.getUi().showoDialog(ui)
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>サイドバー表示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function showSideBar(){
+</span><span class='line'>    var ui = HtmlService.createHtmlOutput(myFunction()).setWidth(300)
+</span><span class='line'>    DocumnetApps.getUi().showSideBar(ui)
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>DriveSDKを使う</h5>
+
+<hr />
+
+<p>以下のようなコードでGoogleDriveを操作できる</p>
+
+<ul>
+<li>ファイル名取得</li>
+<li>ファイルをゴミ箱へ送る</li>
+<li>ファイルへアクセス権を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function drive(){
+</span><span class='line'>    // ファイル検索
+</span><span class='line'>    // 結果はイテレータで帰ってくる
+</span><span class='line'>    var fails = DriveApp.searchFiles("title contains","検索ファイル")
+</span><span class='line'>    var file
+</span><span class='line'>    while(fails.hasNext()){
+</span><span class='line'>        file  = fails.next();
+</span><span class='line'>        // ファイル名を取得する
+</span><span class='line'>        file.getName()
+</span><span class='line'>        try{
+</span><span class='line'>            // ファイルをゴミ箱へおくる
+</span><span class='line'>            // 権限がないとエラーが出るかも
+</span><span class='line'>            file.setTrash(true)
+</span><span class='line'>            // 権限を追加(Owner権を追加)
+</span><span class='line'>            file.setOwner("追加するユーザー")
+</span><span class='line'>        }catch(e){
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>質問</h5>
+
+<hr />
+
+<ul>
+<li>補完は出ないときは、一回保存して開き直すとかで対処(リファレンス読み直せばいい)</li>
+<li>GASでプレゼンテーションは操作できない(予定もない)</li>
+<li>GASで作ったファイルはドライブに保存される</li>
+<li>FormはSpreadSheetにプログラムでひもづけることもできる</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[削除してしまったDropboxのデータを復元する]]></title>
@@ -2061,102 +2451,6 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
 <p><a href="http://localhost/webdav">http://localhost/webdav</a>にアクセス出来れば完了です。</p>
 
 <p>この程度だと、大したことないし知ってれば３分要らないかもw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[findコマンドのメモ]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/31/find-command/"/>
-    <updated>2013-03-31T00:04:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/31/find-command</id>
-    <content type="html"><![CDATA[<p>普段から常用しているコマンドなのですが、今更という感じです。</p>
-
-<p>滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。<br/>
-※今回、使ったのは日時オプションです</p>
-
-<table>
-<thead>
-<tr>
-<th align="left"> コマンドオプション    </th>
-<th align="center"> 機能          </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> -name [filename]    </td>
-<td align="center"> 指定した文字でファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -user [username]    </td>
-<td align="center"> 指定したユーザーが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -group [groupname]  </td>
-<td align="center"> 指定したグループが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -type [type]        </td>
-<td align="center"> ファイルの種類を指定して検索(b：ブロック型特殊ファイル　c：キャラクタ型特殊ファイル　d：ディレクトリ　l：シンボリックリンク　f：通常ファイル)</td>
-</tr>
-<tr>
-<td align="left"> -atime (+/-)n       </td>
-<td align="center"> 最後にアクセスしたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -ctime (+/-)n       </td>
-<td align="center"> 最後にステータスが変更されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mtime (+/-)n       </td>
-<td align="center"> 最後にデータが修正されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mmin (+/-)n        </td>
-<td align="center"> 最後にデータが修正されたのがn分前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -newer [filename]   </td>
-<td align="center"> 指定したファイルよりも後に更新されているものを検索対象にする</td>
-</tr>
-<tr>
-<td align="left"> -size n[c/k/b]      </td>
-<td align="center"> nのサイズのファイルを検索(c:バイト、k:キロバイト、b:ブロック)</td>
-</tr>
-<tr>
-<td align="left"> -ls                 </td>
-<td align="center"> 検索結果のファイル、ディレクトリの詳細を表示する(lsコマンドと同じ)</td>
-</tr>
-<tr>
-<td align="left"> -print              </td>
-<td align="center"> 検索結果を標準出力に出す(元々結果表示されるんで不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -fprint [filename]  </td>
-<td align="center"> 検索結果をファイルに出力する(>でファイル出力できるので不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -exec [command] {}\;</td>
-<td align="center"> 検索結果を指定コマンドにの引数に設定して実行する</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>(例)カレントディレクトリ配下のファイルに「hogehoge」という文字が含まれているかどうか調べる</p>
-
-<p>以下のコマンドで調べることができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f -exec grep hogehoge {}\;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こちらでも同じ結果を得られます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f |xargs grep "hogehoge"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どちらでもいいと思いますが、自分はよく後者を利用しますね。</p>
 ]]></content>
   </entry>
   

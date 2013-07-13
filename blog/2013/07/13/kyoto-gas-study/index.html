@@ -1,0 +1,636 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>GoogleAppsScript勉強会に行って来ました - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
+
+  
+  <meta name="description" content="GDG京都さんとKyotoGASさんが主催する勉強会に行って来ました。
+正直なところ今更感、漂う感じの記事ですが気にしないでください。
+実は、用事があって関西に行っていたのです。 以下にメモを記載します。。。 GASとは 大雑把に言うとMSOfficeのVBAみたいなもの JS 1.8Base( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/07/13/kyoto-gas-study/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <!--
+  <li><a href="/about">About me</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">GoogleAppsScript勉強会に行って来ました</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-13T17:54:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>GDG京都さんとKyotoGASさんが主催する勉強会に行って来ました。<br/>
+正直なところ今更感、漂う感じの記事ですが気にしないでください。<br/>
+実は、用事があって関西に行っていたのです。</p>
+
+<p>以下にメモを記載します。。。</p>
+
+<h3>GASとは</h3>
+
+<hr />
+
+<p>大雑把に言うとMSOfficeのVBAみたいなもの</p>
+
+<ul>
+<li>JS 1.8Base(既存のJS資産が使える)</li>
+<li>サーバサイド実行</li>
+<li>Googleのサービスと連携できるAPIがいっぱいある</li>
+<li>GoogleAppsの拡張</li>
+<li>Advanced Google Serviceが利用(API Keyが必要)</li>
+<li>Charts(グラフ)</li>
+<li>JDBCでクラウドSQL利用可</li>
+<li>ウェブアプリケーションの作成が可能</li>
+<li>スクリプトトリガーで、任意or一定間隔でスクリプト実行できる</li>
+</ul>
+
+
+<h5>制限</h5>
+
+<hr />
+
+<p>主にあげられる制限</p>
+
+<ul>
+<li>メールの本数など(GoogleAppsのユーザーや一般ユーザーの違いなど)</li>
+</ul>
+
+
+<h5>その他</h5>
+
+<hr />
+
+<ul>
+<li>GAEよりもお手軽にできる</li>
+<li>ソースの共有(ソースの共有を設定していれば)</li>
+<li>GAEよりも制限がゆるい</li>
+</ul>
+
+
+<h3>AppsScriptとクラウドBPM</h3>
+
+<hr />
+
+<ul>
+<li>GASの学習コストは低い</li>
+<li>GAS自身に足りないところはSpreadSheetで補う(最適な方法)</li>
+<li>サーバ処理、クライアント処理の連携がよい</li>
+</ul>
+
+
+<h4>連携例</h4>
+
+<h5>1.Sheetでマスタ管理</h5>
+
+<hr />
+
+<h6>(連携例)  サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>JSONPでデータを返してやればサイト側でJS処理をするだけでよい</p>
+
+<p>問題</p>
+
+<ul>
+<li>JSとGASお通信でクロスドメイン問題</li>
+<li>ブラウザの設定だけでやると戻すデータがカラになってしまう</li>
+</ul>
+
+
+<h5>2.リアルタイム集計</h5>
+
+<hr />
+
+<h6>(連携例) サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>データ送信してSheetで集計</p>
+
+<h5>3.帳票出力</h5>
+
+<hr />
+
+<h6>(連携例) サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>SpreadSheetを利用して、帳票を出す</p>
+
+<h5>4.一括処理</h5>
+
+<hr />
+
+<h6>(連携例) SpreadSheetからGASに投げ、GASからサイトのAPIを実行する</h6>
+
+<p>定期実行をするようにしてやる</p>
+
+<h5>5.Googleカレンダー連携</h5>
+
+<hr />
+
+<ul>
+<li>キーワードをGASで取得してやる</li>
+</ul>
+
+
+<h5>考慮点</h5>
+
+<hr />
+
+<ul>
+<li>セキュリティ(サーバからアクセスするので、GoogleApps認証ができない、Keyというパラメータをもたせる)</li>
+<li>運用監視(ログをspreadSheetへ)</li>
+<li>エラーの発生を極力回避するようにする</li>
+</ul>
+
+
+<h5>GASを使用していて困るところ</h5>
+
+<hr />
+
+<ul>
+<li>ソースコードの構成管理</li>
+<li>httpリクエストのデバッグ(実際に手動で実行してみてリクエストを送信するしかない)</li>
+<li>IP制限がない</li>
+<li>予期せぬエラーが出た場合の対処</li>
+</ul>
+
+
+<h3>GoogleAppsScriptを積極活用</h3>
+
+<hr />
+
+<p>GAS+SpreadSheetがすごいという事例紹介
+特に以下がやりやすい</p>
+
+<ul>
+<li>GASで勤怠管理</li>
+<li>集客ツール</li>
+</ul>
+
+
+<h5>勤怠管理</h5>
+
+<hr />
+
+<ul>
+<li>SpreadSheetをDBのように扱う</li>
+<li>SpreadSheetの変更管理が大変(ユーザーが大変)</li>
+<li>受託ではやらないほうがいいかもしれない。(予期せぬ問題が起きたときの解析などが大変)</li>
+<li>プログラムが得意ではない人でもGASは使いやすい(Excelユーザ向け)</li>
+<li>各種GoogleServiceとの連携に向いている</li>
+</ul>
+
+
+<h3>GoogleAppsScriptの新機能</h3>
+
+<hr />
+
+<p>GoogleAppSAPIは以下の使用方法がある</p>
+
+<ul>
+<li>DATA API</li>
+<li>AppsScript</li>
+</ul>
+
+
+<p>GAE vs GAS</p>
+
+<ul>
+<li>速さGAE</li>
+<li>柔軟GAE(なんでもできる)</li>
+<li>お仕事GAE(GASは不安定)</li>
+<li>お手軽GAS(GAEよりも圧倒的に楽にアプリが組める)</li>
+</ul>
+
+
+<p>GAS</p>
+
+<ul>
+<li>Forms + GAS</li>
+<li>Documents + GAS</li>
+<li>new UI Component(Dialog,sidebar)</li>
+<li>GoogleDriveIntegration</li>
+</ul>
+
+
+<p>新しくFormsにToolsというメニュー項目が追加</p>
+
+<h5>GASからフォーム作る</h5>
+
+<hr />
+
+<p>ソースから新しくFormを作成するソースコード</p>
+
+<ul>
+<li>フォームの作成</li>
+<li>メールの送信</li>
+<li>ログ出力</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function myFunction{
+</span><span class='line'>    // 空のフォーム
+</span><span class='line'>    var form = FormApp.create("アンケートひな形").setDescription("アンケート用のフォームです");    
+</span><span class='line'>    //入力フォーム
+</span><span class='line'>    form.addtextItem().setTitle("Email")
+</span><span class='line'>    // 1-5までのラジオボタンを作る
+</span><span class='line'>    form.addScaleItem().setTitle("評価").setBound(1,5).setHelpText("1..5");
+</span><span class='line'>    //  自由入力欄
+</span><span class='line'>    form.setParagrapheTextItem.setTitle("")
+</span><span class='line'>    // メールの送信
+</span><span class='line'>    MailApps.sendEmail("宛先","本文")
+</span><span class='line'>    // 公開用のアドレス
+</span><span class='line'>    Loger.log(form.getPublishedUrl())
+</span><span class='line'>    // 編集用のアドレス
+</span><span class='line'>    Loger.log(form.getEditUrl())
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Document + GAS</h5>
+
+<hr />
+
+<ul>
+<li>文章の構造化(DOM構造みたいにItemとか)を制御できるようになった</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function myFunction{
+</span><span class='line'>    //ドキュメント本体
+</span><span class='line'>    var body = DocumentApps.getActiveDocument().getBody();
+</span><span class='line'>    // インデックス
+</span><span class='line'>    body numChild = body.getNumChild();
+</span><span class='line'>
+</span><span class='line'>    var i = 0,chld,type,hending,html="&lt;div&gt;";
+</span><span class='line'>    for(;i&lt;numChild;i++){
+</span><span class='line'>        //  子要素
+</span><span class='line'>        child = body.getChild(i)
+</span><span class='line'>        type = child.getType()
+</span><span class='line'>
+</span><span class='line'>        if(type == DocumentApps.ElementType.PARAGRAPH){
+</span><span class='line'>            heading = child.getHeading()
+</span><span class='line'>            // 不要なHeadingが付いている。これは、文章自身もパラグラフと認識されてるためだったっけ(?)
+</span><span class='line'>            if(heading != DocumentApps.ParagraphHeding.Normal && child.getNumChild() &gt; 0){
+</span><span class='line'>                Logger.log(heading +" "+child.getChild(0).getText() )
+</span><span class='line'>                html + ="&lt;p&gt;" +heading +" "+child.getChild(0).getText()+"&lt;/p&gt;" 
+</span><span class='line'>            }
+</span><span class='line'>        }
+</span><span class='line'>    html +="&lt;/div&gt;"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ダイアログ表示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function showDialog(){
+</span><span class='line'>    var ui = HtmlService.createHtmlOutput(myFunction()).setWidth(400).setHeight(300)
+</span><span class='line'>    DocumnetApps.getUi().showoDialog(ui)
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>サイドバー表示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function showSideBar(){
+</span><span class='line'>    var ui = HtmlService.createHtmlOutput(myFunction()).setWidth(300)
+</span><span class='line'>    DocumnetApps.getUi().showSideBar(ui)
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>DriveSDKを使う</h5>
+
+<hr />
+
+<p>以下のようなコードでGoogleDriveを操作できる</p>
+
+<ul>
+<li>ファイル名取得</li>
+<li>ファイルをゴミ箱へ送る</li>
+<li>ファイルへアクセス権を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function drive(){
+</span><span class='line'>    // ファイル検索
+</span><span class='line'>    // 結果はイテレータで帰ってくる
+</span><span class='line'>    var fails = DriveApp.searchFiles("title contains","検索ファイル")
+</span><span class='line'>    var file
+</span><span class='line'>    while(fails.hasNext()){
+</span><span class='line'>        file  = fails.next();
+</span><span class='line'>        // ファイル名を取得する
+</span><span class='line'>        file.getName()
+</span><span class='line'>        try{
+</span><span class='line'>            // ファイルをゴミ箱へおくる
+</span><span class='line'>            // 権限がないとエラーが出るかも
+</span><span class='line'>            file.setTrash(true)
+</span><span class='line'>            // 権限を追加(Owner権を追加)
+</span><span class='line'>            file.setOwner("追加するユーザー")
+</span><span class='line'>        }catch(e){
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>質問</h5>
+
+<hr />
+
+<ul>
+<li>補完は出ないときは、一回保存して開き直すとかで対処(リファレンス読み直せばいい)</li>
+<li>GASでプレゼンテーションは操作できない(予定もない)</li>
+<li>GASで作ったファイルはドライブに保存される</li>
+<li>FormはSpreadSheetにプログラムでひもづけることもできる</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-13T17:54:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gas/'>GAS</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/07/13/kyoto-gas-study/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/07/13/kyoto-gas-study/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/13/recover-dropbox-data/" title="Previous Post: 削除してしまったDropboxのデータを復元する">&laquo; 削除してしまったDropboxのデータを復元する</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/13/kyoto-gas-study/">GoogleAppsScript勉強会に行って来ました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/13/recover-dropbox-data/">削除してしまったDropboxのデータを復元する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/02/ruby-struct/">RubyのStructクラスが便利</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 112.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 136.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 148.0%'>Ruby(4)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 148.0%'>戯言(4)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
