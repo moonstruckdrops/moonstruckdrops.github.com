@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-06-27T22:32:52+09:00</updated>
+  <updated>2013-07-13T17:50:59+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,304 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[削除してしまったDropboxのデータを復元する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/13/recover-dropbox-data/"/>
+    <updated>2013-07-13T17:06:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/13/recover-dropbox-data</id>
+    <content type="html"><![CDATA[<h3>簡単な経緯</h3>
+
+<hr />
+
+<p>このブログ記事を書くキッカケになった内容を以下に記述します。</p>
+
+<p>お馬鹿すぎて笑えますwww</p>
+
+<ol>
+<li>Dropboxアプリ起動</li>
+<li>アプリを起動したまま、あるコマンドを実行</li>
+<li>Dropboxと同期したディレクトリが2で実行したコマンドで削除される</li>
+<li>1のDropboxアプリが削除した状態を同期開始</li>
+<li>削除だけなので、同期が一瞬で終わってしまう</li>
+<li>Dropboxサーバのデータが削除</li>
+</ol>
+
+
+<p>こんな感じでした・・・
+実際は、Dropboxのディレクトリだけでなくもっと影響がでかくて涙を流しています。</p>
+
+<h3>復元の手順</h3>
+
+<hr />
+
+<p>復活の呪文を唱えるにも条件があります。</p>
+
+<h4>削除してからの日数が30日以内であれば、復元可能</h4>
+
+<p>というものです。</p>
+
+<p>幸いなことに削除した次の日に気がついたので、自分はこの条件を満たしていました。</p>
+
+<p>で、肝心の復元の手順ですが、以下で実施します。</p>
+
+<ol>
+<li>Dropboxのウェブサイトにログイン</li>
+<li>画面右上の「削除済みファイル」をクリック</li>
+<li>ファイル名の横に表示されている逆三角を押下し復元をクリック</li>
+</ol>
+
+
+<h4><a href="https://www.dropbox.com/help/296/ja">公式の手順</a></h4>
+
+<p>これで削除したファイルが復元できます。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RubyのStructクラスが便利]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/02/ruby-struct/"/>
+    <updated>2013-07-02T01:15:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/02/ruby-struct</id>
+    <content type="html"><![CDATA[<p>特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも</p>
+
+<h3>Structクラス</h3>
+
+<hr />
+
+<p>Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・)</p>
+
+<p>平たく言うと、Classクラスに似ているものです。</p>
+
+<p>じゃー違いは何なの？ってなります。</p>
+
+<ol>
+<li>newしたとき、引数で指定したアクnセッサをもつクラスを生成する</li>
+<li>第一引数の文字列がクラス名となるが、指定がない場合は無名のクラスになる</li>
+</ol>
+
+
+<p>これだけ。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new("Point", :x, :y)
+</span><span class='line'>item = Point.new(100,200)
+</span><span class='line'>p item =&gt; #&lt;struct Struct::Point x=100, y=200&gt;
+</span><span class='line'>p item.x =&gt; 100</span></code></pre></td></tr></table></div></figure>
+
+
+<p>無名クラスだと、こんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point2 = Struct.new(:z)
+</span><span class='line'>Point2.class =&gt; Class
+</span><span class='line'>item2 = Point2.new(300)
+</span><span class='line'>p item2 =&gt; #&lt;struct Point2 z=300&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ドキュメントに無い機能</h3>
+
+<hr />
+
+<p>ブロックを使うことができることです。<br/>
+ブロック内では、独自のメソッドを定義することができます。</p>
+
+<p>こんな感じです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new(:x, :y) do
+</span><span class='line'>  def sum
+</span><span class='line'>        x + y
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def minus
+</span><span class='line'>        x - y 
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>p Point.new(600, 700).sum =&gt; 1300
+</span><span class='line'>p Point.new(800,900).minus =&gt; -100</span></code></pre></td></tr></table></div></figure>
+
+
+<p>他にも、superを使うことで、上位のコンストラクタを実行することができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
+</span><span class='line'>  def initialize(x, y)
+</span><span class='line'>    z = x + y
+</span><span class='line'>    super(z, y)
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>item = Point.new(400, 500)
+</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使いどころ</h3>
+
+<hr />
+
+<p>正直、あんまり無いような気がしなくもないですが、自分だと以下で使います。</p>
+
+<ul>
+<li>csvファイルとか読み込むとき、ちょっとしたデータ構造を定義するとき</li>
+<li>ちょっとしたデータのソート</li>
+<li>ちょっとしたアルゴリズムの追加</li>
+<li>ハッシュの代わりとか(既にデータ構造が分かってる場合など)</li>
+</ul>
+
+
+<p>データソートする場合の例</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
+</span><span class='line'>  def initialize(x, y)
+</span><span class='line'>    z = x + y
+</span><span class='line'>    super(z, y)
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>item = Point.new(400, 500)
+</span><span class='line'>item2 = Point.new(200,300)
+</span><span class='line'>
+</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;
+</span><span class='line'>p item2 =&gt; #&lt;struct Point x=500, y=300&gt;
+</span><span class='line'>
+</span><span class='line'>array = []
+</span><span class='line'>array &lt;&lt; item
+</span><span class='line'>array &lt;&lt; item2
+</span><span class='line'>
+</span><span class='line'>p array =&gt; [#&lt;struct Point x=900, y=500&gt;, #&lt;struct Point x=500, y=300&gt;]
+</span><span class='line'>
+</span><span class='line'>result = array.sort{ |item1,item2|
+</span><span class='line'>                    item1.x &lt;=&gt; item2.x
+</span><span class='line'>               }
+</span><span class='line'>p result =&gt; [#&lt;struct Point x=500, y=300&gt;, #&lt;struct Point x=900, y=500&gt;]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>書き捨てみたいなRubyコードを書くときにはちょうどいいのかもしれないですね。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dependency Injectionについて]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/06/27/dependency-injection/"/>
+    <updated>2013-06-27T19:28:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/06/27/dependency-injection</id>
+    <content type="html"><![CDATA[<p>DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。</p>
+
+<p>簡単に言うと、よく言われる「依存性の注入」といいます。</p>
+
+<p>が、なんのことかさっぱりわからないですね。
+少し言い換えてあげると</p>
+
+<h6>「依存性をモジュールもしくはクラス内部に抱え込まずに外部から依存内容を設定してあげる」</h6>
+
+<p>となります。</p>
+
+<p>擬似コードを出すとDI前にこんなコードとすると</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(){
+</span><span class='line'>    this.fuga = new Fuga("hogefuga");
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>DI後の擬似コードはこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(Fuga fuga){
+</span><span class='line'>    this.fuga = fuga;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンストラクタの引数Fugaを差し替えるだけで容易に設定内容を変更できます。<br/>
+依存前のコードだと、依存性はFugaコンストラクタの中にありますが、依存後のコードは依存性は外部にあります。(引数の内容次第)<br/>
+このFugaのコンストラクタがリソースに関わる何かだとDI前のコードであればユニットテストが大変になりますね。<br/>
+しかし、DI後のコードであれば引数を差し替えるだけでユニットテストができるようになります。</p>
+
+<p>なので、DIをするメリットというと(個人的に)以下が挙げられます。</p>
+
+<ul>
+<li>依存しているものが外部にあるので、ユニットテストで差し替えが簡単にできる(外部からモックにしやすい)</li>
+<li>IFさえ同じものであれば、別の実装を行ったものを設定として渡してやることができる(柔軟性)</li>
+</ul>
+
+
+<p>面倒になるのは、事前準備ですがメリットのほうが大きいと個人的には思ってます。<br/>
+面倒な事前処理(主にコンストラクタ生成ですが)をやってくれるのがDIコンテナですね。</p>
+
+<p>よく使うDIコンテナだと、有名なjavaのコンテナはこんなところですかね。</p>
+
+<ul>
+<li>GoogleGuice</li>
+<li>Seaser2</li>
+<li>SpringFramework</li>
+</ul>
+
+
+<p>自分が使うときの基準だと、以下になりますね。</p>
+
+<ul>
+<li>Seaser2なプロダクト(SAStrutsとか)を使っている、もしくは使う場合は、「Seaser2」のDIコンテナ</li>
+<li>Spring関係の何かを使っている、もしくは使う場合は、「SpringFramework」のDIコンテナ(尤も殆ど使ったことないです)</li>
+<li>それ以外の場合なら、大体「GoogleGuice」(どこかに事例とかあればいいですし、大体がWicketとかで使います)</li>
+</ul>
+
+
+<p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
+使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dependency Injectionについて]]></title>
@@ -1859,184 +2157,6 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
 
 
 <p>どちらでもいいと思いますが、自分はよく後者を利用しますね。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Octpressで画像ファイルを扱う]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/30/octpress-image-tag/"/>
-    <updated>2013-03-30T01:47:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/30/octpress-image-tag</id>
-    <content type="html"><![CDATA[<p>Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。</p>
-
-<h3>画像の格納ディレクトリ</h3>
-
-<hr />
-
-<p>画像の格納場所は、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>~source/images</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に格納すればよい</p>
-
-<p>imagesディレクトリの配下にも、blogというディレクトリがあるのでブログ用の画像はそちらに格納すればよいっぽい。</p>
-
-<h3>Octpress公式の手順</h3>
-
-<hr />
-
-<p><a href="http://octopress.org/docs/plugins/image-tag/">公式の手順</a></p>
-
-<p>以下の書式に従って記載すれば、いいらしい。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img [class names] /path/to/image [width] [height] [title text [alt text]] \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>そのため、画像サイズを640x480で表示させたい場合、以下のように書くことができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img left /images/picture.png 640 480 \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コード上の「\」は不要です。(何故か、エスケープが正しく動作しなかった)</p>
-
-<h3>markdownを使用した方法</h3>
-
-<hr />
-
-<p>これは、前にも書いたように以下のようにすればよいでしょう。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[テスト画像](/images/picture.png "title")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但し、画像サイズは指定できないという欠点があります。<br/>
-画像は、加工するしかないようですね。</p>
-
-<h3>htmlを直接記載する方法</h3>
-
-<hr />
-
-<p>以下のような感じで、htmlを使用した書き方もできるようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;img src="http://moonstruckdrops.github.com/images/picture.png" alt="alt" title="title" width="640" height="480"&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意する点があるとすれば、必ず前後に<p>タグが挿入されてしまうことです。<br/>
-インラインで使用することは、できないっぽいです。</p>
-
-<h3>まとめ</h3>
-
-<hr />
-
-<p>個人的な見解は以下のような感じ</p>
-
-<ul>
-<li>基本はmarkdown記法で記載</li>
-<li>画像サイズを変更したい場合、Octpressの記法に従う</li>
-<li>汎用的にしたい場合、htmlで記載する</li>
-<li>ブログ記事用の画像の場合、「souce/images/blog」の下に格納する</li>
-<li>ブログ記事以外の画像の場合、「source/images」の下に格納する</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rubyで画像ファイルをダウンロードする]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file/"/>
-    <updated>2013-03-28T23:34:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file</id>
-    <content type="html"><![CDATA[<p>少しばかり、やることがあったのでやってみた。<br/>
-煩悩丸出しですいませんw</p>
-
-<h3>HTTP Responseのbodyを利用する</h3>
-
-<hr />
-
-<p>直感的ではないけど、素直なやりかた</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>urlで接続したbodyデータをファイルに書き込む</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
-</span><span class='line'>   filename = File.basename(url)
-</span><span class='line'>   open(filename, "wb") do  |file|
-</span><span class='line'>          file.puts Net::HTTP.get_response(URI.parse(url)).body
-</span><span class='line'>   end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>open-uriを使用する方法</h3>
-
-<hr />
-
-<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
-</span><span class='line'>    filename = File.basename(url)
-</span><span class='line'>    open(filename, 'wb') do |file|
-</span><span class='line'>        open(url) do |data|
-</span><span class='line'>            file.write(data.read)
-</span><span class='line'>      end
-</span><span class='line'>    end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JavaのHashmapを使ったiteratorの実装]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator/"/>
-    <updated>2013-03-25T18:29:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator</id>
-    <content type="html"><![CDATA[<p>偶に忘れるのでメモしておきます。<br/>
-iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Map map = new HashMap();
-</span><span class='line'>for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
-</span><span class='line'>    Map.Entry entry = (Map.Entry)it.next();
-</span><span class='line'>    Object key = entry.getKey();
-</span><span class='line'>    Object value = entry.getValue();
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Javaを書かなくなると忘れてしまいますねw</p>
 ]]></content>
   </entry>
   

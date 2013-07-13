@@ -9,9 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="午前中と午後はモクモクとコード書いてました。。。
-XML周りの処理とかちょっとしたい感じだったので書いてみました。 「XMLの構造が分かっていたら、 Unmarshal関数を使ったほうがいいね。」 というのが感想です。
-真面目にDOMを用意してみるとかなりコード書かないといけないので辛い感じ。 &hellip;">
+  <meta name="description" content="すごくド基礎なのですが・・・。
+ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。 ユーザーアカウントの追加 基本中の基本ですね。
+以下のコマンドのような感じで追加します。 1
+$useradd -u 500 -g wheel -m kurobara &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,292 @@ XML周りの処理とかちょっとしたい感じだったので書いてみ�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/24/linux-user-add/">Linux上にあるユーザーアカウントの追加と削除をする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>すごくド基礎なのですが・・・。<br/>
+ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
+
+<h3>ユーザーアカウントの追加</h3>
+
+<hr />
+
+<p>基本中の基本ですね。<br/>
+以下のコマンドのような感じで追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下の表によく使用するオプションを記載します。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">オプション</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">c コメント      </td>
+<td align="left">ユーザーのコメントを設定</td>
+</tr>
+<tr>
+<td align="left">d ディレクトリ  </td>
+<td align="left">ユーザーのログインディレクトリを指定</td>
+</tr>
+<tr>
+<td align="left">e mm/dd/yy </td>
+<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
+</tr>
+<tr>
+<td align="left">g グループ   </td>
+<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
+</tr>
+<tr>
+<td align="left">G グループ    </td>
+<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
+</tr>
+<tr>
+<td align="left">u ユーザーID </td>
+<td align="left">ユーザーのユーザーIDを指定</td>
+</tr>
+<tr>
+<td align="left">s シェル </td>
+<td align="left">ユーザーのログインシェルを指定</td>
+</tr>
+<tr>
+<td align="left">m        </td>
+<td align="left">ホームディレクトリの作成を自動で行う</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>ユーザーアカウントの削除</h3>
+
+<hr />
+
+<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
+なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
+但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>常識ですね(ぉぃ</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/22/zip-pass/">コマンドで暗号化Zipファイルを作成する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-22T23:48:00+09:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>暗号化Zipファイル作成</h3>
+
+<hr />
+
+<p>大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。<br/>
+以下のようにzipコマンドのeオプションを使うだけで簡単にできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>恥ずかしながらあんまりやらないので、いざというときには忘れてしまいます。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/14/emacs-scratch-setting/">EmacsのScratchバッファに設定を追加してみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-14T22:06:00+09:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Emacsのscratchバッファってすごく便利ですよね。</p>
+
+<p>特に以下のことによく使います。</p>
+
+<ul>
+<li>ちょっとしたメモしたり</li>
+<li>URLメモを取ったり</li>
+<li>ちょっとした引用メモの整形とか</li>
+<li>マクロの実験とか</li>
+</ul>
+
+
+<p>まぁよく使うわけです・・・
+が、ついうっかりでEmacsを終了したりとか、Emacs本体がゾンビプロセスになったりとかでロストしてしまうことがあります。<br/>
+自分はこれでよく泣きました(> &lt;;)</p>
+
+<p>また、メモを保存しておこうと思った時にバッファの先頭にある初期メッセージが鬱陶しくなってきます。</p>
+
+<p>今回は、これらの問題を解決してしまいます。</p>
+
+<p>まずは、scratchの初期メッセージ消去します。<br/>
+以下の内容を「.emacs/init.el」に追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq initial-scratch-message "")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この設定を加えて、Emacsを再起動するとscratchバッファの初期メッセージがなくなります。
+即座に反映したければ、評価してもいいとおもいます。</p>
+
+<p>次に、Emacsが終了してしまったときにScratchバッファの保存と再起動時にScratchバッファの内容を復元する方法ですが・・・</p>
+
+<p>以下の内容を「.emacs/init.el」に追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(defun save-scratch-data ()
+</span><span class='line'>  (let ((str (progn
+</span><span class='line'>               (set-buffer (get-buffer "*scratch*"))
+</span><span class='line'>               (buffer-substring-no-properties
+</span><span class='line'>                (point-min) (point-max))))
+</span><span class='line'>        (file "~/.emacs.d/backups/.scratch"))
+</span><span class='line'>    (if (get-file-buffer (expand-file-name file))
+</span><span class='line'>        (setq buf (get-file-buffer (expand-file-name file)))
+</span><span class='line'>      (setq buf (find-file-noselect file)))
+</span><span class='line'>    (set-buffer buf)
+</span><span class='line'>    (erase-buffer)
+</span><span class='line'>    (insert str)
+</span><span class='line'>    (save-buffer)
+</span><span class='line'>    (kill-buffer buf)))
+</span><span class='line'>
+</span><span class='line'>(defadvice save-buffers-kill-emacs
+</span><span class='line'>  (before save-scratch-buffer activate)
+</span><span class='line'>  (save-scratch-data))
+</span><span class='line'>
+</span><span class='line'>(defun read-scratch-data ()
+</span><span class='line'>  (let ((file "~/.emacs.d/backups/.scratch"))
+</span><span class='line'>    (when (file-exists-p file)
+</span><span class='line'>      (set-buffer (get-buffer "*scratch*"))
+</span><span class='line'>      (erase-buffer)
+</span><span class='line'>      (insert-file-contents file))
+</span><span class='line'>    ))
+</span><span class='line'>
+</span><span class='line'>(read-scratch-data)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上のEmacsLispが何をやっているかと言うと・・・<br/>
+終了時にScratchの内容をファイルに書き込み、起動時に書き出したScratchバッファの内容を読み込みしているだけです。</p>
+
+<p>これで、Scratchバッファをちょっとしたメモ帳として大いに活用できますね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1046,265 +1333,6 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/30/octpress-image-tag/">Octpressで画像ファイルを扱う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-30T01:47:00+09:00" pubdate data-updated="true">Mar 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。</p>
-
-<h3>画像の格納ディレクトリ</h3>
-
-<hr />
-
-<p>画像の格納場所は、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>~source/images</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に格納すればよい</p>
-
-<p>imagesディレクトリの配下にも、blogというディレクトリがあるのでブログ用の画像はそちらに格納すればよいっぽい。</p>
-
-<h3>Octpress公式の手順</h3>
-
-<hr />
-
-<p><a href="http://octopress.org/docs/plugins/image-tag/">公式の手順</a></p>
-
-<p>以下の書式に従って記載すれば、いいらしい。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img [class names] /path/to/image [width] [height] [title text [alt text]] \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>そのため、画像サイズを640x480で表示させたい場合、以下のように書くことができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img left /images/picture.png 640 480 \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コード上の「\」は不要です。(何故か、エスケープが正しく動作しなかった)</p>
-
-<h3>markdownを使用した方法</h3>
-
-<hr />
-
-<p>これは、前にも書いたように以下のようにすればよいでしょう。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[テスト画像](/images/picture.png "title")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但し、画像サイズは指定できないという欠点があります。<br/>
-画像は、加工するしかないようですね。</p>
-
-<h3>htmlを直接記載する方法</h3>
-
-<hr />
-
-<p>以下のような感じで、htmlを使用した書き方もできるようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;img src="/images/picture.png" alt="alt" title="title" width="640" height="480"&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意する点があるとすれば、必ず前後に<p>タグが挿入されてしまうことです。<br/>
-インラインで使用することは、できないっぽいです。</p>
-
-<h3>まとめ</h3>
-
-<hr />
-
-<p>個人的な見解は以下のような感じ</p>
-
-<ul>
-<li>基本はmarkdown記法で記載</li>
-<li>画像サイズを変更したい場合、Octpressの記法に従う</li>
-<li>汎用的にしたい場合、htmlで記載する</li>
-<li>ブログ記事用の画像の場合、「souce/images/blog」の下に格納する</li>
-<li>ブログ記事以外の画像の場合、「source/images」の下に格納する</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/28/ruby-web-file/">Rubyで画像ファイルをダウンロードする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-28T23:34:00+09:00" pubdate data-updated="true">Mar 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>少しばかり、やることがあったのでやってみた。<br/>
-煩悩丸出しですいませんw</p>
-
-<h3>HTTP Responseのbodyを利用する</h3>
-
-<hr />
-
-<p>直感的ではないけど、素直なやりかた</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>urlで接続したbodyデータをファイルに書き込む</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
-</span><span class='line'>   filename = File.basename(url)
-</span><span class='line'>   open(filename, "wb") do  |file|
-</span><span class='line'>          file.puts Net::HTTP.get_response(URI.parse(url)).body
-</span><span class='line'>   end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>open-uriを使用する方法</h3>
-
-<hr />
-
-<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
-</span><span class='line'>    filename = File.basename(url)
-</span><span class='line'>    open(filename, 'wb') do |file|
-</span><span class='line'>        open(url) do |data|
-</span><span class='line'>            file.write(data.read)
-</span><span class='line'>      end
-</span><span class='line'>    end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/25/java-map-iterator/">JavaのHashmapを使ったiteratorの実装</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-25T18:29:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>偶に忘れるのでメモしておきます。<br/>
-iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Map map = new HashMap();
-</span><span class='line'>for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
-</span><span class='line'>    Map.Entry entry = (Map.Entry)it.next();
-</span><span class='line'>    Object key = entry.getKey();
-</span><span class='line'>    Object value = entry.getValue();
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Javaを書かなくなると忘れてしまいますねw</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1326,6 +1354,18 @@ iterationは忘れたらダメだと思いつつも、偶にアレなんだっ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/13/recover-dropbox-data/">削除してしまったDropboxのデータを復元する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/02/ruby-struct/">RubyのStructクラスが便利</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a>
       </li>
     
@@ -1333,23 +1373,11 @@ iterationは忘れたらダメだと思いつつも、偶にアレなんだっ�
         <a href="/blog/2013/06/18/nikkei-software-07/">日経ソフトウェア7月号の特集を読んだ感想</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/06/08/use-rubymine/">Rubymineを使ってみる</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/07/vi-on-emacs/">Vi(Vim) on Emacsを思いつきでやってみた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/05/31/oversea-travel/">初海外がGoogleI/Oだったので、準備とか苦労したことのメモ</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 124.0%'>Java(2)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 136.0%'>Ruby(3)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 136.0%'>戯言(3)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 136.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 148.0%'>Ruby(4)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 148.0%'>戯言(4)</a> </span>
 </section
 
 

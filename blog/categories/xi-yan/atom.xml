@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 戯言 | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/xi-yan/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-06-27T22:32:52+09:00</updated>
+  <updated>2013-07-13T17:51:17+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[削除してしまったDropboxのデータを復元する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/13/recover-dropbox-data/"/>
+    <updated>2013-07-13T17:06:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/13/recover-dropbox-data</id>
+    <content type="html"><![CDATA[<h3>簡単な経緯</h3>
+
+<hr />
+
+<p>このブログ記事を書くキッカケになった内容を以下に記述します。</p>
+
+<p>お馬鹿すぎて笑えますwww</p>
+
+<ol>
+<li>Dropboxアプリ起動</li>
+<li>アプリを起動したまま、あるコマンドを実行</li>
+<li>Dropboxと同期したディレクトリが2で実行したコマンドで削除される</li>
+<li>1のDropboxアプリが削除した状態を同期開始</li>
+<li>削除だけなので、同期が一瞬で終わってしまう</li>
+<li>Dropboxサーバのデータが削除</li>
+</ol>
+
+
+<p>こんな感じでした・・・
+実際は、Dropboxのディレクトリだけでなくもっと影響がでかくて涙を流しています。</p>
+
+<h3>復元の手順</h3>
+
+<hr />
+
+<p>復活の呪文を唱えるにも条件があります。</p>
+
+<h4>削除してからの日数が30日以内であれば、復元可能</h4>
+
+<p>というものです。</p>
+
+<p>幸いなことに削除した次の日に気がついたので、自分はこの条件を満たしていました。</p>
+
+<p>で、肝心の復元の手順ですが、以下で実施します。</p>
+
+<ol>
+<li>Dropboxのウェブサイトにログイン</li>
+<li>画面右上の「削除済みファイル」をクリック</li>
+<li>ファイル名の横に表示されている逆三角を押下し復元をクリック</li>
+</ol>
+
+
+<h4><a href="https://www.dropbox.com/help/296/ja">公式の手順</a></h4>
+
+<p>これで削除したファイルが復元できます。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[日経ソフトウェア7月号の特集を読んだ感想]]></title>

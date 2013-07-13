@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-06-27T22:32:52+09:00</updated>
+  <updated>2013-07-13T17:51:17+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,81 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dependency Injectionについて]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/06/27/dependency-injection/"/>
+    <updated>2013-06-27T19:28:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/06/27/dependency-injection</id>
+    <content type="html"><![CDATA[<p>DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。</p>
+
+<p>簡単に言うと、よく言われる「依存性の注入」といいます。</p>
+
+<p>が、なんのことかさっぱりわからないですね。
+少し言い換えてあげると</p>
+
+<h6>「依存性をモジュールもしくはクラス内部に抱え込まずに外部から依存内容を設定してあげる」</h6>
+
+<p>となります。</p>
+
+<p>擬似コードを出すとDI前にこんなコードとすると
+```
+public Hoge(){</p>
+
+<pre><code>this.fuga = new Fuga("hogefuga");
+</code></pre>
+
+<p>}
+```</p>
+
+<p>DI後の擬似コードはこんな感じ
+```
+public Hoge(Fuga fuga){</p>
+
+<pre><code>this.fuga = fuga;
+</code></pre>
+
+<p>}
+```</p>
+
+<p>コンストラクタの引数Fugaを差し替えるだけで容易に設定内容を変更できます。<br/>
+依存前のコードだと、依存性はFugaコンストラクタの中にありますが、依存後のコードは依存性は外部にあります。(引数の内容次第)<br/>
+このFugaのコンストラクタがリソースに関わる何かだとDI前のコードであればユニットテストが大変になりますね。<br/>
+しかし、DI後のコードであれば引数を差し替えるだけでユニットテストができるようになります。</p>
+
+<p>なので、DIをするメリットというと(個人的に)以下が挙げられます。</p>
+
+<ul>
+<li>依存しているものが外部にあるので、ユニットテストで差し替えが簡単にできる(外部からモックにしやすい)</li>
+<li>IFさえ同じものであれば、別の実装を行ったものを設定として渡してやることができる(柔軟性)</li>
+</ul>
+
+
+<p>面倒になるのは、事前準備ですがメリットのほうが大きいと個人的には思ってます。<br/>
+面倒な事前処理(主にコンストラクタ生成ですが)をやってくれるのがDIコンテナですね。</p>
+
+<p>よく使うDIコンテナだと、有名なjavaのコンテナはこんなところですかね。</p>
+
+<ul>
+<li>GoogleGuice</li>
+<li>Seaser2</li>
+<li>SpringFramework</li>
+</ul>
+
+
+<p>自分が使うときの基準だと、以下になりますね。</p>
+
+<ul>
+<li>Seaser2なプロダクト(SAStrutsとか)を使っている、もしくは使う場合は、「Seaser2」のDIコンテナ</li>
+<li>Spring関係の何かを使っている、もしくは使う場合は、「SpringFramework」のDIコンテナ(尤も殆ど使ったことないです)</li>
+<li>それ以外の場合なら、大体「GoogleGuice」(どこかに事例とかあればいいですし、大体がWicketとかで使います)</li>
+</ul>
+
+
+<p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
+使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dependency Injectionについて]]></title>

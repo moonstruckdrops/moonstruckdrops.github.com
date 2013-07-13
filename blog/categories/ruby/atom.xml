@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-06-27T22:32:52+09:00</updated>
+  <updated>2013-07-13T17:51:17+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,145 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyのStructクラスが便利]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/02/ruby-struct/"/>
+    <updated>2013-07-02T01:15:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/02/ruby-struct</id>
+    <content type="html"><![CDATA[<p>特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも</p>
+
+<h3>Structクラス</h3>
+
+<hr />
+
+<p>Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・)</p>
+
+<p>平たく言うと、Classクラスに似ているものです。</p>
+
+<p>じゃー違いは何なの？ってなります。</p>
+
+<ol>
+<li>newしたとき、引数で指定したアクnセッサをもつクラスを生成する</li>
+<li>第一引数の文字列がクラス名となるが、指定がない場合は無名のクラスになる</li>
+</ol>
+
+
+<p>これだけ。</p>
+
+<p><code>
+Point = Struct.new("Point", :x, :y)
+item = Point.new(100,200)
+p item =&gt; #&lt;struct Struct::Point x=100, y=200&gt;
+p item.x =&gt; 100
+</code></p>
+
+<p>無名クラスだと、こんな感じ</p>
+
+<p><code>
+Point2 = Struct.new(:z)
+Point2.class =&gt; Class
+item2 = Point2.new(300)
+p item2 =&gt; #&lt;struct Point2 z=300&gt;
+</code></p>
+
+<h3>ドキュメントに無い機能</h3>
+
+<hr />
+
+<p>ブロックを使うことができることです。<br/>
+ブロック内では、独自のメソッドを定義することができます。</p>
+
+<p>こんな感じです。</p>
+
+<p>```
+Point = Struct.new(:x, :y) do
+  def sum</p>
+
+<pre><code>    x + y
+</code></pre>
+
+<p>  end</p>
+
+<p>  def minus</p>
+
+<pre><code>    x - y 
+</code></pre>
+
+<p>  end
+end
+p Point.new(600, 700).sum => 1300
+p Point.new(800,900).minus => -100
+```</p>
+
+<p>他にも、superを使うことで、上位のコンストラクタを実行することができます。</p>
+
+<p>```
+class Point &lt; Struct.new(:x, :y)
+  def initialize(x, y)</p>
+
+<pre><code>z = x + y
+super(z, y)
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>item = Point.new(400, 500)
+p item => #<struct Point x=900, y=500>
+```</p>
+
+<h3>使いどころ</h3>
+
+<hr />
+
+<p>正直、あんまり無いような気がしなくもないですが、自分だと以下で使います。</p>
+
+<ul>
+<li>csvファイルとか読み込むとき、ちょっとしたデータ構造を定義するとき</li>
+<li>ちょっとしたデータのソート</li>
+<li>ちょっとしたアルゴリズムの追加</li>
+<li>ハッシュの代わりとか(既にデータ構造が分かってる場合など)</li>
+</ul>
+
+
+<p>データソートする場合の例</p>
+
+<p>```
+class Point &lt; Struct.new(:x, :y)
+  def initialize(x, y)</p>
+
+<pre><code>z = x + y
+super(z, y)
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>item = Point.new(400, 500)
+item2 = Point.new(200,300)</p>
+
+<p>p item => #<struct Point x=900, y=500>
+p item2 => #<struct Point x=500, y=300></p>
+
+<p>array = []
+array &lt;&lt; item
+array &lt;&lt; item2</p>
+
+<p>p array => [#<struct Point x=900, y=500>, #<struct Point x=500, y=300>]</p>
+
+<p>result = array.sort{ |item1,item2|</p>
+
+<pre><code>                item1.x &lt;=&gt; item2.x
+           }
+</code></pre>
+
+<p>p result => [#<struct Point x=500, y=300>, #<struct Point x=900, y=500>]
+```</p>
+
+<p>書き捨てみたいなRubyコードを書くときにはちょうどいいのかもしれないですね。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubymineを使ってみる]]></title>
