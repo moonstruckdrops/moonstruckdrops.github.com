@@ -9,9 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="GDG京都さんとKyotoGASさんが主催する勉強会に行って来ました。
-正直なところ今更感、漂う感じの記事ですが気にしないでください。
-実は、用事があって関西に行っていたのです。 以下にメモを記載します。。。 GASとは 大雑把に言うとMSOfficeのVBAみたいなもの JS 1.8Base( &hellip;">
+  <meta name="description" content="訳があって実施することになりました。
+ビルドに使ったソースコードがなくなってしまっただけなんですけどね。 前提 adbコマンドが使える環境であること
+端末がデバッグモードONであること 手順 以下の方法で実施します。 adb shell pm list packages -f | grep [ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/14/push-apk/">端末にインストールしてあるapkファイルを取り出す</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-14T11:48:00+09:00" pubdate data-updated="true">Jul 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>訳があって実施することになりました。<br/>
+ビルドに使ったソースコードがなくなってしまっただけなんですけどね。</p>
+
+<h3>前提</h3>
+
+<hr />
+
+<ol>
+<li>adbコマンドが使える環境であること</li>
+<li>端末がデバッグモードONであること</li>
+</ol>
+
+
+<h3>手順</h3>
+
+<hr />
+
+<p>以下の方法で実施します。</p>
+
+<ol>
+<li>adb shell pm list packages -f | grep [取得対象のパッケージ名の一部]</li>
+<li>1を実行すると「package:/data/app/&lt;apkファイル名>=&lt;アクティビティ名>」が表示される</li>
+<li>adb pullコマンドでapkファイルのフルパス(/data/app/&lt;apkファイル名>)を指定する</li>
+</ol>
+
+
+<p>これだけです。</p>
+
+<p>一応ソースコードを紛失したapkのバイナリが取り出せました。<br/>
+別の端末にインストールできる。<br/>
+よかったよかった。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1740,86 +1806,6 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/29/intellij-select/">IntelliJ IDEAで/usrディレクトリ配下のものが選択できなかった</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-29T00:32:00+09:00" pubdate data-updated="true">May 29<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>そんなことがあったのでメモしておく。</p>
-
-<h3>どういうことかと</h3>
-
-<hr />
-
-<p>ProjectStructureでSDKとか設定する訳なのだが・・・<br/>
-これ、MacだとSDKの場所をGUIで選べって方式なんですよね。</p>
-
-<p>それはそれで便利だし楽でいいんだけども</p>
-
-<h4>/usr/ディレクトリ配下にあるものは選択できない!!</h4>
-
-<p>( ﾟдﾟ)</p>
-
-<p>Macの隠しディレクトリを表示する以下のコマンドを実行しても選択することが出来なかった。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$defaults write com.apple.finder AppleShowAllFiles -boolean true
-</span><span class='line'>$killall</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>結局どうしたか</h3>
-
-<hr />
-
-<p>ものすごく力技ですが・・・</p>
-
-<h4>ホームディレクトリから/usr/ディレクトリまでシンボリックリンク張っちゃいました</h4>
-
-<p>とりあえずこの方法で解決しました。<br/>
-あんまりよくないというのは理解していますが、しょうもないことに時間取られるのも嫌だったのでこうしました。<br/>
-うまい解決方法あったら教えて下さい。</p>
-
-<h3>正直なところ</h3>
-
-<hr />
-
-<p>そんなところにファイル置いてるほうが悪いのでは？と言われるかもしれないですが、SDKとかって「/usr/local」の下に入れたくなるじゃないですか。<br/>
-特にLinuxとか弄ってると</p>
-
-<p>ぶっちゃけ、IDEAが悪いわけではきっとないと思っているし、ステマでもなんでもないです。</p>
-
-<p>本当だよ。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1839,6 +1825,10 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/14/push-apk/">端末にインストールしてあるapkファイルを取り出す</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/13/kyoto-gas-study/">GoogleAppsScript勉強会に行って来ました</a>
       </li>
     
@@ -1854,15 +1844,11 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
         <a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 112.0%'>Android(1)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 112.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 136.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 148.0%'>Ruby(4)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 148.0%'>戯言(4)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 124.0%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 112.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 136.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 148.0%'>Ruby(4)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 148.0%'>戯言(4)</a> </span>
 </section
 
 

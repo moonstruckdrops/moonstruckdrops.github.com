@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-07-14T01:02:52+09:00</updated>
+  <updated>2013-07-14T11:55:40+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[端末にインストールしてあるapkファイルを取り出す]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/14/push-apk/"/>
+    <updated>2013-07-14T11:48:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/14/push-apk</id>
+    <content type="html"><![CDATA[<p>訳があって実施することになりました。<br/>
+ビルドに使ったソースコードがなくなってしまっただけなんですけどね。</p>
+
+<h3>前提</h3>
+
+<hr />
+
+<ol>
+<li>adbコマンドが使える環境であること</li>
+<li>端末がデバッグモードONであること</li>
+</ol>
+
+
+<h3>手順</h3>
+
+<hr />
+
+<p>以下の方法で実施します。</p>
+
+<ol>
+<li>adb shell pm list packages -f | grep [取得対象のパッケージ名の一部]</li>
+<li>1を実行すると「package:/data/app/&lt;apkファイル名>=&lt;アクティビティ名>」が表示される</li>
+<li>adb pullコマンドでapkファイルのフルパス(/data/app/&lt;apkファイル名>)を指定する</li>
+</ol>
+
+
+<p>これだけです。</p>
+
+<p>一応ソースコードを紛失したapkのバイナリが取り出せました。<br/>
+別の端末にインストールできる。<br/>
+よかったよかった。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Androidのソースコード検索サービスを構築してみる]]></title>
