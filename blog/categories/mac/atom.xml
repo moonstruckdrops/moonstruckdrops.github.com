@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mac | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/mac/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2013-07-19T00:56:35+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[MacにGUIありWiresharkをインストールする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/19/install-wireshark/"/>
+    <updated>2013-07-19T00:47:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/19/install-wireshark</id>
+    <content type="html"><![CDATA[<p>いつも忘れるのでいい加減にメモを残しておきます。</p>
+
+<h3>インストール環境</h3>
+
+<hr />
+
+<p>以下がインストールされているマシンであること</p>
+
+<ul>
+<li>XQuartz</li>
+<li>Homebrew</li>
+</ul>
+
+
+<p>XCodeが古かったりするとインストールできない可能性があります。<br/>
+少なくともwarningは出ます。</p>
+
+<h3>インストール方法</h3>
+
+<hr />
+
+<p>以下のコマンドを実施することでGUIありWiresharkがインストールできます。</p>
+
+<p><code>
+$brew install wireshark --with-x
+</code></p>
+
+<p>因みに「--with-x」オプションがない状態でインストールするとGUI無しのwiresharkがインストールされます。</p>
+
+<h3>Wireshark起動方法</h3>
+
+<hr />
+
+<p>以下のコマンドで起動します。</p>
+
+<p><code>
+$sudo wireshark
+</code></p>
+
+<p>毎回実施しては、毎回思うのだけど・・・
+Homebrew使わずにインストールしたほうが手っ取り早いような気がする。。。</p>
+]]></content>
+  </entry>
+  
+</feed>
