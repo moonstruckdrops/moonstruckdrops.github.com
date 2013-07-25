@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-07-25T18:54:18+09:00</updated>
+  <updated>2013-07-25T21:25:45+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,73 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rubyでアクセス用のメソッドを定義する(アクセッサ)]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/"/>
+    <updated>2013-07-25T20:56:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor</id>
+    <content type="html"><![CDATA[<p>なんてことはない、ただの整理です。</p>
+
+<p>通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。</p>
+
+<p>Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。</p>
+
+<p>以下のようなModuleクラスにあるものを使います</p>
+
+<ul>
+<li>attr_reader : 参照(読み出し)できるようにする(getter)</li>
+<li>attr_writer : 代入(書き込み)できるようにする(setter)</li>
+<li>attr_accessor : 参照、代入の両方できるようにする(getter/setter)</li>
+</ul>
+
+
+<p>それぞれ、使い方は以下のような形になります。</p>
+
+<p>```
+class Accessor</p>
+
+<pre><code>attr_reader :name,:hoge
+attr_writer :fuga,:piyo
+attr_accessor :access
+
+def initialize
+    @name = "kurobara"
+    @hoge = "hogehoge"
+    @fuga = "fugafuga"
+    @piyo = "piypiyo"
+    @access = "OK"
+end
+
+def print_fuga_piyo
+    p '---------------------'
+    puts "fuga = " + @fuga
+    puts "piyo = " + @piyo
+end
+</code></pre>
+
+<p>end</p>
+
+<p>a = Accessor.new()
+puts a.name
+puts a.hoge<br/>
+a.print_fuga_piyo
+p "代入操作"
+a.fuga = "fuga2fuga2"
+a.piyo = "piyo2piyo2"
+a.print_fuga_piyo
+p '---------------------'
+puts 'a.access = ' + a.access
+p "代入操作"
+a.access = "OKOK"
+puts 'a.access = ' + a.access
+```</p>
+
+<p>こんな感じで使えちゃいます。。。<br/>
+今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
+attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyでSingletonパターンを実装する]]></title>
@@ -554,68 +621,6 @@ array &lt;&lt; item2</p>
 なので、機会があればどこかでネタを話たいなーと思います。</p>
 
 <p># 思ってるだけだとダメなので実際どこかで行動しないといけないですね。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rubyで画像ファイルをダウンロードする]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file/"/>
-    <updated>2013-03-28T23:34:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file</id>
-    <content type="html"><![CDATA[<p>少しばかり、やることがあったのでやってみた。<br/>
-煩悩丸出しですいませんw</p>
-
-<h3>HTTP Responseのbodyを利用する</h3>
-
-<hr />
-
-<p>直感的ではないけど、素直なやりかた</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>urlで接続したbodyデータをファイルに書き込む</li>
-</ol>
-
-
-<p>```
-def save_file(url)
-   filename = File.basename(url)
-   open(filename, "wb") do  |file|</p>
-
-<pre><code>      file.puts Net::HTTP.get_response(URI.parse(url)).body
-</code></pre>
-
-<p>   end
-end
-```</p>
-
-<h3>open-uriを使用する方法</h3>
-
-<hr />
-
-<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
-</ol>
-
-
-<p>```
-def save_file(url)</p>
-
-<pre><code>filename = File.basename(url)
-open(filename, 'wb') do |file|
-    open(url) do |data|
-        file.write(data.read)
-  end
-end
-</code></pre>
-
-<p>end
-```</p>
-
-<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
 ]]></content>
   </entry>
   

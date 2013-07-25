@@ -9,9 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="ただのネタカテゴリですwww 昨夜、盛大に悪酔いしましてその時思いつきました。 手順とか見れば、誰でも思いつくでしょう。 という訳で以下に起動手順と感想を書いてみました。 Vi(Vim) on Emacsの手順 ターミナルを起動します。
-おもむろにemacsとタイプしてEnterを押します。
-M- &hellip;">
+  <meta name="description" content="皆さんはRubyやRailsでアプリを書くときどのようなエディタを使いますでしょうか？ 僕は、Emacsで書いていることが多いです。。。 多いのですが・・・
+こんな感じで若干面倒な面もあってですね。 設定がともかく面倒くさい・・・。
+色々設定を追加しているので、重くなってきた( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,123 @@ M- &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/08/use-rubymine/">Rubymineを使ってみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-08T17:26:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>皆さんはRubyやRailsでアプリを書くときどのようなエディタを使いますでしょうか？</p>
+
+<h6>僕は、Emacsで書いていることが多いです。。。</h6>
+
+<p>多いのですが・・・<br/>
+こんな感じで若干面倒な面もあってですね。</p>
+
+<ul>
+<li>設定がともかく面倒くさい・・・。</li>
+<li>色々設定を追加しているので、重くなってきた(僕の設定が悪いのかもしれませんが・・・)</li>
+<li>補完周りも効くのか効かないのか微妙な時も(僕の設定が悪いry)</li>
+<li>オムニ補完が・・・効きすぎてお節介すぎる(僕の設定がry)</li>
+<li>その他色々。。。</li>
+</ul>
+
+
+<p>良い面もありまして、僕が思う良い面はこんな感じ。</p>
+
+<ul>
+<li>キーバインドがカスタムできるよ</li>
+<li>画面が分割できるので、TDDにも向いてるよ</li>
+<li>オムニ補完が良い感じに効いたときは、さくさくコードが書ける</li>
+<li>タブやフォーマットとか「{ }」の自動補完とかきっちりやってくれる</li>
+<li>あとは、タグを使ってソースからソースへのコードジャンプができる</li>
+</ul>
+
+
+<p>殆ど、Emacsの機能ですねw</p>
+
+<p>で、面倒くさい面もあるのでRuby開発に限ってはEmacsを卒業してもいいのではないかと最近思うようになりました。</p>
+
+<p>なので、Rubyをスムーズに開発できるエディタってなんだろうとか気になりだした訳です。<br/>
+エディタとして候補が挙げれたものは・・・</p>
+
+<ul>
+<li>Vim</li>
+<li>Text Mate</li>
+<li>Sublime text2</li>
+<li>Coda</li>
+<li>Aptana Studio(Eclipse)</li>
+<li>RubyMine</li>
+</ul>
+
+
+<p>自分が観測できた範囲だとこんだけ。</p>
+
+<p>色々ありますね。とりかえず今回はRubyMineを使ってみます。</p>
+
+<h6>Rails コマンド</h6>
+
+<p>「$rails migration」とか実行する場合、「Ctrl + Option + G」<br/>
+よく使いそうなものは大体実行できます。<br/>
+主に以下のようなことができる。(ここでは一部のみ記載)</p>
+
+<ul>
+<li>scaffold</li>
+<li>migration</li>
+<li>helper</li>
+<li>controller</li>
+<li>その他色々</li>
+</ul>
+
+
+<h6>Rails Server</h6>
+
+<p>サーバを起動する場合、「Option + Shift + F10」<br/>
+デバッグ実行やプロダクション起動、リリース</p>
+
+<h6>リファクタリング</h6>
+
+<p>変更箇所をカーソルで選択後「Shift + F6」<br/>
+プレビューが表示されるので、「Do Refactor」を実行しましょう。<br/>
+いちいち、「Do Refactor」ボタンを押さないといけないところに操作性のムカツキを感じる。</p>
+
+<h6>その他</h6>
+
+<p>エディタ自身の設定でデフォルトで有効になっている「フリーカーソール」をOFFにしたい。(余白をクリックすると、行の末尾にいかない)<br/>
+設定項目のエディタ設定で、「Vertual Space」を見つけます。</p>
+
+<h6>「Allow Placement of caret after the end of line」のチェックボックスを外します。</h6>
+
+<p>そうすると、余白をクリックしても行の末尾にいくようになります</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1352,145 +1469,6 @@ Apacheのディレクトリ制限を噛ますことでアクセス制限なん�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/06/ranyo-rb/">万葉.rbに参加してきました。#everyrb</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-06T13:01:00+09:00" pubdate data-updated="true">Apr 6<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>参加メモメモ。</p>
-
-<h3>オープニング</h3>
-
-<hr />
-
-<p>Matzからの挨拶。<br/>
-楽しい設計の言語が真面目に仕事になって嬉しい。<br/>
-万葉をよろしく!!</p>
-
-<h3>基調公演(島田さん)</h3>
-
-<hr />
-
-<p>言葉は軽く聞こえるけど、会社経営だとすごい!!</p>
-
-<p>最近思う「コミュニティと会社の私」</p>
-
-<ul>
-<li>会社は孤立している。契約とか仕事程度(内側のつながりはない)</li>
-<li>コミュニティではゆるく繋がっているので、今は繋がっているのではないのか</li>
-<li>Rubyのコミュニティは面白い方々多い</li>
-<li>地域Ruby会議に行くと、質問したり自分のことを見直すきっかけになるのでいいかもしれない</li>
-<li>普通、ビジネス主体としての会社</li>
-<li>もう１つは、コミュニティとしての会社</li>
-<li>中の人が見えるというのはいい</li>
-</ul>
-
-
-<h3>万葉社長</h3>
-
-<hr />
-
-<p>コードについて言いたいこと</p>
-
-<p>プログラミングはどういう仕事？</p>
-
-<p>良い考えが最良とは限らない(衝突が起きる)</p>
-
-<ul>
-<li>クラス名が仕様書番号とか最低すぎる</li>
-<li>わかりやすい名前</li>
-<li>自動テストあるといいよ</li>
-<li>PHP悪くてRubyがいいという意見は、別れる</li>
-<li>MVCとオブジェクト指向は？</li>
-<li>DRYと読みやすさ</li>
-<li>RDB的に最適解とオブジェクト指向</li>
-<li>安全と自由(型など)</li>
-</ul>
-
-
-<p>そのため、一般的に悪いといわれることが役立つこともある。</p>
-
-<p>他にも・・・</p>
-
-<ul>
-<li>すべてを一気に解決することはできない。</li>
-<li>どの局面で問題を解決をするのが重要</li>
-<li>正解なんてものはない。</li>
-</ul>
-
-
-<p>大事なこと</p>
-
-<ul>
-<li>意思の表明。思ってるだけでは何もできない</li>
-<li>考えていることを言語化することが必要</li>
-<li>たのしくソフトウェア開発ができること</li>
-<li>意思をもって選びとること</li>
-</ul>
-
-
-<h3>LT</h3>
-
-<hr />
-
-<p>角谷さん</p>
-
-<ul>
-<li>Rubyで仕事しだすと会社とコミュニティと個人のつながりを考えだす</li>
-<li>WHYから始める</li>
-</ul>
-
-
-<p>和田さん</p>
-
-<ul>
-<li>6年続くのはすごい</li>
-<li>生き生きできるのはレッドじゃなくてサブ</li>
-<li>オススメ本:はじめの一歩を踏み出そう</li>
-</ul>
-
-
-<p>これ以外は聞くほうが面白かったのでメモってません。<br/>
-ごめんなさいm(<em> </em>)m</p>
-
-<h3>宿題的なアレ</h3>
-
-<hr />
-
-<p>万葉の中の人にやってること、超面白いし聞きたいんで是非LTやってくださいと勧められました。<br/>
-なので、機会があればどこかでネタを話たいなーと思います。</p>
-
-<p># 思ってるだけだとダメなので実際どこかで行動しないといけないですね。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1512,6 +1490,10 @@ Apacheのディレクトリ制限を噛ますことでアクセス制限なん�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/25/ruby-accessor/">Rubyでアクセス用のメソッドを定義する(アクセッサ)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/25/ruby-singleton/">RubyでSingletonパターンを実装する</a>
       </li>
     
@@ -1527,15 +1509,11 @@ Apacheのディレクトリ制限を噛ますことでアクセス制限なん�
         <a href="/blog/2013/07/13/kyoto-gas-study/">GoogleAppsScript勉強会に行って来ました</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/07/13/recover-dropbox-data/">削除してしまったDropboxのデータを復元する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 124.0%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 136.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 112.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 112.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 112.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 136.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 148.0%'>Linux(4)</a> <a href='/blog/categories/mac' style='font-size: 112.0%'>Mac(1)</a> <a href='/blog/categories/markdown' style='font-size: 160.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(5)</a> <a href='/blog/categories/shellscript' style='font-size: 112.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 148.0%'>戯言(4)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 130.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 110.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 110.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 110.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(4)</a> <a href='/blog/categories/mac' style='font-size: 110.0%'>Mac(1)</a> <a href='/blog/categories/markdown' style='font-size: 150.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 110.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(4)</a> </span>
 </section
 
 

@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-07-25T18:54:18+09:00</updated>
+  <updated>2013-07-25T21:25:24+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,106 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rubyでアクセス用のメソッドを定義する(アクセッサ)]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/"/>
+    <updated>2013-07-25T20:56:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor</id>
+    <content type="html"><![CDATA[<p>なんてことはない、ただの整理です。</p>
+
+<p>通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。</p>
+
+<p>Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。</p>
+
+<p>以下のようなModuleクラスにあるものを使います</p>
+
+<ul>
+<li>attr_reader : 参照(読み出し)できるようにする(getter)</li>
+<li>attr_writer : 代入(書き込み)できるようにする(setter)</li>
+<li>attr_accessor : 参照、代入の両方できるようにする(getter/setter)</li>
+</ul>
+
+
+<p>それぞれ、使い方は以下のような形になります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Accessor
+</span><span class='line'>
+</span><span class='line'>    attr_reader :name,:hoge
+</span><span class='line'>    attr_writer :fuga,:piyo
+</span><span class='line'>    attr_accessor :access
+</span><span class='line'>    
+</span><span class='line'>    def initialize
+</span><span class='line'>        @name = "kurobara"
+</span><span class='line'>        @hoge = "hogehoge"
+</span><span class='line'>        @fuga = "fugafuga"
+</span><span class='line'>        @piyo = "piypiyo"
+</span><span class='line'>        @access = "OK"
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>    def print_fuga_piyo
+</span><span class='line'>        p '---------------------'
+</span><span class='line'>        puts "fuga = " + @fuga
+</span><span class='line'>        puts "piyo = " + @piyo
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>a = Accessor.new()
+</span><span class='line'>puts a.name
+</span><span class='line'>puts a.hoge  
+</span><span class='line'>a.print_fuga_piyo
+</span><span class='line'>p "代入操作"
+</span><span class='line'>a.fuga = "fuga2fuga2"
+</span><span class='line'>a.piyo = "piyo2piyo2"
+</span><span class='line'>a.print_fuga_piyo
+</span><span class='line'>p '---------------------'
+</span><span class='line'>puts 'a.access = ' + a.access
+</span><span class='line'>p "代入操作"
+</span><span class='line'>a.access = "OKOK"
+</span><span class='line'>puts 'a.access = ' + a.access</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで使えちゃいます。。。<br/>
+今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
+attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyでSingletonパターンを実装する]]></title>
@@ -2508,118 +2608,6 @@ Apacheのディレクトリ制限を噛ますことでアクセス制限なん�
 認証を付けたければ、認証の設定をすれば認証付きのBlogになります。</p>
 
 <p>これで、要件を満たせたので作業メモとか残せて幸せになれますね。(多分)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[万葉.rbに参加してきました。#everyrb]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/04/06/ranyo-rb/"/>
-    <updated>2013-04-06T13:01:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/04/06/ranyo-rb</id>
-    <content type="html"><![CDATA[<p>参加メモメモ。</p>
-
-<h3>オープニング</h3>
-
-<hr />
-
-<p>Matzからの挨拶。<br/>
-楽しい設計の言語が真面目に仕事になって嬉しい。<br/>
-万葉をよろしく!!</p>
-
-<h3>基調公演(島田さん)</h3>
-
-<hr />
-
-<p>言葉は軽く聞こえるけど、会社経営だとすごい!!</p>
-
-<p>最近思う「コミュニティと会社の私」</p>
-
-<ul>
-<li>会社は孤立している。契約とか仕事程度(内側のつながりはない)</li>
-<li>コミュニティではゆるく繋がっているので、今は繋がっているのではないのか</li>
-<li>Rubyのコミュニティは面白い方々多い</li>
-<li>地域Ruby会議に行くと、質問したり自分のことを見直すきっかけになるのでいいかもしれない</li>
-<li>普通、ビジネス主体としての会社</li>
-<li>もう１つは、コミュニティとしての会社</li>
-<li>中の人が見えるというのはいい</li>
-</ul>
-
-
-<h3>万葉社長</h3>
-
-<hr />
-
-<p>コードについて言いたいこと</p>
-
-<p>プログラミングはどういう仕事？</p>
-
-<p>良い考えが最良とは限らない(衝突が起きる)</p>
-
-<ul>
-<li>クラス名が仕様書番号とか最低すぎる</li>
-<li>わかりやすい名前</li>
-<li>自動テストあるといいよ</li>
-<li>PHP悪くてRubyがいいという意見は、別れる</li>
-<li>MVCとオブジェクト指向は？</li>
-<li>DRYと読みやすさ</li>
-<li>RDB的に最適解とオブジェクト指向</li>
-<li>安全と自由(型など)</li>
-</ul>
-
-
-<p>そのため、一般的に悪いといわれることが役立つこともある。</p>
-
-<p>他にも・・・</p>
-
-<ul>
-<li>すべてを一気に解決することはできない。</li>
-<li>どの局面で問題を解決をするのが重要</li>
-<li>正解なんてものはない。</li>
-</ul>
-
-
-<p>大事なこと</p>
-
-<ul>
-<li>意思の表明。思ってるだけでは何もできない</li>
-<li>考えていることを言語化することが必要</li>
-<li>たのしくソフトウェア開発ができること</li>
-<li>意思をもって選びとること</li>
-</ul>
-
-
-<h3>LT</h3>
-
-<hr />
-
-<p>角谷さん</p>
-
-<ul>
-<li>Rubyで仕事しだすと会社とコミュニティと個人のつながりを考えだす</li>
-<li>WHYから始める</li>
-</ul>
-
-
-<p>和田さん</p>
-
-<ul>
-<li>6年続くのはすごい</li>
-<li>生き生きできるのはレッドじゃなくてサブ</li>
-<li>オススメ本:はじめの一歩を踏み出そう</li>
-</ul>
-
-
-<p>これ以外は聞くほうが面白かったのでメモってません。<br/>
-ごめんなさいm(<em> </em>)m</p>
-
-<h3>宿題的なアレ</h3>
-
-<hr />
-
-<p>万葉の中の人にやってること、超面白いし聞きたいんで是非LTやってくださいと勧められました。<br/>
-なので、機会があればどこかでネタを話たいなーと思います。</p>
-
-<p># 思ってるだけだとダメなので実際どこかで行動しないといけないですね。</p>
 ]]></content>
   </entry>
   

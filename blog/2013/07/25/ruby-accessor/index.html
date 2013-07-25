@@ -5,14 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>iPhoneのカレンダーアプリとGoogleCalendarを同期する - kurobaraのブログ</title>
+  <title>Rubyでアクセス用のメソッドを定義する(アクセッサ) - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="iPhone/iPad購入後、１度しかやらないのでよく忘れます。
-そのため、端末を新しくするとやり方を忘れるのでキモだけメモ。 設定アプリ メール/連絡先/カレンダーの設定項目で、Gmailアカウントを登録する
-作ったアカウントの設定項目で、カレンダーを「オン」にする
-その他の項目は、「オフ」 &hellip;">
+  <meta name="description" content="なんてことはない、ただの整理です。 通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。 Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。 以下のようなModuleクラスにあるものを使います &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/04/05/iphone-google-calendar/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +74,7 @@
   
   <header>
     
-      <h1 class="entry-title">iPhoneのカレンダーアプリとGoogleCalendarを同期する</h1>
+      <h1 class="entry-title">Rubyでアクセス用のメソッドを定義する(アクセッサ)</h1>
     
     
       <p class="meta">
@@ -93,48 +90,105 @@
   
 
 
-<time datetime="2013-04-05T08:13:00+09:00" pubdate data-updated="true">Apr 5<span>th</span>, 2013</time>
+<time datetime="2013-07-25T20:56:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>iPhone/iPad購入後、１度しかやらないのでよく忘れます。<br/>
-そのため、端末を新しくするとやり方を忘れるのでキモだけメモ。</p>
+<div class="entry-content"><p>なんてことはない、ただの整理です。</p>
 
-<h3>設定アプリ</h3>
+<p>通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。</p>
 
-<hr />
+<p>Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。</p>
+
+<p>以下のようなModuleクラスにあるものを使います</p>
 
 <ul>
-<li>メール/連絡先/カレンダーの設定項目で、Gmailアカウントを登録する</li>
-<li>作ったアカウントの設定項目で、カレンダーを「オン」にする</li>
-<li>その他の項目は、「オフ」でもよい</li>
+<li>attr_reader : 参照(読み出し)できるようにする(getter)</li>
+<li>attr_writer : 代入(書き込み)できるようにする(setter)</li>
+<li>attr_accessor : 参照、代入の両方できるようにする(getter/setter)</li>
 </ul>
 
 
-<h3>カレンダーアプリ</h3>
+<p>それぞれ、使い方は以下のような形になります。</p>
 
-<hr />
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Accessor
+</span><span class='line'>
+</span><span class='line'>    attr_reader :name,:hoge
+</span><span class='line'>    attr_writer :fuga,:piyo
+</span><span class='line'>    attr_accessor :access
+</span><span class='line'>    
+</span><span class='line'>    def initialize
+</span><span class='line'>        @name = "kurobara"
+</span><span class='line'>        @hoge = "hogehoge"
+</span><span class='line'>        @fuga = "fugafuga"
+</span><span class='line'>        @piyo = "piypiyo"
+</span><span class='line'>        @access = "OK"
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>    def print_fuga_piyo
+</span><span class='line'>        p '---------------------'
+</span><span class='line'>        puts "fuga = " + @fuga
+</span><span class='line'>        puts "piyo = " + @piyo
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>a = Accessor.new()
+</span><span class='line'>puts a.name
+</span><span class='line'>puts a.hoge  
+</span><span class='line'>a.print_fuga_piyo
+</span><span class='line'>p "代入操作"
+</span><span class='line'>a.fuga = "fuga2fuga2"
+</span><span class='line'>a.piyo = "piyo2piyo2"
+</span><span class='line'>a.print_fuga_piyo
+</span><span class='line'>p '---------------------'
+</span><span class='line'>puts 'a.access = ' + a.access
+</span><span class='line'>p "代入操作"
+</span><span class='line'>a.access = "OKOK"
+</span><span class='line'>puts 'a.access = ' + a.access</span></code></pre></td></tr></table></div></figure>
 
-<ul>
-<li>カレンダーの設定項目で、左下にある同期を押下する</li>
-<li>Gmail項目が出るので、同期したいものをチェックする</li>
-</ul>
 
-
-<h3>参考</h3>
-
-<hr />
-
-<ul>
-<li><a href="http://support.google.com/calendar/answer/151674?hl=ja&amp;ref_topic=13950">Google公式</a></li>
-<li><a href="http://oshiete.appbank.net/archives/1585">画像入りの設定方法</a></li>
-</ul>
-
-
-<p>偶にしかやらないと忘れてしまいますね。</p>
+<p>こんな感じで使えちゃいます。。。<br/>
+今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
+attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
 </div>
 
 
@@ -157,12 +211,12 @@
   
 
 
-<time datetime="2013-04-05T08:13:00+09:00" pubdate data-updated="true">Apr 5<span>th</span>, 2013</time>
+<time datetime="2013-07-25T20:56:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/xi-yan/'>戯言</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -171,7 +225,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/04/05/iphone-google-calendar/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/04/05/iphone-google-calendar/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -184,10 +238,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/02/httpd-webdav/" title="Previous Post: 3分で認証とか考慮しないWebDavを構築してみる">&laquo; 3分で認証とか考慮しないWebDavを構築してみる</a>
+        <a class="basic-alignment left" href="/blog/2013/07/25/ruby-singleton/" title="Previous Post: RubyでSingletonパターンを実装する">&laquo; RubyでSingletonパターンを実装する</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/04/05/shell-args/" title="Next Post: シェルスクリプトで引数を順次処理する">シェルスクリプトで引数を順次処理する &raquo;</a>
       
     </p>
   </footer>
