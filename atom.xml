@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-07-19T00:55:38+09:00</updated>
+  <updated>2013-07-25T18:54:18+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,288 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyでSingletonパターンを実装する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-singleton/"/>
+    <updated>2013-07-25T18:33:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/25/ruby-singleton</id>
+    <content type="html"><![CDATA[<p>このまえ、友人とデザインパターンの話をしてたような気がするので書いてみた。</p>
+
+<p>SingletonはGOFのデザインパターンの一つです。<br/>
+使い所は、システム内で絶対に一つにしておかないといけないもの仕組みのものに使います。<br/>
+例えば、アプリの設定とか見た目(Look&amp;Feel)とかシステムの何かを管理するだとかに使ったりします。</p>
+
+<p>Singletonは以下の条件を満たす必要があります。</p>
+
+<ul>
+<li>作成したクラスのインスタンスは一つだけであることが保証されている</li>
+<li>コード上のどこからでも、生成した1つだけのインスタンスにアクセスできる</li>
+</ul>
+
+
+<p>Javaで上の条件を満たすものはこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>final class Singleton {
+</span><span class='line'>    private static Singleton instance;
+</span><span class='line'>    private Singleton(){};
+</span><span class='line'>
+</span><span class='line'>    public static synchronized Singleton getInstance(){
+</span><span class='line'>        if(instance == null){
+</span><span class='line'>            instance = new Singleton();
+</span><span class='line'>        }
+</span><span class='line'>        return instance;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これと同じ実装をRubyでやるとこんな感じになります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Singleton
+</span><span class='line'>  @@singleton_obj = nil
+</span><span class='line'>  @@count = 0
+</span><span class='line'>
+</span><span class='line'>  # 以下の行をコメントアウトすると
+</span><span class='line'>  # オブジェクトが再生成されるので
+</span><span class='line'>  # シングルトンにならない
+</span><span class='line'>  private_class_method:new
+</span><span class='line'>
+</span><span class='line'>  def initialize
+</span><span class='line'>    @@count = 1
+</span><span class='line'>  end
+</span><span class='line'>  
+</span><span class='line'>  def self.get_instance
+</span><span class='line'>    if @@singleton_obj == nil
+</span><span class='line'>      @@singleton_obj = new
+</span><span class='line'>    end
+</span><span class='line'>    @@singleton_obj
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def self.count_up
+</span><span class='line'>    @@count+=1
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def self.print_count
+</span><span class='line'>    p @@count
+</span><span class='line'>  end
+</span><span class='line'>  
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p '初回インスタンス取得'
+</span><span class='line'>p Singleton.get_instance
+</span><span class='line'>Singleton.print_count
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p '２回目のインスタンス取得でオブジェクトに変更がない'
+</span><span class='line'>p Singleton.get_instance
+</span><span class='line'>Singleton.count_up
+</span><span class='line'>Singleton.print_count
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p 'newするとエラーが飛ぶ'
+</span><span class='line'>begin
+</span><span class='line'>  Singleton.new
+</span><span class='line'>rescue
+</span><span class='line'>  p 'newでエラーが飛んだ'
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結構長いですねw</p>
+
+<p>上記のコードの実行結果は、以下になります。<br/>
+オブジェクトに変化が無いことがわかりますね。<br/>
+つまり、オブジェクトが１つであることが、保証されています。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>"-----------------------"
+</span><span class='line'>"初回インスタンス取得"
+</span><span class='line'>#&lt;Singleton:0x007f91519026f0&gt;
+</span><span class='line'>1
+</span><span class='line'>"-----------------------"
+</span><span class='line'>"２回目のインスタンス取得でオブジェクトに変更がない"
+</span><span class='line'>#&lt;Singleton:0x007f91519026f0&gt;
+</span><span class='line'>2
+</span><span class='line'>"-----------------------"
+</span><span class='line'>"newするとエラーが飛ぶ"
+</span><span class='line'>"newでエラーが飛んだ"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>自力でSingletonを実装すると上記のようなコードなのですが、<br/>
+実は、Rubyにはsingletonをやってくれる便利なモジュールがあります。<br/>
+これを使うと、Mix-inしたクラスのインスタンスは常に同じものを返してくれます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require 'singleton'
+</span><span class='line'>
+</span><span class='line'>class MySingleton
+</span><span class='line'>
+</span><span class='line'>  include Singleton
+</span><span class='line'>
+</span><span class='line'>  @@count = 0
+</span><span class='line'>
+</span><span class='line'>  def initialize
+</span><span class='line'>    @@count = 1
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def self.count_up
+</span><span class='line'>    @@count+=1
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def self.print_count
+</span><span class='line'>    p @@count
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p '初回インスタンス取得'
+</span><span class='line'>p MySingleton.instance
+</span><span class='line'>MySingleton.print_count
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p '２回目のインスタンス取得でオブジェクトに変更がない'
+</span><span class='line'>p MySingleton.instance
+</span><span class='line'>MySingleton.count_up
+</span><span class='line'>MySingleton.print_count
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p 'newするとエラーが飛ぶ'
+</span><span class='line'>begin
+</span><span class='line'>  MySingleton.new
+</span><span class='line'>rescue
+</span><span class='line'>  p 'newでエラーが飛んだ'
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行結果は、こんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>"-----------------------"
+</span><span class='line'>"初回インスタンス取得"
+</span><span class='line'>#&lt;MySingleton:0x007fd2fa8c9658&gt;
+</span><span class='line'>1
+</span><span class='line'>"-----------------------"
+</span><span class='line'>"２回目のインスタンス取得でオブジェクトに変更がない"
+</span><span class='line'>#&lt;MySingleton:0x007fd2fa8c9658&gt;
+</span><span class='line'>2
+</span><span class='line'>"-----------------------"
+</span><span class='line'>"newするとエラーが飛ぶ"
+</span><span class='line'>"newでエラーが飛んだ"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>モジュールを使うと、スッキリとしたコードになりますね。<br/>
+当たり前ですが、newしようとするとエラーになります。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[MacにGUIありWiresharkをインストールする]]></title>
@@ -2338,34 +2620,6 @@ Apacheのディレクトリ制限を噛ますことでアクセス制限なん�
 なので、機会があればどこかでネタを話たいなーと思います。</p>
 
 <p># 思ってるだけだとダメなので実際どこかで行動しないといけないですね。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[シェルスクリプトで引数を順次処理する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/04/05/shell-args/"/>
-    <updated>2013-04-05T23:36:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/04/05/shell-args</id>
-    <content type="html"><![CDATA[<p>表題のようなことをしたいときってありますよね。</p>
-
-<p>特にオレオレのスクリプトで、引数の数だけ処理を実行したいってときなんかがあると思います。<br/>
-まーいわゆる引数の回数分、forをグルグル回すだけですね。</p>
-
-<p>以下は、シェルの引数「$@」を変数「arg」に順次格納して、標準入出力に表示してます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/sh
-</span><span class='line'>for arg in $@
-</span><span class='line'>do
-</span><span class='line'>　　echo ${arg}
-</span><span class='line'>done</span></code></pre></td></tr></table></div></figure>
-
-
-<p>簡単だけど、忘れがちなのでメモしておきました。</p>
 ]]></content>
   </entry>
   

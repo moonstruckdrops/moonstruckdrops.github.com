@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-07-19T00:56:35+09:00</updated>
+  <updated>2013-07-25T18:54:18+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,209 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyでSingletonパターンを実装する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-singleton/"/>
+    <updated>2013-07-25T18:33:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/07/25/ruby-singleton</id>
+    <content type="html"><![CDATA[<p>このまえ、友人とデザインパターンの話をしてたような気がするので書いてみた。</p>
+
+<p>SingletonはGOFのデザインパターンの一つです。<br/>
+使い所は、システム内で絶対に一つにしておかないといけないもの仕組みのものに使います。<br/>
+例えば、アプリの設定とか見た目(Look&amp;Feel)とかシステムの何かを管理するだとかに使ったりします。</p>
+
+<p>Singletonは以下の条件を満たす必要があります。</p>
+
+<ul>
+<li>作成したクラスのインスタンスは一つだけであることが保証されている</li>
+<li>コード上のどこからでも、生成した1つだけのインスタンスにアクセスできる</li>
+</ul>
+
+
+<p>Javaで上の条件を満たすものはこんな感じ</p>
+
+<p>```
+final class Singleton {</p>
+
+<pre><code>private static Singleton instance;
+private Singleton(){};
+
+public static synchronized Singleton getInstance(){
+    if(instance == null){
+        instance = new Singleton();
+    }
+    return instance;
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これと同じ実装をRubyでやるとこんな感じになります。</p>
+
+<p>```
+class Singleton
+  @@singleton_obj = nil
+  @@count = 0</p>
+
+<p>  # 以下の行をコメントアウトすると
+  # オブジェクトが再生成されるので
+  # シングルトンにならない
+  private_class_method:new</p>
+
+<p>  def initialize</p>
+
+<pre><code>@@count = 1
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.get_instance</p>
+
+<pre><code>if @@singleton_obj == nil
+  @@singleton_obj = new
+end
+@@singleton_obj
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.count_up</p>
+
+<pre><code>@@count+=1
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.print_count</p>
+
+<pre><code>p @@count
+</code></pre>
+
+<p>  end</p>
+
+<p>end</p>
+
+<p>p '-----------------------'
+p '初回インスタンス取得'
+p Singleton.get_instance
+Singleton.print_count
+p '-----------------------'
+p '２回目のインスタンス取得でオブジェクトに変更がない'
+p Singleton.get_instance
+Singleton.count_up
+Singleton.print_count
+p '-----------------------'
+p 'newするとエラーが飛ぶ'
+begin
+  Singleton.new
+rescue
+  p 'newでエラーが飛んだ'
+end
+```</p>
+
+<p>結構長いですねw</p>
+
+<p>上記のコードの実行結果は、以下になります。<br/>
+オブジェクトに変化が無いことがわかりますね。<br/>
+つまり、オブジェクトが１つであることが、保証されています。</p>
+
+<p>```
+"-----------------------"
+"初回インスタンス取得"</p>
+
+<h1>&lt;Singleton:0x007f91519026f0></h1>
+
+<p>1
+"-----------------------"
+"２回目のインスタンス取得でオブジェクトに変更がない"</p>
+
+<h1>&lt;Singleton:0x007f91519026f0></h1>
+
+<p>2
+"-----------------------"
+"newするとエラーが飛ぶ"
+"newでエラーが飛んだ"
+```</p>
+
+<p>自力でSingletonを実装すると上記のようなコードなのですが、<br/>
+実は、Rubyにはsingletonをやってくれる便利なモジュールがあります。<br/>
+これを使うと、Mix-inしたクラスのインスタンスは常に同じものを返してくれます。</p>
+
+<p>```
+require 'singleton'</p>
+
+<p>class MySingleton</p>
+
+<p>  include Singleton</p>
+
+<p>  @@count = 0</p>
+
+<p>  def initialize</p>
+
+<pre><code>@@count = 1
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.count_up</p>
+
+<pre><code>@@count+=1
+</code></pre>
+
+<p>  end</p>
+
+<p>  def self.print_count</p>
+
+<pre><code>p @@count
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>p '-----------------------'
+p '初回インスタンス取得'
+p MySingleton.instance
+MySingleton.print_count
+p '-----------------------'
+p '２回目のインスタンス取得でオブジェクトに変更がない'
+p MySingleton.instance
+MySingleton.count_up
+MySingleton.print_count
+p '-----------------------'
+p 'newするとエラーが飛ぶ'
+begin
+  MySingleton.new
+rescue
+  p 'newでエラーが飛んだ'
+end
+```</p>
+
+<p>実行結果は、こんな感じ</p>
+
+<p>```
+"-----------------------"
+"初回インスタンス取得"</p>
+
+<h1>&lt;MySingleton:0x007fd2fa8c9658></h1>
+
+<p>1
+"-----------------------"
+"２回目のインスタンス取得でオブジェクトに変更がない"</p>
+
+<h1>&lt;MySingleton:0x007fd2fa8c9658></h1>
+
+<p>2
+"-----------------------"
+"newするとエラーが飛ぶ"
+"newでエラーが飛んだ"
+```</p>
+
+<p>モジュールを使うと、スッキリとしたコードになりますね。<br/>
+当たり前ですが、newしようとするとエラーになります。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyのStructクラスが便利]]></title>
