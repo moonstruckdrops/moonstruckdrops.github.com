@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-07-25T21:25:24+09:00</updated>
+  <updated>2013-08-11T22:23:25+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,164 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DDコマンドで物理ディスクをバックアップする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/08/11/make-disk-backup/"/>
+    <updated>2013-08-11T21:22:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/08/11/make-disk-backup</id>
+    <content type="html"><![CDATA[<p>どうも、どうも。久しぶりの更新です。<br/>
+ゴタゴタが続いてたり、続いていなかったりでして。<br/>
+更新するような感じのことができていません(勉強しろ)<br/>
+まぁそんなどうでもいいことは置いておきまして、本題に入ります。</p>
+
+<h3>発端</h3>
+
+<hr />
+
+<p>最近、とある目的のためにWindowsPCを買いました。<br/>
+中古で安く買ったのはいいのですが、ライセンス的なもので復旧用のディスクを頂けませんでした。<br/>
+頂けない上にちょっとアレな感じなところもありまして・・・</p>
+
+<p>とりあえず、以下でゴニョゴニョやってみました。</p>
+
+<ol>
+<li>Windows7に標準で搭載されているバックアップツール</li>
+<li>出処不明のリカバリーディスク</li>
+</ol>
+
+
+<p>結果として、どちらも失敗でした。<br/>
+1はリカバーしたら古い情報も残ります。<br/>
+残るだけならまだしも、色々ファイルも消えます。<br/>
+2なんかは、インストールでドライバー用意しろと言われました。<br/>
+なんか、ディスク起動もやたら遅いので怪しい感じ。。。</p>
+
+<p>仕方ないので、ディスク換装した上に<br/>
+元のドライブのデータを全て換装後のディスクにコピーして保存するようにしました。</p>
+
+<h3>バックアップ方法</h3>
+
+<hr />
+
+<p>ディスクのバックアップ方法ですが、「dd」コマンドを使用します。<br/>
+このコマンドですが、「ハードディスク・パーティションを0/1の信号のママ丸ごとコピー」するものです。<br/>
+注意点とすれば、以下のことでしょうか。</p>
+
+<ul>
+<li>ハードディスクの容量がコピー元以上であること</li>
+<li>コマンドで指定するディスクを間違えて指定した場合、データが消滅すること</li>
+</ul>
+
+
+<h3>バックアップ例</h3>
+
+<hr />
+
+<p>以下のような条件とします。</p>
+
+<ul>
+<li>ディスクサイズは、「コピー先HDD ≧コピー元HDD」の大きさとすること</li>
+<li>パーティションは、mountしないこと</li>
+<li>コピー元HDDのパス、「/dev/sdb」</li>
+<li>コピー先HDDのパス、/dev/sdc」</li>
+</ul>
+
+
+<p>以下のコマンドで、上記のデータをコピーすることができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/sdb of=/dev/sdc bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、コピーができます。
+但し、完了までに数時間かかります。</p>
+
+<p>さて、これでディスクからディスクにコピーすることができました。
+それだけでなくバックアップ用のディスクイメージをつくることが出来ます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/sdb of=./backup-disk-image.img bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>故障ディスクのコピー</h3>
+
+<hr />
+
+<p>上記のコマンドを使えば、故障している(ある程度読める必要がありますが)ものまでコピーできます。<br/>
+まぁ強引に読んでる(読めないところは、スキップしています)だけです。</p>
+
+<p>上記のコマンドに設定しているオプションは、以下の表の意味です。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">オプション </th>
+<th align="left"> 内容 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">noerror</td>
+<td align="left">エラー読み飛ばし</td>
+</tr>
+<tr>
+<td align="left">sync</td>
+<td align="left">エラー箇所をNUL(ゼロ）で埋める</td>
+</tr>
+<tr>
+<td align="left">bs</td>
+<td align="left">byte size 読込書き出すバイトサイズ</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>因みに、byte size値が大きいとコピー速度が速くなります。<br/>
+但し、壊れている部分があると道連れになる部分が大きくなります。<br/>
+なので、byte size値を小さくするとエラー範囲は最小になります(コピー速度が遅くなります)</p>
+
+<h3>転送状況の表示</h3>
+
+<hr />
+
+<p>ddコマンドには、転送状況を表示してくれるようなオプションはありません。<br/>
+以下のように、killallコマンドのUSRオプションで途中経過を表示できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$killall -USR1 dd </span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、どれくらいかかるか時間計算ができますね。</p>
+
+<h3>ディスクイメージからの復元方法</h3>
+
+<hr />
+
+<p>ディスクイメージのバックアップは取れましたが、ディスクイメージからの復元が必要ですね。<br/>
+といっても、ここまでで大まかに理解できそうな感じがしますが・・・</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=./backup-disk-image.img of=/dev/sdb bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コピー元とコピー先を入れ替えるだけですね。</p>
+
+<h3>ディスクの消去</h3>
+
+<hr />
+
+<p>復元と同じ要領で、zero埋めすれば完全フォーマットができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/zero of=/dev/sdc</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このコマンド本当に便利。<br/>
+LinuxとかMacのディスクだけでなくって、Windowsなディスクまで丸ごとコピーできるところが素敵。<br/>
+ファイル指定はできないけどw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubyでアクセス用のメソッドを定義する(アクセッサ)]]></title>
@@ -2502,112 +2660,6 @@ interface はmethod(?)</p>
 
 
 <p>仕事でシステム周りの実装するならGo言語をぜひとも採用させたいですね。。。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[rsyncを使って自前サーバでOctpressを運用する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/04/08/rsync-octpress/"/>
-    <updated>2013-04-08T21:35:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/04/08/rsync-octpress</id>
-    <content type="html"><![CDATA[<p>Octpressが便利すぎ。。。<br/>
-Bloggerとは何だったんだって感じです。</p>
-
-<p>どうも、どうもこんにちは。kurobaraです。</p>
-
-<p>便利すぎるんで、</p>
-
-<p>「ちょっと、外部に公開できないけどーみたいな感じで何でも書けるようなブログ」</p>
-
-<p>欲しくなるわけですよ。(主に会社で、ですが・・・)</p>
-
-<p>結論から先に言っちゃうと、自前サーバでOctpressを動かせます。<br/>
-Apacheのディレクトリ制限を噛ますことでアクセス制限なんてこともできます。</p>
-
-<p>という訳で、Octpressを自前サーバで動かす方法をやってみます。</p>
-
-<h3>準備</h3>
-
-<hr />
-
-<p>思いつく感じのこと</p>
-
-<ul>
-<li>クライアントから自前のサーバにSSHでアクセスできること</li>
-<li>クライアントにrsyncがあること</li>
-<li>クライアントでOctpressが動作すること</li>
-</ul>
-
-
-<p>こんな感じ、移行で設定します。</p>
-
-<h3>Rakefileの編集</h3>
-
-<hr />
-
-<p>Rakeコマンドを使ってる訳なので、deploy先を変更するため以下のように編集します。</p>
-
-<ul>
-<li>「ssh_user」を実際のユーザー名とサーバ名に変更します</li>
-<li>「document_root」でサーバ配置のディレクトリを指定します</li>
-<li>「ssh_port」はデフォルトで22ですが、必要に応じて変えます</li>
-<li>「deploy_default」をpushからrsyncに変更します。</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ssh_user       = "user@server"
-</span><span class='line'>ssh_port       = 22
-</span><span class='line'>document_root  = "/var/www/html/"
-</span><span class='line'>rsync_delete   = true
-</span><span class='line'>deploy_default = "rsync"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ぶっちゃけ、自前サーバで動かすだけならこれで終わりです。<br/>
-が、これだけだと寂しいのでサブディレクトリで動作するようにしてみます。<br/>
-# 当たり前ですが、普通はサブディレクトリ単位でコンテンツをApacheに配備すると思います。</p>
-
-<h3>サブディレクトリ運用</h3>
-
-<hr />
-
-<p>http://＜サーバURL＞/hoge のようにサブディレクトリ運用する場合は、以下のようにします。</p>
-
-<ul>
-<li>サブディレクトリを作成します</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$rake set_root_dir[hoge]</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>_config.yamlでサブディレクトリを追加します</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>url: http://&lt;サーバURL&gt;/hoge</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>Rakefileのdocument_rootをサブディレクトリに変更します</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>document_root = "/var/www/html/octopress"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あとは、Apache2でサブディレクトリの設定を施してやれば動作します。<br/>
-認証を付けたければ、認証の設定をすれば認証付きのBlogになります。</p>
-
-<p>これで、要件を満たせたので作業メモとか残せて幸せになれますね。(多分)</p>
 ]]></content>
   </entry>
   

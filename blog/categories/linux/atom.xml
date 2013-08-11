@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-07-25T21:25:45+09:00</updated>
+  <updated>2013-08-11T22:23:25+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,164 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DDコマンドで物理ディスクをバックアップする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/08/11/make-disk-backup/"/>
+    <updated>2013-08-11T21:22:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/08/11/make-disk-backup</id>
+    <content type="html"><![CDATA[<p>どうも、どうも。久しぶりの更新です。<br/>
+ゴタゴタが続いてたり、続いていなかったりでして。<br/>
+更新するような感じのことができていません(勉強しろ)<br/>
+まぁそんなどうでもいいことは置いておきまして、本題に入ります。</p>
+
+<h3>発端</h3>
+
+<hr />
+
+<p>最近、とある目的のためにWindowsPCを買いました。<br/>
+中古で安く買ったのはいいのですが、ライセンス的なもので復旧用のディスクを頂けませんでした。<br/>
+頂けない上にちょっとアレな感じなところもありまして・・・</p>
+
+<p>とりあえず、以下でゴニョゴニョやってみました。</p>
+
+<ol>
+<li>Windows7に標準で搭載されているバックアップツール</li>
+<li>出処不明のリカバリーディスク</li>
+</ol>
+
+
+<p>結果として、どちらも失敗でした。<br/>
+1はリカバーしたら古い情報も残ります。<br/>
+残るだけならまだしも、色々ファイルも消えます。<br/>
+2なんかは、インストールでドライバー用意しろと言われました。<br/>
+なんか、ディスク起動もやたら遅いので怪しい感じ。。。</p>
+
+<p>仕方ないので、ディスク換装した上に<br/>
+元のドライブのデータを全て換装後のディスクにコピーして保存するようにしました。</p>
+
+<h3>バックアップ方法</h3>
+
+<hr />
+
+<p>ディスクのバックアップ方法ですが、「dd」コマンドを使用します。<br/>
+このコマンドですが、「ハードディスク・パーティションを0/1の信号のママ丸ごとコピー」するものです。<br/>
+注意点とすれば、以下のことでしょうか。</p>
+
+<ul>
+<li>ハードディスクの容量がコピー元以上であること</li>
+<li>コマンドで指定するディスクを間違えて指定した場合、データが消滅すること</li>
+</ul>
+
+
+<h3>バックアップ例</h3>
+
+<hr />
+
+<p>以下のような条件とします。</p>
+
+<ul>
+<li>ディスクサイズは、「コピー先HDD ≧コピー元HDD」の大きさとすること</li>
+<li>パーティションは、mountしないこと</li>
+<li>コピー元HDDのパス、「/dev/sdb」</li>
+<li>コピー先HDDのパス、/dev/sdc」</li>
+</ul>
+
+
+<p>以下のコマンドで、上記のデータをコピーすることができます。</p>
+
+<p><code>
+$dd if=/dev/sdb of=/dev/sdc bs=512 conv=noerror,sync
+</code></p>
+
+<p>これで、コピーができます。
+但し、完了までに数時間かかります。</p>
+
+<p>さて、これでディスクからディスクにコピーすることができました。
+それだけでなくバックアップ用のディスクイメージをつくることが出来ます</p>
+
+<p><code>
+$dd if=/dev/sdb of=./backup-disk-image.img bs=512 conv=noerror,sync
+</code></p>
+
+<h3>故障ディスクのコピー</h3>
+
+<hr />
+
+<p>上記のコマンドを使えば、故障している(ある程度読める必要がありますが)ものまでコピーできます。<br/>
+まぁ強引に読んでる(読めないところは、スキップしています)だけです。</p>
+
+<p>上記のコマンドに設定しているオプションは、以下の表の意味です。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">オプション </th>
+<th align="left"> 内容 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">noerror</td>
+<td align="left">エラー読み飛ばし</td>
+</tr>
+<tr>
+<td align="left">sync</td>
+<td align="left">エラー箇所をNUL(ゼロ）で埋める</td>
+</tr>
+<tr>
+<td align="left">bs</td>
+<td align="left">byte size 読込書き出すバイトサイズ</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>因みに、byte size値が大きいとコピー速度が速くなります。<br/>
+但し、壊れている部分があると道連れになる部分が大きくなります。<br/>
+なので、byte size値を小さくするとエラー範囲は最小になります(コピー速度が遅くなります)</p>
+
+<h3>転送状況の表示</h3>
+
+<hr />
+
+<p>ddコマンドには、転送状況を表示してくれるようなオプションはありません。<br/>
+以下のように、killallコマンドのUSRオプションで途中経過を表示できます。</p>
+
+<p><code>
+$killall -USR1 dd
+</code></p>
+
+<p>これで、どれくらいかかるか時間計算ができますね。</p>
+
+<h3>ディスクイメージからの復元方法</h3>
+
+<hr />
+
+<p>ディスクイメージのバックアップは取れましたが、ディスクイメージからの復元が必要ですね。<br/>
+といっても、ここまでで大まかに理解できそうな感じがしますが・・・</p>
+
+<p><code>
+$dd if=./backup-disk-image.img of=/dev/sdb bs=512 conv=noerror,sync
+</code></p>
+
+<p>コピー元とコピー先を入れ替えるだけですね。</p>
+
+<h3>ディスクの消去</h3>
+
+<hr />
+
+<p>復元と同じ要領で、zero埋めすれば完全フォーマットができます。</p>
+
+<p><code>
+$dd if=/dev/zero of=/dev/sdc
+</code></p>
+
+<p>このコマンド本当に便利。<br/>
+LinuxとかMacのディスクだけでなくって、Windowsなディスクまで丸ごとコピーできるところが素敵。<br/>
+ファイル指定はできないけどw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Linux上にあるユーザーアカウントの追加と削除をする]]></title>

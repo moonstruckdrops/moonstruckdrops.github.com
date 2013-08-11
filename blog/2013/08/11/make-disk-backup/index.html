@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>DDコマンドで物理ディスクをバックアップする - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
+
+  
+  <meta name="description" content="どうも、どうも。久しぶりの更新です。
+ゴタゴタが続いてたり、続いていなかったりでして。
+更新するような感じのことができていません(勉強しろ)
+まぁそんなどうでもいいことは置いておきまして、本題に入ります。 発端 最近、とある目的のためにWindowsPCを買いました。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/08/11/make-disk-backup/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <!--
+  <li><a href="/about">About me</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">DDコマンドで物理ディスクをバックアップする</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-11T21:22:00+09:00" pubdate data-updated="true">Aug 11<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>どうも、どうも。久しぶりの更新です。<br/>
+ゴタゴタが続いてたり、続いていなかったりでして。<br/>
+更新するような感じのことができていません(勉強しろ)<br/>
+まぁそんなどうでもいいことは置いておきまして、本題に入ります。</p>
+
+<h3>発端</h3>
+
+<hr />
+
+<p>最近、とある目的のためにWindowsPCを買いました。<br/>
+中古で安く買ったのはいいのですが、ライセンス的なもので復旧用のディスクを頂けませんでした。<br/>
+頂けない上にちょっとアレな感じなところもありまして・・・</p>
+
+<p>とりあえず、以下でゴニョゴニョやってみました。</p>
+
+<ol>
+<li>Windows7に標準で搭載されているバックアップツール</li>
+<li>出処不明のリカバリーディスク</li>
+</ol>
+
+
+<p>結果として、どちらも失敗でした。<br/>
+1はリカバーしたら古い情報も残ります。<br/>
+残るだけならまだしも、色々ファイルも消えます。<br/>
+2なんかは、インストールでドライバー用意しろと言われました。<br/>
+なんか、ディスク起動もやたら遅いので怪しい感じ。。。</p>
+
+<p>仕方ないので、ディスク換装した上に<br/>
+元のドライブのデータを全て換装後のディスクにコピーして保存するようにしました。</p>
+
+<h3>バックアップ方法</h3>
+
+<hr />
+
+<p>ディスクのバックアップ方法ですが、「dd」コマンドを使用します。<br/>
+このコマンドですが、「ハードディスク・パーティションを0/1の信号のママ丸ごとコピー」するものです。<br/>
+注意点とすれば、以下のことでしょうか。</p>
+
+<ul>
+<li>ハードディスクの容量がコピー元以上であること</li>
+<li>コマンドで指定するディスクを間違えて指定した場合、データが消滅すること</li>
+</ul>
+
+
+<h3>バックアップ例</h3>
+
+<hr />
+
+<p>以下のような条件とします。</p>
+
+<ul>
+<li>ディスクサイズは、「コピー先HDD ≧コピー元HDD」の大きさとすること</li>
+<li>パーティションは、mountしないこと</li>
+<li>コピー元HDDのパス、「/dev/sdb」</li>
+<li>コピー先HDDのパス、/dev/sdc」</li>
+</ul>
+
+
+<p>以下のコマンドで、上記のデータをコピーすることができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/sdb of=/dev/sdc bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、コピーができます。
+但し、完了までに数時間かかります。</p>
+
+<p>さて、これでディスクからディスクにコピーすることができました。
+それだけでなくバックアップ用のディスクイメージをつくることが出来ます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/sdb of=./backup-disk-image.img bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>故障ディスクのコピー</h3>
+
+<hr />
+
+<p>上記のコマンドを使えば、故障している(ある程度読める必要がありますが)ものまでコピーできます。<br/>
+まぁ強引に読んでる(読めないところは、スキップしています)だけです。</p>
+
+<p>上記のコマンドに設定しているオプションは、以下の表の意味です。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">オプション </th>
+<th align="left"> 内容 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">noerror</td>
+<td align="left">エラー読み飛ばし</td>
+</tr>
+<tr>
+<td align="left">sync</td>
+<td align="left">エラー箇所をNUL(ゼロ）で埋める</td>
+</tr>
+<tr>
+<td align="left">bs</td>
+<td align="left">byte size 読込書き出すバイトサイズ</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>因みに、byte size値が大きいとコピー速度が速くなります。<br/>
+但し、壊れている部分があると道連れになる部分が大きくなります。<br/>
+なので、byte size値を小さくするとエラー範囲は最小になります(コピー速度が遅くなります)</p>
+
+<h3>転送状況の表示</h3>
+
+<hr />
+
+<p>ddコマンドには、転送状況を表示してくれるようなオプションはありません。<br/>
+以下のように、killallコマンドのUSRオプションで途中経過を表示できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$killall -USR1 dd </span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、どれくらいかかるか時間計算ができますね。</p>
+
+<h3>ディスクイメージからの復元方法</h3>
+
+<hr />
+
+<p>ディスクイメージのバックアップは取れましたが、ディスクイメージからの復元が必要ですね。<br/>
+といっても、ここまでで大まかに理解できそうな感じがしますが・・・</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=./backup-disk-image.img of=/dev/sdb bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コピー元とコピー先を入れ替えるだけですね。</p>
+
+<h3>ディスクの消去</h3>
+
+<hr />
+
+<p>復元と同じ要領で、zero埋めすれば完全フォーマットができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/zero of=/dev/sdc</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このコマンド本当に便利。<br/>
+LinuxとかMacのディスクだけでなくって、Windowsなディスクまで丸ごとコピーできるところが素敵。<br/>
+ファイル指定はできないけどw</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-11T21:22:00+09:00" pubdate data-updated="true">Aug 11<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>Linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/08/11/make-disk-backup/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/08/11/make-disk-backup/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/25/ruby-accessor/" title="Previous Post: Rubyでアクセス用のメソッドを定義する(アクセッサ)">&laquo; Rubyでアクセス用のメソッドを定義する(アクセッサ)</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/11/make-disk-backup/">DDコマンドで物理ディスクをバックアップする</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/25/ruby-accessor/">Rubyでアクセス用のメソッドを定義する(アクセッサ)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/25/ruby-singleton/">RubyでSingletonパターンを実装する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/19/install-wireshark/">MacにGUIありWiresharkをインストールする</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/14/push-apk/">端末にインストールしてあるapkファイルを取り出す</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 130.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 110.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 110.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 110.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 150.0%'>Linux(5)</a> <a href='/blog/categories/mac' style='font-size: 110.0%'>Mac(1)</a> <a href='/blog/categories/markdown' style='font-size: 150.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 110.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(4)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
