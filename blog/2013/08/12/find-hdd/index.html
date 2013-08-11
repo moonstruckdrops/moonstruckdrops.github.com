@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rubyでアクセス用のメソッドを定義する(アクセッサ) - kurobaraのブログ</title>
+  <title>Linuxに接続したHDDを知る方法 - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="なんてことはない、ただの整理です。 通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。 Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。 以下のようなModuleクラスにあるものを使います &hellip;">
+  <meta name="description" content="バックアップ作業とかマウントとかで指定するんだけど・・・
+どこだっけって探しまわるのも面倒なので、やり方をメモしておきます。 方法1:dmesgコマンドを使用 出力された結果をgrepします。 SATAの場合 1
+$dmesg | grep sd USB,PATAの場合 1
+$dmesg | &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/08/12/find-hdd/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -74,7 +77,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rubyでアクセス用のメソッドを定義する(アクセッサ)</h1>
+      <h1 class="entry-title">Linuxに接続したHDDを知る方法</h1>
     
     
       <p class="meta">
@@ -90,105 +93,116 @@
   
 
 
-<time datetime="2013-07-25T20:56:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
+<time datetime="2013-08-12T00:09:00+09:00" pubdate data-updated="true">Aug 12<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>なんてことはない、ただの整理です。</p>
+<div class="entry-content"><p>バックアップ作業とかマウントとかで指定するんだけど・・・<br/>
+どこだっけって探しまわるのも面倒なので、やり方をメモしておきます。</p>
 
-<p>通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。</p>
+<h3>方法1:dmesgコマンドを使用</h3>
 
-<p>Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。</p>
+<hr />
 
-<p>以下のようなModuleクラスにあるものを使います</p>
+<p>出力された結果をgrepします。</p>
 
-<ul>
-<li>attr_reader : 参照(読み出し)できるようにする(getter)</li>
-<li>attr_writer : 代入(書き込み)できるようにする(setter)</li>
-<li>attr_accessor : 参照、代入の両方できるようにする(getter/setter)</li>
-</ul>
-
-
-<p>それぞれ、使い方は以下のような形になります。</p>
+<h5>SATAの場合</h5>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Accessor
-</span><span class='line'>
-</span><span class='line'>    attr_reader :name,:hoge
-</span><span class='line'>    attr_writer :fuga,:piyo
-</span><span class='line'>    attr_accessor :access
-</span><span class='line'>    
-</span><span class='line'>    def initialize
-</span><span class='line'>        @name = "kurobara"
-</span><span class='line'>        @hoge = "hogehoge"
-</span><span class='line'>        @fuga = "fugafuga"
-</span><span class='line'>        @piyo = "piypiyo"
-</span><span class='line'>        @access = "OK"
-</span><span class='line'>    end
-</span><span class='line'>
-</span><span class='line'>    def print_fuga_piyo
-</span><span class='line'>        p '---------------------'
-</span><span class='line'>        puts "fuga = " + @fuga
-</span><span class='line'>        puts "piyo = " + @piyo
-</span><span class='line'>    end
-</span><span class='line'>
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>a = Accessor.new()
-</span><span class='line'>puts a.name
-</span><span class='line'>puts a.hoge  
-</span><span class='line'>a.print_fuga_piyo
-</span><span class='line'>p "代入操作"
-</span><span class='line'>a.fuga = "fuga2fuga2"
-</span><span class='line'>a.piyo = "piyo2piyo2"
-</span><span class='line'>a.print_fuga_piyo
-</span><span class='line'>p '---------------------'
-</span><span class='line'>puts 'a.access = ' + a.access
-</span><span class='line'>p "代入操作"
-</span><span class='line'>a.access = "OKOK"
-</span><span class='line'>puts 'a.access = ' + a.access</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dmesg | grep sd</span></code></pre></td></tr></table></div></figure>
 
 
-<p>こんな感じで使えちゃいます。。。<br/>
-今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
-attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
+<h5>USB,PATAの場合</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$dmesg |grep hd</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>方法2:dfコマンドを使用</h3>
+
+<hr />
+
+<p>自動マウントとかされている場合なんかだとこっちを使う</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$df</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結果を見れば、どのディスクがありどんなパーティションがあるか一目瞭然です。</p>
+
+<h3>方法3:/dev配下の内容+fdiskコマンドを使用</h3>
+
+<hr />
+
+<p>接続中のデバイスを知るには、lsコマンドで/dev配下を知ります。<br/>
+以下の表のような感じになります。実際の割り当ては、OSやディストリに依存</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">パス</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">/dev/hda</td>
+<td align="left">IDEプライマリー(USB)のマスターディスク(hd以降は何が割り当てられるかはOS依存)</td>
+</tr>
+<tr>
+<td align="left">/dev/hda1</td>
+<td align="left">数字が付けば、パーティション</td>
+</tr>
+<tr>
+<td align="left">/dev/sda</td>
+<td align="left">SATAもしくはSCSI</td>
+</tr>
+<tr>
+<td align="left">/dev/sda1</td>
+<td align="left">SATAもしくはSCSIのパーティション</td>
+</tr>
+<tr>
+<td align="left">/dev/md0</td>
+<td align="left">ソフトウェアRAID</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>接続中のデバイスがわかれば、以下のコマンドで詳細情報を得ます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$fdisk -l /dev/sda</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>方法4:/dev配下の内容+hdparmコマンドを使用</h3>
+
+<hr />
+
+<p>方法3と同じようにします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$hdparm -i /dev/sda</span></code></pre></td></tr></table></div></figure>
+
+
+<p>fdiskがデバイスの情報に特化したものに対して、こっちは制御情報だったりステータスまで出てきます。</p>
+
+<h3>余談</h3>
+
+<hr />
+
+<p>単純にUSBで接続したディスクであれば、lsusbコマンドを使えばよかったりします。<br/>
+ターゲットのディスクがわかれば、マウントも簡単になります。<br/>
+マウントポイント(自分で決めて、作成する)を「/mnt/hdd」とした場合、以下のコマンドでマウント可能</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mount /dev/sda1 /mnt/hdd</span></code></pre></td></tr></table></div></figure>
+
+
+<p>自分は、方法1と方法3をよく使います。</p>
 </div>
 
 
@@ -211,12 +225,12 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
   
 
 
-<time datetime="2013-07-25T20:56:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
+<time datetime="2013-08-12T00:09:00+09:00" pubdate data-updated="true">Aug 12<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+    <a class='category' href='/blog/categories/linux/'>Linux</a>
   
 </span>
 
@@ -225,7 +239,7 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/08/12/find-hdd/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/08/12/find-hdd/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -238,10 +252,8 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/07/25/ruby-singleton/" title="Previous Post: RubyでSingletonパターンを実装する">&laquo; RubyでSingletonパターンを実装する</a>
+        <a class="basic-alignment left" href="/blog/2013/08/11/make-disk-backup/" title="Previous Post: DDコマンドで物理ディスクをバックアップする">&laquo; DDコマンドで物理ディスクをバックアップする</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/08/11/make-disk-backup/" title="Next Post: DDコマンドで物理ディスクをバックアップする">DDコマンドで物理ディスクをバックアップする &raquo;</a>
       
     </p>
   </footer>

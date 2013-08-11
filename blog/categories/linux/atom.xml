@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-08-11T22:23:25+09:00</updated>
+  <updated>2013-08-12T00:30:10+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,117 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Linuxに接続したHDDを知る方法]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/08/12/find-hdd/"/>
+    <updated>2013-08-12T00:09:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/08/12/find-hdd</id>
+    <content type="html"><![CDATA[<p>バックアップ作業とかマウントとかで指定するんだけど・・・<br/>
+どこだっけって探しまわるのも面倒なので、やり方をメモしておきます。</p>
+
+<h3>方法1:dmesgコマンドを使用</h3>
+
+<hr />
+
+<p>出力された結果をgrepします。</p>
+
+<h5>SATAの場合</h5>
+
+<p><code>
+$dmesg | grep sd
+</code></p>
+
+<h5>USB,PATAの場合</h5>
+
+<p><code>
+$dmesg |grep hd
+</code></p>
+
+<h3>方法2:dfコマンドを使用</h3>
+
+<hr />
+
+<p>自動マウントとかされている場合なんかだとこっちを使う</p>
+
+<p><code>
+$df
+</code></p>
+
+<p>結果を見れば、どのディスクがありどんなパーティションがあるか一目瞭然です。</p>
+
+<h3>方法3:/dev配下の内容+fdiskコマンドを使用</h3>
+
+<hr />
+
+<p>接続中のデバイスを知るには、lsコマンドで/dev配下を知ります。<br/>
+以下の表のような感じになります。実際の割り当ては、OSやディストリに依存</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">パス</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">/dev/hda</td>
+<td align="left">IDEプライマリー(USB)のマスターディスク(hd以降は何が割り当てられるかはOS依存)</td>
+</tr>
+<tr>
+<td align="left">/dev/hda1</td>
+<td align="left">数字が付けば、パーティション</td>
+</tr>
+<tr>
+<td align="left">/dev/sda</td>
+<td align="left">SATAもしくはSCSI</td>
+</tr>
+<tr>
+<td align="left">/dev/sda1</td>
+<td align="left">SATAもしくはSCSIのパーティション</td>
+</tr>
+<tr>
+<td align="left">/dev/md0</td>
+<td align="left">ソフトウェアRAID</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>接続中のデバイスがわかれば、以下のコマンドで詳細情報を得ます</p>
+
+<p><code>
+$fdisk -l /dev/sda
+</code></p>
+
+<h3>方法4:/dev配下の内容+hdparmコマンドを使用</h3>
+
+<hr />
+
+<p>方法3と同じようにします。</p>
+
+<p><code>
+$hdparm -i /dev/sda
+</code></p>
+
+<p>fdiskがデバイスの情報に特化したものに対して、こっちは制御情報だったりステータスまで出てきます。</p>
+
+<h3>余談</h3>
+
+<hr />
+
+<p>単純にUSBで接続したディスクであれば、lsusbコマンドを使えばよかったりします。<br/>
+ターゲットのディスクがわかれば、マウントも簡単になります。<br/>
+マウントポイント(自分で決めて、作成する)を「/mnt/hdd」とした場合、以下のコマンドでマウント可能</p>
+
+<p><code>
+$mount /dev/sda1 /mnt/hdd
+</code></p>
+
+<p>自分は、方法1と方法3をよく使います。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DDコマンドで物理ディスクをバックアップする]]></title>
@@ -389,100 +500,6 @@ $sudo /etc/init.d/httpd start
 <p><a href="http://localhost/webdav">http://localhost/webdav</a>にアクセス出来れば完了です。</p>
 
 <p>この程度だと、大したことないし知ってれば３分要らないかもw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[findコマンドのメモ]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/31/find-command/"/>
-    <updated>2013-03-31T00:04:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/31/find-command</id>
-    <content type="html"><![CDATA[<p>普段から常用しているコマンドなのですが、今更という感じです。</p>
-
-<p>滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。<br/>
-※今回、使ったのは日時オプションです</p>
-
-<table>
-<thead>
-<tr>
-<th align="left"> コマンドオプション    </th>
-<th align="center"> 機能          </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> -name [filename]    </td>
-<td align="center"> 指定した文字でファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -user [username]    </td>
-<td align="center"> 指定したユーザーが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -group [groupname]  </td>
-<td align="center"> 指定したグループが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -type [type]        </td>
-<td align="center"> ファイルの種類を指定して検索(b：ブロック型特殊ファイル　c：キャラクタ型特殊ファイル　d：ディレクトリ　l：シンボリックリンク　f：通常ファイル)</td>
-</tr>
-<tr>
-<td align="left"> -atime (+/-)n       </td>
-<td align="center"> 最後にアクセスしたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -ctime (+/-)n       </td>
-<td align="center"> 最後にステータスが変更されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mtime (+/-)n       </td>
-<td align="center"> 最後にデータが修正されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mmin (+/-)n        </td>
-<td align="center"> 最後にデータが修正されたのがn分前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -newer [filename]   </td>
-<td align="center"> 指定したファイルよりも後に更新されているものを検索対象にする</td>
-</tr>
-<tr>
-<td align="left"> -size n[c/k/b]      </td>
-<td align="center"> nのサイズのファイルを検索(c:バイト、k:キロバイト、b:ブロック)</td>
-</tr>
-<tr>
-<td align="left"> -ls                 </td>
-<td align="center"> 検索結果のファイル、ディレクトリの詳細を表示する(lsコマンドと同じ)</td>
-</tr>
-<tr>
-<td align="left"> -print              </td>
-<td align="center"> 検索結果を標準出力に出す(元々結果表示されるんで不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -fprint [filename]  </td>
-<td align="center"> 検索結果をファイルに出力する(>でファイル出力できるので不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -exec [command] {}\;</td>
-<td align="center"> 検索結果を指定コマンドにの引数に設定して実行する</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>(例)カレントディレクトリ配下のファイルに「hogehoge」という文字が含まれているかどうか調べる</p>
-
-<p>以下のコマンドで調べることができます。
-<code>
-$find . -type f -exec grep hogehoge {}\;
-</code></p>
-
-<p>こちらでも同じ結果を得られます。
-<code>
-$find . -type f |xargs grep "hogehoge"
-</code></p>
-
-<p>どちらでもいいと思いますが、自分はよく後者を利用しますね。</p>
 ]]></content>
   </entry>
   
