@@ -5,13 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rubymineを使ってみる - kurobaraのブログ</title>
+  <title>Macのディレクトリ名を英語化する - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="皆さんはRubyやRailsでアプリを書くときどのようなエディタを使いますでしょうか？ 僕は、Emacsで書いていることが多いです。。。 多いのですが・・・
-こんな感じで若干面倒な面もあってですね。 設定がともかく面倒くさい・・・。
-色々設定を追加しているので、重くなってきた( &hellip;">
+  <meta name="description" content="色々不便なのでやりました。
+理由は、「ソートや補完とかが辛い」です。 英語化対象は、デフォルトで日本語化されているディレクトリです。
+(「デスクトップ」という名前のディレクトリなど) 以下のコマンドを実行すれば、ディレクトリ名が英語化します。
+やっていることは単純で、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/06/08/use-rubymine/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/08/22/mac-dir/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,7 +77,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rubymineを使ってみる</h1>
+      <h1 class="entry-title">Macのディレクトリ名を英語化する</h1>
     
     
       <p class="meta">
@@ -92,95 +93,31 @@
   
 
 
-<time datetime="2013-06-08T17:26:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
+<time datetime="2013-08-22T00:09:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>皆さんはRubyやRailsでアプリを書くときどのようなエディタを使いますでしょうか？</p>
+<div class="entry-content"><p>色々不便なのでやりました。<br/>
+理由は、「ソートや補完とかが辛い」です。</p>
 
-<h6>僕は、Emacsで書いていることが多いです。。。</h6>
+<p>英語化対象は、デフォルトで日本語化されているディレクトリです。<br/>
+(「デスクトップ」という名前のディレクトリなど)</p>
 
-<p>多いのですが・・・<br/>
-こんな感じで若干面倒な面もあってですね。</p>
+<p>以下のコマンドを実行すれば、ディレクトリ名が英語化します。
+やっていることは単純で、再帰的に権限維持したまま対訳表があるディレクトリをコピーです。</p>
 
-<ul>
-<li>設定がともかく面倒くさい・・・。</li>
-<li>色々設定を追加しているので、重くなってきた(僕の設定が悪いのかもしれませんが・・・)</li>
-<li>補完周りも効くのか効かないのか微妙な時も(僕の設定が悪いry)</li>
-<li>オムニ補完が・・・効きすぎてお節介すぎる(僕の設定がry)</li>
-<li>その他色々。。。</li>
-</ul>
-
-
-<p>良い面もありまして、僕が思う良い面はこんな感じ。</p>
-
-<ul>
-<li>キーバインドがカスタムできるよ</li>
-<li>画面が分割できるので、TDDにも向いてるよ</li>
-<li>オムニ補完が良い感じに効いたときは、さくさくコードが書ける</li>
-<li>タブやフォーマットとか「{ }」の自動補完とかきっちりやってくれる</li>
-<li>あとは、タグを使ってソースからソースへのコードジャンプができる</li>
-</ul>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd /System/Library/CoreServices/SystemFolderLocalizations/
+</span><span class='line'>$ sudo mv Japanese.lproj Japanese.lproj.bak
+</span><span class='line'>$ sudo cp -pr en.lproj Japanese.lproj</span></code></pre></td></tr></table></div></figure>
 
 
-<p>殆ど、Emacsの機能ですねw</p>
-
-<p>で、面倒くさい面もあるのでRuby開発に限ってはEmacsを卒業してもいいのではないかと最近思うようになりました。</p>
-
-<p>なので、Rubyをスムーズに開発できるエディタってなんだろうとか気になりだした訳です。<br/>
-エディタとして候補が挙げれたものは・・・</p>
-
-<ul>
-<li>Vim</li>
-<li>Text Mate</li>
-<li>Sublime text2</li>
-<li>Coda</li>
-<li>Aptana Studio(Eclipse)</li>
-<li>RubyMine</li>
-</ul>
-
-
-<p>自分が観測できた範囲だとこんだけ。</p>
-
-<p>色々ありますね。とりかえず今回はRubyMineを使ってみます。</p>
-
-<h6>Rails コマンド</h6>
-
-<p>「$rails migration」とか実行する場合、「Ctrl + Option + G」<br/>
-よく使いそうなものは大体実行できます。<br/>
-主に以下のようなことができる。(ここでは一部のみ記載)</p>
-
-<ul>
-<li>scaffold</li>
-<li>migration</li>
-<li>helper</li>
-<li>controller</li>
-<li>その他色々</li>
-</ul>
-
-
-<h6>Rails Server</h6>
-
-<p>サーバを起動する場合、「Option + Shift + F10」<br/>
-デバッグ実行やプロダクション起動、リリース</p>
-
-<h6>リファクタリング</h6>
-
-<p>変更箇所をカーソルで選択後「Shift + F6」<br/>
-プレビューが表示されるので、「Do Refactor」を実行しましょう。<br/>
-いちいち、「Do Refactor」ボタンを押さないといけないところに操作性のムカツキを感じる。</p>
-
-<h6>その他</h6>
-
-<p>エディタ自身の設定でデフォルトで有効になっている「フリーカーソール」をOFFにしたい。(余白をクリックすると、行の末尾にいかない)<br/>
-設定項目のエディタ設定で、「Vertual Space」を見つけます。</p>
-
-<h6>「Allow Placement of caret after the end of line」のチェックボックスを外します。</h6>
-
-<p>そうすると、余白をクリックしても行の末尾にいくようになります</p>
+<p>これで英語化されるね。。。</p>
 </div>
 
 
@@ -203,12 +140,12 @@
   
 
 
-<time datetime="2013-06-08T17:26:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
+<time datetime="2013-08-22T00:09:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+    <a class='category' href='/blog/categories/mac/'>Mac</a>
   
 </span>
 
@@ -217,7 +154,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/06/08/use-rubymine/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/06/08/use-rubymine/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/08/22/mac-dir/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/08/22/mac-dir/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -230,10 +167,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/07/vi-on-emacs/" title="Previous Post: Vi(Vim) on Emacsを思いつきでやってみた">&laquo; Vi(Vim) on Emacsを思いつきでやってみた</a>
+        <a class="basic-alignment left" href="/blog/2013/08/12/find-hdd/" title="Previous Post: Linuxに接続したHDDを知る方法">&laquo; Linuxに接続したHDDを知る方法</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/06/18/nikkei-software-07/" title="Next Post: 日経ソフトウェア7月号の特集を読んだ感想">日経ソフトウェア7月号の特集を読んだ感想 &raquo;</a>
       
     </p>
   </footer>

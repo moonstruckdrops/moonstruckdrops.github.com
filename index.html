@@ -9,10 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="バックアップ作業とかマウントとかで指定するんだけど・・・
-どこだっけって探しまわるのも面倒なので、やり方をメモしておきます。 方法1:dmesgコマンドを使用 出力された結果をgrepします。 SATAの場合 1
-$dmesg | grep sd USB,PATAの場合 1
-$dmesg | &hellip;">
+  <meta name="description" content="色々不便なのでやりました。
+理由は、「ソートや補完とかが辛い」です。 英語化対象は、デフォルトで日本語化されているディレクトリです。
+(「デスクトップ」という名前のディレクトリなど) 以下のコマンドを実行すれば、ディレクトリ名が英語化します。
+やっていることは単純で、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,59 @@ $dmesg | &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/22/mac-dir/">Macのディレクトリ名を英語化する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-22T00:09:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>色々不便なのでやりました。<br/>
+理由は、「ソートや補完とかが辛い」です。</p>
+
+<p>英語化対象は、デフォルトで日本語化されているディレクトリです。<br/>
+(「デスクトップ」という名前のディレクトリなど)</p>
+
+<p>以下のコマンドを実行すれば、ディレクトリ名が英語化します。
+やっていることは単純で、再帰的に権限維持したまま対訳表があるディレクトリをコピーです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd /System/Library/CoreServices/SystemFolderLocalizations/
+</span><span class='line'>$ sudo mv Japanese.lproj Japanese.lproj.bak
+</span><span class='line'>$ sudo cp -pr en.lproj Japanese.lproj</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで英語化されるね。。。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1670,108 +1723,6 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-27T19:28:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。</p>
-
-<p>簡単に言うと、よく言われる「依存性の注入」といいます。</p>
-
-<p>が、なんのことかさっぱりわからないですね。
-少し言い換えてあげると</p>
-
-<h6>「依存性をモジュールもしくはクラス内部に抱え込まずに外部から依存内容を設定してあげる」</h6>
-
-<p>となります。</p>
-
-<p>擬似コードを出すとDI前にこんなコードとすると</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(){
-</span><span class='line'>    this.fuga = new Fuga("hogefuga");
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>DI後の擬似コードはこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(Fuga fuga){
-</span><span class='line'>    this.fuga = fuga;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コンストラクタの引数Fugaを差し替えるだけで容易に設定内容を変更できます。<br/>
-依存前のコードだと、依存性はFugaコンストラクタの中にありますが、依存後のコードは依存性は外部にあります。(引数の内容次第)<br/>
-このFugaのコンストラクタがリソースに関わる何かだとDI前のコードであればユニットテストが大変になりますね。<br/>
-しかし、DI後のコードであれば引数を差し替えるだけでユニットテストができるようになります。</p>
-
-<p>なので、DIをするメリットというと(個人的に)以下が挙げられます。</p>
-
-<ul>
-<li>依存しているものが外部にあるので、ユニットテストで差し替えが簡単にできる(外部からモックにしやすい)</li>
-<li>IFさえ同じものであれば、別の実装を行ったものを設定として渡してやることができる(柔軟性)</li>
-</ul>
-
-
-<p>面倒になるのは、事前準備ですがメリットのほうが大きいと個人的には思ってます。<br/>
-面倒な事前処理(主にコンストラクタ生成ですが)をやってくれるのがDIコンテナですね。</p>
-
-<p>よく使うDIコンテナだと、有名なjavaのコンテナはこんなところですかね。</p>
-
-<ul>
-<li>GoogleGuice</li>
-<li>Seaser2</li>
-<li>SpringFramework</li>
-</ul>
-
-
-<p>自分が使うときの基準だと、以下になりますね。</p>
-
-<ul>
-<li>Seaser2なプロダクト(SAStrutsとか)を使っている、もしくは使う場合は、「Seaser2」のDIコンテナ</li>
-<li>Spring関係の何かを使っている、もしくは使う場合は、「SpringFramework」のDIコンテナ(尤も殆ど使ったことないです)</li>
-<li>それ以外の場合なら、大体「GoogleGuice」(どこかに事例とかあればいいですし、大体がWicketとかで使います)</li>
-</ul>
-
-
-<p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
-使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1791,6 +1742,10 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/22/mac-dir/">Macのディレクトリ名を英語化する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/12/find-hdd/">Linuxに接続したHDDを知る方法</a>
       </li>
     
@@ -1806,15 +1761,11 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
         <a href="/blog/2013/07/25/ruby-singleton/">RubyでSingletonパターンを実装する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/07/19/install-wireshark/">MacにGUIありWiresharkをインストールする</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 130.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 110.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 110.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 110.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 160.0%'>Linux(6)</a> <a href='/blog/categories/mac' style='font-size: 110.0%'>Mac(1)</a> <a href='/blog/categories/markdown' style='font-size: 150.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 110.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(4)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 130.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 110.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 110.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 110.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 160.0%'>Linux(6)</a> <a href='/blog/categories/mac' style='font-size: 120.0%'>Mac(2)</a> <a href='/blog/categories/markdown' style='font-size: 150.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 110.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(4)</a> </span>
 </section
 
 
