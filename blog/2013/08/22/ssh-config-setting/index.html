@@ -5,14 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Linux上にあるユーザーアカウントの追加と削除をする - kurobaraのブログ</title>
+  <title>SSHで複数の鍵を管理する - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="すごくド基礎なのですが・・・。
-ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。 ユーザーアカウントの追加 基本中の基本ですね。
-以下のコマンドのような感じで追加します。 1
-$useradd -u 500 -g wheel -m kurobara &hellip;">
+  <meta name="description" content="SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
+ホスト毎の設定は「~/.ssh/config」で設定できます。 管理方法 以下の方法で管理します。 鍵毎にprefixやsuffixをつける
+sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +20,7 @@ $useradd -u 500 -g wheel -m kurobara &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/08/22/ssh-config-setting/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +76,7 @@ $useradd -u 500 -g wheel -m kurobara &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Linux上にあるユーザーアカウントの追加と削除をする</h1>
+      <h1 class="entry-title">SSHで複数の鍵を管理する</h1>
     
     
       <p class="meta">
@@ -93,86 +92,129 @@ $useradd -u 500 -g wheel -m kurobara &hellip;">
   
 
 
-<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+<time datetime="2013-08-22T21:29:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>すごくド基礎なのですが・・・。<br/>
-ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
+<div class="entry-content"><p>SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
+ホスト毎の設定は「~/.ssh/config」で設定できます。</p>
 
-<h3>ユーザーアカウントの追加</h3>
+<h3>管理方法</h3>
 
 <hr />
 
-<p>基本中の基本ですね。<br/>
-以下のコマンドのような感じで追加します。</p>
+<p>以下の方法で管理します。</p>
+
+<ul>
+<li>鍵毎にprefixやsuffixをつける</li>
+<li>sshのconfigにホスト毎に設定をつける</li>
+</ul>
+
+
+<p>因みに、鍵がわかれば鍵ファイル名はなんでもいいです。</p>
+
+<h3>configの記載</h3>
+
+<hr />
+
+<p>以下のような形で記載します。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Host github.com
+</span><span class='line'>    HostName        github.com
+</span><span class='line'>    IdentityFile    ~/.ssh/github_id_rsa
+</span><span class='line'>    User            git
+</span><span class='line'>    TCPKeepAlive    yes
+</span><span class='line'>    IdentitiesOnly  yes
+</span><span class='line'>Host hogehoge
+</span><span class='line'>    HostName        hogehoge
+</span><span class='line'>    Port            12345
+</span><span class='line'>    IdentityFile    ~/.ssh/hogehoge_id_rsa
+</span><span class='line'>    User            hogehoge
+</span><span class='line'>    Protocol        2</span></code></pre></td></tr></table></div></figure>
 
 
-<p>以下の表によく使用するオプションを記載します。</p>
+<p>各項目は以下の内容を設定しています。</p>
 
 <table>
 <thead>
 <tr>
-<th align="left">オプション</th>
-<th align="left">意味</th>
+<th align="left">設定項目</th>
+<th align="left">設定値</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left">c コメント      </td>
-<td align="left">ユーザーのコメントを設定</td>
+<td align="left">Host</td>
+<td align="left">次のHostキーワードが現れるまでの項目が１つの設定項目にする</td>
 </tr>
 <tr>
-<td align="left">d ディレクトリ  </td>
-<td align="left">ユーザーのログインディレクトリを指定</td>
+<td align="left">HostName</td>
+<td align="left">ログイン先のホスト名</td>
 </tr>
 <tr>
-<td align="left">e mm/dd/yy </td>
-<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
+<td align="left">IdentityFile</td>
+<td align="left">SSHの鍵ファイル</td>
 </tr>
 <tr>
-<td align="left">g グループ   </td>
-<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
+<td align="left">User</td>
+<td align="left">ログインするユーザー名</td>
 </tr>
 <tr>
-<td align="left">G グループ    </td>
-<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
+<td align="left">TCPKeepAlive</td>
+<td align="left">持続的接続</td>
 </tr>
 <tr>
-<td align="left">u ユーザーID </td>
-<td align="left">ユーザーのユーザーIDを指定</td>
+<td align="left">IdentitiesOnly</td>
+<td align="left">IdentityFileを利用する場合に設定する</td>
 </tr>
 <tr>
-<td align="left">s シェル </td>
-<td align="left">ユーザーのログインシェルを指定</td>
+<td align="left">Port</td>
+<td align="left">ポート番号</td>
 </tr>
 <tr>
-<td align="left">m        </td>
-<td align="left">ホームディレクトリの作成を自動で行う</td>
+<td align="left">Protocol</td>
+<td align="left">SSHのプロトコル指定</td>
 </tr>
 </tbody>
 </table>
 
 
-<h3>ユーザーアカウントの削除</h3>
+<p>githubへのログインの場合は、上記の内容を記載します。</p>
+
+<h3>接続確認</h3>
 
 <hr />
 
-<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
-なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
-但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
+<p>以下のコマンドで確認します</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T &lt;Host&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>常識ですね(ぉぃ</p>
+<p>例えば、上記のconfigに設定したgithubへのアクセスは以下で確認します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T github.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、「You&#8217;ve successfully authenticated」が出れば成功です。</p>
+
+<p>以上で複数の鍵を管理できますね。</p>
 </div>
 
 
@@ -195,7 +237,7 @@ $useradd -u 500 -g wheel -m kurobara &hellip;">
   
 
 
-<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+<time datetime="2013-08-22T21:29:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
       
 
 <span class="categories">
@@ -209,7 +251,7 @@ $useradd -u 500 -g wheel -m kurobara &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/08/22/ssh-config-setting/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/08/22/ssh-config-setting/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -222,10 +264,8 @@ $useradd -u 500 -g wheel -m kurobara &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/22/zip-pass/" title="Previous Post: コマンドで暗号化Zipファイルを作成する">&laquo; コマンドで暗号化Zipファイルを作成する</a>
+        <a class="basic-alignment left" href="/blog/2013/08/22/mac-dir/" title="Previous Post: Macのディレクトリ名を英語化する">&laquo; Macのディレクトリ名を英語化する</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/05/28/git-talk/" title="Next Post: Gitを教えたときの話">Gitを教えたときの話 &raquo;</a>
       
     </p>
   </footer>

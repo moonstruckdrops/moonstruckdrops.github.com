@@ -9,15 +9,15 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="偶に忘れるのでメモしておきます。
-iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。 1
+  <meta name="description" content="少しばかり、やることがあったのでやってみた。
+煩悩丸出しですいませんw HTTP Responseのbodyを利用する 直感的ではないけど、素直なやりかた 書き込みモードでファイルを開く
+urlで接続したbodyデータをファイルに書き込む 1
 2
 3
 4
 5
 6
-Map map = new HashMap();
-for (Iterator it = map.entrySet().iterator(); it. &hellip;">
+def save_file(url &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,101 @@ for (Iterator it = map.entrySet().iterator(); it. &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/28/ruby-web-file/">Rubyで画像ファイルをダウンロードする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-28T23:34:00+09:00" pubdate data-updated="true">Mar 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>少しばかり、やることがあったのでやってみた。<br/>
+煩悩丸出しですいませんw</p>
+
+<h3>HTTP Responseのbodyを利用する</h3>
+
+<hr />
+
+<p>直感的ではないけど、素直なやりかた</p>
+
+<ol>
+<li>書き込みモードでファイルを開く</li>
+<li>urlで接続したbodyデータをファイルに書き込む</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
+</span><span class='line'>   filename = File.basename(url)
+</span><span class='line'>   open(filename, "wb") do  |file|
+</span><span class='line'>          file.puts Net::HTTP.get_response(URI.parse(url)).body
+</span><span class='line'>   end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>open-uriを使用する方法</h3>
+
+<hr />
+
+<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
+
+<ol>
+<li>書き込みモードでファイルを開く</li>
+<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
+</span><span class='line'>    filename = File.basename(url)
+</span><span class='line'>    open(filename, 'wb') do |file|
+</span><span class='line'>        open(url) do |data|
+</span><span class='line'>            file.write(data.read)
+</span><span class='line'>      end
+</span><span class='line'>    end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1132,6 +1227,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/22/ssh-config-setting/">SSHで複数の鍵を管理する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/22/mac-dir/">Macのディレクトリ名を英語化する</a>
       </li>
     
@@ -1147,15 +1246,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2013/07/25/ruby-accessor/">Rubyでアクセス用のメソッドを定義する(アクセッサ)</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/07/25/ruby-singleton/">RubyでSingletonパターンを実装する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 130.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 110.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.0%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 110.0%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 110.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 160.0%'>Linux(6)</a> <a href='/blog/categories/mac' style='font-size: 120.0%'>Mac(2)</a> <a href='/blog/categories/markdown' style='font-size: 150.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 110.0%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(4)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 117.14285714285714%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 125.71428571428572%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 108.57142857142857%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 108.57142857142857%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 108.57142857142857%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 108.57142857142857%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.71428571428572%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 160.0%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(2)</a> <a href='/blog/categories/markdown' style='font-size: 142.85714285714286%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 151.42857142857144%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 108.57142857142857%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 134.28571428571428%'>戯言(4)</a> </span>
 </section
 
 
