@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-08-22T21:52:18+09:00</updated>
+  <updated>2013-08-25T13:20:28+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iTerm2のMetaキーを変更する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key/"/>
+    <updated>2013-08-25T13:11:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>MetaキーはEmacsライクのように使いたい人です。<br/>
+変更と書けば物凄く大げさな内容です。</p>
+
+<h3>変更方法</h3>
+
+<hr />
+
+<p>iTerm2の環境設定で変更します。</p>
+
+<ol>
+<li>Profiles</li>
+<li>Left option key acts asで+Escを選択</li>
+<li>Right option key acts asで+Escを選択</li>
+<li>閉じる</li>
+</ol>
+
+
+<p>これだけ。<br/>
+これで、optionキーがMetaキーとして動作します。</p>
+
+<h3>他の方法は？</h3>
+
+<hr />
+
+<p>方法としては幾らでもあって思いつくだけでもこんだけですね。</p>
+
+<ol>
+<li>Keyremap4macbookを使って変更する</li>
+<li>inputrcファイルを作成する</li>
+</ol>
+
+
+<p>神保町でお安くOreiiy本(入門bash)をゲットしたので<br/>
+ちょっと気になることとかやってるうちに小ネタが出ましたw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[SSHで複数の鍵を管理する]]></title>
@@ -2448,87 +2494,6 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
 
 
 <p>ここに書いた以外のやり方なんていくらでもあるので、参考程度で。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Linux上にあるユーザーアカウントの追加と削除をする]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/"/>
-    <updated>2013-04-24T23:40:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add</id>
-    <content type="html"><![CDATA[<p>すごくド基礎なのですが・・・。<br/>
-ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
-
-<h3>ユーザーアカウントの追加</h3>
-
-<hr />
-
-<p>基本中の基本ですね。<br/>
-以下のコマンドのような感じで追加します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下の表によく使用するオプションを記載します。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">オプション</th>
-<th align="left">意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">c コメント      </td>
-<td align="left">ユーザーのコメントを設定</td>
-</tr>
-<tr>
-<td align="left">d ディレクトリ  </td>
-<td align="left">ユーザーのログインディレクトリを指定</td>
-</tr>
-<tr>
-<td align="left">e mm/dd/yy </td>
-<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
-</tr>
-<tr>
-<td align="left">g グループ   </td>
-<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
-</tr>
-<tr>
-<td align="left">G グループ    </td>
-<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
-</tr>
-<tr>
-<td align="left">u ユーザーID </td>
-<td align="left">ユーザーのユーザーIDを指定</td>
-</tr>
-<tr>
-<td align="left">s シェル </td>
-<td align="left">ユーザーのログインシェルを指定</td>
-</tr>
-<tr>
-<td align="left">m        </td>
-<td align="left">ホームディレクトリの作成を自動で行う</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>ユーザーアカウントの削除</h3>
-
-<hr />
-
-<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
-なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
-但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>常識ですね(ぉぃ</p>
 ]]></content>
   </entry>
   

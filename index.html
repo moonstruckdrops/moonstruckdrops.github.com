@@ -9,9 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
-ホスト毎の設定は「~/.ssh/config」で設定できます。 管理方法 以下の方法で管理します。 鍵毎にprefixやsuffixをつける
-sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
+  <meta name="description" content="はじめに MetaキーはEmacsライクのように使いたい人です。
+変更と書けば物凄く大げさな内容です。 変更方法 iTerm2の環境設定で変更します。 Profiles
+Left option key acts asで+Escを選択
+Right option key acts asで+Escを選択 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,79 @@ sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/25/iterm-meta-key/">iTerm2のMetaキーを変更する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-25T13:11:00+09:00" pubdate data-updated="true">Aug 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>MetaキーはEmacsライクのように使いたい人です。<br/>
+変更と書けば物凄く大げさな内容です。</p>
+
+<h3>変更方法</h3>
+
+<hr />
+
+<p>iTerm2の環境設定で変更します。</p>
+
+<ol>
+<li>Profiles</li>
+<li>Left option key acts asで+Escを選択</li>
+<li>Right option key acts asで+Escを選択</li>
+<li>閉じる</li>
+</ol>
+
+
+<p>これだけ。<br/>
+これで、optionキーがMetaキーとして動作します。</p>
+
+<h3>他の方法は？</h3>
+
+<hr />
+
+<p>方法としては幾らでもあって思いつくだけでもこんだけですね。</p>
+
+<ol>
+<li>Keyremap4macbookを使って変更する</li>
+<li>inputrcファイルを作成する</li>
+</ol>
+
+
+<p>神保町でお安くOreiiy本(入門bash)をゲットしたので<br/>
+ちょっと気になることとかやってるうちに小ネタが出ましたw</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1596,86 +1670,6 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/13/recover-dropbox-data/">削除してしまったDropboxのデータを復元する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-13T17:06:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>簡単な経緯</h3>
-
-<hr />
-
-<p>このブログ記事を書くキッカケになった内容を以下に記述します。</p>
-
-<p>お馬鹿すぎて笑えますwww</p>
-
-<ol>
-<li>Dropboxアプリ起動</li>
-<li>アプリを起動したまま、あるコマンドを実行</li>
-<li>Dropboxと同期したディレクトリが2で実行したコマンドで削除される</li>
-<li>1のDropboxアプリが削除した状態を同期開始</li>
-<li>削除だけなので、同期が一瞬で終わってしまう</li>
-<li>Dropboxサーバのデータが削除</li>
-</ol>
-
-
-<p>こんな感じでした・・・
-実際は、Dropboxのディレクトリだけでなくもっと影響がでかくて涙を流しています。</p>
-
-<h3>復元の手順</h3>
-
-<hr />
-
-<p>復活の呪文を唱えるにも条件があります。</p>
-
-<h4>削除してからの日数が30日以内であれば、復元可能</h4>
-
-<p>というものです。</p>
-
-<p>幸いなことに削除した次の日に気がついたので、自分はこの条件を満たしていました。</p>
-
-<p>で、肝心の復元の手順ですが、以下で実施します。</p>
-
-<ol>
-<li>Dropboxのウェブサイトにログイン</li>
-<li>画面右上の「削除済みファイル」をクリック</li>
-<li>ファイル名の横に表示されている逆三角を押下し復元をクリック</li>
-</ol>
-
-
-<h4><a href="https://www.dropbox.com/help/296/ja">公式の手順</a></h4>
-
-<p>これで削除したファイルが復元できます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1695,6 +1689,10 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/25/iterm-meta-key/">iTerm2のMetaキーを変更する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/08/22/ssh-config-setting/">SSHで複数の鍵を管理する</a>
       </li>
     
@@ -1710,15 +1708,11 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
         <a href="/blog/2013/08/11/make-disk-backup/">DDコマンドで物理ディスクをバックアップする</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/07/25/ruby-accessor/">Rubyでアクセス用のメソッドを定義する(アクセッサ)</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 117.14285714285714%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 125.71428571428572%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 108.57142857142857%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 108.57142857142857%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 108.57142857142857%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 108.57142857142857%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.71428571428572%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 160.0%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(2)</a> <a href='/blog/categories/markdown' style='font-size: 142.85714285714286%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 151.42857142857144%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 108.57142857142857%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 134.28571428571428%'>戯言(4)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 117.14285714285714%'>Android(2)</a> <a href='/blog/categories/emacs' style='font-size: 125.71428571428572%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 108.57142857142857%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 108.57142857142857%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 108.57142857142857%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 108.57142857142857%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.71428571428572%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 160.0%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 125.71428571428572%'>Mac(3)</a> <a href='/blog/categories/markdown' style='font-size: 142.85714285714286%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 151.42857142857144%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 108.57142857142857%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 134.28571428571428%'>戯言(4)</a> </span>
 </section
 
 

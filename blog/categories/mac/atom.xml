@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mac | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/mac/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-08-22T21:52:18+09:00</updated>
+  <updated>2013-08-25T13:20:28+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iTerm2のMetaキーを変更する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key/"/>
+    <updated>2013-08-25T13:11:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>MetaキーはEmacsライクのように使いたい人です。<br/>
+変更と書けば物凄く大げさな内容です。</p>
+
+<h3>変更方法</h3>
+
+<hr />
+
+<p>iTerm2の環境設定で変更します。</p>
+
+<ol>
+<li>Profiles</li>
+<li>Left option key acts asで+Escを選択</li>
+<li>Right option key acts asで+Escを選択</li>
+<li>閉じる</li>
+</ol>
+
+
+<p>これだけ。<br/>
+これで、optionキーがMetaキーとして動作します。</p>
+
+<h3>他の方法は？</h3>
+
+<hr />
+
+<p>方法としては幾らでもあって思いつくだけでもこんだけですね。</p>
+
+<ol>
+<li>Keyremap4macbookを使って変更する</li>
+<li>inputrcファイルを作成する</li>
+</ol>
+
+
+<p>神保町でお安くOreiiy本(入門bash)をゲットしたので<br/>
+ちょっと気になることとかやってるうちに小ネタが出ましたw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Macのディレクトリ名を英語化する]]></title>
