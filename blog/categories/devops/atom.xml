@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: DevOps | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/devops/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2013-10-16T02:39:41+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[packerを使用して、VirtualMachineで動くVagrant用のBoxファイルを作成した]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/10/16/packer-basic/"/>
+    <updated>2013-10-16T00:23:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/10/16/packer-basic</id>
+    <content type="html"><![CDATA[<p>昨日(日付の上では、一昨日)にあったGo Conference 2013 autumnに行ってきました。</p>
+
+<p>野良Hackathonがあったので、久々のGo慣らしも兼ねてpackerで１つ環境用意してやるかといった感じでやってました。<br/>
+勿論、イメージ作ってる待ち時間の間にpackerのソースも読んでました<br/>
+正直、ドキュメント読んで(?)ってなったところもあったので読んだとかそんな感じです。</p>
+
+<p>Google I/O以来に会った<a href="https://twitter.com/ymotongpoo">@ymotongpoo</a>さんにLTやらね？って誘われた。<br/>
+然しながら、Goのネタが今手元に無かったので、LT時刻までにpackerで環境用意できたらやるって言ったけど、出来なかったのでLT諦めた。<br/>
+後で、すごい誤った。(完成したのは、LT終了して暫くしてからだった)<br/>
+<a href="https://twitter.com/ymotongpoo">@ymotongpoo</a>さん、もし見てたら次回のGoConではLTやれるように準備しておきます。</p>
+
+<p>という訳で、代わり(?)に表題の内容をやります。</p>
+
+<h2>最終ゴール</h2>
+
+<hr />
+
+<p>以下のコマンドでVirtualBox上で動作するCentOS6.4(64bit)が起動してログインできるようにする<br/>
+<code>
+$vagrant up
+</code></p>
+
+<p>但し、Vagrant側では、特にアプリケーションのインストールを実施せず、packer側で以下の２点を満たすこと</p>
+
+<ul>
+<li>最小インストールしたパッケージを全て最新化すること</li>
+<li>Gitをインストールすること</li>
+</ul>
+
+
+<h2>前提</h2>
+
+<hr />
+
+<p>前提がないとお話にならないので、以下が入ってることにします。</p>
+
+<ul>
+<li>Vagrant 1.3.4</li>
+<li>VirtualBox 4.2.16</li>
+<li>Go 1.1.2</li>
+</ul>
+
+
+<p>こいつらが入ってない場合は、入れて下さい。</p>
+
+<p>あと、実行環境はMacでやってますが、Linuxも似たような感じでできると思います。<br/>
+Windowsは知らないですが多分できるんじゃないかなぁと思います。</p>
+
+<h3>packerのインストール</h3>
+
+<hr />
+
+<p>packerをインストールします。<br/>
+公式の手順に従えば1発でインストールできます。</p>
+
+<p><code>
+$brew tap homebrew/binary
+$brew install packer
+</code></p>
+
+<h3>OSインストール用のkickstartファイルを用意する</h3>
+
+<hr />
+
+<p>kickstartは、RHEL系(CentOSなど)OS のインストール&amp;セットアップが自動化できることを指します。<br/>
+で、一応OSインストールした時の構成がOS側で記録されていまして、「/root/anaconda-ks.cfg」がkickstartファイルになります。<br/>
+他にも、system-config-kickstart.noarchをインストールすることでGUIで設定ファイルを用意できるようになっています。</p>
+
+<p>以下のような感じで最小構成インストールファイルを用意します。</p>
+
+<p>```
+install
+cdrom
+lang en_US.UTF-8
+keyboard us
+network --bootproto=dhcp
+rootpw --iscrypted $1$FB.fOroc$b2.YcN30BjrYxlUbECUxO1
+firewall --enabled --service=ssh
+authconfig --enableshadow --passalgo=sha512
+selinux --disabled
+timezone UTC
+bootloader --location=mbr</p>
+
+<p>text
+skipx
+zerombr</p>
+
+<p>clearpart --all --initlabel
+autopart</p>
+
+<p>auth  --useshadow  --enablemd5
+firstboot --disabled
+reboot</p>
+
+<p>%packages --nobase
+@core
+%end</p>
+
+<p>%post
+/usr/bin/yum -y install sudo
+/usr/sbin/groupadd moonstruckdrops
+/usr/sbin/useradd moonstruckdrops -g moonstruckdrops -G wheel
+echo "moonstruckdrops"|passwd --stdin moonstruckdrops
+echo "moonstruckdrops        ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers.d/moonstruckdrops
+chmod 0440 /etc/sudoers.d/moonstruckdrops
+%end
+```</p>
+
+<p>最小インストールを実施した後にsudoをインストールし、ログインユーザーを新規に追加しています。</p>
+
+<p>因みに、rootパスワードは以下のコマンドで生成します。<br/>
+生成された文字列をrootpwに記述します。</p>
+
+<p><code>
+$openssl passwd -1
+</code></p>
+
+<h3>jsonファイルを作成する</h3>
+
+<hr />
+
+<p>細かい解説は抜きにして、以下のような感じで作成します。<br/>
+大体、ドキュメントに書いてあるので直感的に分かるかと思います。</p>
+
+<p>```
+{</p>
+
+<pre><code>"builders": [
+    {
+        "type": "virtualbox",
+        "vm_name": "centos_box",
+        "guest_os_type": "RedHat_64",
+        "disk_size": "20000",
+        "format": "ovf",
+        "hard_drive_interface":"sata",
+        "boot_wait": "5s",
+        "iso_url": "http://ftp.iij.ad.jp/pub/linux/centos/6.4/isos/x86_64/CentOS-6.4-x86_64-minimal.iso",
+        "iso_checksum_type": "md5",
+        "iso_checksum": "4a5fa01c81cc300f4729136e28ebe600",
+        "ssh_username":"root",
+        "ssh_password":"vagrant",
+        "ssh_port": 22,
+        "shutdown_command": "shutdown -h now",
+        "guest_additions_path": "VBoxGuestAdditions_.iso",
+        "virtualbox_version_file": ".vbox_version",
+        "vboxmanage":[
+            ["modifyvm", "", "--memory", "1024"],
+            ["modifyvm", "", "--cpus", "2"]
+        ],
+        "http_directory": "./builders/",
+        "boot_command": [
+            "&lt;tab&gt; text ks=http://:/ks.cfg&lt;enter&gt;&lt;wait&gt;"
+        ]
+    }
+],
+"provisioners": [{
+    "type": "shell",
+    "inline": [
+        "sleep 30",
+        "sudo yum -y update",
+        "sudo yum -y install git"
+        ]
+}],
+"post-processors": [{
+    "type": "vagrant",
+    "output": "centos.box"
+}]
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>ビルドしてイメージを作成する</h3>
+
+<hr />
+
+<h5>作成したjsonに誤りがないことを確認する</h5>
+
+<p>以下のコマンドを使用して確認する<br/>
+<code>
+$packer validate
+</code></p>
+
+<p>以下の実行結果になれば、エラーなく記述できている<br/>
+<code>
+Template validated successfully.
+</code></p>
+
+<p>エラーだと、こんな感じでどこが誤っているか教えてくれる<br/>
+<code>
+Failed to parse template: Error in line 14, char 8: invalid character '"' after object key:value pair
+</code></p>
+
+<h5>ビルドを行う</h5>
+
+<p>うまくいけば、期待した結果の仮想マシンができている</p>
+
+<p><code>
+$packer build -only=virtualbox centos.json
+</code></p>
+
+<h3>vagrantを使ってインストールしたOSを起動する</h3>
+
+<hr />
+
+<p>やることは非常に簡単です。</p>
+
+<p>まず、初期化します。<br/>
+<code>
+$vagrant init
+</code></p>
+
+<p>vagrantの設定ファイルを編集します。</p>
+
+<ul>
+<li>「config.vm.box_url = "your_boxfile_path"」に生成したファイルのパスを記述</li>
+<li>「vb.gui = true」 を有効化(コメント削除)</li>
+</ul>
+
+
+<p>最後に起動します。
+<code>
+$vagrant up
+</code></p>
+
+<p>うまくいけば、最終ゴールの内容で起動します。</p>
+
+<h3>嵌ったビルドエラー</h3>
+
+<hr />
+
+<p>ビルドを行うと以下のようなビルドエラーに遭遇します。<br/>
+エラーになると、以下のようなエラーになります。</p>
+
+<p><code>
+==&gt; virtualbox: Waiting for SSH to become available...
+==&gt; virtualbox: Timeout waiting for SSH.
+==&gt; virtualbox: Unregistering and deleting virtual machine...
+==&gt; virtualbox: Deleting output directory...
+Build 'virtualbox' errored: Build was halted.
+</code></p>
+
+<p>解決方法ですが、「"ssh_wait_timeout"」の値を長めに設定する、もしくはjsonに記述しない(デフォルトは20min設定のため)こと<br/>
+少し考えれば理解できた話なんですが、そもそもこのsshはどこで使用するかというとOSインストール完了後、即ちprovisionersで利用します。<br/>
+そのため、インストールしたOSに接続するためsshが必要になるということです。(ゴールの場合だと、updateとgitインストール)<br/>
+こういうことから、OSインストールが終わるまでssh接続できないからsshがタイムアウトしていたということです。</p>
+
+<p>そもそも、公式のドキュメントに「"ssh_wait_timeout":"30s"」と記述してあり、sshがどこで使われるのか言及していないことも嵌る原因だと思います。</p>
+
+<h3>感想というか思うところ</h3>
+
+<hr />
+
+<p>ドキュメントもかなり充実してるんで、BOXファイルを作成するまでは割りとすんなりいけるかなぁと思います。<br/>
+一部、嵌まりどころもありますが・・・。</p>
+
+<p>一方で、仕組み上仕方ない部分もありますが、kickstartやその他OS自動インストールの知識がないと使いづらい印象を受けました。<br/>
+尤も、こういうツールに手を出す人は、知識持ちの人かもしれませんが・・・</p>
+
+<p>「packer + Vagrant + Chef」を組み合わせれば、かなりプラットフォーム及び開発環境系の自動化ができるなぁと思いました。</p>
+
+<p>しかし、これがGoで作られているのがすごいよなぁ・・・。<br/>
+Goマジイケてると思います。</p>
+]]></content>
+  </entry>
+  
+</feed>
