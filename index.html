@@ -9,8 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="昨日(日付の上では、一昨日)にあったGo Conference 2013 autumnに行ってきました。 野良Hackathonがあったので、久々のGo慣らしも兼ねてpackerで１つ環境用意してやるかといった感じでやってました。
-勿論、 &hellip;">
+  <meta name="description" content="何個か前の記事を加筆修正したときの手順をまとめます。
+但し、このやり方はpush内容を残したくないときのやり方に加えて、
+ハッシュ値を知ってれば参照できてしまうという点があります。
+(公開されているページは修正されたものが表示されます) 記事の公開停止方法 以下の順序で変更を行います &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +74,77 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/19/fix-octpress-page/">Octpressで記事を一度公開停止→再公開をしたい場合の方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-19T10:24:00+09:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>何個か前の記事を加筆修正したときの手順をまとめます。<br/>
+但し、このやり方はpush内容を残したくないときのやり方に加えて、<br/>
+ハッシュ値を知ってれば参照できてしまうという点があります。<br/>
+(公開されているページは修正されたものが表示されます)</p>
+
+<h3>記事の公開停止方法</h3>
+
+<hr />
+
+<p>以下の順序で変更を行います</p>
+
+<ol>
+<li>octpressでgithubにpushしているディレクトリに移動する</li>
+<li>gitコマンドで記事をpushしたコミットまで遡って、 変更取り消しを行う</li>
+</ol>
+
+
+<p>それぞれコマンドは以下のようになります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd ~/octpress/_deploy
+</span><span class='line'>$git push -f origin master:HEAD^^</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、２つ前の記事公開の状態まで変更することができました。
+同じ方法をとれば、記事の順序を入れ替え(削除)した状態で公開することも出来ると思います。<br/>
+(git rebase後にpush origin masterなどすればです)</p>
+
+<h3>再公開方法</h3>
+
+<hr />
+
+<p>普通に記事を生成して再度サーバにpushして下さい。<br/>
+ファイルの日付や記事の日付を修正していなければ、
+公開停止前と同じURLになります。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1722,82 +1795,6 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/19/install-wireshark/">MacにGUIありWiresharkをインストールする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-19T00:47:00+09:00" pubdate data-updated="true">Jul 19<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>いつも忘れるのでいい加減にメモを残しておきます。</p>
-
-<h3>インストール環境</h3>
-
-<hr />
-
-<p>以下がインストールされているマシンであること</p>
-
-<ul>
-<li>XQuartz</li>
-<li>Homebrew</li>
-</ul>
-
-
-<p>XCodeが古かったりするとインストールできない可能性があります。<br/>
-少なくともwarningは出ます。</p>
-
-<h3>インストール方法</h3>
-
-<hr />
-
-<p>以下のコマンドを実施することでGUIありWiresharkがインストールできます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install wireshark --with-x</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因みに「&#8211;with-x」オプションがない状態でインストールするとGUI無しのwiresharkがインストールされます。</p>
-
-<h3>Wireshark起動方法</h3>
-
-<hr />
-
-<p>以下のコマンドで起動します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo wireshark</span></code></pre></td></tr></table></div></figure>
-
-
-<p>毎回実施しては、毎回思うのだけど・・・
-Homebrew使わずにインストールしたほうが手っ取り早いような気がする。。。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1817,6 +1814,10 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/10/19/fix-octpress-page/">Octpressで記事を一度公開停止→再公開をしたい場合の方法</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/10/16/packer-basic/">packerを使用して、VirtualMachineで動くVagrant用のBoxファイルを作成した</a>
       </li>
     
@@ -1832,15 +1833,11 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
         <a href="/blog/2013/08/22/ssh-config-setting/">SSHで複数の鍵を管理する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/08/22/mac-dir/">Macのディレクトリ名を英語化する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 117.14285714285714%'>Android(2)</a> <a href='/blog/categories/devops' style='font-size: 108.57142857142857%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.71428571428572%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 108.57142857142857%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 108.57142857142857%'>git(1)</a> <a href='/blog/categories/go' style='font-size: 108.57142857142857%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 108.57142857142857%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.71428571428572%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 160.0%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 125.71428571428572%'>Mac(3)</a> <a href='/blog/categories/markdown' style='font-size: 142.85714285714286%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 151.42857142857144%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 108.57142857142857%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 142.85714285714286%'>戯言(5)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 117.14285714285714%'>Android(2)</a> <a href='/blog/categories/devops' style='font-size: 108.57142857142857%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.71428571428572%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 108.57142857142857%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 117.14285714285714%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 108.57142857142857%'>Go(1)</a> <a href='/blog/categories/ide' style='font-size: 108.57142857142857%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.71428571428572%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 160.0%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 125.71428571428572%'>Mac(3)</a> <a href='/blog/categories/markdown' style='font-size: 142.85714285714286%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 151.42857142857144%'>Ruby(6)</a> <a href='/blog/categories/shellscript' style='font-size: 108.57142857142857%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 142.85714285714286%'>戯言(5)</a> </span>
 </section
 
 

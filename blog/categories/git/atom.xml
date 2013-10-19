@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-10-16T02:39:41+09:00</updated>
+  <updated>2013-10-19T10:25:55+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Octpressで記事を一度公開停止→再公開をしたい場合の方法]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page/"/>
+    <updated>2013-10-19T10:24:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page</id>
+    <content type="html"><![CDATA[<p>何個か前の記事を加筆修正したときの手順をまとめます。<br/>
+但し、このやり方はpush内容を残したくないときのやり方に加えて、<br/>
+ハッシュ値を知ってれば参照できてしまうという点があります。<br/>
+(公開されているページは修正されたものが表示されます)</p>
+
+<h3>記事の公開停止方法</h3>
+
+<hr />
+
+<p>以下の順序で変更を行います</p>
+
+<ol>
+<li>octpressでgithubにpushしているディレクトリに移動する</li>
+<li>gitコマンドで記事をpushしたコミットまで遡って、 変更取り消しを行う</li>
+</ol>
+
+
+<p>それぞれコマンドは以下のようになります
+<code>
+$cd ~/octpress/_deploy
+$git push -f origin master:HEAD^^
+</code></p>
+
+<p>これで、２つ前の記事公開の状態まで変更することができました。
+同じ方法をとれば、記事の順序を入れ替え(削除)した状態で公開することも出来ると思います。<br/>
+(git rebase後にpush origin masterなどすればです)</p>
+
+<h3>再公開方法</h3>
+
+<hr />
+
+<p>普通に記事を生成して再度サーバにpushして下さい。<br/>
+ファイルの日付や記事の日付を修正していなければ、
+公開停止前と同じURLになります。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Gitを教えたときの話]]></title>
