@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Hackathon | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/hackathon/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2013-10-29T01:21:32+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[EdTech Hackathonに行ってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/10/28/edtech-hackathon/"/>
+    <updated>2013-10-28T23:44:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/10/28/edtech-hackathon</id>
+    <content type="html"><![CDATA[<p>久しぶりにHackathonに行ってきた気がする。</p>
+
+<p>成果は・・・</p>
+
+<p>「これからのIT業界を支える未来のエンジニアを育成できました!!」</p>
+
+<p>これだけだと、「Hackathonなのにコードの成果がなくないか？」<br/>
+ってことになりかねないし何の事かさっぱり分からないと思うので当日の詳細を以下に載っけます。</p>
+
+<h3>アイデア出し</h3>
+
+<hr />
+
+<p>通称、「Ideathon」なんだけども・・・<br/>
+前日に人が集まらずだったので、チームとか作る内容もあんまりいい感じには決まらなかった。</p>
+
+<p>例外は、自分を含めたチームぐらいでした。<br/>
+一応、大雑把なアイデアを持っていたので、募集かけたらすんなりと決まりました。</p>
+
+<p>チームメンバーというか役割は、以下の５人です。</p>
+
+<ul>
+<li>プログラム 自分</li>
+<li>プログラム 大学生</li>
+<li>デザイン + ディレクター 本職の方</li>
+<li>素材、画像作成、プレゼン : 中学生</li>
+</ul>
+
+
+<p>こんな構成でした。今回は中学生がいるんですよ。中学生!!<br/>
+最年少参加でした。。。</p>
+
+<p>所謂、学生チームですね。</p>
+
+<p># 自分がHackathonに初参加してた時よりもまだ若いのですよ。<br/>
+# 時代は進むものです。</p>
+
+<p>ディレクターとの合言葉は、「俺達、老害なんで彼らの成長を支えよう」ということでした(ぉぃ</p>
+
+<p># 因みに、後で知ったことなのですが・・・<br/>
+# チーム内で自分が一番最年長でした(> &lt;;)</p>
+
+<p>プログラマー側の打ち合わせでは、以下のことを決めました。</p>
+
+<ul>
+<li>使用言語はJavaにする(大学生たっての希望)</li>
+<li>フレームワークは、Seaser2(大学生が使用したことあるそうなので・・・)</li>
+<li>サーバは、Tomcat7.x</li>
+<li>DBはmysql 5.6.13</li>
+<li>上記、開発環境の準備をしてくること</li>
+</ul>
+
+
+<p>SIer等でよくありがちな、Javaを使ったWebアプリ開発ですね。</p>
+
+<p># 僕もいい大人(?)なので、希望は叶えてあげたいものです<br/>
+# 主催者が、学生に対して、自分をJavaエンジニアとして学生に推薦したのもありますが・・・</p>
+
+<h3>Hackathon当日の開始前</h3>
+
+<hr />
+
+<p>色々とドタバタしました。<br/>
+手持ちで持ってきたモニターがディレクターさんのPCで使えないなどのハプニング。</p>
+
+<p>元々のコンセプトのすり合わせを開始前のこの時点で話し合いました。</p>
+
+<p>ハプニングの最中にディレクターさんと２人で本日のゴールを何処に落としこむかを話していました。</p>
+
+<p># 学生さん達には秘密会議的にやってて申し訳なかった<br/>
+# 実はこの時点で、ある程度本日の着地点(現実的に出来そうな範囲)の見積もりを立ててました。</p>
+
+<h3>Hackathon当日の午前</h3>
+
+<hr />
+
+<p>開始と同時に、「こういう機能でこういう表示方法にしましょう」ということを<br/>
+ディレクターさんとワイヤーフレームモデルを使って合意を取りました。</p>
+
+<p># ここは勝手に進めて学生さんに申し訳なかった・・・。</p>
+
+<p>デザイナーとして活躍してくれる中学生は、ディレクターさんに任せ、プログラマー側はプログラマー同士で作業をすすめることにしました。</p>
+
+<p>プログラマー側では、大学生側の開発環境が出来ていなかったので、開発環境を構築することにしました。</p>
+
+<p>tomcatのインストールやmysqlのインストール&amp;設定、eclipseの設定を教えながら進めました。</p>
+
+<p>インストールの待ち時間の間、作成するものの以下の内容について説明してました。</p>
+
+<ul>
+<li>アプリケーションの説明</li>
+<li>表示する画面の構成要素の説明&amp;簡単な構成案</li>
+<li>DB設計</li>
+</ul>
+
+
+<p>この中で以下のついてどうやって見つければ良いかの説明を行いました。</p>
+
+<ul>
+<li>どうやればDB設計ができるか</li>
+<li>画面の構成要素はどう決めればよいか</li>
+<li>暗黙的な要件の見つけ方(画面に現れない&amp;前提としている内容等)</li>
+</ul>
+
+
+<p>そうこう説明しているうちに午前中が終了でお弁当タイムになりました。<br/>
+唐揚げ弁当うまかったなー</p>
+
+<h3>Hackathon当日の午後</h3>
+
+<hr />
+
+<p>午前中に開発環境の構築や設計周りの教示に費やしていたので、<br/>
+当初のゴールまで難しいことが、この時点で判明。</p>
+
+<p>ディレクターと話をして、「彼らのスキルアップというか育成に費やそう」ということにしました。</p>
+
+<p># EdTechということで教育がテーマだからいいかーということでお互いに合意しました。</p>
+
+<p>はじめは、自分で進めてみようということで、お互いの機能を実装することに専念しました。<br/>
+自分の担当した機能は実装と簡単な動作試験まで完了することができました。</p>
+
+<p># この間、１時間無いぐらい。</p>
+
+<p>この後、終了時間３０分前までは、大学生につきっきりになり、以下のことをマンツーマンで教示しました。<br/>
+所々、ペアプロも含んでいます。</p>
+
+<ul>
+<li>リーダブルコード的なこと(メソッド名の命名規則や付随すること諸々)</li>
+<li>スコープの話と(自分の考える)ポリシー(publicにしたら何処からでも使われるので、javadoc書く等)</li>
+<li>Seaser2の設計思想とMVC的な話</li>
+<li>Seaser2の実装方法や設定の説明&amp;解説</li>
+<li>コードの書き始めはどうしたらよいのか(逐次的に処理概要をTODOで書いてみるなどのやり方の話)</li>
+<li>コードのリファクタリング等</li>
+<li>eclipseのショートカットキーや設定全般</li>
+</ul>
+
+
+<p>ざっと覚えてるのは、この辺りだけどもっとなにか色々と偉そうに言ってたような気がする。。。</p>
+
+<p>終了まで残り３０分のところで、自分が作った部分の機能とデザインをマージ作業しました。<br/>
+マージ作業中は、大学生放置しましたけど、許して下さいm(<em> </em>)m</p>
+
+<p>久しぶりにwebapp/WEB-INF周りを弄ったので、jsp含んでた場合リソースの扱いに注意すること忘れてトラブりました。</p>
+
+<p># 今回の場合だと、「webapp」ディレクトリ直下に置かないと認識されませんでしたw</p>
+
+<p>最後のプレゼンは、中学生が頑張ってくれました!!<br/>
+自分には中々できないプレゼンや将来的にこういう機能もあればいいかもーみたいな案も考えてくれていました!!</p>
+
+<h3>感想</h3>
+
+<hr />
+
+<p>久しぶりにいい刺激を受けました。<br/>
+社内にいてもいい刺激を受けることが多いですが、外部のエンジニアとの交流もいいものです。<br/>
+何よりものを作り上げるのは楽しいです。</p>
+
+<p>今回のHackathonに関してはものを作るよりも、教育していたほうが長かったです。 <br/>
+ですが、自分にも得るものがありましたし、復習の機会になりました。<br/>
+大学生の彼が、自分の拙い説明で何かを得てくれれば自分も嬉しいと思います。</p>
+
+<p># 自分が初めてHackathonに出た時のようにですが・・・</p>
+
+<h3>Hackathonで構築した開発環境と簡単な設計メモ</h3>
+
+<hr />
+
+<p>以下に、説明に使用したメモを残します。<br/>
+こいつを参考にするとTomcat7.x + Eclipse + Seaser2な開発環境は構築できます。</p>
+
+<p>```
+★tomcatインストール
+$brew install tomcat</p>
+
+<p>1.ホームディレクトリの.bash_profileに以下を追加</p>
+
+<p>export CATALINA_HOME='/usr/local/Cellar/tomcat/7.0.42/libexec'
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home
+PATH=${JAVA_HOME}/bin:$PATH
+PATH=$PATH:${CATALINA_HOME}</p>
+
+<p>2.ターミナル上で$source .bash_profileを実行
+3.tomcat起動「/usr/local/Cellar/tomcat/7.0.42/libexec/bin/startup.sh」
+4.tomcat停止「/usr/local/Cellar/tomcat/7.0.42/libexec/bin/shutdown.sh」</p>
+
+<p>Homebrewが無ければ、インストールして下さい
+使用しているShell(bash以外)が違う場合は適宜読み替えて下さい</p>
+
+<p>★eclipse
+1.「http://www.eclipsetotale.com/tomcatPlugin.html」から最新のプラグインをダウンロード
+2.ダウンロードしたzipを解答して、できたディレクトリごと eclipseのディレクトリの下に移動
+3.eclipseを再起動
+4.設定→tomcat
+5.tomcatのバージョンを7に変更
+6.HOMEを/usr/local/Cellar/tomcat/7.0.42/libexec
+7.適用を押す</p>
+
+<p>これでeclipse上からtomcat操作ができる</p>
+
+<p>★mysql
+brew install mysql</p>
+
+<p>DBの保存先とキャッシュの保存場所の設定
+mysql_install_db --verbose --user=<code>whoami</code> --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp</p>
+
+<p>rootパスワードの設定
+mysql.server start
+mysqladmin -u root password '好きなパスワード'
+mysql -uroot -p</p>
+
+<p>何でもできるユーザーの追加(本当はここはしっかりと考える必要あるけど今回はハッカソンなのでパス)
+GRANT ALL PRIVILEGES ON <em>.</em> TO edtech@localhost IDENTIFIED BY 'edtechhackathon' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON <em>.</em> TO edtech@'%' IDENTIFIED BY 'edtechhackathon' WITH GRANT OPTION;
+mysql -uedtech -pedtechhackathon</p>
+
+<p>データベースの作成
+create database edtechhackathon;</p>
+
+<p>これで開発をします。
+ユーザー名:edtech
+パスワード:edtechhackathon</p>
+
+<p>jdbcドライバはこんな感じかな
+jdbc:mysql://localhost:3306/edtechhackathon
+接続ユーザー:edtech
+接続パスワード:edtechhackathon</p>
+
+<p>★Doltengのインストール(一応)
+したがって行う
+http://dolteng.sandbox.seasar.org/
+→DBからエンティティを自動生成するので使う</p>
+
+<p>★eclipsemarket placeからインストール
+プロパティエディタのインストール
+maven integrationプラグイン</p>
+
+<p>★Devloder
+mkdir -p /usr/local/Cellar/tomcat/7.0.42/libexec/server/lib
+$cp /Applications/eclipse/plugins/com.sysdeo.eclipse.tomcat_3.3.0/DevloaderTomcat7.jar /usr/local/Cellar/tomcat/7.0.42/libexec/lib/</p>
+
+<p>★mysql追加
+mysql.server stop
+cp /usr/local/Cellar/mysql/5.6.13/my.cnf /usr/local/Cellar/mysql/5.6.13/my.cnf.20131026
+「port = 3306」を記述
+mysql.server start</p>
+
+<p>★確認用データ投入
+mysql -uedtech -p -hlocalhost edtechhackathon
+CREATE TABLE sample(id int auto_increment primary key, data varchar(255) NOT NULL UNIQUE, created_at datetime NOT NULL) ENGINE=InnoDB;
+insert into sample(data, created_at) values('test', '2013-10-26');</p>
+
+<p>★usersテーブル
+入力項目は、以下のもの
+・名前
+・メール
+・パスワード(アプリ側でBlowfish形式で暗号化しておくこと、暗号化の鍵はedtechとパスワード入力値とする。初期でinsertする内容は「test」にする)、
+・Roleは1(教師)、0(親)、2(管理者)で表現(アプリ側で数値を見てRoleの判断する)</p>
+
+<p>create table users( user_id int auto_increment primary key, name varchar(255) not null, mail varchar(255) not null, password varchar(255) not null, role int not null) ENGINE=InnoDB;</p>
+
+<p>★fixture
+insert into users(name, mail, password, role) values('hoge', 'hogeATgmail.com', '0791e4e0ade0f161', '2');
+insert into users(name, mail, password, role) values('fuga', 'fugaAtgmail.com', '0791e4e0ade0f161', '1');
+insert into users(name, mail, password, role) values('hogehoge', 'hogehogeAtgmail.com', '0791e4e0ade0f161', '0');
+```</p>
+]]></content>
+  </entry>
+  
+</feed>
