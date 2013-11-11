@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-10-29T01:21:32+09:00</updated>
+  <updated>2013-11-12T00:30:44+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,65 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ActiveRecordメモ]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo/"/>
+    <updated>2013-11-12T00:20:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo</id>
+    <content type="html"><![CDATA[<p>使ってるけど、意外と知らなかったのでメモ</p>
+
+<h3>抽出方法は全部同じ</h3>
+
+<hr />
+
+<p>whereの条件指定の方法ですね。</p>
+
+<p>以下の３つは、全て同じSQLを発行します</p>
+
+<p>1.Hashで条件設定する方法(AR独自チックな感じで大体使う方法)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where(:title =&gt; "title", :id =&gt; 1)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.プレースホルダで地道にパラメータ設定する方法(どの言語でも通用する)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where("title = ? and id = ?", "title1", 1)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.シンボルで対応付けをわかりやすくする方法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where("title = :title and id = :id", {:title =&gt; "title", :id =&gt;1})</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>抽出結果がなかったらレコードの新規作成をする</h3>
+
+<hr />
+
+<p>これ、一発でできるメソッドあったんですね。<br/>
+知らなかった。。。</p>
+
+<p>どうやらfirst_or_createというメソッドを使えばよいみたい。<br/>
+で、ブロックを取ることができるので、ブロック内で挿入する値を自由に設定できる</p>
+
+<p>以下のような感じで書くとできる模様。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where(:title =&gt; "title").first_or_create do |p|
+</span><span class='line'>    p.body = "hogehoge"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結局は裏で2回SQL発行してるだけなんですけどね。(selectとinsert)</p>
+
+<p>と、まぁ色々とありますがこんなところで。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[EdTech Hackathonに行ってきた]]></title>
@@ -2935,96 +2994,6 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
 
 <p>特集を読んだ感想は以上かなー。
 なんとなく、書籍のサンプルがアレな時があるって感じじゃねーの？みたいな感想でごめんなさい。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rubymineを使ってみる]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/06/08/use-rubymine/"/>
-    <updated>2013-06-08T17:26:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/06/08/use-rubymine</id>
-    <content type="html"><![CDATA[<p>皆さんはRubyやRailsでアプリを書くときどのようなエディタを使いますでしょうか？</p>
-
-<h6>僕は、Emacsで書いていることが多いです。。。</h6>
-
-<p>多いのですが・・・<br/>
-こんな感じで若干面倒な面もあってですね。</p>
-
-<ul>
-<li>設定がともかく面倒くさい・・・。</li>
-<li>色々設定を追加しているので、重くなってきた(僕の設定が悪いのかもしれませんが・・・)</li>
-<li>補完周りも効くのか効かないのか微妙な時も(僕の設定が悪いry)</li>
-<li>オムニ補完が・・・効きすぎてお節介すぎる(僕の設定がry)</li>
-<li>その他色々。。。</li>
-</ul>
-
-
-<p>良い面もありまして、僕が思う良い面はこんな感じ。</p>
-
-<ul>
-<li>キーバインドがカスタムできるよ</li>
-<li>画面が分割できるので、TDDにも向いてるよ</li>
-<li>オムニ補完が良い感じに効いたときは、さくさくコードが書ける</li>
-<li>タブやフォーマットとか「{ }」の自動補完とかきっちりやってくれる</li>
-<li>あとは、タグを使ってソースからソースへのコードジャンプができる</li>
-</ul>
-
-
-<p>殆ど、Emacsの機能ですねw</p>
-
-<p>で、面倒くさい面もあるのでRuby開発に限ってはEmacsを卒業してもいいのではないかと最近思うようになりました。</p>
-
-<p>なので、Rubyをスムーズに開発できるエディタってなんだろうとか気になりだした訳です。<br/>
-エディタとして候補が挙げれたものは・・・</p>
-
-<ul>
-<li>Vim</li>
-<li>Text Mate</li>
-<li>Sublime text2</li>
-<li>Coda</li>
-<li>Aptana Studio(Eclipse)</li>
-<li>RubyMine</li>
-</ul>
-
-
-<p>自分が観測できた範囲だとこんだけ。</p>
-
-<p>色々ありますね。とりかえず今回はRubyMineを使ってみます。</p>
-
-<h6>Rails コマンド</h6>
-
-<p>「$rails migration」とか実行する場合、「Ctrl + Option + G」<br/>
-よく使いそうなものは大体実行できます。<br/>
-主に以下のようなことができる。(ここでは一部のみ記載)</p>
-
-<ul>
-<li>scaffold</li>
-<li>migration</li>
-<li>helper</li>
-<li>controller</li>
-<li>その他色々</li>
-</ul>
-
-
-<h6>Rails Server</h6>
-
-<p>サーバを起動する場合、「Option + Shift + F10」<br/>
-デバッグ実行やプロダクション起動、リリース</p>
-
-<h6>リファクタリング</h6>
-
-<p>変更箇所をカーソルで選択後「Shift + F6」<br/>
-プレビューが表示されるので、「Do Refactor」を実行しましょう。<br/>
-いちいち、「Do Refactor」ボタンを押さないといけないところに操作性のムカツキを感じる。</p>
-
-<h6>その他</h6>
-
-<p>エディタ自身の設定でデフォルトで有効になっている「フリーカーソール」をOFFにしたい。(余白をクリックすると、行の末尾にいかない)<br/>
-設定項目のエディタ設定で、「Vertual Space」を見つけます。</p>
-
-<h6>「Allow Placement of caret after the end of line」のチェックボックスを外します。</h6>
-
-<p>そうすると、余白をクリックしても行の末尾にいくようになります</p>
 ]]></content>
   </entry>
   

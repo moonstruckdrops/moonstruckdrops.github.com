@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-10-29T01:21:32+09:00</updated>
+  <updated>2013-11-12T00:30:44+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,66 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ActiveRecordメモ]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo/"/>
+    <updated>2013-11-12T00:20:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo</id>
+    <content type="html"><![CDATA[<p>使ってるけど、意外と知らなかったのでメモ</p>
+
+<h3>抽出方法は全部同じ</h3>
+
+<hr />
+
+<p>whereの条件指定の方法ですね。</p>
+
+<p>以下の３つは、全て同じSQLを発行します</p>
+
+<p>1.Hashで条件設定する方法(AR独自チックな感じで大体使う方法)</p>
+
+<p><code>
+Hoge.where(:title =&gt; "title", :id =&gt; 1)
+</code></p>
+
+<p>2.プレースホルダで地道にパラメータ設定する方法(どの言語でも通用する)</p>
+
+<p><code>
+Hoge.where("title = ? and id = ?", "title1", 1)
+</code></p>
+
+<p>3.シンボルで対応付けをわかりやすくする方法</p>
+
+<p><code>
+Hoge.where("title = :title and id = :id", {:title =&gt; "title", :id =&gt;1})
+</code></p>
+
+<h3>抽出結果がなかったらレコードの新規作成をする</h3>
+
+<hr />
+
+<p>これ、一発でできるメソッドあったんですね。<br/>
+知らなかった。。。</p>
+
+<p>どうやらfirst_or_createというメソッドを使えばよいみたい。<br/>
+で、ブロックを取ることができるので、ブロック内で挿入する値を自由に設定できる</p>
+
+<p>以下のような感じで書くとできる模様。</p>
+
+<p>```
+Hoge.where(:title => "title").first_or_create do |p|</p>
+
+<pre><code>p.body = "hogehoge"
+</code></pre>
+
+<p>end
+```</p>
+
+<p>結局は裏で2回SQL発行してるだけなんですけどね。(selectとinsert)</p>
+
+<p>と、まぁ色々とありますがこんなところで。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rubyでアクセス用のメソッドを定義する(アクセッサ)]]></title>
@@ -509,118 +569,6 @@ array &lt;&lt; item2</p>
 <h6>「Allow Placement of caret after the end of line」のチェックボックスを外します。</h6>
 
 <p>そうすると、余白をクリックしても行の末尾にいくようになります</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[万葉.rbに参加してきました。#everyrb]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/04/06/ranyo-rb/"/>
-    <updated>2013-04-06T13:01:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/04/06/ranyo-rb</id>
-    <content type="html"><![CDATA[<p>参加メモメモ。</p>
-
-<h3>オープニング</h3>
-
-<hr />
-
-<p>Matzからの挨拶。<br/>
-楽しい設計の言語が真面目に仕事になって嬉しい。<br/>
-万葉をよろしく!!</p>
-
-<h3>基調公演(島田さん)</h3>
-
-<hr />
-
-<p>言葉は軽く聞こえるけど、会社経営だとすごい!!</p>
-
-<p>最近思う「コミュニティと会社の私」</p>
-
-<ul>
-<li>会社は孤立している。契約とか仕事程度(内側のつながりはない)</li>
-<li>コミュニティではゆるく繋がっているので、今は繋がっているのではないのか</li>
-<li>Rubyのコミュニティは面白い方々多い</li>
-<li>地域Ruby会議に行くと、質問したり自分のことを見直すきっかけになるのでいいかもしれない</li>
-<li>普通、ビジネス主体としての会社</li>
-<li>もう１つは、コミュニティとしての会社</li>
-<li>中の人が見えるというのはいい</li>
-</ul>
-
-
-<h3>万葉社長</h3>
-
-<hr />
-
-<p>コードについて言いたいこと</p>
-
-<p>プログラミングはどういう仕事？</p>
-
-<p>良い考えが最良とは限らない(衝突が起きる)</p>
-
-<ul>
-<li>クラス名が仕様書番号とか最低すぎる</li>
-<li>わかりやすい名前</li>
-<li>自動テストあるといいよ</li>
-<li>PHP悪くてRubyがいいという意見は、別れる</li>
-<li>MVCとオブジェクト指向は？</li>
-<li>DRYと読みやすさ</li>
-<li>RDB的に最適解とオブジェクト指向</li>
-<li>安全と自由(型など)</li>
-</ul>
-
-
-<p>そのため、一般的に悪いといわれることが役立つこともある。</p>
-
-<p>他にも・・・</p>
-
-<ul>
-<li>すべてを一気に解決することはできない。</li>
-<li>どの局面で問題を解決をするのが重要</li>
-<li>正解なんてものはない。</li>
-</ul>
-
-
-<p>大事なこと</p>
-
-<ul>
-<li>意思の表明。思ってるだけでは何もできない</li>
-<li>考えていることを言語化することが必要</li>
-<li>たのしくソフトウェア開発ができること</li>
-<li>意思をもって選びとること</li>
-</ul>
-
-
-<h3>LT</h3>
-
-<hr />
-
-<p>角谷さん</p>
-
-<ul>
-<li>Rubyで仕事しだすと会社とコミュニティと個人のつながりを考えだす</li>
-<li>WHYから始める</li>
-</ul>
-
-
-<p>和田さん</p>
-
-<ul>
-<li>6年続くのはすごい</li>
-<li>生き生きできるのはレッドじゃなくてサブ</li>
-<li>オススメ本:はじめの一歩を踏み出そう</li>
-</ul>
-
-
-<p>これ以外は聞くほうが面白かったのでメモってません。<br/>
-ごめんなさいm(<em> </em>)m</p>
-
-<h3>宿題的なアレ</h3>
-
-<hr />
-
-<p>万葉の中の人にやってること、超面白いし聞きたいんで是非LTやってくださいと勧められました。<br/>
-なので、機会があればどこかでネタを話たいなーと思います。</p>
-
-<p># 思ってるだけだとダメなので実際どこかで行動しないといけないですね。</p>
 ]]></content>
   </entry>
   

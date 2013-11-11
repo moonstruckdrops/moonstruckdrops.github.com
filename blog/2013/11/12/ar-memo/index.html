@@ -5,14 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Octpressで記事を一度公開停止→再公開をしたい場合の方法 - kurobaraのブログ</title>
+  <title>ActiveRecordメモ - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="何個か前の記事を加筆修正したときの手順をまとめます。
-但し、このやり方はpush内容を残したくないときのやり方に加えて、
-ハッシュ値を知ってれば参照できてしまうという点があります。
-(公開されているページは修正されたものが表示されます) 記事の公開停止方法 以下の順序で変更を行います &hellip;">
+  <meta name="description" content="使ってるけど、意外と知らなかったのでメモ 抽出方法は全部同じ whereの条件指定の方法ですね。 以下の３つは、全て同じSQLを発行します 1.Hashで条件設定する方法(AR独自チックな感じで大体使う方法) 1
+Hoge.where(:title =&gt; "title", :id =&gt &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +75,7 @@
   
   <header>
     
-      <h1 class="entry-title">Octpressで記事を一度公開停止→再公開をしたい場合の方法</h1>
+      <h1 class="entry-title">ActiveRecordメモ</h1>
     
     
       <p class="meta">
@@ -93,49 +91,64 @@
   
 
 
-<time datetime="2013-10-19T10:24:00+09:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time>
+<time datetime="2013-11-12T00:20:00+09:00" pubdate data-updated="true">Nov 12<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>何個か前の記事を加筆修正したときの手順をまとめます。<br/>
-但し、このやり方はpush内容を残したくないときのやり方に加えて、<br/>
-ハッシュ値を知ってれば参照できてしまうという点があります。<br/>
-(公開されているページは修正されたものが表示されます)</p>
+<div class="entry-content"><p>使ってるけど、意外と知らなかったのでメモ</p>
 
-<h3>記事の公開停止方法</h3>
+<h3>抽出方法は全部同じ</h3>
 
 <hr />
 
-<p>以下の順序で変更を行います</p>
+<p>whereの条件指定の方法ですね。</p>
 
-<ol>
-<li>octpressでgithubにpushしているディレクトリに移動する</li>
-<li>gitコマンドで記事をpushしたコミットまで遡って、 変更取り消しを行う</li>
-</ol>
+<p>以下の３つは、全て同じSQLを発行します</p>
+
+<p>1.Hashで条件設定する方法(AR独自チックな感じで大体使う方法)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where(:title =&gt; "title", :id =&gt; 1)</span></code></pre></td></tr></table></div></figure>
 
 
-<p>それぞれコマンドは以下のようになります</p>
+<p>2.プレースホルダで地道にパラメータ設定する方法(どの言語でも通用する)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where("title = ? and id = ?", "title1", 1)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.シンボルで対応付けをわかりやすくする方法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where("title = :title and id = :id", {:title =&gt; "title", :id =&gt;1})</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>抽出結果がなかったらレコードの新規作成をする</h3>
+
+<hr />
+
+<p>これ、一発でできるメソッドあったんですね。<br/>
+知らなかった。。。</p>
+
+<p>どうやらfirst_or_createというメソッドを使えばよいみたい。<br/>
+で、ブロックを取ることができるので、ブロック内で挿入する値を自由に設定できる</p>
+
+<p>以下のような感じで書くとできる模様。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$cd ~/octpress/_deploy
-</span><span class='line'>$git push -f origin master:HEAD^^</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where(:title =&gt; "title").first_or_create do |p|
+</span><span class='line'>    p.body = "hogehoge"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>これで、２つ前の記事公開の状態まで変更することができました。
-同じ方法をとれば、記事の順序を入れ替え(削除)した状態で公開することも出来ると思います。<br/>
-(git rebase後にpush origin masterなどすればです)</p>
+<p>結局は裏で2回SQL発行してるだけなんですけどね。(selectとinsert)</p>
 
-<h3>再公開方法</h3>
-
-<hr />
-
-<p>普通に記事を生成して再度サーバにpushして下さい。<br/>
-ファイルの日付や記事の日付を修正していなければ、
-公開停止前と同じURLになります。</p>
+<p>と、まぁ色々とありますがこんなところで。</p>
 </div>
 
 
@@ -158,12 +171,12 @@
   
 
 
-<time datetime="2013-10-19T10:24:00+09:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time>
+<time datetime="2013-11-12T00:20:00+09:00" pubdate data-updated="true">Nov 12<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/git/'>git</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -172,7 +185,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -185,10 +198,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/10/16/packer-basic/" title="Previous Post: packerを使用して、VirtualMachineで動くVagrant用のBoxファイルを作成した">&laquo; packerを使用して、VirtualMachineで動くVagrant用のBoxファイルを作成した</a>
+        <a class="basic-alignment left" href="/blog/2013/10/28/edtech-hackathon/" title="Previous Post: EdTech Hackathonに行ってきた">&laquo; EdTech Hackathonに行ってきた</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/10/28/edtech-hackathon/" title="Next Post: EdTech Hackathonに行ってきた">EdTech Hackathonに行ってきた &raquo;</a>
       
     </p>
   </footer>
