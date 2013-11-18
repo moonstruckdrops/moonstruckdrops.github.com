@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-11-12T00:30:44+09:00</updated>
+  <updated>2013-11-19T01:54:16+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,246 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ActiveRecordメモ その2]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/11/19/ar-memo-2/"/>
+    <updated>2013-11-19T00:13:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/11/19/ar-memo-2</id>
+    <content type="html"><![CDATA[<p>前回書いたので、メモをまたまた残しておく</p>
+
+<p>今回は、以下の３つを書き起こす。</p>
+
+<ul>
+<li>既存行の更新処理</li>
+<li>データ保存系メソッドの違い</li>
+<li>既存行の削除処理</li>
+<li>コールバック</li>
+</ul>
+
+
+<h3>既存行の更新</h3>
+
+<hr />
+
+<p>1.更新する行を特定してから更新するやり方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
+</span><span class='line'>table.name = "column name"
+</span><span class='line'>table.save
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.属性の値を変更してからモデルオブジェクトを取得するやり方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
+</span><span class='line'>table.update_attribute(:name, "column_name")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上はシンボルを使って、特定の１カラムのみの更新の場合</p>
+
+<p>まとめて行を更新する場合、ハッシュを使いますね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
+</span><span class='line'>table.update_attributes(name: "column_name", text: "ActiveRecord")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに、Railsだとこんな感じで使ってますね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def update
+</span><span class='line'>  table = Tables.find(params[:id])
+</span><span class='line'>  if table.update_attributes(params[:table])
+</span><span class='line'>    redirect_to action: :index
+</span><span class='line'>  else
+</span><span class='line'>    redirect_to action: :edit
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.行の読み込みと更新を一度に行う方法</p>
+
+<p>これは特に言うこともないですね。<br/>
+指定した行を更新し、結果をDBに反映、そのままオブジェクトを取得します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.update(12, name: "column_name", text: "ActiveRecord")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに、update_allメソッドを使えばまとめて更新することができます。<br/>
+第1引数にupdate文、第2引数にwhere句を指定という形でやります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tbales.update_all("name = column_name, text = ActiveRecord", "id = 12")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>戻り値は、データベースのアダプターによって異なるようです。<br/>
+大体、更新行数が返るようですが、Oracleだけ何故か違うみたいです。。。</p>
+
+<h3>データ保存系メソッドの違い</h3>
+
+<hr />
+
+<table>
+<thead>
+<tr>
+<th align="left">メソッド </th>
+<th align="left"> 違い </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">save    </td>
+<td align="left">レコードが保存された場合、trueを返し、そうでなければnilを返す</td>
+</tr>
+<tr>
+<td align="left">save!   </td>
+<td align="left">保存が成功した、trueを返し、そうでなければ例外を発生</td>
+</tr>
+<tr>
+<td align="left">create  </td>
+<td align="left">保存に成功したかどうかは関係なく、ActiveRecordオブジェクトを返す。データが保存されたかどうかの確認は検証チェックが必要</td>
+</tr>
+<tr>
+<td align="left">create! </td>
+<td align="left">成功時は、ActiveRecordオブジェクトを返し、そうでなければ例外を発生</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>なので、使い分けはこんな感じに行う</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>if table.save
+</span><span class='line'>  検証と保存に成功
+</span><span class='line'>else
+</span><span class='line'>  検証エラー
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>begin
+</span><span class='line'>  table.save!
+</span><span class='line'>rescue ActiveRecord::RecordInvalid =&gt; error
+</span><span class='line'>  検証エラー
+</span><span class='line'>rescue ActiveRecord::RecordNotSaved =&gt; error
+</span><span class='line'>  保存に失敗(コールバックで保存が出来なかった)
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>既存行の削除処理</h3>
+
+<hr />
+
+<p>これは２種類の方法があります。<br/>
+１つ目、データベースを直接操作する感じのやり方</p>
+
+<p>こんな感じで、id指定で削除できます。<br/>
+idを格納した配列を指定することで、まとめて削除もできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.delete(12)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>SQLのwhereを使ってまとめて削除する方法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.delete_all(["id = 12"])</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これもupdate_allメソッドと同じで削除した行数が返ってきます。</p>
+
+<p>もう一つのやり方は、destroyメソッドを使う方法です。<br/>
+こいつは、削除というよりもデータの凍結ですね。</p>
+
+<p>特定の行のみ凍結</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.destroy(12)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まとめて凍結する方法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.destroy_all("name = ?", "column_name")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みにdeleteメソッドを使った場合、<br/>
+ActiveRecordの検証メソッドが実行されないことに注意かも。</p>
+
+<h3>コールバック順序</h3>
+
+<hr />
+
+<p>コールバックで独自に処理を入れたい場合ってあると思うので、ついでにメモしておく</p>
+
+<p>新規レコードでmodel.saveを実行した場合、以下の順序でコールバックされる</p>
+
+<ol>
+<li>before_validation</li>
+<li>検証処理</li>
+<li>after_validation</li>
+<li>before_save</li>
+<li>before_create</li>
+<li>挿入処理</li>
+<li>after_create</li>
+<li>after_save</li>
+</ol>
+
+
+<p>更新の場合だと以下になる</p>
+
+<ol>
+<li>before_validation</li>
+<li>検証処理</li>
+<li>after_validation</li>
+<li>before_save</li>
+<li>before_update</li>
+<li>更新処理</li>
+<li>after_update</li>
+<li>after_save</li>
+</ol>
+
+
+<p>削除(model.destroy)だと、以下になる</p>
+
+<ol>
+<li>before_destroy</li>
+<li>destroy処理</li>
+<li>after_destory</li>
+</ol>
+
+
+<p>ここまでそれなりに書いたので、もうちょい参照系も書いておきたいなw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ActiveRecordメモ]]></title>
@@ -2754,246 +2994,6 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
 
 <p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
 使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[日経ソフトウェア7月号の特集を読んだ感想]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/06/18/nikkei-software-07/"/>
-    <updated>2013-06-18T23:36:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/06/18/nikkei-software-07</id>
-    <content type="html"><![CDATA[<p>日経ソフトウェア7月号の特集「そのコードは古い!」を読んだ感想。</p>
-
-<p>これとは別の技術書を書店まで買いに行きました。</p>
-
-<p>そこで日経ソフトウェアを手に取りました。</p>
-
-<p>いつもは、日経ソフトウェアを書店でパラパラ目を通す程度です(エンジニアに端くれかみたいな感想は兎も角)
-ただ、今回は特集のタイトルに惹かれて買ってじっくり読んでみました。</p>
-
-<p>なので、特集に限って読んだ感想というメモを残します。
-あくまで、私めの意見というか感想なので・・・スルーしていただけると。</p>
-
-<h3>C言語編</h3>
-
-<hr />
-
-<p>point1「void mainはやめよう」とありますが、これは入門書のサンプルが諸悪の根源かと思います。<br/>
-自分がC言語を学習したときは、普通にvoid mainで教わりました。<br/>
-当時は、Unix/Linuxの知識も無いので当たり前ですし、戻り値が、intになっていてもおまじない程度の認識でした。</p>
-
-<p>なので、intの意味まで教えてあげるべきかなーと思います。(特に初学者に対してですが)<br/>
-こうやって、サンプルコードとして教えてあげればいいかなーとか思いました。(これなら処理が正常終了していることが明確になるかと)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#include&lt;stdio.h&gt;
-</span><span class='line'>#include&lt;stdlib.h&gt;
-</span><span class='line'>
-</span><span class='line'>int main(void){
-</span><span class='line'> printf("Hello world");
-</span><span class='line'> return EXIT_SUCCESS;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下のものは当たり前の話かなーと思いました。</p>
-
-<ul>
-<li>point2「文字定数にchar型は使わない」(関数同士で受け渡す際はint型に変換されるから)</li>
-<li>point3「古い関数定義はやめよう」(K&amp;Rの記述方法。本を読めば分かります)</li>
-<li>point4「gets関数は古い」(確保された領域以上のものが入力されたらバッファオーバーフローになっちゃうから)</li>
-<li>point5「switch文あり気で考えない」(これはどの言語でも言える話で、コードが見づらくなっちゃう上に、break文忘れるとバグになってしまう)</li>
-<li>point6「何でも#defineで定数や関数マクロを定義するのは古い」(コンパイル時の型チェック等スルーする上、関数マクロは記述ミスをしやすくなるから)</li>
-<li>point7「定数の羅列に#defineは古い」(意味のある連続したものだとenum使ったほうが便利ですね)</li>
-<li>point8「ポインタサイズでメモリを確保しない」(ポインタ型とデータ型は処理系によってサイズが違うから)</li>
-</ul>
-
-
-<p>point8の良くないコードは以下のもの</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>double *d
-</span><span class='line'>d = (double *)malloc(sizeof(d)*100)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>良いコードは以下のもの</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>double *d
-</span><span class='line'>d = (double *)malloc(sizeof(*d)*100)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>書いて思ったけど、普通のことだな。。。</p>
-
-<h3>java編</h3>
-
-<hr />
-
-<p>お仕事柄メイン(?)で使ってたので・・・</p>
-
-<ul>
-<li>point1「C言語で主流だったハンガリアン記法は古い」</li>
-<li>point2「スネークケースは使わない」</li>
-<li>point3「メソッドの先頭に変数宣言を並べるのは古い」</li>
-<li>point4「エラー種別をintで返さない」</li>
-<li>point5「処理結果を引数に格納しない」</li>
-</ul>
-
-
-<p>このあたりはCの悪癖なんで、マジ勘弁して下さい・・・。<br/>
-コードレビューにこんなコード出してきたら速攻Rejectしちゃいますよ。。。<br/>
-poin4は、Exceptionをthrowすればいいのでなんとかなります(尤もjniに依存するようなコードだと考えてもいいかなーなんて個人的には考えてしまいます)<br/>
-point5なんか副作用が山盛りなコードになりますしね。</p>
-
-<p>気を取り直して・・・。</p>
-
-<ul>
-<li>point6「ジェネリクスを使用しないコードは古い」(リストを型安全にできますよねー。キャスト地獄はヤダー)</li>
-<li>point7「定数インターフェースは古い」(static importとか、定数の機能分割をやるでしょ)</li>
-<li>point8「意味のない定数値は書かない」(enumにしろって話。これもC言語の定数定義の話と同じですね)</li>
-<li>point9「finally句でcloseするのは古い定石」(java7以降だとそうですね。java6までだとこの定石を使いましょう)</li>
-<li>point10「ジェネリクスで型を省略しないのは古い」(point6と矛盾してるような感じですが、こちらはjava7の話で俗にダイヤモンド演算子と呼ばれるもの)</li>
-<li>point11「ファイルの読み込みには数行も使うな」(java7以降に限る話です。java6までは従来道理の読み込み処理を書きましょう)</li>
-<li>point12「定番ライブラリはApacheCommonsだけではない」(それもそうだよねーって話。ジェネリクス非対応だったり、流れるようなインターフェースもなかったりだし)</li>
-<li>point13「Listからある条件に一致した要素を取り出す際、for文を使うのは古い」(filterメソッドを使ったらいいよってこと。因みにGroovy使えって言ったらダメ？)</li>
-</ul>
-
-
-<p>point9で言ってるjava7での新しい定石「close句の省略」</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>try ( FileReader in = new FileReader("hoge.txt");
-</span><span class='line'>    BufferdReader br = new BufferedReader(in);{
-</span><span class='line'>    // 詳細な処理
-</span><span class='line'>}catch(Exception e){
-</span><span class='line'>    // 例外処理
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>point10のダイヤモンド演算子</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>List&lt;String&gt; list = new ArrayList&lt;&gt;();</span></code></pre></td></tr></table></div></figure>
-
-
-<p>point11のファイル読み込み処理(Filesクラスが便利になった)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Files.readAllLines("hoge.txt",Charset.defaultCharset());</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因みに、従来の長い処理(途中の前後を省略)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>BufferdReader br = new BufferedReader(in);
-</span><span class='line'>String line;
-</span><span class='line'>while((line = br.readLine()) == null){
-</span><span class='line'>    // 読み込んだときの処理
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>javascript編</h3>
-
-<hr />
-
-<p>思うところというよりも・・・<br/>
-HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざましいと個人的に思ってます。<br/>
-そのため、感想というよりもこうするのが最近のトレンドだよねーみたいな感じでした。</p>
-
-<ul>
-<li>point1「HTMLのform要素に処理を埋め込むのは古い」(特殊な事をしなければ、HTML5で事足りることが増えてきたと思う)</li>
-<li>point2「ロールオーバにa要素を使っているのは古い」(ブラウザのサポートに依るのは？と思った。SE/SIerなところだと未だにIE6でみたいなことがまかり通るし、一概に古いと断言するのはどうかと思った。)</li>
-<li>point3「JavaSriptライブラリを使わないのは時代遅れ」(これはそうかなーと思う。実際にjQueryは使いますし。)</li>
-<li>point4「jQueryを使わないコードは古い」(古いと断言するのは、どうかと思うが使うほうが楽できる。コラムにあったけど万能ではないね。特にIEが絡むとなると途端に辛くなる)</li>
-<li>point5「HTML5のAPIを使わないと時代遅れ」(新規に書く場合ならHTML5を使っていき、補助(Flashがやってたとことか)でJSを使うのがいいのかなーと思う)</li>
-<li>point6「多言語の助けを借りる」(DartとかTypeScriptかな。得手不得手があるので適材適所で使えばいいと思う。jsとかで書きづらいところはサーバサイドJavaとかでやってもいいわけだしね)</li>
-</ul>
-
-
-<h3>C#編</h3>
-
-<hr />
-
-<p>自分が、C#を現在進行形で勉強中なので、感想が出てくるより先にこう書けばいいのかー。<br/>
-なんてことを思いました。<br/>
-サンプルのあるのが全てではないよ～的な感じですね。</p>
-
-<h3>Ruby編</h3>
-
-<hr />
-
-<p>これは、好きな言語</p>
-
-<ul>
-<li>point1「大量の引数が必要な際ハッシュオブジェクトを利用するのは古い」(このテクニック自体は好きだけど、ハッシュキーが無かったら大惨事になることがありますね)</li>
-<li>point2「配列のグループ分けを長々と書くのは古い」(1.8系に限らず、1.9系でも思わずやってしまいそうな処理がコード例だった。chunkメソッドで配列のグループ分けができるのか)</li>
-<li>point3「配列からランダムに値を抽出する際delete_atメソッドは古い」(samplingって意味から作ったっぽいsampleメソッドを使用すればランダムに値を抽出できる)</li>
-<li>point4「テストフレームワークは１つと考えるのは古い」(要するに適材適所。RSpecとTestUnitの両方を併用(てテスト範囲なり、記述方法なり、assertなり)してテストをすればいいと個人的に思ってる)</li>
-<li>point5「execコマンドでjavaのクラスを読み込むのは古い」(一々、外出しにしたjavaを読み込む何かの実行ファイルを作成する必要はなく、JRubyを使えばいいよって話。割りと普通かと思ってた)</li>
-</ul>
-
-
-<p>point1はRuby2.0で導入されたキーワード引数でデフォルト値を設定すればいいですね。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def keyword(hoge:0,fuga:"fugafuga")
-</span><span class='line'>    puts #{hoge}
-</span><span class='line'>    puts #{fuga}
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>keyword hoge:10 fuga:"hogehoge"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>point2の配列のグループ分け(偶数のものと奇数のもを分ける)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[1,2,4,7,9].chunk{|a| a.even?}.each{|k,v| puts "#{k} #{v}"}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>point3の配列からランダムに値を抽出する</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[1,2,4,7,9].sample(2) #-&gt; [4,9]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>point5のJRubyで実行する話(Jythonとかも似たような感じですね)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>require 'java'
-</span><span class='line'>import 'java.lang.System'
-</span><span class='line'>
-</span><span class='line'>puts "hogehoge"
-</span><span class='line'>System.out.println("fugafuga");
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>特集を読んだ感想は以上かなー。
-なんとなく、書籍のサンプルがアレな時があるって感じじゃねーの？みたいな感想でごめんなさい。</p>
 ]]></content>
   </entry>
   
