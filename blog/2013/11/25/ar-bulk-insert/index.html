@@ -5,14 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Emacsでmarkdown-modeを使用する - kurobaraのブログ</title>
+  <title>Rails(ActiveRecord)でBULK INSERTする方法 - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Emacsでmarkdown-modeを使用してみます。
-markdownの編集で使えるモードで結構便利なので紹介してみます。 インストール Emacsのパッケージインストーラからインストールをします。
-以下を実行します。 1
-M-x package-list-packages markdown- &hellip;">
+  <meta name="description" content="はじめに RailsでRake Taskなんか作ったときは、バッチ処理するようなことを書くと思います。
+多分ですが・・・ この前、バルクインサートをすることがあったのでやり方を残しておきます。 因みに、普通にrubyスクリプトの中でも使うこともできると思います(これも多分w) やり方 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +19,7 @@ M-x package-list-packages markdown- &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/11/25/ar-bulk-insert/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +75,7 @@ M-x package-list-packages markdown- &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Emacsでmarkdown-modeを使用する</h1>
+      <h1 class="entry-title">Rails(ActiveRecord)でBULK INSERTする方法</h1>
     
     
       <p class="meta">
@@ -93,85 +91,77 @@ M-x package-list-packages markdown- &hellip;">
   
 
 
-<time datetime="2013-03-24T00:38:00+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+<time datetime="2013-11-25T00:12:00+09:00" pubdate data-updated="true">Nov 25<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Emacsでmarkdown-modeを使用してみます。<br/>
-markdownの編集で使えるモードで結構便利なので紹介してみます。</p>
-
-<h4>インストール</h4>
+<div class="entry-content"><h3>はじめに</h3>
 
 <hr />
 
-<p>Emacsのパッケージインストーラからインストールをします。<br/>
-以下を実行します。</p>
+<p>RailsでRake Taskなんか作ったときは、バッチ処理するようなことを書くと思います。<br/>
+多分ですが・・・</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x package-list-packages</span></code></pre></td></tr></table></div></figure>
+<p>この前、バルクインサートをすることがあったのでやり方を残しておきます。</p>
 
+<p>因みに、普通にrubyスクリプトの中でも使うこともできると思います(これも多分w)</p>
 
-<p>markdown-modeを選択してインストールを実施します。</p>
-
-<p>他にmarkdownコマンドが使用できるようにする必要がありますので、合わせてインストールします。<br/>
-MacOSXだとHomebrewを使用すれば一発でインストール出来ます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install markdown</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>設定</h4>
+<h3>やり方</h3>
 
 <hr />
+
+<p><a href="https://github.com/zdennis/activerecord-import/wiki">activerecord-import</a>というGemを使用します。</p>
+
+<p>Gemfileに以下を追加すれば、Rake Taskで使用することができます。<br/>
+ぶっちゃけRake Taskだけではなく、普通に使うこともできますが・・・</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem 'activerecord-import'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>利用できるデータベースは以下のものです。</p>
 
 <ul>
-<li>markdown-modeを使用できるように「.emacs.d/init.el」に以下を追加</li>
+<li>mysql(アダプターはmysql, mysql2の両方で使用可能)</li>
+<li>postgresql</li>
+<li>sqlite3</li>
 </ul>
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>markdown-modeで使用できる拡張子を追加</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上の設定では、.markdownと付くファイルは、markdown-modeを使用する設定です。<br/>
-他に使用したいmarkdown-modeを使用したい拡張子があれば、同じようにして追加します。(下は.txtと付くファイルをmarkdown-modeで開きます)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.txt" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>エラー対処</h4>
+<h3>前提</h3>
 
 <hr />
 
-<p>プレビューを実行しようとすると、以下のようなエラーが発生します。</p>
+<p>かなり簡単です。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/bin/bash: markdown: command not found</span></code></pre></td></tr></table></div></figure>
+<p>以下のようなモデルを用意したとします。</p>
+
+<ul>
+<li>モデル名:Hoge</li>
+<li>カラム(主キー): id</li>
+<li>カラム(名前): name</li>
+<li>カラム(テキスト): text</li>
+</ul>
 
 
-<p>原因は、以下の２点が考えられます。</p>
+<p>このモデルを10個まとめてバルクインサートしたいとします。</p>
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>かなり簡単です。。。</p>
 
 <ol>
-<li>markdownコマンドがインストールされていない</li>
-<li>Emacsが認識しているパスと環境変数のパスが異なる</li>
+<li>バルクインサートしたい数だけモデルオブジェクトを格納したリストを用意する</li>
+<li>該当のモデルのimportメソッドに1で作成したリストを渡す</li>
 </ol>
 
 
-<p>1に関しては、markdownコマンドをインストールをすれば解決します。<br/>
-2に関してですが、以下のようにしてEmacs側にパスを通してやれば解決できます。</p>
+<p>コードに起こすとこんな感じです。。。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -179,57 +169,51 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(dolist (dir (list
-</span><span class='line'>              "/sbin"
-</span><span class='line'>              "/usr/sbin"
-</span><span class='line'>              "/bin"
-</span><span class='line'>              "/usr/bin"
-</span><span class='line'>              "/opt/local/bin"
-</span><span class='line'>              "/sw/bin"
-</span><span class='line'>              "/usr/local/bin"
-</span><span class='line'>              (expand-file-name "~/bin")
-</span><span class='line'>              (expand-file-name "~/.emacs.d/bin")
-</span><span class='line'>              ))
-</span><span class='line'> (when (and (file-exists-p dir) (not (member dir exec-path)))
-</span><span class='line'>   (setenv "PATH" (concat dir ":" (getenv "PATH")))
-</span><span class='line'>   (setq exec-path (append (list dir) exec-path))))</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>hoge_list = []
+</span><span class='line'>10.times do |i|
+</span><span class='line'>  hoge_list &lt;&lt; Hoge.new(id: i, name: "hoge #{i}", text: "fugafuga")
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>Hoge.import hoge_list</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>プレビュー</h4>
+<p>実行するとこんな感じのSQLが一気に発行されます。。。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>INSERT INTO `hoge` (`id`,`name`,`text`,`created_at`,`updated_at`) VALUES (1,'hoge 1','fugafuga','2013-11-25 00:30:30','2013-11-25 00:30:30') ON DUPLICATE KEY UPDATE `messages`.`updated_at`=VALUES(`updated_at`)
+</span><span class='line'>INSERT INTO `hoge` (`id`,`name`,`text`,`created_at`,`updated_at`) VALUES (2,'hoge 2','fugafuga','2013-11-25 00:30:30','2013-11-25 00:30:30') ON DUPLICATE KEY UPDATE `messages`.`updated_at`=VALUES(`updated_at`)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに、以下のようなオプションがあります。
+利用する場合、importメソッドの引数にハッシュで指定するだけです。</p>
+
+<ul>
+<li>「:on_duplicate_key_update」: ユニークキーが重複したカラムを更新したい場合に設定</li>
+<li>「:timestamps」: falseを設定すると、自分でcreated_at,created_on,update_at,update_onを設定</li>
+<li>「:validate」: falseを設定すると、モデル検証をスキップする(デフォルトはtrue)</li>
+</ul>
+
+
+<p>こんな感じで設定します。。。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>columns = [:id, :name, :text]
+</span><span class='line'>Hoge.import hoge_list, :on_duplicate_key_update =&gt; columns, :timestamps =&gt; false, :validate =&gt; false</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使用感</h3>
 
 <hr />
 
-<ul>
-<li><em>markdown-output</em>バッファでプレビューを確認する</li>
-</ul>
+<p>結構、問題ない感じで使えました。。。</p>
 
+<p>自分が使用した感じだと10万件の更新に1分程度かかったので、<br/>
+データが増えていくようなモデル(テーブル)に対して、多用するのは危険かなと思いました。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c m</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>ブラウザでプレビューを確認する(一時ファイルを作成します)</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c v</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://jblevins.org/projects/markdown-mode/">公式</a>にその他の使用方法が掲載されていますので、その他の機能はそちらを参照してください。</p>
-
-<p>ブラウザでプレビューしていて、かつOctpress用の記事を編集する場合、注意してください。</p>
-
-<p>そのままデプロイするとhtmlファイルまでアップロードされてしまうので、２重投稿になるので気をつけてください。</p>
+<p>コードベースで、バルクインサートやバルクアップデートができるところがいいですね。<br/>
+データをまとめて引っ張って→データ処理→まとめて更新なんかの使い方では便利かもｗ</p>
 </div>
 
 
@@ -252,12 +236,12 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
   
 
 
-<time datetime="2013-03-24T00:38:00+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+<time datetime="2013-11-25T00:12:00+09:00" pubdate data-updated="true">Nov 25<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/emacs/'>Emacs</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -266,7 +250,7 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/11/25/ar-bulk-insert/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/11/25/ar-bulk-insert/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -279,10 +263,8 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/21/start-octpress/" title="Previous Post: Octpress始めました">&laquo; Octpress始めました</a>
+        <a class="basic-alignment left" href="/blog/2013/11/19/ar-memo-2/" title="Previous Post: ActiveRecordメモ その2">&laquo; ActiveRecordメモ その2</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/25/gnu-global/" title="Next Post: Androidのソースコード検索サービスを構築してみる">Androidのソースコード検索サービスを構築してみる &raquo;</a>
       
     </p>
   </footer>

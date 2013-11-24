@@ -9,14 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="前回書いたので、メモをまたまた残しておく 今回は、以下の３つを書き起こす。 既存行の更新処理
-データ保存系メソッドの違い
-既存行の削除処理
-コールバック 既存行の更新 1.更新する行を特定してから更新するやり方 1
-2
-3
-table = Tables.find(12)
-table.name &hellip;">
+  <meta name="description" content="はじめに RailsでRake Taskなんか作ったときは、バッチ処理するようなことを書くと思います。
+多分ですが・・・ この前、バルクインサートをすることがあったのでやり方を残しておきます。 因みに、普通にrubyスクリプトの中でも使うこともできると思います(これも多分w) やり方 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +72,157 @@ table.name &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/25/ar-bulk-insert/">Rails(ActiveRecord)でBULK INSERTする方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-25T00:12:00+09:00" pubdate data-updated="true">Nov 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>RailsでRake Taskなんか作ったときは、バッチ処理するようなことを書くと思います。<br/>
+多分ですが・・・</p>
+
+<p>この前、バルクインサートをすることがあったのでやり方を残しておきます。</p>
+
+<p>因みに、普通にrubyスクリプトの中でも使うこともできると思います(これも多分w)</p>
+
+<h3>やり方</h3>
+
+<hr />
+
+<p><a href="https://github.com/zdennis/activerecord-import/wiki">activerecord-import</a>というGemを使用します。</p>
+
+<p>Gemfileに以下を追加すれば、Rake Taskで使用することができます。<br/>
+ぶっちゃけRake Taskだけではなく、普通に使うこともできますが・・・</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem 'activerecord-import'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>利用できるデータベースは以下のものです。</p>
+
+<ul>
+<li>mysql(アダプターはmysql, mysql2の両方で使用可能)</li>
+<li>postgresql</li>
+<li>sqlite3</li>
+</ul>
+
+
+<h3>前提</h3>
+
+<hr />
+
+<p>かなり簡単です。</p>
+
+<p>以下のようなモデルを用意したとします。</p>
+
+<ul>
+<li>モデル名:Hoge</li>
+<li>カラム(主キー): id</li>
+<li>カラム(名前): name</li>
+<li>カラム(テキスト): text</li>
+</ul>
+
+
+<p>このモデルを10個まとめてバルクインサートしたいとします。</p>
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>かなり簡単です。。。</p>
+
+<ol>
+<li>バルクインサートしたい数だけモデルオブジェクトを格納したリストを用意する</li>
+<li>該当のモデルのimportメソッドに1で作成したリストを渡す</li>
+</ol>
+
+
+<p>コードに起こすとこんな感じです。。。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>hoge_list = []
+</span><span class='line'>10.times do |i|
+</span><span class='line'>  hoge_list &lt;&lt; Hoge.new(id: i, name: "hoge #{i}", text: "fugafuga")
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>Hoge.import hoge_list</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行するとこんな感じのSQLが一気に発行されます。。。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>INSERT INTO `hoge` (`id`,`name`,`text`,`created_at`,`updated_at`) VALUES (1,'hoge 1','fugafuga','2013-11-25 00:30:30','2013-11-25 00:30:30') ON DUPLICATE KEY UPDATE `messages`.`updated_at`=VALUES(`updated_at`)
+</span><span class='line'>INSERT INTO `hoge` (`id`,`name`,`text`,`created_at`,`updated_at`) VALUES (2,'hoge 2','fugafuga','2013-11-25 00:30:30','2013-11-25 00:30:30') ON DUPLICATE KEY UPDATE `messages`.`updated_at`=VALUES(`updated_at`)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに、以下のようなオプションがあります。
+利用する場合、importメソッドの引数にハッシュで指定するだけです。</p>
+
+<ul>
+<li>「:on_duplicate_key_update」: ユニークキーが重複したカラムを更新したい場合に設定</li>
+<li>「:timestamps」: falseを設定すると、自分でcreated_at,created_on,update_at,update_onを設定</li>
+<li>「:validate」: falseを設定すると、モデル検証をスキップする(デフォルトはtrue)</li>
+</ul>
+
+
+<p>こんな感じで設定します。。。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>columns = [:id, :name, :text]
+</span><span class='line'>Hoge.import hoge_list, :on_duplicate_key_update =&gt; columns, :timestamps =&gt; false, :validate =&gt; false</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使用感</h3>
+
+<hr />
+
+<p>結構、問題ない感じで使えました。。。</p>
+
+<p>自分が使用した感じだと10万件の更新に1分程度かかったので、<br/>
+データが増えていくようなモデル(テーブル)に対して、多用するのは危険かなと思いました。</p>
+
+<p>コードベースで、バルクインサートやバルクアップデートができるところがいいですね。<br/>
+データをまとめて引っ張って→データ処理→まとめて更新なんかの使い方では便利かもｗ</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1804,144 +1949,6 @@ RubyやGoとかが好きです。<br/>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/12/find-hdd/">Linuxに接続したHDDを知る方法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-12T00:09:00+09:00" pubdate data-updated="true">Aug 12<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>バックアップ作業とかマウントとかで指定するんだけど・・・<br/>
-どこだっけって探しまわるのも面倒なので、やり方をメモしておきます。</p>
-
-<h3>方法1:dmesgコマンドを使用</h3>
-
-<hr />
-
-<p>出力された結果をgrepします。</p>
-
-<h5>SATAの場合</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$dmesg | grep sd</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>USB,PATAの場合</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$dmesg |grep hd</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>方法2:dfコマンドを使用</h3>
-
-<hr />
-
-<p>自動マウントとかされている場合なんかだとこっちを使う</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$df</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果を見れば、どのディスクがありどんなパーティションがあるか一目瞭然です。</p>
-
-<h3>方法3:/dev配下の内容+fdiskコマンドを使用</h3>
-
-<hr />
-
-<p>接続中のデバイスを知るには、lsコマンドで/dev配下を知ります。<br/>
-以下の表のような感じになります。実際の割り当ては、OSやディストリに依存</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">パス</th>
-<th align="left">意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">/dev/hda</td>
-<td align="left">IDEプライマリー(USB)のマスターディスク(hd以降は何が割り当てられるかはOS依存)</td>
-</tr>
-<tr>
-<td align="left">/dev/hda1</td>
-<td align="left">数字が付けば、パーティション</td>
-</tr>
-<tr>
-<td align="left">/dev/sda</td>
-<td align="left">SATAもしくはSCSI</td>
-</tr>
-<tr>
-<td align="left">/dev/sda1</td>
-<td align="left">SATAもしくはSCSIのパーティション</td>
-</tr>
-<tr>
-<td align="left">/dev/md0</td>
-<td align="left">ソフトウェアRAID</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>接続中のデバイスがわかれば、以下のコマンドで詳細情報を得ます</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$fdisk -l /dev/sda</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>方法4:/dev配下の内容+hdparmコマンドを使用</h3>
-
-<hr />
-
-<p>方法3と同じようにします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$hdparm -i /dev/sda</span></code></pre></td></tr></table></div></figure>
-
-
-<p>fdiskがデバイスの情報に特化したものに対して、こっちは制御情報だったりステータスまで出てきます。</p>
-
-<h3>余談</h3>
-
-<hr />
-
-<p>単純にUSBで接続したディスクであれば、lsusbコマンドを使えばよかったりします。<br/>
-ターゲットのディスクがわかれば、マウントも簡単になります。<br/>
-マウントポイント(自分で決めて、作成する)を「/mnt/hdd」とした場合、以下のコマンドでマウント可能</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mount /dev/sda1 /mnt/hdd</span></code></pre></td></tr></table></div></figure>
-
-
-<p>自分は、方法1と方法3をよく使います。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1961,6 +1968,10 @@ RubyやGoとかが好きです。<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/11/25/ar-bulk-insert/">Rails(ActiveRecord)でBULK INSERTする方法</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/19/ar-memo-2/">ActiveRecordメモ その2</a>
       </li>
     
@@ -1976,15 +1987,11 @@ RubyやGoとかが好きです。<br/>
         <a href="/blog/2013/10/19/fix-octpress-page/">Octpressで記事を一度公開停止→再公開をしたい場合の方法</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/10/16/packer-basic/">packerを使用して、VirtualMachineで動くVagrant用のBoxファイルを作成した</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 115.0%'>Android(2)</a> <a href='/blog/categories/devops' style='font-size: 107.5%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 122.5%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 107.5%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 115.0%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 107.5%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 107.5%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 107.5%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 122.5%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 152.5%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 122.5%'>Mac(3)</a> <a href='/blog/categories/markdown' style='font-size: 137.5%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(8)</a> <a href='/blog/categories/shellscript' style='font-size: 107.5%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 137.5%'>戯言(5)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 113.33333333333333%'>Android(2)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 120.0%'>Mac(3)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
 </section
 
 
