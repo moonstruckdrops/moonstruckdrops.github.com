@@ -5,14 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Emacsでmarkdown-modeを使用する - kurobaraのブログ</title>
+  <title>Time Capsule(NAS)をMacとLinuxの両方から使えるようにする - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Emacsでmarkdown-modeを使用してみます。
-markdownの編集で使えるモードで結構便利なので紹介してみます。 インストール Emacsのパッケージインストーラからインストールをします。
-以下を実行します。 1
-M-x package-list-packages markdown- &hellip;">
+  <meta name="description" content="はじめに 糞お高いNASを買ってしまいました・・・
+というか、買わざるを得ませんでしたorz とりあえず、こんな理由で選定 自宅の外付けHDDが故障気味
+Macも自動でバックアップ取っておきたい 勿論、QNAPでも良かったのですが、以下の理由で諦め HDDが別売とかでお高い( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +20,7 @@ M-x package-list-packages markdown- &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/11/29/timecapsule-mac-linux/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +76,7 @@ M-x package-list-packages markdown- &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Emacsでmarkdown-modeを使用する</h1>
+      <h1 class="entry-title">Time Capsule(NAS)をMacとLinuxの両方から使えるようにする</h1>
     
     
       <p class="meta">
@@ -93,85 +92,130 @@ M-x package-list-packages markdown- &hellip;">
   
 
 
-<time datetime="2013-03-24T00:38:00+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+<time datetime="2013-11-29T00:18:00+09:00" pubdate data-updated="true">Nov 29<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Emacsでmarkdown-modeを使用してみます。<br/>
-markdownの編集で使えるモードで結構便利なので紹介してみます。</p>
-
-<h4>インストール</h4>
+<div class="entry-content"><h3>はじめに</h3>
 
 <hr />
 
-<p>Emacsのパッケージインストーラからインストールをします。<br/>
-以下を実行します。</p>
+<p>糞お高いNASを買ってしまいました・・・<br/>
+というか、買わざるを得ませんでしたorz</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x package-list-packages</span></code></pre></td></tr></table></div></figure>
-
-
-<p>markdown-modeを選択してインストールを実施します。</p>
-
-<p>他にmarkdownコマンドが使用できるようにする必要がありますので、合わせてインストールします。<br/>
-MacOSXだとHomebrewを使用すれば一発でインストール出来ます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install markdown</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>設定</h4>
-
-<hr />
+<p>とりあえず、こんな理由で選定</p>
 
 <ul>
-<li>markdown-modeを使用できるように「.emacs.d/init.el」に以下を追加</li>
+<li>自宅の外付けHDDが故障気味</li>
+<li>Macも自動でバックアップ取っておきたい</li>
 </ul>
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)</span></code></pre></td></tr></table></div></figure>
-
+<p>勿論、QNAPでも良かったのですが、以下の理由で諦め</p>
 
 <ul>
-<li>markdown-modeで使用できる拡張子を追加</li>
+<li>HDDが別売とかでお高い(故障交換ができるのは強みですが・・・)</li>
+<li>サイズが大きい</li>
+<li>ルーター機能までついてるので省スペース</li>
 </ul>
 
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
+<p>で、バックアップだけではもったいないため、
+よく使うOSで表題のようにNAS利用を使用と思いました。</p>
 
-
-<p>上の設定では、.markdownと付くファイルは、markdown-modeを使用する設定です。<br/>
-他に使用したいmarkdown-modeを使用したい拡張子があれば、同じようにして追加します。(下は.txtと付くファイルをmarkdown-modeで開きます)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.txt" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>エラー対処</h4>
+<h3>やってみる</h3>
 
 <hr />
 
-<p>プレビューを実行しようとすると、以下のようなエラーが発生します。</p>
+<p>やるまでに結構苦労しました。<br/>
+そもそも、どうやって手をつけるのか若干悩みましたw</p>
+
+<h5>障壁</h5>
+
+<hr />
+
+<p>Mac側(よしなにやってくれるが故の問題)</p>
+
+<ul>
+<li>GUI操作で自動的にマウントされる</li>
+<li>自動的にマウントされるが故に何処にマウントされたか不明</li>
+<li>マウント先不明の為、コマンドでlsとかcd実行できない</li>
+</ul>
+
+
+<p>Linux側</p>
+
+<ul>
+<li>使用プロトコルが分からない</li>
+<li>マウントするためのファイルシステムは？？？</li>
+<li>そもそもマウント先のIPとかディレクトリが不明</li>
+</ul>
+
+
+<h5>解決編</h5>
+
+<hr />
+
+<p>AirMacユーティリティをGUI操作して、以下を設定</p>
+
+<ul>
+<li>ファイル共有にチェック</li>
+<li>共有ディスクのセキュリティをアカウントに変更(デフォルトはディスクパスワード)</li>
+</ul>
+
+
+<p>他の項目は、すぐにわかりました</p>
+
+<ul>
+<li>IPはすぐに発覚(GW + 末尾に数字の1追加)</li>
+<li>プロトコルはafpもGUI操作時の情報で発覚</li>
+</ul>
+
+
+<p>Mac側は、afpをマウントする際のコマンド(mount_afp)を参照することでわかりました</p>
+
+<p>以下のコマンドを実行するとよいようです。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/bin/bash: markdown: command not found</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mount -t afp afp://YOUR_USERNAME:YOUR_PASSWORD@&lt;TimeCapsuleのIP&gt;/Data &lt;マウント先ディレクトリ</span></code></pre></td></tr></table></div></figure>
 
 
-<p>原因は、以下の２点が考えられます。</p>
+<p>umountコマンドで普通に実行できます。</p>
+
+<p>Mac側が判明したので、Linux側もほぼ同じようにしてできました。
+但し、ファイルシステムを「cifs」に設定することやディスクの指定方法が異なりました。</p>
+
+<p>以下のようにすればできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mount -t cifs -o user="YOUR_USERNAME",password="YOUR_PASSWORD" //&lt;TimeCapsuleのIP&gt; &lt;マウント先ディレクトリ&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>シェル化</h3>
+
+<hr />
+
+<p>一々、上記の内容を手打ちするのは面倒なので、シェル化しました。</p>
+
+<p>こんなことをします。</p>
 
 <ol>
-<li>markdownコマンドがインストールされていない</li>
-<li>Emacsが認識しているパスと環境変数のパスが異なる</li>
+<li>マウント先のディレクトリをチェック</li>
+<li>ディレクトリがなければ作成</li>
+<li>ディレクトリにマウント実行</li>
 </ol>
 
 
-<p>1に関しては、markdownコマンドをインストールをすれば解決します。<br/>
-2に関してですが、以下のようにしてEmacs側にパスを通してやれば解決できます。</p>
+<p>以下の環境で動作確認しています。</p>
+
+<ul>
+<li>MacOSX 10.8.5</li>
+<li>CentOS6.4 x86_64</li>
+</ul>
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -187,49 +231,43 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(dolist (dir (list
-</span><span class='line'>              "/sbin"
-</span><span class='line'>              "/usr/sbin"
-</span><span class='line'>              "/bin"
-</span><span class='line'>              "/usr/bin"
-</span><span class='line'>              "/opt/local/bin"
-</span><span class='line'>              "/sw/bin"
-</span><span class='line'>              "/usr/local/bin"
-</span><span class='line'>              (expand-file-name "~/bin")
-</span><span class='line'>              (expand-file-name "~/.emacs.d/bin")
-</span><span class='line'>              ))
-</span><span class='line'> (when (and (file-exists-p dir) (not (member dir exec-path)))
-</span><span class='line'>   (setenv "PATH" (concat dir ":" (getenv "PATH")))
-</span><span class='line'>   (setq exec-path (append (list dir) exec-path))))</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/sh
+</span><span class='line'>
+</span><span class='line'># TimeCapsuleの共有ディスクをアカウント認証にしておくこと
+</span><span class='line'>USER="YOUR_USER_NAME"
+</span><span class='line'>PASSWORD="YOUR_PASSWORD"
+</span><span class='line'>MAC_DIRECTORY="/Volumes/timecapsule"
+</span><span class='line'>LINUX_DIRECTORY="/mnt/timecapsule"
+</span><span class='line'>TC_DIRECTORY="YOUR_TIMECAPSULE_DIRECTORY"
+</span><span class='line'>
+</span><span class='line'>if [ `echo "${OSTYPE}" |grep "linux*"` ]&&[ ! -d "$LINUX_DIRECTORY" ]; then
+</span><span class='line'>    mkdir -p "$LINUX_DIRECTORY"
+</span><span class='line'>elif [ ! -d "$MAC_DIRECTORY" ]; then
+</span><span class='line'>    mkdir -p "$MAC_DIRECTORY"
+</span><span class='line'>fi
+</span><span class='line'>
+</span><span class='line'>if [ `echo "${OSTYPE}" |grep "linux*"` ]; then
+</span><span class='line'>    # for Linux
+</span><span class='line'>    # use cifs-utils(RedHat)
+</span><span class='line'>    mount -t cifs -o user="$USER",password="$PASSWORD" //"$TC_DIRECTORY" "$LINUX_DIRECTORY"
+</span><span class='line'>else
+</span><span class='line'>    # for Mac
+</span><span class='line'>    # ユーザ:パスワード@TimeCapusleのIPアドレス
+</span><span class='line'>    mount -t afp afp://"$USER":"$PASSWORD"@"$TC_DIRECTORY" "$MAC_DIRECTORY"
+</span><span class='line'>fi</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>プレビュー</h4>
 
-<hr />
-
-<ul>
-<li><em>markdown-output</em>バッファでプレビューを確認する</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c m</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>ブラウザでプレビューを確認する(一時ファイルを作成します)</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c v</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://jblevins.org/projects/markdown-mode/">公式</a>にその他の使用方法が掲載されていますので、その他の機能はそちらを参照してください。</p>
-
-<p>ブラウザでプレビューしていて、かつOctpress用の記事を編集する場合、注意してください。</p>
-
-<p>そのままデプロイするとhtmlファイルまでアップロードされてしまうので、２重投稿になるので気をつけてください。</p>
 </div>
 
 
@@ -252,12 +290,12 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
   
 
 
-<time datetime="2013-03-24T00:38:00+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+<time datetime="2013-11-29T00:18:00+09:00" pubdate data-updated="true">Nov 29<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/emacs/'>Emacs</a>
+    <a class='category' href='/blog/categories/mac/'>Mac</a>
   
 </span>
 
@@ -266,7 +304,7 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/24/markdown-mode/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/11/29/timecapsule-mac-linux/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/11/29/timecapsule-mac-linux/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -279,10 +317,8 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/21/start-octpress/" title="Previous Post: Octpress始めました">&laquo; Octpress始めました</a>
+        <a class="basic-alignment left" href="/blog/2013/11/25/ar-bulk-insert/" title="Previous Post: Rails(ActiveRecord)でBULK INSERTする方法">&laquo; Rails(ActiveRecord)でBULK INSERTする方法</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/25/gnu-global/" title="Next Post: Androidのソースコード検索サービスを構築してみる">Androidのソースコード検索サービスを構築してみる &raquo;</a>
       
     </p>
   </footer>
