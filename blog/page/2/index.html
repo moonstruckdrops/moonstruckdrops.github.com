@@ -9,10 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="色々不便なのでやりました。
-理由は、「ソートや補完とかが辛い」です。 英語化対象は、デフォルトで日本語化されているディレクトリです。
-(「デスクトップ」という名前のディレクトリなど) 以下のコマンドを実行すれば、ディレクトリ名が英語化します。
-やっていることは単純で、 &hellip;">
+  <meta name="description" content="SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
+ホスト毎の設定は「~/.ssh/config」で設定できます。 管理方法 以下の方法で管理します。 鍵毎にprefixやsuffixをつける
+sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +73,157 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/22/ssh-config-setting/">SSHで複数の鍵を管理する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-22T21:29:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
+ホスト毎の設定は「~/.ssh/config」で設定できます。</p>
+
+<h3>管理方法</h3>
+
+<hr />
+
+<p>以下の方法で管理します。</p>
+
+<ul>
+<li>鍵毎にprefixやsuffixをつける</li>
+<li>sshのconfigにホスト毎に設定をつける</li>
+</ul>
+
+
+<p>因みに、鍵がわかれば鍵ファイル名はなんでもいいです。</p>
+
+<h3>configの記載</h3>
+
+<hr />
+
+<p>以下のような形で記載します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Host github.com
+</span><span class='line'>    HostName        github.com
+</span><span class='line'>    IdentityFile    ~/.ssh/github_id_rsa
+</span><span class='line'>    User            git
+</span><span class='line'>    TCPKeepAlive    yes
+</span><span class='line'>    IdentitiesOnly  yes
+</span><span class='line'>Host hogehoge
+</span><span class='line'>    HostName        hogehoge
+</span><span class='line'>    Port            12345
+</span><span class='line'>    IdentityFile    ~/.ssh/hogehoge_id_rsa
+</span><span class='line'>    User            hogehoge
+</span><span class='line'>    Protocol        2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>各項目は以下の内容を設定しています。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">設定項目</th>
+<th align="left">設定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Host</td>
+<td align="left">次のHostキーワードが現れるまでの項目が１つの設定項目にする</td>
+</tr>
+<tr>
+<td align="left">HostName</td>
+<td align="left">ログイン先のホスト名</td>
+</tr>
+<tr>
+<td align="left">IdentityFile</td>
+<td align="left">SSHの鍵ファイル</td>
+</tr>
+<tr>
+<td align="left">User</td>
+<td align="left">ログインするユーザー名</td>
+</tr>
+<tr>
+<td align="left">TCPKeepAlive</td>
+<td align="left">持続的接続</td>
+</tr>
+<tr>
+<td align="left">IdentitiesOnly</td>
+<td align="left">IdentityFileを利用する場合に設定する</td>
+</tr>
+<tr>
+<td align="left">Port</td>
+<td align="left">ポート番号</td>
+</tr>
+<tr>
+<td align="left">Protocol</td>
+<td align="left">SSHのプロトコル指定</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>githubへのログインの場合は、上記の内容を記載します。</p>
+
+<h3>接続確認</h3>
+
+<hr />
+
+<p>以下のコマンドで確認します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T &lt;Host&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例えば、上記のconfigに設定したgithubへのアクセスは以下で確認します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T github.com</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、「You&#8217;ve successfully authenticated」が出れば成功です。</p>
+
+<p>以上で複数の鍵を管理できますね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1526,203 +1676,6 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/02/ruby-struct/">RubyのStructクラスが便利</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-02T01:15:00+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも</p>
-
-<h3>Structクラス</h3>
-
-<hr />
-
-<p>Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・)</p>
-
-<p>平たく言うと、Classクラスに似ているものです。</p>
-
-<p>じゃー違いは何なの？ってなります。</p>
-
-<ol>
-<li>newしたとき、引数で指定したアクnセッサをもつクラスを生成する</li>
-<li>第一引数の文字列がクラス名となるが、指定がない場合は無名のクラスになる</li>
-</ol>
-
-
-<p>これだけ。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new("Point", :x, :y)
-</span><span class='line'>item = Point.new(100,200)
-</span><span class='line'>p item =&gt; #&lt;struct Struct::Point x=100, y=200&gt;
-</span><span class='line'>p item.x =&gt; 100</span></code></pre></td></tr></table></div></figure>
-
-
-<p>無名クラスだと、こんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Point2 = Struct.new(:z)
-</span><span class='line'>Point2.class =&gt; Class
-</span><span class='line'>item2 = Point2.new(300)
-</span><span class='line'>p item2 =&gt; #&lt;struct Point2 z=300&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>ドキュメントに無い機能</h3>
-
-<hr />
-
-<p>ブロックを使うことができることです。<br/>
-ブロック内では、独自のメソッドを定義することができます。</p>
-
-<p>こんな感じです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new(:x, :y) do
-</span><span class='line'>  def sum
-</span><span class='line'>        x + y
-</span><span class='line'>  end
-</span><span class='line'>
-</span><span class='line'>  def minus
-</span><span class='line'>        x - y 
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>p Point.new(600, 700).sum =&gt; 1300
-</span><span class='line'>p Point.new(800,900).minus =&gt; -100</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他にも、superを使うことで、上位のコンストラクタを実行することができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
-</span><span class='line'>  def initialize(x, y)
-</span><span class='line'>    z = x + y
-</span><span class='line'>    super(z, y)
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>item = Point.new(400, 500)
-</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>使いどころ</h3>
-
-<hr />
-
-<p>正直、あんまり無いような気がしなくもないですが、自分だと以下で使います。</p>
-
-<ul>
-<li>csvファイルとか読み込むとき、ちょっとしたデータ構造を定義するとき</li>
-<li>ちょっとしたデータのソート</li>
-<li>ちょっとしたアルゴリズムの追加</li>
-<li>ハッシュの代わりとか(既にデータ構造が分かってる場合など)</li>
-</ul>
-
-
-<p>データソートする場合の例</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
-</span><span class='line'>  def initialize(x, y)
-</span><span class='line'>    z = x + y
-</span><span class='line'>    super(z, y)
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>item = Point.new(400, 500)
-</span><span class='line'>item2 = Point.new(200,300)
-</span><span class='line'>
-</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;
-</span><span class='line'>p item2 =&gt; #&lt;struct Point x=500, y=300&gt;
-</span><span class='line'>
-</span><span class='line'>array = []
-</span><span class='line'>array &lt;&lt; item
-</span><span class='line'>array &lt;&lt; item2
-</span><span class='line'>
-</span><span class='line'>p array =&gt; [#&lt;struct Point x=900, y=500&gt;, #&lt;struct Point x=500, y=300&gt;]
-</span><span class='line'>
-</span><span class='line'>result = array.sort{ |item1,item2|
-</span><span class='line'>                    item1.x &lt;=&gt; item2.x
-</span><span class='line'>               }
-</span><span class='line'>p result =&gt; [#&lt;struct Point x=500, y=300&gt;, #&lt;struct Point x=900, y=500&gt;]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>書き捨てみたいなRubyコードを書くときにはちょうどいいのかもしれないですね。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1744,6 +1697,10 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/19/active-android/">ActiveAndroidを使ってみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/29/timecapsule-mac-linux/">Time Capsule(NAS)をMacとLinuxの両方から使えるようにする</a>
       </li>
     
@@ -1759,15 +1716,11 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
         <a href="/blog/2013/11/12/ar-memo/">ActiveRecordメモ</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/10/28/edtech-hackathon/">EdTech Hackathonに行ってきた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 113.33333333333333%'>Android(2)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(3)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
 </section
 
 

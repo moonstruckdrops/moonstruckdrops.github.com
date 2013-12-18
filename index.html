@@ -9,9 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 糞お高いNASを買ってしまいました・・・
-というか、買わざるを得ませんでしたorz とりあえず、こんな理由で選定 自宅の外付けHDDが故障気味
-Macも自動でバックアップ取っておきたい 勿論、QNAPでも良かったのですが、以下の理由で諦め HDDが別売とかでお高い( &hellip;">
+  <meta name="description" content="はじめに 久しぶりにオレオレ用のAndroidアプリを書きました。
+その際、DBを使ったのですが、面倒くさいことはしたくなかったので
+Android向けO/R MapperであるActiveAndroid使いました。 その時のメモを備忘録な感じで残します。 準備 以下のようにして、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,440 @@ Macも自動でバックアップ取っておきたい 勿論、QNAPでも良か
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/12/19/active-android/">ActiveAndroidを使ってみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-19T00:58:00+09:00" pubdate data-updated="true">Dec 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>はじめに</h2>
+
+<hr />
+
+<p>久しぶりにオレオレ用のAndroidアプリを書きました。<br/>
+その際、DBを使ったのですが、面倒くさいことはしたくなかったので<br/>
+Android向けO/R Mapperである<a href="https://github.com/pardom/ActiveAndroid">ActiveAndroid</a>使いました。</p>
+
+<p>その時のメモを備忘録な感じで残します。</p>
+
+<h2>準備</h2>
+
+<hr />
+
+<p>以下のようにして、ライブラリを自分でビルドします。<br/>
+ビルド完了後、プロジェクトのビルドパスにライブラリを追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone https://github.com/pardom/ActiveAndroid.git
+</span><span class='line'>$ cd ActiveAndroid
+</span><span class='line'>$ sh gradlew build</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>設定</h2>
+
+<hr />
+
+<p>2種類の方法で利用準備ができます。</p>
+
+<ol>
+<li>AndroidManifest.xmlに設定する</li>
+<li>Applicationクラスを継承した独自のクラスを用意する</li>
+</ol>
+
+
+<p>1のやり方は以下のような形で定義します。</p>
+
+<ul>
+<li>meta-dataタグを用意し、そこにDB名前とバージョンを記載</li>
+<li>android:nameに「com.activeandroid.app.Application」を記載</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;application
+</span><span class='line'>        android:allowBackup="true"
+</span><span class='line'>        android:name="com.activeandroid.app.Application"&gt;
+</span><span class='line'>        ・・・
+</span><span class='line'>
+</span><span class='line'>        &lt;meta-data android:name="AA_DB_NAME" android:value="test.db" /&gt;
+</span><span class='line'>        &lt;meta-data android:name="AA_DB_VERSION" android:value="1" /&gt;
+</span><span class='line'>
+</span><span class='line'>        ・・・
+</span><span class='line'>
+</span><span class='line'>&lt;/application&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2のやり方は、以下のようにして設定内容を組み立て、起動と停止処理を組み込みます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public class MyApplication extends Application {
+</span><span class='line'>
+</span><span class='line'>  @Override
+</span><span class='line'>  public void onCreate() {
+</span><span class='line'>    super.onCreate();
+</span><span class='line'>    Builder builder = new Configuration.Builder(getBaseContext());
+</span><span class='line'>    builder.setCacheSize(1024*1024*4);
+</span><span class='line'>    builder.setDatabaseName("test.db");
+</span><span class='line'>    builder.setDatabaseVersion(1);
+</span><span class='line'>    ActiveAndroid.initialize(builder.create(), true);
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  @Override
+</span><span class='line'>  public void onTerminate() {
+</span><span class='line'>    super.onTerminate();
+</span><span class='line'>    ActiveAndroid.dispose();
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記の内容では、以下のものを設定しています。</p>
+
+<ul>
+<li>キャッシュサイズ4MB</li>
+<li>DBを「test.db」</li>
+<li>バージョンを「1」</li>
+<li>ActiveAndroidのログを有効化(initializeメソッドのtrueのこと)</li>
+</ul>
+
+
+<p>個人的には、以下の理由から組み立てて実行するほうがよいかと思います。</p>
+
+<ul>
+<li>ActiveAndroidの設定に引きづられず、自分のアプリに影響が出ないこと</li>
+<li>DBのキャッシュサイズを決められる(デフォルトが1KBのため)</li>
+<li>progurdによる難読化ができる(AndroidManifest.xmlに書けば見え見えになりますが、コードだと難読化ができる)</li>
+</ul>
+
+
+<p>尤も、最後のはコード上でstaticに文字列として定義するとあまり意味がないですが・・・</p>
+
+<h2>モデル定義</h2>
+
+<hr />
+
+<p>以下のような感じでアノテーションをつける形で定義します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@Table(name = "Items")
+</span><span class='line'>public class Item extends Model {
+</span><span class='line'>
+</span><span class='line'>  @Column(name = "id", notNull = true)
+</span><span class='line'>  public int id;
+</span><span class='line'>
+</span><span class='line'>  @Column(name = "name", unique = true, onUpdate = ForeignKeyAction.NO_ACTION)
+</span><span class='line'>  public String name;
+</span><span class='line'>
+</span><span class='line'>  @Column(name = "category", onNullConflict = ConflictAction.REPLACE)
+</span><span class='line'>  public String category;
+</span><span class='line'>
+</span><span class='line'>  public List&lt;Test&gt; tests() {
+</span><span class='line'>    return getMany(Test.class, "test");
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>アノテーションに付けれる内容は以下の表のような感じのものです。<br/>
+殆どが<a href="http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html">Android本家のページ</a>のConstants(CONFLICT_XXXと記載されたもの)なので<br/>
+こちらの説明を読んで設定すればよいかと思います。</p>
+
+<table>
+<thead>
+<tr>
+<th> 定義先 </th>
+<th> 定義内容 </th>
+<th> 意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> クラス </td>
+<td> name      </td>
+<td> 対応するテーブル名</td>
+</tr>
+<tr>
+<td> 変数   </td>
+<td> name      </td>
+<td> 対応するカラム名</td>
+</tr>
+<tr>
+<td>      </td>
+<td> length           </td>
+<td> 長さの制約(デフォルト -1(無制限?))</td>
+</tr>
+<tr>
+<td>      </td>
+<td> notNull          </td>
+<td> not null制約(デフォルト false)</td>
+</tr>
+<tr>
+<td>      </td>
+<td> onNullConflict   </td>
+<td> null制約違反時の動作を設定する(デフォルトはFAIL, 設定内容はAndroid公式参照)</td>
+</tr>
+<tr>
+<td>      </td>
+<td> onDelete         </td>
+<td> 削除時の外部キーの動作設定(CASCADE, RESTRICT等が設定可能)</td>
+</tr>
+<tr>
+<td>      </td>
+<td> onUpdate         </td>
+<td> 更新時の外部キーの動作設定(CASCADE, RESTRICT等が設定可能)</td>
+</tr>
+<tr>
+<td>      </td>
+<td> unique           </td>
+<td> ユニーク制約(デフォルト false)</td>
+</tr>
+<tr>
+<td>      </td>
+<td> onUniqueConflict </td>
+<td> ユニーク制約違反時の動作を設定\n(デフォルトはFAIL, 設定内容はAndroid公式参照)</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>意味が必ずしも正しいかと言われると少し自信がありませんが、多分こんな感じかと。</p>
+
+<p>また、1対Nのような関係を作るときは、getMenyメソッドを実装したヘルパーメソッドを作る必要があるようです。</p>
+
+<h2>クエリ</h2>
+
+<p>クエリについて、書いていきます。</p>
+
+<p>以下を使ったことがあればすんなり理解できるかと・・・</p>
+
+<ul>
+<li>JavaのO/R Mapper(s2jdbc等)</li>
+<li>RubyのActiveRecord</li>
+</ul>
+
+
+<h3>挿入</h3>
+
+<hr />
+
+<p>以下のような感じで記載します。<br/>
+ActiveRecordと殆ど同じですね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Item item = new Item();
+</span><span class='line'>item.name = "test";
+</span><span class='line'>item.save();</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のようにすれば、バルクインサートもできます。
+また、トランザクションも併せて記載します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ActiveAndroid.beginTransaction();
+</span><span class='line'>try{
+</span><span class='line'>  for(int i = 0; i &lt; 1000; i++ ){
+</span><span class='line'>    Item item = new Item();
+</span><span class='line'>    item.name = "test_" + i;
+</span><span class='line'>    item.save();
+</span><span class='line'>  }
+</span><span class='line'>  ActiveAndroid.setTransactionSuccessful();
+</span><span class='line'>}finally{
+</span><span class='line'>  ActiveAndroid.endTransaction();
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>トランザクション中にエラーが出てもthrowされないので、注意して下さい。<br/>
+コンフリクト周りでエラーが出る場合は、モデルのアノテーションに定義した内容が適用されます。</p>
+
+<h3>削除</h3>
+
+<hr />
+
+<p>やり方は、以下の３種類です。</p>
+
+<ol>
+<li>オブジェクトをロードしてから削除する方法</li>
+<li>静的メソッドを使用して削除する方法</li>
+<li>クエリを組み立てて削除する方法</li>
+</ol>
+
+
+<p>1のやり方は、以下です。<br/>
+一度、selectしてから削除という感じです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Item item = Item.load(Item.class, 1);
+</span><span class='line'>item.delete();</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2のやり方は、以下です。<br/>
+主キーさえ分かっていれば、こちらのほうが無駄なクエリを発行しない分早いです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Item.delete(Item.class, 1);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3のやり方は、以下です。<br/>
+複数の行をまとめて削除できたりします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>new Delete().from(Item.class).where("Id = ? and name = ?", 1, "test").execute();</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>参照</h3>
+
+<hr />
+
+<p>これも直感的に記述できます。<br/>
+使い方は、s2jdbcに似ています。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Item result = new Select().from(Item.class).executeSingle();
+</span><span class='line'>
+</span><span class='line'>List&lt;Item&gt; resultSet = new Select("id", "name").from(Item.class).execute();
+</span><span class='line'>
+</span><span class='line'>List&lt;Item&gt; resultSet = new Select().from(Item.class).where("Id = ? and name = ?", 1, "test").execute();</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記のような形で実行できます。</p>
+
+<ul>
+<li>先頭１つのカラムデータのみ取得</li>
+<li>カラムを指定した取り方</li>
+<li>条件付き(s2jdcのようにandメソッドとかはありません)</li>
+</ul>
+
+
+<p>テーブル結合時は、以下のような形で記述します。<br/>
+現状では、以下の方法しか手段がないようです。</p>
+
+<ol>
+<li>ActiveAndroidでクエリオブジェクト作成</li>
+<li>1で作成したクエリオブジェクトからsqlを作成</li>
+<li>2のsqlを直接実行しCursorクラスのオブジェクトを取得</li>
+<li>Cusorクラスからデータを取得する(whileループ等で・・・)</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>From query = new Select().from(Item.class).innerJoin(Hoge.class).on("Hoge.id = Item.id");
+</span><span class='line'>
+</span><span class='line'>Cursor cursor = Cache.openDatabase().rawQuery(query.toSql(), query.getArguments());</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>感想</h2>
+
+<hr />
+
+<p>こんな感じな印象でした。簡単なものだと今後も使うかも。</p>
+
+<ul>
+<li>ActiveRecordライクなので、扱い易い</li>
+<li>Modelクラスを継承したクラスを作るだけで、面倒な処理を大幅に軽減できる</li>
+<li>テーブル定義にコードが引きづられやすくなるので注意</li>
+<li>複雑なクエリの場合、通常のSQLiteのDB操作と変わらなくなる</li>
+</ul>
+
+
+<h2>資料</h2>
+
+<hr />
+
+<p>身内向けの勉強会で、ActiveAndroidについて発表してきました。
+その時、書いた資料とかも残しておきます。</p>
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/29216122 " width="595" height="446" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen></iframe>
+
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1950,157 +2384,6 @@ RubyやGoとかが好きです。<br/>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/22/ssh-config-setting/">SSHで複数の鍵を管理する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-22T21:29:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
-ホスト毎の設定は「~/.ssh/config」で設定できます。</p>
-
-<h3>管理方法</h3>
-
-<hr />
-
-<p>以下の方法で管理します。</p>
-
-<ul>
-<li>鍵毎にprefixやsuffixをつける</li>
-<li>sshのconfigにホスト毎に設定をつける</li>
-</ul>
-
-
-<p>因みに、鍵がわかれば鍵ファイル名はなんでもいいです。</p>
-
-<h3>configの記載</h3>
-
-<hr />
-
-<p>以下のような形で記載します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Host github.com
-</span><span class='line'>    HostName        github.com
-</span><span class='line'>    IdentityFile    ~/.ssh/github_id_rsa
-</span><span class='line'>    User            git
-</span><span class='line'>    TCPKeepAlive    yes
-</span><span class='line'>    IdentitiesOnly  yes
-</span><span class='line'>Host hogehoge
-</span><span class='line'>    HostName        hogehoge
-</span><span class='line'>    Port            12345
-</span><span class='line'>    IdentityFile    ~/.ssh/hogehoge_id_rsa
-</span><span class='line'>    User            hogehoge
-</span><span class='line'>    Protocol        2</span></code></pre></td></tr></table></div></figure>
-
-
-<p>各項目は以下の内容を設定しています。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">設定項目</th>
-<th align="left">設定値</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">Host</td>
-<td align="left">次のHostキーワードが現れるまでの項目が１つの設定項目にする</td>
-</tr>
-<tr>
-<td align="left">HostName</td>
-<td align="left">ログイン先のホスト名</td>
-</tr>
-<tr>
-<td align="left">IdentityFile</td>
-<td align="left">SSHの鍵ファイル</td>
-</tr>
-<tr>
-<td align="left">User</td>
-<td align="left">ログインするユーザー名</td>
-</tr>
-<tr>
-<td align="left">TCPKeepAlive</td>
-<td align="left">持続的接続</td>
-</tr>
-<tr>
-<td align="left">IdentitiesOnly</td>
-<td align="left">IdentityFileを利用する場合に設定する</td>
-</tr>
-<tr>
-<td align="left">Port</td>
-<td align="left">ポート番号</td>
-</tr>
-<tr>
-<td align="left">Protocol</td>
-<td align="left">SSHのプロトコル指定</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>githubへのログインの場合は、上記の内容を記載します。</p>
-
-<h3>接続確認</h3>
-
-<hr />
-
-<p>以下のコマンドで確認します</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T &lt;Host&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>例えば、上記のconfigに設定したgithubへのアクセスは以下で確認します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T github.com</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで、「You&#8217;ve successfully authenticated」が出れば成功です。</p>
-
-<p>以上で複数の鍵を管理できますね。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2120,6 +2403,10 @@ RubyやGoとかが好きです。<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/19/active-android/">ActiveAndroidを使ってみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/11/29/timecapsule-mac-linux/">Time Capsule(NAS)をMacとLinuxの両方から使えるようにする</a>
       </li>
     
@@ -2135,15 +2422,11 @@ RubyやGoとかが好きです。<br/>
         <a href="/blog/2013/11/12/ar-memo/">ActiveRecordメモ</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/10/28/edtech-hackathon/">EdTech Hackathonに行ってきた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 113.33333333333333%'>Android(2)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(3)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
 </section
 
 
