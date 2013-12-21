@@ -9,15 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="少しばかり、やることがあったのでやってみた。
-煩悩丸出しですいませんw HTTP Responseのbodyを利用する 直感的ではないけど、素直なやりかた 書き込みモードでファイルを開く
-urlで接続したbodyデータをファイルに書き込む 1
-2
-3
-4
-5
-6
-def save_file(url &hellip;">
+  <meta name="description" content="Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。 画像の格納ディレクトリ 画像の格納場所は、 1
+~source/images に格納すればよい imagesディレクトリの配下にも、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +72,117 @@ def save_file(url &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/30/octpress-image-tag/">Octpressで画像ファイルを扱う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-30T01:47:00+09:00" pubdate data-updated="true">Mar 30<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。</p>
+
+<h3>画像の格納ディレクトリ</h3>
+
+<hr />
+
+<p>画像の格納場所は、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>~source/images</span></code></pre></td></tr></table></div></figure>
+
+
+<p>に格納すればよい</p>
+
+<p>imagesディレクトリの配下にも、blogというディレクトリがあるのでブログ用の画像はそちらに格納すればよいっぽい。</p>
+
+<h3>Octpress公式の手順</h3>
+
+<hr />
+
+<p><a href="http://octopress.org/docs/plugins/image-tag/">公式の手順</a></p>
+
+<p>以下の書式に従って記載すれば、いいらしい。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img [class names] /path/to/image [width] [height] [title text [alt text]] \%}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>そのため、画像サイズを640x480で表示させたい場合、以下のように書くことができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img left /images/picture.png 640 480 \%}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コード上の「\」は不要です。(何故か、エスケープが正しく動作しなかった)</p>
+
+<h3>markdownを使用した方法</h3>
+
+<hr />
+
+<p>これは、前にも書いたように以下のようにすればよいでしょう。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[テスト画像](/images/picture.png "title")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但し、画像サイズは指定できないという欠点があります。<br/>
+画像は、加工するしかないようですね。</p>
+
+<h3>htmlを直接記載する方法</h3>
+
+<hr />
+
+<p>以下のような感じで、htmlを使用した書き方もできるようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;img src="/images/picture.png" alt="alt" title="title" width="640" height="480"&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意する点があるとすれば、必ず前後に<p>タグが挿入されてしまうことです。<br/>
+インラインで使用することは、できないっぽいです。</p>
+
+<h3>まとめ</h3>
+
+<hr />
+
+<p>個人的な見解は以下のような感じ</p>
+
+<ul>
+<li>基本はmarkdown記法で記載</li>
+<li>画像サイズを変更したい場合、Octpressの記法に従う</li>
+<li>汎用的にしたい場合、htmlで記載する</li>
+<li>ブログ記事用の画像の場合、「souce/images/blog」の下に格納する</li>
+<li>ブログ記事以外の画像の場合、「source/images」の下に格納する</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1227,6 +1331,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/21/work-site/">現場について考えてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/19/active-android/">ActiveAndroidを使ってみた</a>
       </li>
     
@@ -1242,15 +1350,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2013/11/19/ar-memo-2/">ActiveRecordメモ その2</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/11/12/ar-memo/">ActiveRecordメモ</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(3)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(3)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
 </section
 
 

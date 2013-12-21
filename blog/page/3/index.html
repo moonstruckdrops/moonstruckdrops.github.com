@@ -9,7 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも Structクラス Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・) 平たく言うと、Classクラスに似ているものです。 じゃー違いは何なの？ってなります。 newしたとき、 &hellip;">
+  <meta name="description" content="簡単な経緯 このブログ記事を書くキッカケになった内容を以下に記述します。 お馬鹿すぎて笑えますwww Dropboxアプリ起動
+アプリを起動したまま、あるコマンドを実行
+Dropboxと同期したディレクトリが2で実行したコマンドで削除される
+1のDropboxアプリが削除した状態を同期開始 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +74,86 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/13/recover-dropbox-data/">削除してしまったDropboxのデータを復元する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-13T17:06:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>簡単な経緯</h3>
+
+<hr />
+
+<p>このブログ記事を書くキッカケになった内容を以下に記述します。</p>
+
+<p>お馬鹿すぎて笑えますwww</p>
+
+<ol>
+<li>Dropboxアプリ起動</li>
+<li>アプリを起動したまま、あるコマンドを実行</li>
+<li>Dropboxと同期したディレクトリが2で実行したコマンドで削除される</li>
+<li>1のDropboxアプリが削除した状態を同期開始</li>
+<li>削除だけなので、同期が一瞬で終わってしまう</li>
+<li>Dropboxサーバのデータが削除</li>
+</ol>
+
+
+<p>こんな感じでした・・・
+実際は、Dropboxのディレクトリだけでなくもっと影響がでかくて涙を流しています。</p>
+
+<h3>復元の手順</h3>
+
+<hr />
+
+<p>復活の呪文を唱えるにも条件があります。</p>
+
+<h4>削除してからの日数が30日以内であれば、復元可能</h4>
+
+<p>というものです。</p>
+
+<p>幸いなことに削除した次の日に気がついたので、自分はこの条件を満たしていました。</p>
+
+<p>で、肝心の復元の手順ですが、以下で実施します。</p>
+
+<ol>
+<li>Dropboxのウェブサイトにログイン</li>
+<li>画面右上の「削除済みファイル」をクリック</li>
+<li>ファイル名の横に表示されている逆三角を押下し復元をクリック</li>
+</ol>
+
+
+<h4><a href="https://www.dropbox.com/help/296/ja">公式の手順</a></h4>
+
+<p>これで削除したファイルが復元できます。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1421,114 +1504,6 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/24/linux-user-add/">Linux上にあるユーザーアカウントの追加と削除をする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>すごくド基礎なのですが・・・。<br/>
-ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
-
-<h3>ユーザーアカウントの追加</h3>
-
-<hr />
-
-<p>基本中の基本ですね。<br/>
-以下のコマンドのような感じで追加します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下の表によく使用するオプションを記載します。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">オプション</th>
-<th align="left">意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">c コメント      </td>
-<td align="left">ユーザーのコメントを設定</td>
-</tr>
-<tr>
-<td align="left">d ディレクトリ  </td>
-<td align="left">ユーザーのログインディレクトリを指定</td>
-</tr>
-<tr>
-<td align="left">e mm/dd/yy </td>
-<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
-</tr>
-<tr>
-<td align="left">g グループ   </td>
-<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
-</tr>
-<tr>
-<td align="left">G グループ    </td>
-<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
-</tr>
-<tr>
-<td align="left">u ユーザーID </td>
-<td align="left">ユーザーのユーザーIDを指定</td>
-</tr>
-<tr>
-<td align="left">s シェル </td>
-<td align="left">ユーザーのログインシェルを指定</td>
-</tr>
-<tr>
-<td align="left">m        </td>
-<td align="left">ホームディレクトリの作成を自動で行う</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>ユーザーアカウントの削除</h3>
-
-<hr />
-
-<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
-なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
-但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>常識ですね(ぉぃ</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1550,6 +1525,10 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/21/work-site/">現場について考えてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/19/active-android/">ActiveAndroidを使ってみた</a>
       </li>
     
@@ -1565,15 +1544,11 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
         <a href="/blog/2013/11/19/ar-memo-2/">ActiveRecordメモ その2</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/11/12/ar-memo/">ActiveRecordメモ</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(3)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(3)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(3)</a> <a href='/blog/categories/linux' style='font-size: 146.66666666666666%'>Linux(7)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 133.33333333333334%'>戯言(5)</a> </span>
 </section
 
 
