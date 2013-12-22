@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-12-21T13:16:39+09:00</updated>
+  <updated>2013-12-23T05:15:00+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,280 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[log4j 2を使った。おまけで他のloggingも用意した。]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/12/23/java-logging/"/>
+    <updated>2013-12-23T03:27:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/12/23/java-logging</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>今はRails使いですが、数年前まではJava使いでした。<br/>
+何やらlog4jがメジャーバージョンアップ始めたという噂を聞いたので試してみました。<br/>
+因みに、自分が最後に使っていたのは「slf4j + logback」です。</p>
+
+<h3>コード類</h3>
+
+<hr />
+
+<p>コードは<a href="https://github.com/moonstruckdrops/java-logging-sample/tree/master/Log4j2Sample">github</a>に置きました。<br/>
+どれも必要最低限のライブラリしか使っていませんので、動作の参考になるかと思います。</p>
+
+<p>特にivy, maven, gradleを使うと必要以上のライブラリまで取ってくるので、解決に困っている方がいれば役立つかも・・・</p>
+
+<p># 自分が偶に忘れるなんてことは言えない・・・</p>
+
+<h3>log4j 2.x</h3>
+
+<hr />
+
+<p><a href="http://logging.apache.org/log4j/2.x/index.html">本家</a>曰く、何やらこんなことが増えたらしい。</p>
+
+<ul>
+<li>APIの分離</li>
+<li>パフォーマンス(性能)改良</li>
+<li>multiple API(commons-logging, slf4j)のサポート</li>
+<li>設定の自動リロード</li>
+<li>logbackライクなFilter設定</li>
+<li>plugin機構の追加</li>
+</ul>
+
+
+<p>後は、地味に細かい改良があったりします。。。</p>
+
+<h3>セットアップ</h3>
+
+<hr />
+
+<p>ライブラリ(2013/12/22時点)は、以下のものがあればよいようです。</p>
+
+<ul>
+<li>log4j-api-2.0-beta9.jar</li>
+<li>log4j-core-2.0-beta9.jar</li>
+</ul>
+
+
+<p>slf4jと連携させたいときは、以下を追加します。</p>
+
+<ul>
+<li>log4j-slf4j-impl-2.0-beta9.jar</li>
+<li>slf4j-api.1.7.5.jar</li>
+</ul>
+
+
+<p>Gradleだとこんな感じですね。(transitiveをつけるのは余計なライブラリをダウンロードさせないため)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>dependencies {
+</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-core:2.0-beta9') {transitive = false}
+</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-api:2.0-beta9') {transitive = false}
+</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-slf4j-impl:2.0-beta9') {transitive = false}
+</span><span class='line'>    compile ('org.slf4j:slf4j-api:1.7.5') {transitive = false}
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このあたりを参考にするといいかも</p>
+
+<ul>
+<li><a href="http://logging.apache.org/log4j/2.x/maven-artifacts.html">maven連携</a></li>
+<li><a href="http://logging.apache.org/log4j/2.x/log4j-slf4j-impl/">slf4j連携の注意点</a></li>
+</ul>
+
+
+<p>設定ファイルの置き場ですが、こちらは「クラスパス」が通ったところに置けばよいでしょう。<br/>
+# eclipseとかだとsrcの直下の置けばよいです。</p>
+
+<p>因みに、この設定ファイルですが以下に変更となったようです。</p>
+
+<ul>
+<li>log4j2.xmlもしくはlog4j2.jsonのどちらかを設定ファイルとする</li>
+<li>propertiesファイルでは記載できなくなった</li>
+<li>ファイル名の規則が「log4j2」になった</li>
+</ul>
+
+
+<p># Javaの特徴という感じだったのでプロパティファイル結構好きだったんだけどなぁ(日本語書くとアレなのは置いておいて)<br/>
+# 複雑なことは書けないという致命傷もあったので、設定が複雑なことには向かなかったというのも分かる<br/>
+# jsonのサポートは今風かも。</p>
+
+<p>ログの設定にjsonを使う場合は、以下のライブラリを追加する必要があるようです。</p>
+
+<ul>
+<li>jackson-core-2.2.2.jar</li>
+<li>jackson-databind-2.2.2.jar</li>
+</ul>
+
+
+<h3>設定</h3>
+
+<hr />
+
+<p>ログって基本、一度設定してしまうと何か特別な理由が無い限り設定変更ってしませんよね。<br/>
+# ログ分析が必要になったとか、ログレベルの変更をする必要が出たとか</p>
+
+<ul>
+<li><a href="http://logging.apache.org/log4j/2.x/manual/architecture.html">デフォルト</a>はERRORとFATALのみ表示(ログレベルは、FATAL > ERROR> WARN > INFO > DEBUG > TRACE)</li>
+<li><a href="http://logging.apache.org/log4j/2.x/manual/layouts.html">指定できる出力フォーマット</a></li>
+<li><a href="http://logging.apache.org/log4j/2.x/manual/appenders.html">appender</a>は、コンソールやファイルの出力するフォーマット定義</li>
+<li>loggersは、どのappendersを使うかを指定することでログの出力方式を決定できます</li>
+<li>最低限、appenderとloggersを設定すれば動きます。</li>
+</ul>
+
+
+<p>以下のような感じでlog4j2.xmlを設定します。</p>
+
+<ul>
+<li>Consoleとログファイルの両方にログを出力するようにしています</li>
+<li>ログファイルの出力は、JSONを設定しています</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+</span><span class='line'>&lt;configuration status="OFF"&gt;
+</span><span class='line'>  &lt;appenders&gt;
+</span><span class='line'>    &lt;Console name="Console" target="SYSTEM_OUT"&gt;
+</span><span class='line'>      &lt;PatternLayout&gt;
+</span><span class='line'>        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+</span><span class='line'>      &lt;/PatternLayout&gt;
+</span><span class='line'>    &lt;/Console&gt;
+</span><span class='line'>
+</span><span class='line'>    &lt;RollingFile name="RollingFile" fileName="log4j2_sample_log.log" filePattern="log4j2_sample_log_%d{yyyy-MM-dd}.log.gz"&gt;
+</span><span class='line'>      &lt;JSONLayout complete="true" charset="UTF-8" /&gt;
+</span><span class='line'>      &lt;Policies&gt;
+</span><span class='line'>        &lt;TimeBasedTriggeringPolicy /&gt;
+</span><span class='line'>      &lt;/Policies&gt;
+</span><span class='line'>    &lt;/RollingFile&gt;
+</span><span class='line'>  &lt;/appenders&gt;
+</span><span class='line'>
+</span><span class='line'>  &lt;loggers&gt;
+</span><span class='line'>    &lt;root level="trace"&gt;
+</span><span class='line'>      &lt;appender-ref ref="Console" /&gt;
+</span><span class='line'>      &lt;appender-ref ref="RollingFile" /&gt;
+</span><span class='line'>    &lt;/root&gt;
+</span><span class='line'>  &lt;/loggers&gt;
+</span><span class='line'>    
+</span><span class='line'>&lt;/configuration&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>他にも出来そうなこと</p>
+
+<ul>
+<li><code>「&lt;property name="LOG_PATH" value="" /&gt;」</code>のように定義することもできるような感じなので柔軟に出来そうですね。</li>
+<li>appenderを追加すれば、状況に応じたログ出力が出来そう(普通のログとJSONのログ等)</li>
+<li>JSONでログ出力すれば、ログの分析がしやすそう(分析基盤(Fluentdとか)を使ったり作ればですが)</li>
+</ul>
+
+
+<h3>おまけ(その1)</h3>
+
+<hr />
+
+<p>いつもSLF4jを使用するときの組み合わせを忘れるので、ここにメモします。
+SLF4jはFacadeパターンを採っていまして、以下のメリットがあるようです。</p>
+
+<ul>
+<li>柔軟な切り替え</li>
+<li>効率化</li>
+</ul>
+
+
+<p>これのお陰で、移行とかがスムーズにできるというわけです。
+以下の表に組み合わせをメモしておきます。</p>
+
+<table>
+<thead>
+<tr>
+<th> </th>
+<th>Log4j</th>
+<th>Log4j2</th>
+<th>Logback</th>
+<th>Logging</th>
+<th>Simple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SLF4J/コア</td>
+<td>slf4j-api.jar</td>
+<td>slf4j-api.jar</td>
+<td>slf4j-api.jar</td>
+<td>slf4j-api.jar</td>
+<td>slf4j-api.jar</td>
+</tr>
+<tr>
+<td>SLF4J/アダブタ</td>
+<td>slf4j-log4j12.jar</td>
+<td>log4j-slf4j-impl</td>
+<td>logback-classic.jar, logback-core.jar</td>
+<td>slf4j-jdk14.jar</td>
+<td>slf4j-simple.jar</td>
+</tr>
+<tr>
+<td>ロギング・ライブラリ</td>
+<td>log4j-1.2.x.jar</td>
+<td>log4j-core, log4j-api</td>
+<td>logback-classic.jar, logback-core.jar</td>
+<td>java.util.logging</td>
+<td>slf4j-simple.jar</td>
+</tr>
+</tbody>
+</table>
+
+
+<p># どちらかと言うとこちらのほうが必要だったかもw</p>
+
+<h3>おまけ(その2)</h3>
+
+<hr />
+
+<p>ついでといってはなんですが、他にJavaでよく使いそうなloggingも用意しました。<br/>
+どれも必要最低限のライブラリしか使っていませんので、動作の参考になるかと思います。</p>
+
+<ul>
+<li>Commons Logging + SimpleLog</li>
+<li>SLF4j + Log4j</li>
+<li>SLF4j + Logback</li>
+<li>SLF4j + Log4j2</li>
+</ul>
+
+
+<p><a href="https://github.com/moonstruckdrops/java-logging-sample">ここ</a>に置きました。</p>
+
+<p>Gradleがあれば使えるようにしてあります。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[現場で感じた理想と現実]]></title>
@@ -3097,396 +3371,6 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
 <p>一応ソースコードを紛失したapkのバイナリが取り出せました。<br/>
 別の端末にインストールできる。<br/>
 よかったよかった。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[GoogleAppsScript勉強会に行って来ました]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/07/13/kyoto-gas-study/"/>
-    <updated>2013-07-13T17:54:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/07/13/kyoto-gas-study</id>
-    <content type="html"><![CDATA[<p>GDG京都さんとKyotoGASさんが主催する勉強会に行って来ました。<br/>
-正直なところ今更感、漂う感じの記事ですが気にしないでください。<br/>
-実は、用事があって関西に行っていたのです。</p>
-
-<p>以下にメモを記載します。。。</p>
-
-<h3>GASとは</h3>
-
-<hr />
-
-<p>大雑把に言うとMSOfficeのVBAみたいなもの</p>
-
-<ul>
-<li>JS 1.8Base(既存のJS資産が使える)</li>
-<li>サーバサイド実行</li>
-<li>Googleのサービスと連携できるAPIがいっぱいある</li>
-<li>GoogleAppsの拡張</li>
-<li>Advanced Google Serviceが利用(API Keyが必要)</li>
-<li>Charts(グラフ)</li>
-<li>JDBCでクラウドSQL利用可</li>
-<li>ウェブアプリケーションの作成が可能</li>
-<li>スクリプトトリガーで、任意or一定間隔でスクリプト実行できる</li>
-</ul>
-
-
-<h5>制限</h5>
-
-<hr />
-
-<p>主にあげられる制限</p>
-
-<ul>
-<li>メールの本数など(GoogleAppsのユーザーや一般ユーザーの違いなど)</li>
-</ul>
-
-
-<h5>その他</h5>
-
-<hr />
-
-<ul>
-<li>GAEよりもお手軽にできる</li>
-<li>ソースの共有(ソースの共有を設定していれば)</li>
-<li>GAEよりも制限がゆるい</li>
-</ul>
-
-
-<h3>AppsScriptとクラウドBPM</h3>
-
-<hr />
-
-<ul>
-<li>GASの学習コストは低い</li>
-<li>GAS自身に足りないところはSpreadSheetで補う(最適な方法)</li>
-<li>サーバ処理、クライアント処理の連携がよい</li>
-</ul>
-
-
-<h4>連携例</h4>
-
-<h5>1.Sheetでマスタ管理</h5>
-
-<hr />
-
-<h6>(連携例)  サイト<->GAS(処理を実施)<->SpreadSheat</h6>
-
-<p>JSONPでデータを返してやればサイト側でJS処理をするだけでよい</p>
-
-<p>問題</p>
-
-<ul>
-<li>JSとGASお通信でクロスドメイン問題</li>
-<li>ブラウザの設定だけでやると戻すデータがカラになってしまう</li>
-</ul>
-
-
-<h5>2.リアルタイム集計</h5>
-
-<hr />
-
-<h6>(連携例) サイト<->GAS(処理を実施)<->SpreadSheat</h6>
-
-<p>データ送信してSheetで集計</p>
-
-<h5>3.帳票出力</h5>
-
-<hr />
-
-<h6>(連携例) サイト<->GAS(処理を実施)<->SpreadSheat</h6>
-
-<p>SpreadSheetを利用して、帳票を出す</p>
-
-<h5>4.一括処理</h5>
-
-<hr />
-
-<h6>(連携例) SpreadSheetからGASに投げ、GASからサイトのAPIを実行する</h6>
-
-<p>定期実行をするようにしてやる</p>
-
-<h5>5.Googleカレンダー連携</h5>
-
-<hr />
-
-<ul>
-<li>キーワードをGASで取得してやる</li>
-</ul>
-
-
-<h5>考慮点</h5>
-
-<hr />
-
-<ul>
-<li>セキュリティ(サーバからアクセスするので、GoogleApps認証ができない、Keyというパラメータをもたせる)</li>
-<li>運用監視(ログをspreadSheetへ)</li>
-<li>エラーの発生を極力回避するようにする</li>
-</ul>
-
-
-<h5>GASを使用していて困るところ</h5>
-
-<hr />
-
-<ul>
-<li>ソースコードの構成管理</li>
-<li>httpリクエストのデバッグ(実際に手動で実行してみてリクエストを送信するしかない)</li>
-<li>IP制限がない</li>
-<li>予期せぬエラーが出た場合の対処</li>
-</ul>
-
-
-<h3>GoogleAppsScriptを積極活用</h3>
-
-<hr />
-
-<p>GAS+SpreadSheetがすごいという事例紹介
-特に以下がやりやすい</p>
-
-<ul>
-<li>GASで勤怠管理</li>
-<li>集客ツール</li>
-</ul>
-
-
-<h5>勤怠管理</h5>
-
-<hr />
-
-<ul>
-<li>SpreadSheetをDBのように扱う</li>
-<li>SpreadSheetの変更管理が大変(ユーザーが大変)</li>
-<li>受託ではやらないほうがいいかもしれない。(予期せぬ問題が起きたときの解析などが大変)</li>
-<li>プログラムが得意ではない人でもGASは使いやすい(Excelユーザ向け)</li>
-<li>各種GoogleServiceとの連携に向いている</li>
-</ul>
-
-
-<h3>GoogleAppsScriptの新機能</h3>
-
-<hr />
-
-<p>GoogleAppSAPIは以下の使用方法がある</p>
-
-<ul>
-<li>DATA API</li>
-<li>AppsScript</li>
-</ul>
-
-
-<p>GAE vs GAS</p>
-
-<ul>
-<li>速さGAE</li>
-<li>柔軟GAE(なんでもできる)</li>
-<li>お仕事GAE(GASは不安定)</li>
-<li>お手軽GAS(GAEよりも圧倒的に楽にアプリが組める)</li>
-</ul>
-
-
-<p>GAS</p>
-
-<ul>
-<li>Forms + GAS</li>
-<li>Documents + GAS</li>
-<li>new UI Component(Dialog,sidebar)</li>
-<li>GoogleDriveIntegration</li>
-</ul>
-
-
-<p>新しくFormsにToolsというメニュー項目が追加</p>
-
-<h5>GASからフォーム作る</h5>
-
-<hr />
-
-<p>ソースから新しくFormを作成するソースコード</p>
-
-<ul>
-<li>フォームの作成</li>
-<li>メールの送信</li>
-<li>ログ出力</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function myFunction{
-</span><span class='line'>    // 空のフォーム
-</span><span class='line'>    var form = FormApp.create("アンケートひな形").setDescription("アンケート用のフォームです");    
-</span><span class='line'>    //入力フォーム
-</span><span class='line'>    form.addtextItem().setTitle("Email")
-</span><span class='line'>    // 1-5までのラジオボタンを作る
-</span><span class='line'>    form.addScaleItem().setTitle("評価").setBound(1,5).setHelpText("1..5");
-</span><span class='line'>    //  自由入力欄
-</span><span class='line'>    form.setParagrapheTextItem.setTitle("")
-</span><span class='line'>    // メールの送信
-</span><span class='line'>    MailApps.sendEmail("宛先","本文")
-</span><span class='line'>    // 公開用のアドレス
-</span><span class='line'>    Loger.log(form.getPublishedUrl())
-</span><span class='line'>    // 編集用のアドレス
-</span><span class='line'>    Loger.log(form.getEditUrl())
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>Document + GAS</h5>
-
-<hr />
-
-<ul>
-<li>文章の構造化(DOM構造みたいにItemとか)を制御できるようになった</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function myFunction{
-</span><span class='line'>    //ドキュメント本体
-</span><span class='line'>    var body = DocumentApps.getActiveDocument().getBody();
-</span><span class='line'>    // インデックス
-</span><span class='line'>    body numChild = body.getNumChild();
-</span><span class='line'>
-</span><span class='line'>    var i = 0,chld,type,hending,html="&lt;div&gt;";
-</span><span class='line'>    for(;i&lt;numChild;i++){
-</span><span class='line'>        //  子要素
-</span><span class='line'>        child = body.getChild(i)
-</span><span class='line'>        type = child.getType()
-</span><span class='line'>
-</span><span class='line'>        if(type == DocumentApps.ElementType.PARAGRAPH){
-</span><span class='line'>            heading = child.getHeading()
-</span><span class='line'>            // 不要なHeadingが付いている。これは、文章自身もパラグラフと認識されてるためだったっけ(?)
-</span><span class='line'>            if(heading != DocumentApps.ParagraphHeding.Normal && child.getNumChild() &gt; 0){
-</span><span class='line'>                Logger.log(heading +" "+child.getChild(0).getText() )
-</span><span class='line'>                html + ="&lt;p&gt;" +heading +" "+child.getChild(0).getText()+"&lt;/p&gt;" 
-</span><span class='line'>            }
-</span><span class='line'>        }
-</span><span class='line'>    html +="&lt;/div&gt;"
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ダイアログ表示</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function showDialog(){
-</span><span class='line'>    var ui = HtmlService.createHtmlOutput(myFunction()).setWidth(400).setHeight(300)
-</span><span class='line'>    DocumnetApps.getUi().showoDialog(ui)
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>サイドバー表示</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function showSideBar(){
-</span><span class='line'>    var ui = HtmlService.createHtmlOutput(myFunction()).setWidth(300)
-</span><span class='line'>    DocumnetApps.getUi().showSideBar(ui)
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>DriveSDKを使う</h5>
-
-<hr />
-
-<p>以下のようなコードでGoogleDriveを操作できる</p>
-
-<ul>
-<li>ファイル名取得</li>
-<li>ファイルをゴミ箱へ送る</li>
-<li>ファイルへアクセス権を追加</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function drive(){
-</span><span class='line'>    // ファイル検索
-</span><span class='line'>    // 結果はイテレータで帰ってくる
-</span><span class='line'>    var fails = DriveApp.searchFiles("title contains","検索ファイル")
-</span><span class='line'>    var file
-</span><span class='line'>    while(fails.hasNext()){
-</span><span class='line'>        file  = fails.next();
-</span><span class='line'>        // ファイル名を取得する
-</span><span class='line'>        file.getName()
-</span><span class='line'>        try{
-</span><span class='line'>            // ファイルをゴミ箱へおくる
-</span><span class='line'>            // 権限がないとエラーが出るかも
-</span><span class='line'>            file.setTrash(true)
-</span><span class='line'>            // 権限を追加(Owner権を追加)
-</span><span class='line'>            file.setOwner("追加するユーザー")
-</span><span class='line'>        }catch(e){
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>質問</h5>
-
-<hr />
-
-<ul>
-<li>補完は出ないときは、一回保存して開き直すとかで対処(リファレンス読み直せばいい)</li>
-<li>GASでプレゼンテーションは操作できない(予定もない)</li>
-<li>GASで作ったファイルはドライブに保存される</li>
-<li>FormはSpreadSheetにプログラムでひもづけることもできる</li>
-</ul>
-
 ]]></content>
   </entry>
   
