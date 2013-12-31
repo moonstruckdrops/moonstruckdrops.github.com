@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-12-23T05:15:00+09:00</updated>
+  <updated>2013-12-31T22:44:43+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,85 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[2013年の振り返り]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2013/12/31/2013-summary/"/>
+    <updated>2013-12-31T22:09:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2013/12/31/2013-summary</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>年の瀬なので、今年一年を振り返ってみました。<br/>
+思えば、今年一年は色々とあったなーと思いました。</p>
+
+<p>上半期(1~6月)、下半期(7~12月)の２つのセクションで振り返りたいと思います。</p>
+
+<h3>上半期(1~6月)</h3>
+
+<hr />
+
+<p>この頃はあまりモノ作りというものをやってなかったような気がします。</p>
+
+<p># どちらかというとR&amp;Dライクな何かでしょうかね・・・。</p>
+
+<p>とはいえ、元々自分が何がしたかったのかを思い出せた出来事がありました。</p>
+
+<p># 出来事についての詳細は割愛します。</p>
+
+<p>ここまででは、やりたいことを思い出しただけですね。</p>
+
+<p>そうそう、忘れてはいけないイベントがありましたね。</p>
+
+<h5>GoogleI/Oへの参加</h5>
+
+<p>これが、上半期の中で一番デカイイベントでした。</p>
+
+<p># 初めての海外ということもありますがw</p>
+
+<p>世界のエンジニアと交流することで色々と刺激やツッコミを貰ったりしました。<br/>
+ここで、自分が本当にやりたいことをやるためには行動が必要だということを学びました。</p>
+
+<p># 勿論、技術ネタも学んできましたよ。</p>
+
+<h3>下半期(7~12月)</h3>
+
+<hr />
+
+<p>さて、実際に行動をする訳ですが、まぁ色々と駄目出しをいただくわけでして・・・</p>
+
+<p>結局、転職という道を選びました。</p>
+
+<p># 自宅も引っ越しするという・・・</p>
+
+<p>今は、晴れてRailsをやっています。</p>
+
+<p>やはり、今まで事業的な視点を持っていないことが結構キツイですね。<br/>
+キツイ中でもやり甲斐はあってかなり楽しくやれています。</p>
+
+<p># 技術が楽しいというのもあるし、コードや開発プロセス、標準使用ツールなどが自分に合ってるというのもあるかもしれないです。</p>
+
+<p>転職して「Androidという最新でイケイケなことを捨ててWeb業界に来たの？」よく言われます。</p>
+
+<p>元々、Androidというかmobile系がやりたかったというわけではないということが理由としてデカイです。</p>
+
+<h3>終わりに</h3>
+
+<hr />
+
+<p>お茶を濁してる部分がかなりありますが、其処はアレがあるということで・・・</p>
+
+<p>さて、来年はどうなることですかね。<br/>
+もう少し、事業的なことにも目を向ける必要がありそうですね。</p>
+
+<p>今(2013年)以上に充実した生活を送りたいですね。</p>
+
+<p># そろそろ、婚活的なアレもいるんだろうか・・・</p>
+
+<p>というわけで、振り返りになってない振り返りでしたw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[log4j 2を使った。おまけで他のloggingも用意した。]]></title>
@@ -3332,45 +3411,6 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
 
 <p>毎回実施しては、毎回思うのだけど・・・
 Homebrew使わずにインストールしたほうが手っ取り早いような気がする。。。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[端末にインストールしてあるapkファイルを取り出す]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/07/14/push-apk/"/>
-    <updated>2013-07-14T11:48:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/07/14/push-apk</id>
-    <content type="html"><![CDATA[<p>訳があって実施することになりました。<br/>
-ビルドに使ったソースコードがなくなってしまっただけなんですけどね。</p>
-
-<h3>前提</h3>
-
-<hr />
-
-<ol>
-<li>adbコマンドが使える環境であること</li>
-<li>端末がデバッグモードONであること</li>
-</ol>
-
-
-<h3>手順</h3>
-
-<hr />
-
-<p>以下の方法で実施します。</p>
-
-<ol>
-<li>adb shell pm list packages -f | grep [取得対象のパッケージ名の一部]</li>
-<li>1を実行すると「package:/data/app/&lt;apkファイル名>=&lt;アクティビティ名>」が表示される</li>
-<li>adb pullコマンドでapkファイルのフルパス(/data/app/&lt;apkファイル名>)を指定する</li>
-</ol>
-
-
-<p>これだけです。</p>
-
-<p>一応ソースコードを紛失したapkのバイナリが取り出せました。<br/>
-別の端末にインストールできる。<br/>
-よかったよかった。</p>
 ]]></content>
   </entry>
   
