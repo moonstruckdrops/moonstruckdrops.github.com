@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: IDE - kurobaraのブログ</title>
+  <title>findのexecオプションとxargsコマンドについて - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Category: IDE">
+  <meta name="description" content="はじめに 年が明けましたね。 せっかくの休みなので、今まで溜め込んだファイルの整理をすることにしました。 無駄なファイルが山ほどあって、検索からの削除を便利にしよう そう思ったのが今回の発端です。 さて、やります。 ファイル検索といえば findコマンドを使いますね。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.comblog/categories/ide/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/01/01/find-delete/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -70,35 +70,163 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: IDE</h1>
+    
+      <h1 class="entry-title">Findのexecオプションとxargsコマンドについて</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-01T21:36:00+09:00" pubdate data-updated="true">Jan 1<span>st</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><h3>はじめに</h3>
 
-  
-  <h2>2013</h2>
+<hr />
 
-<article>
-  
-<h1><a href="/blog/2013/05/29/intellij-select/">IntelliJ IDEAで/usrディレクトリ配下のものが選択できなかった</a></h1>
-<time datetime="2013-05-29T00:32:00+09:00" pubdate><span class='month'>May</span> <span class='day'>29</span> <span class='year'>2013</span></time>
+<p>年が明けましたね。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ide/'>IDE</a></span>
-</footer>
+<p>せっかくの休みなので、今まで溜め込んだファイルの整理をすることにしました。</p>
+
+<p>無駄なファイルが山ほどあって、検索からの削除を便利にしよう</p>
+
+<p>そう思ったのが今回の発端です。</p>
+
+<p>さて、やります。</p>
+
+<h3>ファイル検索といえば</h3>
+
+<hr />
+
+<p>findコマンドを使いますね。</p>
+
+<p>execオプションやパイプとともにxargsコマンドを駆使して検索したファイルに対して処理をします。</p>
+
+<p>今回の要件ファイル削除系だとこんな感じですね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -exec rm {} \;</span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<p>xargsを使う場合だと、こっちですね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -print0 | xargs -0 -n1 rm</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに、print0オプションを有効にすると区切り文字がスペースから \0 に変更されます。<br/>
+ファイル名にスペースがあるかもしれない場合とかはつけておくことがよいと思います。</p>
+
+<p>他にxargsの-0オプションも上記同様のものです。-n&lt;数字>は1 コマンドラインにつき最大の数字分ずつ引数として使用するという意味になります。</p>
+
+<h3>execオプションでxargsと同様の処理</h3>
+
+<hr />
+
+<p>これをする場合は、+を使えばよいようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -exec rm {}+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけだと意味があるような、ないような<sup>^;;</sup></p>
+
+<h3>findのdeleteオプション</h3>
+
+<hr />
+
+<p>OS依存になるようですが、findコマンドにはdeleteオプションがあるようです。<br/>
+これを使えば、上記のようにコマンドの組み合わせをせずともファイル検索→ファイル削除も同時にできるようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -print0 -delete</span></code></pre></td></tr></table></div></figure>
+
+
+<p>検索と同時に削除なので、危険な感じがしますが、便利に使えると思います。</p>
+
+<h3>まとめ</h3>
+
+<hr />
+
+<p>大したことでもないですが、こんな感じですね</p>
+
+<ul>
+<li>findとxargsを組み合わせる場合、find側はprint0オプション、xargs側は-0オプションを付けたほうが安全</li>
+<li>findコマンドでxargsと同様のことがしたい場合、execオプションの末尾を;から+に変更する</li>
+<li>検索+削除の場合、findコマンドのdeleteオプションを使うと便利</li>
+</ul>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-01T21:36:00+09:00" pubdate data-updated="true">Jan 1<span>st</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>Linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/01/01/find-delete/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/01/01/find-delete/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/12/31/2013-summary/" title="Previous Post: 2013年の振り返り">&laquo; 2013年の振り返り</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-12-31T22:44:43+09:00</updated>
+  <updated>2014-01-01T22:04:07+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,90 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[findのexecオプションとxargsコマンドについて]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/01/01/find-delete/"/>
+    <updated>2014-01-01T21:36:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/01/01/find-delete</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>年が明けましたね。</p>
+
+<p>せっかくの休みなので、今まで溜め込んだファイルの整理をすることにしました。</p>
+
+<p>無駄なファイルが山ほどあって、検索からの削除を便利にしよう</p>
+
+<p>そう思ったのが今回の発端です。</p>
+
+<p>さて、やります。</p>
+
+<h3>ファイル検索といえば</h3>
+
+<hr />
+
+<p>findコマンドを使いますね。</p>
+
+<p>execオプションやパイプとともにxargsコマンドを駆使して検索したファイルに対して処理をします。</p>
+
+<p>今回の要件ファイル削除系だとこんな感じですね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -exec rm {} \;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>xargsを使う場合だと、こっちですね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -print0 | xargs -0 -n1 rm</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに、print0オプションを有効にすると区切り文字がスペースから \0 に変更されます。<br/>
+ファイル名にスペースがあるかもしれない場合とかはつけておくことがよいと思います。</p>
+
+<p>他にxargsの-0オプションも上記同様のものです。-n&lt;数字>は1 コマンドラインにつき最大の数字分ずつ引数として使用するという意味になります。</p>
+
+<h3>execオプションでxargsと同様の処理</h3>
+
+<hr />
+
+<p>これをする場合は、+を使えばよいようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -exec rm {}+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけだと意味があるような、ないような<sup>^;;</sup></p>
+
+<h3>findのdeleteオプション</h3>
+
+<hr />
+
+<p>OS依存になるようですが、findコマンドにはdeleteオプションがあるようです。<br/>
+これを使えば、上記のようにコマンドの組み合わせをせずともファイル検索→ファイル削除も同時にできるようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -print0 -delete</span></code></pre></td></tr></table></div></figure>
+
+
+<p>検索と同時に削除なので、危険な感じがしますが、便利に使えると思います。</p>
+
+<h3>まとめ</h3>
+
+<hr />
+
+<p>大したことでもないですが、こんな感じですね</p>
+
+<ul>
+<li>findとxargsを組み合わせる場合、find側はprint0オプション、xargs側は-0オプションを付けたほうが安全</li>
+<li>findコマンドでxargsと同様のことがしたい場合、execオプションの末尾を;から+に変更する</li>
+<li>検索+削除の場合、findコマンドのdeleteオプションを使うと便利</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[2013年の振り返り]]></title>
@@ -3362,55 +3446,6 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
 
 <p>モジュールを使うと、スッキリとしたコードになりますね。<br/>
 当たり前ですが、newしようとするとエラーになります。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[MacにGUIありWiresharkをインストールする]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/07/19/install-wireshark/"/>
-    <updated>2013-07-19T00:47:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/07/19/install-wireshark</id>
-    <content type="html"><![CDATA[<p>いつも忘れるのでいい加減にメモを残しておきます。</p>
-
-<h3>インストール環境</h3>
-
-<hr />
-
-<p>以下がインストールされているマシンであること</p>
-
-<ul>
-<li>XQuartz</li>
-<li>Homebrew</li>
-</ul>
-
-
-<p>XCodeが古かったりするとインストールできない可能性があります。<br/>
-少なくともwarningは出ます。</p>
-
-<h3>インストール方法</h3>
-
-<hr />
-
-<p>以下のコマンドを実施することでGUIありWiresharkがインストールできます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install wireshark --with-x</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因みに「&#8211;with-x」オプションがない状態でインストールするとGUI無しのwiresharkがインストールされます。</p>
-
-<h3>Wireshark起動方法</h3>
-
-<hr />
-
-<p>以下のコマンドで起動します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo wireshark</span></code></pre></td></tr></table></div></figure>
-
-
-<p>毎回実施しては、毎回思うのだけど・・・
-Homebrew使わずにインストールしたほうが手っ取り早いような気がする。。。</p>
 ]]></content>
   </entry>
   

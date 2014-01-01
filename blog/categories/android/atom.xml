@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-12-31T22:44:56+09:00</updated>
+  <updated>2014-01-01T22:04:07+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -364,7 +364,7 @@ From query = new Select().from(Item.class).innerJoin(Hoge.class).on("Hoge.id = I
 <p>身内向けの勉強会で、ActiveAndroidについて発表してきました。
 その時、書いた資料とかも残しておきます。</p>
 
-<p>{% slideshare 29216122 %}</p>
+<p><iframe src="http://www.slideshare.net/slideshow/embed_code/29216122 " width="595" height="446" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen></iframe> </p>
 ]]></content>
   </entry>
   

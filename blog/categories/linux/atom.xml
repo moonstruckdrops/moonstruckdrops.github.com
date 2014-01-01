@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2013-12-31T22:44:56+09:00</updated>
+  <updated>2014-01-01T22:04:07+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,90 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[findのexecオプションとxargsコマンドについて]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/01/01/find-delete/"/>
+    <updated>2014-01-01T21:36:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/01/01/find-delete</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>年が明けましたね。</p>
+
+<p>せっかくの休みなので、今まで溜め込んだファイルの整理をすることにしました。</p>
+
+<p>無駄なファイルが山ほどあって、検索からの削除を便利にしよう</p>
+
+<p>そう思ったのが今回の発端です。</p>
+
+<p>さて、やります。</p>
+
+<h3>ファイル検索といえば</h3>
+
+<hr />
+
+<p>findコマンドを使いますね。</p>
+
+<p>execオプションやパイプとともにxargsコマンドを駆使して検索したファイルに対して処理をします。</p>
+
+<p>今回の要件ファイル削除系だとこんな感じですね。</p>
+
+<p><code>
+$find . -name "*.dummy" -exec rm {} \;
+</code></p>
+
+<p>xargsを使う場合だと、こっちですね。</p>
+
+<p><code>
+$find . -name "*.dummy" -print0 | xargs -0 -n1 rm
+</code></p>
+
+<p>因みに、print0オプションを有効にすると区切り文字がスペースから \0 に変更されます。<br/>
+ファイル名にスペースがあるかもしれない場合とかはつけておくことがよいと思います。</p>
+
+<p>他にxargsの-0オプションも上記同様のものです。-n&lt;数字>は1 コマンドラインにつき最大の数字分ずつ引数として使用するという意味になります。</p>
+
+<h3>execオプションでxargsと同様の処理</h3>
+
+<hr />
+
+<p>これをする場合は、+を使えばよいようです。</p>
+
+<p><code>
+$find . -name "*.dummy" -exec rm {}+
+</code></p>
+
+<p>これだけだと意味があるような、ないような<sup>^;;</sup></p>
+
+<h3>findのdeleteオプション</h3>
+
+<hr />
+
+<p>OS依存になるようですが、findコマンドにはdeleteオプションがあるようです。<br/>
+これを使えば、上記のようにコマンドの組み合わせをせずともファイル検索→ファイル削除も同時にできるようです。</p>
+
+<p><code>
+$find . -name "*.dummy" -print0 -delete
+</code></p>
+
+<p>検索と同時に削除なので、危険な感じがしますが、便利に使えると思います。</p>
+
+<h3>まとめ</h3>
+
+<hr />
+
+<p>大したことでもないですが、こんな感じですね</p>
+
+<ul>
+<li>findとxargsを組み合わせる場合、find側はprint0オプション、xargs側は-0オプションを付けたほうが安全</li>
+<li>findコマンドでxargsと同様のことがしたい場合、execオプションの末尾を;から+に変更する</li>
+<li>検索+削除の場合、findコマンドのdeleteオプションを使うと便利</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[SSHで複数の鍵を管理する]]></title>
@@ -479,26 +563,6 @@ $userdel &lt;ユーザーアカウント名&gt;
 </code></p>
 
 <p>常識ですね(ぉぃ</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[コマンドで暗号化Zipファイルを作成する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/04/22/zip-pass/"/>
-    <updated>2013-04-22T23:48:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/04/22/zip-pass</id>
-    <content type="html"><![CDATA[<h3>暗号化Zipファイル作成</h3>
-
-<hr />
-
-<p>大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。<br/>
-以下のようにzipコマンドのeオプションを使うだけで簡単にできます。</p>
-
-<p><code>
-$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt;
-</code></p>
-
-<p>恥ずかしながらあんまりやらないので、いざというときには忘れてしまいます。</p>
 ]]></content>
   </entry>
   
