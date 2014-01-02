@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-01-01T22:04:07+09:00</updated>
+  <updated>2014-01-02T21:10:51+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,129 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Android端末のROM焼きをやってみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom/"/>
+    <updated>2014-01-02T20:42:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>Android端末ではNexus5を使用しています。</p>
+
+<p>ついこの前(?)、4.4→4.4.2にアップデートしてみました。</p>
+
+<p>アップデートしてみたところ、全体的な機能改善がされていました。</p>
+
+<p>ところが、端末スピーカーを使って音声再生したところ音が割れるようになりました。</p>
+
+<p>暫く、我慢して使って音声再生していたのですが、最早限界に達しましてダウングレードをすることにしました。</p>
+
+<p># 大体、Android界隈でこういうROM焼きをする場合ってカスタムROMを焼くことが多いですが・・・ ^<sup>;;</sup></p>
+
+<p># カスタムROMにしてしまうとAPIとか動作含めて検証機として微妙かなという印象もあるので純正にします。</p>
+
+<h3>注意事項</h3>
+
+<hr />
+
+<p>本作業によって、メーカーの補償は一切きかなくなります。<br/>
+本作業でデータが消えたり、Nexus5が起動しなくなってしまったとしてもこちらは一切責任を負いません。<br/>
+全て自己責任でお願い致します。</p>
+
+<h3>対象機器</h3>
+
+<hr />
+
+<p>Nexus5</p>
+
+<h3>手順</h3>
+
+<hr />
+
+<p>どの端末で大体やることは同じのようです。</p>
+
+<ol>
+<li>Bootloderの解除</li>
+<li>ROMの入手</li>
+<li>ROMを焼く</li>
+</ol>
+
+
+<h3>Bootloderの解除</h3>
+
+<hr />
+
+<p>実はこれが一番ハードルが高いです。 <br/>
+機種によって解除するための作業が微妙に異なるためです。(解除するための鍵を入手したり等)</p>
+
+<p>幸いなことにNexus5はハードルが高くありません。</p>
+
+<p># 流石、天下のGoogle様ですねw</p>
+
+<p>以下の手順で行います。</p>
+
+<ol>
+<li><code>adb reboot bootloader</code>を入力する(電源ボタンとボリュームダウンボタンを同時押しで電源を入れるでも可)</li>
+<li>画面に倒れたドロイド君が表示されていればOK</li>
+<li><code>fastboot oem unlock</code>を入力する</li>
+<li>Nexus5に、「Unlock bootloader?」と尋ねる画面が表示される</li>
+<li>ボリュームボタンを操作し「Yes」を選び電源ボタンを押す</li>
+</ol>
+
+
+<p>上記作業が成功すれば、Nexus5のブートローダー画面のLOCK STATEが「unlocked」に変化しています。</p>
+
+<p>ロックしたい場合は、<code>fastboot oem lock</code>と入力すれば、LOCK STATEが「locked」に変化します。</p>
+
+<h3>ROMの入手</h3>
+
+<hr />
+
+<p>ここは簡単です。</p>
+
+<p>純正のROMは、<a href="https://developers.google.com/android/nexus/images?hl=ja">Factory Images for Nexus Devices</a>から入手できます。</p>
+
+<p># カスタムROMは専用のサイトとか行けばよいと思います。</p>
+
+<h3>ROM焼き</h3>
+
+<hr />
+
+<p>これも簡単です。</p>
+
+<p>純正のROMの場合は、shellとバッチが用意されていますのでそれを実行するだけです。<br/>
+実行タイミングは、ブートローダー画面で行います。</p>
+
+<p>こんな感じでログが出たあとに端末が再起動すれば成功かと思います。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sending 'bootloader' (2506 KB)...
+</span><span class='line'>OKAY [  0.288s]
+</span><span class='line'>
+</span><span class='line'>中略
+</span><span class='line'>
+</span><span class='line'>writing 'cache'...
+</span><span class='line'>OKAY [  1.904s]
+</span><span class='line'>rebooting...
+</span><span class='line'>
+</span><span class='line'>finished. total time: 99.240s</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上！！自分の作業備忘録でした！！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[findのexecオプションとxargsコマンドについて]]></title>
@@ -3164,288 +3287,6 @@ LinuxとかMacのディスクだけでなくって、Windowsなディスクま�
 <p>こんな感じで使えちゃいます。。。<br/>
 今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
 attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RubyでSingletonパターンを実装する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-singleton/"/>
-    <updated>2013-07-25T18:33:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/07/25/ruby-singleton</id>
-    <content type="html"><![CDATA[<p>このまえ、友人とデザインパターンの話をしてたような気がするので書いてみた。</p>
-
-<p>SingletonはGOFのデザインパターンの一つです。<br/>
-使い所は、システム内で絶対に一つにしておかないといけないもの仕組みのものに使います。<br/>
-例えば、アプリの設定とか見た目(Look&amp;Feel)とかシステムの何かを管理するだとかに使ったりします。</p>
-
-<p>Singletonは以下の条件を満たす必要があります。</p>
-
-<ul>
-<li>作成したクラスのインスタンスは一つだけであることが保証されている</li>
-<li>コード上のどこからでも、生成した1つだけのインスタンスにアクセスできる</li>
-</ul>
-
-
-<p>Javaで上の条件を満たすものはこんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>final class Singleton {
-</span><span class='line'>    private static Singleton instance;
-</span><span class='line'>    private Singleton(){};
-</span><span class='line'>
-</span><span class='line'>    public static synchronized Singleton getInstance(){
-</span><span class='line'>        if(instance == null){
-</span><span class='line'>            instance = new Singleton();
-</span><span class='line'>        }
-</span><span class='line'>        return instance;
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これと同じ実装をRubyでやるとこんな感じになります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Singleton
-</span><span class='line'>  @@singleton_obj = nil
-</span><span class='line'>  @@count = 0
-</span><span class='line'>
-</span><span class='line'>  # 以下の行をコメントアウトすると
-</span><span class='line'>  # オブジェクトが再生成されるので
-</span><span class='line'>  # シングルトンにならない
-</span><span class='line'>  private_class_method:new
-</span><span class='line'>
-</span><span class='line'>  def initialize
-</span><span class='line'>    @@count = 1
-</span><span class='line'>  end
-</span><span class='line'>  
-</span><span class='line'>  def self.get_instance
-</span><span class='line'>    if @@singleton_obj == nil
-</span><span class='line'>      @@singleton_obj = new
-</span><span class='line'>    end
-</span><span class='line'>    @@singleton_obj
-</span><span class='line'>  end
-</span><span class='line'>
-</span><span class='line'>  def self.count_up
-</span><span class='line'>    @@count+=1
-</span><span class='line'>  end
-</span><span class='line'>
-</span><span class='line'>  def self.print_count
-</span><span class='line'>    p @@count
-</span><span class='line'>  end
-</span><span class='line'>  
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>p '-----------------------'
-</span><span class='line'>p '初回インスタンス取得'
-</span><span class='line'>p Singleton.get_instance
-</span><span class='line'>Singleton.print_count
-</span><span class='line'>p '-----------------------'
-</span><span class='line'>p '２回目のインスタンス取得でオブジェクトに変更がない'
-</span><span class='line'>p Singleton.get_instance
-</span><span class='line'>Singleton.count_up
-</span><span class='line'>Singleton.print_count
-</span><span class='line'>p '-----------------------'
-</span><span class='line'>p 'newするとエラーが飛ぶ'
-</span><span class='line'>begin
-</span><span class='line'>  Singleton.new
-</span><span class='line'>rescue
-</span><span class='line'>  p 'newでエラーが飛んだ'
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結構長いですねw</p>
-
-<p>上記のコードの実行結果は、以下になります。<br/>
-オブジェクトに変化が無いことがわかりますね。<br/>
-つまり、オブジェクトが１つであることが、保証されています。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>"-----------------------"
-</span><span class='line'>"初回インスタンス取得"
-</span><span class='line'>#&lt;Singleton:0x007f91519026f0&gt;
-</span><span class='line'>1
-</span><span class='line'>"-----------------------"
-</span><span class='line'>"２回目のインスタンス取得でオブジェクトに変更がない"
-</span><span class='line'>#&lt;Singleton:0x007f91519026f0&gt;
-</span><span class='line'>2
-</span><span class='line'>"-----------------------"
-</span><span class='line'>"newするとエラーが飛ぶ"
-</span><span class='line'>"newでエラーが飛んだ"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>自力でSingletonを実装すると上記のようなコードなのですが、<br/>
-実は、Rubyにはsingletonをやってくれる便利なモジュールがあります。<br/>
-これを使うと、Mix-inしたクラスのインスタンスは常に同じものを返してくれます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>require 'singleton'
-</span><span class='line'>
-</span><span class='line'>class MySingleton
-</span><span class='line'>
-</span><span class='line'>  include Singleton
-</span><span class='line'>
-</span><span class='line'>  @@count = 0
-</span><span class='line'>
-</span><span class='line'>  def initialize
-</span><span class='line'>    @@count = 1
-</span><span class='line'>  end
-</span><span class='line'>
-</span><span class='line'>  def self.count_up
-</span><span class='line'>    @@count+=1
-</span><span class='line'>  end
-</span><span class='line'>
-</span><span class='line'>  def self.print_count
-</span><span class='line'>    p @@count
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>p '-----------------------'
-</span><span class='line'>p '初回インスタンス取得'
-</span><span class='line'>p MySingleton.instance
-</span><span class='line'>MySingleton.print_count
-</span><span class='line'>p '-----------------------'
-</span><span class='line'>p '２回目のインスタンス取得でオブジェクトに変更がない'
-</span><span class='line'>p MySingleton.instance
-</span><span class='line'>MySingleton.count_up
-</span><span class='line'>MySingleton.print_count
-</span><span class='line'>p '-----------------------'
-</span><span class='line'>p 'newするとエラーが飛ぶ'
-</span><span class='line'>begin
-</span><span class='line'>  MySingleton.new
-</span><span class='line'>rescue
-</span><span class='line'>  p 'newでエラーが飛んだ'
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果は、こんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>"-----------------------"
-</span><span class='line'>"初回インスタンス取得"
-</span><span class='line'>#&lt;MySingleton:0x007fd2fa8c9658&gt;
-</span><span class='line'>1
-</span><span class='line'>"-----------------------"
-</span><span class='line'>"２回目のインスタンス取得でオブジェクトに変更がない"
-</span><span class='line'>#&lt;MySingleton:0x007fd2fa8c9658&gt;
-</span><span class='line'>2
-</span><span class='line'>"-----------------------"
-</span><span class='line'>"newするとエラーが飛ぶ"
-</span><span class='line'>"newでエラーが飛んだ"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>モジュールを使うと、スッキリとしたコードになりますね。<br/>
-当たり前ですが、newしようとするとエラーになります。</p>
 ]]></content>
   </entry>
   

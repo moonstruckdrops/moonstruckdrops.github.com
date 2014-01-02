@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-01-01T22:04:07+09:00</updated>
+  <updated>2014-01-02T21:10:51+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,120 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Android端末のROM焼きをやってみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom/"/>
+    <updated>2014-01-02T20:42:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>Android端末ではNexus5を使用しています。</p>
+
+<p>ついこの前(?)、4.4→4.4.2にアップデートしてみました。</p>
+
+<p>アップデートしてみたところ、全体的な機能改善がされていました。</p>
+
+<p>ところが、端末スピーカーを使って音声再生したところ音が割れるようになりました。</p>
+
+<p>暫く、我慢して使って音声再生していたのですが、最早限界に達しましてダウングレードをすることにしました。</p>
+
+<p># 大体、Android界隈でこういうROM焼きをする場合ってカスタムROMを焼くことが多いですが・・・ ^<sup>;;</sup></p>
+
+<p># カスタムROMにしてしまうとAPIとか動作含めて検証機として微妙かなという印象もあるので純正にします。</p>
+
+<h3>注意事項</h3>
+
+<hr />
+
+<p>本作業によって、メーカーの補償は一切きかなくなります。<br/>
+本作業でデータが消えたり、Nexus5が起動しなくなってしまったとしてもこちらは一切責任を負いません。<br/>
+全て自己責任でお願い致します。</p>
+
+<h3>対象機器</h3>
+
+<hr />
+
+<p>Nexus5</p>
+
+<h3>手順</h3>
+
+<hr />
+
+<p>どの端末で大体やることは同じのようです。</p>
+
+<ol>
+<li>Bootloderの解除</li>
+<li>ROMの入手</li>
+<li>ROMを焼く</li>
+</ol>
+
+
+<h3>Bootloderの解除</h3>
+
+<hr />
+
+<p>実はこれが一番ハードルが高いです。 <br/>
+機種によって解除するための作業が微妙に異なるためです。(解除するための鍵を入手したり等)</p>
+
+<p>幸いなことにNexus5はハードルが高くありません。</p>
+
+<p># 流石、天下のGoogle様ですねw</p>
+
+<p>以下の手順で行います。</p>
+
+<ol>
+<li><code>adb reboot bootloader</code>を入力する(電源ボタンとボリュームダウンボタンを同時押しで電源を入れるでも可)</li>
+<li>画面に倒れたドロイド君が表示されていればOK</li>
+<li><code>fastboot oem unlock</code>を入力する</li>
+<li>Nexus5に、「Unlock bootloader?」と尋ねる画面が表示される</li>
+<li>ボリュームボタンを操作し「Yes」を選び電源ボタンを押す</li>
+</ol>
+
+
+<p>上記作業が成功すれば、Nexus5のブートローダー画面のLOCK STATEが「unlocked」に変化しています。</p>
+
+<p>ロックしたい場合は、<code>fastboot oem lock</code>と入力すれば、LOCK STATEが「locked」に変化します。</p>
+
+<h3>ROMの入手</h3>
+
+<hr />
+
+<p>ここは簡単です。</p>
+
+<p>純正のROMは、<a href="https://developers.google.com/android/nexus/images?hl=ja">Factory Images for Nexus Devices</a>から入手できます。</p>
+
+<p># カスタムROMは専用のサイトとか行けばよいと思います。</p>
+
+<h3>ROM焼き</h3>
+
+<hr />
+
+<p>これも簡単です。</p>
+
+<p>純正のROMの場合は、shellとバッチが用意されていますのでそれを実行するだけです。<br/>
+実行タイミングは、ブートローダー画面で行います。</p>
+
+<p>こんな感じでログが出たあとに端末が再起動すれば成功かと思います。</p>
+
+<p>```
+sending 'bootloader' (2506 KB)...
+OKAY [  0.288s]</p>
+
+<p>中略</p>
+
+<p>writing 'cache'...
+OKAY [  1.904s]
+rebooting...</p>
+
+<p>finished. total time: 99.240s
+```</p>
+
+<p>以上！！自分の作業備忘録でした！！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ActiveAndroidを使ってみた]]></title>

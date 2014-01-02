@@ -9,7 +9,7 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 年が明けましたね。 せっかくの休みなので、今まで溜め込んだファイルの整理をすることにしました。 無駄なファイルが山ほどあって、検索からの削除を便利にしよう そう思ったのが今回の発端です。 さて、やります。 ファイル検索といえば findコマンドを使いますね。 &hellip;">
+  <meta name="description" content="はじめに Android端末ではNexus5を使用しています。 ついこの前(?)、4.4→4.4.2にアップデートしてみました。 アップデートしてみたところ、全体的な機能改善がされていました。 ところが、端末スピーカーを使って音声再生したところ音が割れるようになりました。 暫く、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,156 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/02/write-android-rom/">Android端末のROM焼きをやってみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-02T20:42:00+09:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>Android端末ではNexus5を使用しています。</p>
+
+<p>ついこの前(?)、4.4→4.4.2にアップデートしてみました。</p>
+
+<p>アップデートしてみたところ、全体的な機能改善がされていました。</p>
+
+<p>ところが、端末スピーカーを使って音声再生したところ音が割れるようになりました。</p>
+
+<p>暫く、我慢して使って音声再生していたのですが、最早限界に達しましてダウングレードをすることにしました。</p>
+
+<p># 大体、Android界隈でこういうROM焼きをする場合ってカスタムROMを焼くことが多いですが・・・ ^<sup>;;</sup></p>
+
+<p># カスタムROMにしてしまうとAPIとか動作含めて検証機として微妙かなという印象もあるので純正にします。</p>
+
+<h3>注意事項</h3>
+
+<hr />
+
+<p>本作業によって、メーカーの補償は一切きかなくなります。<br/>
+本作業でデータが消えたり、Nexus5が起動しなくなってしまったとしてもこちらは一切責任を負いません。<br/>
+全て自己責任でお願い致します。</p>
+
+<h3>対象機器</h3>
+
+<hr />
+
+<p>Nexus5</p>
+
+<h3>手順</h3>
+
+<hr />
+
+<p>どの端末で大体やることは同じのようです。</p>
+
+<ol>
+<li>Bootloderの解除</li>
+<li>ROMの入手</li>
+<li>ROMを焼く</li>
+</ol>
+
+
+<h3>Bootloderの解除</h3>
+
+<hr />
+
+<p>実はこれが一番ハードルが高いです。 <br/>
+機種によって解除するための作業が微妙に異なるためです。(解除するための鍵を入手したり等)</p>
+
+<p>幸いなことにNexus5はハードルが高くありません。</p>
+
+<p># 流石、天下のGoogle様ですねw</p>
+
+<p>以下の手順で行います。</p>
+
+<ol>
+<li><code>adb reboot bootloader</code>を入力する(電源ボタンとボリュームダウンボタンを同時押しで電源を入れるでも可)</li>
+<li>画面に倒れたドロイド君が表示されていればOK</li>
+<li><code>fastboot oem unlock</code>を入力する</li>
+<li>Nexus5に、「Unlock bootloader?」と尋ねる画面が表示される</li>
+<li>ボリュームボタンを操作し「Yes」を選び電源ボタンを押す</li>
+</ol>
+
+
+<p>上記作業が成功すれば、Nexus5のブートローダー画面のLOCK STATEが「unlocked」に変化しています。</p>
+
+<p>ロックしたい場合は、<code>fastboot oem lock</code>と入力すれば、LOCK STATEが「locked」に変化します。</p>
+
+<h3>ROMの入手</h3>
+
+<hr />
+
+<p>ここは簡単です。</p>
+
+<p>純正のROMは、<a href="https://developers.google.com/android/nexus/images?hl=ja">Factory Images for Nexus Devices</a>から入手できます。</p>
+
+<p># カスタムROMは専用のサイトとか行けばよいと思います。</p>
+
+<h3>ROM焼き</h3>
+
+<hr />
+
+<p>これも簡単です。</p>
+
+<p>純正のROMの場合は、shellとバッチが用意されていますのでそれを実行するだけです。<br/>
+実行タイミングは、ブートローダー画面で行います。</p>
+
+<p>こんな感じでログが出たあとに端末が再起動すれば成功かと思います。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sending 'bootloader' (2506 KB)...
+</span><span class='line'>OKAY [  0.288s]
+</span><span class='line'>
+</span><span class='line'>中略
+</span><span class='line'>
+</span><span class='line'>writing 'cache'...
+</span><span class='line'>OKAY [  1.904s]
+</span><span class='line'>rebooting...
+</span><span class='line'>
+</span><span class='line'>finished. total time: 99.240s</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以上！！自分の作業備忘録でした！！</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1917,417 +2067,6 @@ ActiveRecordの検証メソッドが実行されないことに注意かも。</
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/28/edtech-hackathon/">EdTech Hackathonに行ってきた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-28T23:44:00+09:00" pubdate data-updated="true">Oct 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>久しぶりにHackathonに行ってきた気がする。</p>
-
-<p>成果は・・・</p>
-
-<p>「これからのIT業界を支える未来のエンジニアを育成できました!!」</p>
-
-<p>これだけだと、「Hackathonなのにコードの成果がなくないか？」<br/>
-ってことになりかねないし何の事かさっぱり分からないと思うので当日の詳細を以下に載っけます。</p>
-
-<h3>アイデア出し</h3>
-
-<hr />
-
-<p>通称、「Ideathon」なんだけども・・・<br/>
-前日に人が集まらずだったので、チームとか作る内容もあんまりいい感じには決まらなかった。</p>
-
-<p>例外は、自分を含めたチームぐらいでした。<br/>
-一応、大雑把なアイデアを持っていたので、募集かけたらすんなりと決まりました。</p>
-
-<p>チームメンバーというか役割は、以下の５人です。</p>
-
-<ul>
-<li>プログラム 自分</li>
-<li>プログラム 大学生</li>
-<li>デザイン + ディレクター 本職の方</li>
-<li>素材、画像作成、プレゼン : 中学生</li>
-</ul>
-
-
-<p>こんな構成でした。今回は中学生がいるんですよ。中学生!!<br/>
-最年少参加でした。。。</p>
-
-<p>所謂、学生チームですね。</p>
-
-<p># 自分がHackathonに初参加してた時よりもまだ若いのですよ。<br/>
-# 時代は進むものです。</p>
-
-<p>ディレクターとの合言葉は、「俺達、老害なんで彼らの成長を支えよう」ということでした(ぉぃ</p>
-
-<p># 因みに、後で知ったことなのですが・・・<br/>
-# チーム内で自分が一番最年長でした(> &lt;;)</p>
-
-<p>プログラマー側の打ち合わせでは、以下のことを決めました。</p>
-
-<ul>
-<li>使用言語はJavaにする(大学生たっての希望)</li>
-<li>フレームワークは、Seaser2(大学生が使用したことあるそうなので・・・)</li>
-<li>サーバは、Tomcat7.x</li>
-<li>DBはmysql 5.6.13</li>
-<li>上記、開発環境の準備をしてくること</li>
-</ul>
-
-
-<p>SIer等でよくありがちな、Javaを使ったWebアプリ開発ですね。</p>
-
-<p># 僕もいい大人(?)なので、希望は叶えてあげたいものです<br/>
-# 主催者が、学生に対して、自分をJavaエンジニアとして学生に推薦したのもありますが・・・</p>
-
-<h3>Hackathon当日の開始前</h3>
-
-<hr />
-
-<p>色々とドタバタしました。<br/>
-手持ちで持ってきたモニターがディレクターさんのPCで使えないなどのハプニング。</p>
-
-<p>元々のコンセプトのすり合わせを開始前のこの時点で話し合いました。</p>
-
-<p>ハプニングの最中にディレクターさんと２人で本日のゴールを何処に落としこむかを話していました。</p>
-
-<p># 学生さん達には秘密会議的にやってて申し訳なかった<br/>
-# 実はこの時点で、ある程度本日の着地点(現実的に出来そうな範囲)の見積もりを立ててました。</p>
-
-<h3>Hackathon当日の午前</h3>
-
-<hr />
-
-<p>開始と同時に、「こういう機能でこういう表示方法にしましょう」ということを<br/>
-ディレクターさんとワイヤーフレームモデルを使って合意を取りました。</p>
-
-<p># ここは勝手に進めて学生さんに申し訳なかった・・・。</p>
-
-<p>デザイナーとして活躍してくれる中学生は、ディレクターさんに任せ、プログラマー側はプログラマー同士で作業をすすめることにしました。</p>
-
-<p>プログラマー側では、大学生側の開発環境が出来ていなかったので、開発環境を構築することにしました。</p>
-
-<p>tomcatのインストールやmysqlのインストール&amp;設定、eclipseの設定を教えながら進めました。</p>
-
-<p>インストールの待ち時間の間、作成するものの以下の内容について説明してました。</p>
-
-<ul>
-<li>アプリケーションの説明</li>
-<li>表示する画面の構成要素の説明&amp;簡単な構成案</li>
-<li>DB設計</li>
-</ul>
-
-
-<p>この中で以下のついてどうやって見つければ良いかの説明を行いました。</p>
-
-<ul>
-<li>どうやればDB設計ができるか</li>
-<li>画面の構成要素はどう決めればよいか</li>
-<li>暗黙的な要件の見つけ方(画面に現れない&amp;前提としている内容等)</li>
-</ul>
-
-
-<p>そうこう説明しているうちに午前中が終了でお弁当タイムになりました。<br/>
-唐揚げ弁当うまかったなー</p>
-
-<h3>Hackathon当日の午後</h3>
-
-<hr />
-
-<p>午前中に開発環境の構築や設計周りの教示に費やしていたので、<br/>
-当初のゴールまで難しいことが、この時点で判明。</p>
-
-<p>ディレクターと話をして、「彼らのスキルアップというか育成に費やそう」ということにしました。</p>
-
-<p># EdTechということで教育がテーマだからいいかーということでお互いに合意しました。</p>
-
-<p>はじめは、自分で進めてみようということで、お互いの機能を実装することに専念しました。<br/>
-自分の担当した機能は実装と簡単な動作試験まで完了することができました。</p>
-
-<p># この間、１時間無いぐらい。</p>
-
-<p>この後、終了時間３０分前までは、大学生につきっきりになり、以下のことをマンツーマンで教示しました。<br/>
-所々、ペアプロも含んでいます。</p>
-
-<ul>
-<li>リーダブルコード的なこと(メソッド名の命名規則や付随すること諸々)</li>
-<li>スコープの話と(自分の考える)ポリシー(publicにしたら何処からでも使われるので、javadoc書く等)</li>
-<li>Seaser2の設計思想とMVC的な話</li>
-<li>Seaser2の実装方法や設定の説明&amp;解説</li>
-<li>コードの書き始めはどうしたらよいのか(逐次的に処理概要をTODOで書いてみるなどのやり方の話)</li>
-<li>コードのリファクタリング等</li>
-<li>eclipseのショートカットキーや設定全般</li>
-</ul>
-
-
-<p>ざっと覚えてるのは、この辺りだけどもっとなにか色々と偉そうに言ってたような気がする。。。</p>
-
-<p>終了まで残り３０分のところで、自分が作った部分の機能とデザインをマージ作業しました。<br/>
-マージ作業中は、大学生放置しましたけど、許して下さいm(<em> </em>)m</p>
-
-<p>久しぶりにwebapp/WEB-INF周りを弄ったので、jsp含んでた場合リソースの扱いに注意すること忘れてトラブりました。</p>
-
-<p># 今回の場合だと、「webapp」ディレクトリ直下に置かないと認識されませんでしたw</p>
-
-<p>最後のプレゼンは、中学生が頑張ってくれました!!<br/>
-自分には中々できないプレゼンや将来的にこういう機能もあればいいかもーみたいな案も考えてくれていました!!</p>
-
-<h3>感想</h3>
-
-<hr />
-
-<p>久しぶりにいい刺激を受けました。<br/>
-社内にいてもいい刺激を受けることが多いですが、外部のエンジニアとの交流もいいものです。<br/>
-何よりものを作り上げるのは楽しいです。</p>
-
-<p>今回のHackathonに関してはものを作るよりも、教育していたほうが長かったです。 <br/>
-ですが、自分にも得るものがありましたし、復習の機会になりました。<br/>
-大学生の彼が、自分の拙い説明で何かを得てくれれば自分も嬉しいと思います。</p>
-
-<p># 自分が初めてHackathonに出た時のようにですが・・・</p>
-
-<h3>Hackathonで構築した開発環境と簡単な設計メモ</h3>
-
-<hr />
-
-<p>以下に、説明に使用したメモを残します。<br/>
-こいつを参考にするとTomcat7.x + Eclipse + Seaser2な開発環境は構築できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>★tomcatインストール
-</span><span class='line'>$brew install tomcat
-</span><span class='line'>
-</span><span class='line'>1.ホームディレクトリの.bash_profileに以下を追加
-</span><span class='line'>
-</span><span class='line'>export CATALINA_HOME='/usr/local/Cellar/tomcat/7.0.42/libexec'
-</span><span class='line'>export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home
-</span><span class='line'>PATH=${JAVA_HOME}/bin:$PATH
-</span><span class='line'>PATH=$PATH:${CATALINA_HOME}
-</span><span class='line'>
-</span><span class='line'>2.ターミナル上で$source .bash_profileを実行
-</span><span class='line'>3.tomcat起動「/usr/local/Cellar/tomcat/7.0.42/libexec/bin/startup.sh」
-</span><span class='line'>4.tomcat停止「/usr/local/Cellar/tomcat/7.0.42/libexec/bin/shutdown.sh」
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>Homebrewが無ければ、インストールして下さい
-</span><span class='line'>使用しているShell(bash以外)が違う場合は適宜読み替えて下さい
-</span><span class='line'>
-</span><span class='line'>★eclipse
-</span><span class='line'>1.「http://www.eclipsetotale.com/tomcatPlugin.html」から最新のプラグインをダウンロード
-</span><span class='line'>2.ダウンロードしたzipを解答して、できたディレクトリごと eclipseのディレクトリの下に移動
-</span><span class='line'>3.eclipseを再起動
-</span><span class='line'>4.設定→tomcat
-</span><span class='line'>5.tomcatのバージョンを7に変更
-</span><span class='line'>6.HOMEを/usr/local/Cellar/tomcat/7.0.42/libexec
-</span><span class='line'>7.適用を押す
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>これでeclipse上からtomcat操作ができる
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>★mysql
-</span><span class='line'>brew install mysql
-</span><span class='line'>
-</span><span class='line'>DBの保存先とキャッシュの保存場所の設定
-</span><span class='line'>mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
-</span><span class='line'>
-</span><span class='line'>rootパスワードの設定
-</span><span class='line'>mysql.server start
-</span><span class='line'>mysqladmin -u root password '好きなパスワード'
-</span><span class='line'>mysql -uroot -p
-</span><span class='line'>
-</span><span class='line'>何でもできるユーザーの追加(本当はここはしっかりと考える必要あるけど今回はハッカソンなのでパス)
-</span><span class='line'>GRANT ALL PRIVILEGES ON *.* TO edtech@localhost IDENTIFIED BY 'edtechhackathon' WITH GRANT OPTION;
-</span><span class='line'>GRANT ALL PRIVILEGES ON *.* TO edtech@'%' IDENTIFIED BY 'edtechhackathon' WITH GRANT OPTION;
-</span><span class='line'>mysql -uedtech -pedtechhackathon
-</span><span class='line'>
-</span><span class='line'>データベースの作成
-</span><span class='line'>create database edtechhackathon;
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>これで開発をします。
-</span><span class='line'>ユーザー名:edtech
-</span><span class='line'>パスワード:edtechhackathon
-</span><span class='line'>
-</span><span class='line'>jdbcドライバはこんな感じかな
-</span><span class='line'>jdbc:mysql://localhost:3306/edtechhackathon
-</span><span class='line'>接続ユーザー:edtech
-</span><span class='line'>接続パスワード:edtechhackathon
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>★Doltengのインストール(一応)
-</span><span class='line'>したがって行う
-</span><span class='line'>http://dolteng.sandbox.seasar.org/
-</span><span class='line'>→DBからエンティティを自動生成するので使う
-</span><span class='line'>
-</span><span class='line'>★eclipsemarket placeからインストール
-</span><span class='line'>プロパティエディタのインストール
-</span><span class='line'>maven integrationプラグイン
-</span><span class='line'>
-</span><span class='line'>★Devloder
-</span><span class='line'>mkdir -p /usr/local/Cellar/tomcat/7.0.42/libexec/server/lib
-</span><span class='line'>$cp /Applications/eclipse/plugins/com.sysdeo.eclipse.tomcat_3.3.0/DevloaderTomcat7.jar /usr/local/Cellar/tomcat/7.0.42/libexec/lib/
-</span><span class='line'>
-</span><span class='line'>★mysql追加
-</span><span class='line'>mysql.server stop
-</span><span class='line'>cp /usr/local/Cellar/mysql/5.6.13/my.cnf /usr/local/Cellar/mysql/5.6.13/my.cnf.20131026
-</span><span class='line'>「port = 3306」を記述
-</span><span class='line'>mysql.server start
-</span><span class='line'>
-</span><span class='line'>★確認用データ投入
-</span><span class='line'>mysql -uedtech -p -hlocalhost edtechhackathon
-</span><span class='line'>CREATE TABLE sample(id int auto_increment primary key, data varchar(255) NOT NULL UNIQUE, created_at datetime NOT NULL) ENGINE=InnoDB; 
-</span><span class='line'>insert into sample(data, created_at) values('test', '2013-10-26');
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>★usersテーブル
-</span><span class='line'>入力項目は、以下のもの
-</span><span class='line'>・名前
-</span><span class='line'>・メール
-</span><span class='line'>・パスワード(アプリ側でBlowfish形式で暗号化しておくこと、暗号化の鍵はedtechとパスワード入力値とする。初期でinsertする内容は「test」にする)、
-</span><span class='line'>・Roleは1(教師)、0(親)、2(管理者)で表現(アプリ側で数値を見てRoleの判断する)
-</span><span class='line'>
-</span><span class='line'>create table users( user_id int auto_increment primary key, name varchar(255) not null, mail varchar(255) not null, password varchar(255) not null, role int not null) ENGINE=InnoDB; 
-</span><span class='line'>
-</span><span class='line'>★fixture
-</span><span class='line'>insert into users(name, mail, password, role) values('hoge', 'hogeATgmail.com', '0791e4e0ade0f161', '2');
-</span><span class='line'>insert into users(name, mail, password, role) values('fuga', 'fugaAtgmail.com', '0791e4e0ade0f161', '1');
-</span><span class='line'>insert into users(name, mail, password, role) values('hogehoge', 'hogehogeAtgmail.com', '0791e4e0ade0f161', '0');</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2347,6 +2086,10 @@ ActiveRecordの検証メソッドが実行されないことに注意かも。</
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/02/write-android-rom/">Android端末のROM焼きをやってみる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/01/find-delete/">findのexecオプションとxargsコマンドについて</a>
       </li>
     
@@ -2362,15 +2105,11 @@ ActiveRecordの検証メソッドが実行されないことに注意かも。</
         <a href="/blog/2013/12/21/work-site/">現場で感じた理想と現実</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/12/19/active-android/">ActiveAndroidを使ってみた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 120.0%'>Android(3)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(6)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.66666666666667%'>Android(4)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(6)</a> </span>
 </section
 
 
