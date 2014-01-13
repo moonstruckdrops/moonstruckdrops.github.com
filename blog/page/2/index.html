@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="久しぶりにHackathonに行ってきた気がする。 成果は・・・ 「これからのIT業界を支える未来のエンジニアを育成できました!!」 これだけだと、「Hackathonなのにコードの成果がなくないか？」
-ってことになりかねないし何の事かさっぱり分からないと思うので当日の詳細を以下に載っけます。 &hellip;">
+  <meta name="description" content="使ってるけど、意外と知らなかったのでメモ 抽出方法は全部同じ whereの条件指定の方法ですね。 以下の３つは、全て同じSQLを発行します 1.Hashで条件設定する方法(AR独自チックな感じで大体使う方法) 1
+Hoge.where(:title =&gt; "title", :id =&gt &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,92 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/12/ar-memo/">ActiveRecordメモ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-12T00:20:00+09:00" pubdate data-updated="true">Nov 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>使ってるけど、意外と知らなかったのでメモ</p>
+
+<h3>抽出方法は全部同じ</h3>
+
+<hr />
+
+<p>whereの条件指定の方法ですね。</p>
+
+<p>以下の３つは、全て同じSQLを発行します</p>
+
+<p>1.Hashで条件設定する方法(AR独自チックな感じで大体使う方法)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where(:title =&gt; "title", :id =&gt; 1)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.プレースホルダで地道にパラメータ設定する方法(どの言語でも通用する)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where("title = ? and id = ?", "title1", 1)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.シンボルで対応付けをわかりやすくする方法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where("title = :title and id = :id", {:title =&gt; "title", :id =&gt;1})</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>抽出結果がなかったらレコードの新規作成をする</h3>
+
+<hr />
+
+<p>これ、一発でできるメソッドあったんですね。<br/>
+知らなかった。。。</p>
+
+<p>どうやらfirst_or_createというメソッドを使えばよいみたい。<br/>
+で、ブロックを取ることができるので、ブロック内で挿入する値を自由に設定できる</p>
+
+<p>以下のような感じで書くとできる模様。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Hoge.where(:title =&gt; "title").first_or_create do |p|
+</span><span class='line'>    p.body = "hogehoge"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結局は裏で2回SQL発行してるだけなんですけどね。(selectとinsert)</p>
+
+<p>と、まぁ色々とありますがこんなところで。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1768,133 +1854,6 @@ LinuxとかMacのディスクだけでなくって、Windowsなディスクま�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/25/ruby-accessor/">Rubyでアクセス用のメソッドを定義する(アクセッサ)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-25T20:56:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>なんてことはない、ただの整理です。</p>
-
-<p>通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。</p>
-
-<p>Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。</p>
-
-<p>以下のようなModuleクラスにあるものを使います</p>
-
-<ul>
-<li>attr_reader : 参照(読み出し)できるようにする(getter)</li>
-<li>attr_writer : 代入(書き込み)できるようにする(setter)</li>
-<li>attr_accessor : 参照、代入の両方できるようにする(getter/setter)</li>
-</ul>
-
-
-<p>それぞれ、使い方は以下のような形になります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Accessor
-</span><span class='line'>
-</span><span class='line'>    attr_reader :name,:hoge
-</span><span class='line'>    attr_writer :fuga,:piyo
-</span><span class='line'>    attr_accessor :access
-</span><span class='line'>    
-</span><span class='line'>    def initialize
-</span><span class='line'>        @name = "kurobara"
-</span><span class='line'>        @hoge = "hogehoge"
-</span><span class='line'>        @fuga = "fugafuga"
-</span><span class='line'>        @piyo = "piypiyo"
-</span><span class='line'>        @access = "OK"
-</span><span class='line'>    end
-</span><span class='line'>
-</span><span class='line'>    def print_fuga_piyo
-</span><span class='line'>        p '---------------------'
-</span><span class='line'>        puts "fuga = " + @fuga
-</span><span class='line'>        puts "piyo = " + @piyo
-</span><span class='line'>    end
-</span><span class='line'>
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>a = Accessor.new()
-</span><span class='line'>puts a.name
-</span><span class='line'>puts a.hoge  
-</span><span class='line'>a.print_fuga_piyo
-</span><span class='line'>p "代入操作"
-</span><span class='line'>a.fuga = "fuga2fuga2"
-</span><span class='line'>a.piyo = "piyo2piyo2"
-</span><span class='line'>a.print_fuga_piyo
-</span><span class='line'>p '---------------------'
-</span><span class='line'>puts 'a.access = ' + a.access
-</span><span class='line'>p "代入操作"
-</span><span class='line'>a.access = "OKOK"
-</span><span class='line'>puts 'a.access = ' + a.access</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで使えちゃいます。。。<br/>
-今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
-attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1916,6 +1875,10 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/13/kancolle/">今更ながら、艦隊これくしょん(通称、艦これ)始めました</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/02/write-android-rom/">Android端末のROM焼きをやってみる</a>
       </li>
     
@@ -1931,15 +1894,11 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
         <a href="/blog/2013/12/23/java-logging/">log4j 2を使った。おまけで他のloggingも用意した。</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/12/21/work-site/">現場で感じた理想と現実</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.66666666666667%'>Android(4)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(6)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.66666666666667%'>Android(4)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 146.66666666666666%'>戯言(7)</a> </span>
 </section
 
 
