@@ -5,11 +5,16 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Android端末のROM焼きをやってみる - kurobaraのブログ</title>
+  <title>gitkeepを作成、及び削除をするshellを作った - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに Android端末ではNexus5を使用しています。 ついこの前(?)、4.4→4.4.2にアップデートしてみました。 アップデートしてみたところ、全体的な機能改善がされていました。 ところが、端末スピーカーを使って音声再生したところ音が割れるようになりました。 暫く、 &hellip;">
+  <meta name="description" content="はじめに 以下のようなディレクトリ構成のときに.gitkeepを作りたかったのです。 1
+2
+3
+4
+└── test ├── test1 │   └── test2 └── test3 ですが、これを手で一つ一つ用意するのは非常に面倒なわけでして・・・
+ついカッとなって用意しました。 # &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +23,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/01/18/shell-gitkeep/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -74,7 +79,7 @@
   
   <header>
     
-      <h1 class="entry-title">Android端末のROM焼きをやってみる</h1>
+      <h1 class="entry-title">Gitkeepを作成、及び削除をするshellを作った</h1>
     
     
       <p class="meta">
@@ -90,7 +95,7 @@
   
 
 
-<time datetime="2014-01-02T20:42:00+09:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2014</time>
+<time datetime="2014-01-18T00:02:00+09:00" pubdate data-updated="true">Jan 18<span>th</span>, 2014</time>
         
       </p>
     
@@ -101,93 +106,29 @@
 
 <hr />
 
-<p>Android端末ではNexus5を使用しています。</p>
+<p>以下のようなディレクトリ構成のときに.gitkeepを作りたかったのです。</p>
 
-<p>ついこの前(?)、4.4→4.4.2にアップデートしてみました。</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>└── test
+</span><span class='line'>    ├── test1
+</span><span class='line'>    │   └── test2
+</span><span class='line'>    └── test3</span></code></pre></td></tr></table></div></figure>
 
-<p>アップデートしてみたところ、全体的な機能改善がされていました。</p>
 
-<p>ところが、端末スピーカーを使って音声再生したところ音が割れるようになりました。</p>
+<p>ですが、これを手で一つ一つ用意するのは非常に面倒なわけでして・・・<br/>
+ついカッとなって用意しました。</p>
 
-<p>暫く、我慢して使って音声再生していたのですが、最早限界に達しましてダウングレードをすることにしました。</p>
+<p># chefお前のことだ!!<br/>
+# Railsなんかはきっちり用意してくれてるのにね</p>
 
-<p># 大体、Android界隈でこういうROM焼きをする場合ってカスタムROMを焼くことが多いですが・・・ ^<sup>;;</sup></p>
-
-<p># カスタムROMにしてしまうとAPIとか動作含めて検証機として微妙かなという印象もあるので純正にします。</p>
-
-<h3>注意事項</h3>
-
-<hr />
-
-<p>本作業によって、メーカーの補償は一切きかなくなります。<br/>
-本作業でデータが消えたり、Nexus5が起動しなくなってしまったとしてもこちらは一切責任を負いません。<br/>
-全て自己責任でお願い致します。</p>
-
-<h3>対象機器</h3>
+<h3>コード本体</h3>
 
 <hr />
 
-<p>Nexus5</p>
-
-<h3>手順</h3>
-
-<hr />
-
-<p>どの端末で大体やることは同じのようです。</p>
-
-<ol>
-<li>Bootloderの解除</li>
-<li>ROMの入手</li>
-<li>ROMを焼く</li>
-</ol>
-
-
-<h3>Bootloderの解除</h3>
-
-<hr />
-
-<p>実はこれが一番ハードルが高いです。 <br/>
-機種によって解除するための作業が微妙に異なるためです。(解除するための鍵を入手したり等)</p>
-
-<p>幸いなことにNexus5はハードルが高くありません。</p>
-
-<p># 流石、天下のGoogle様ですねw</p>
-
-<p>以下の手順で行います。</p>
-
-<ol>
-<li><code>adb reboot bootloader</code>を入力する(電源ボタンとボリュームダウンボタンを同時押しで電源を入れるでも可)</li>
-<li>画面に倒れたドロイド君が表示されていればOK</li>
-<li><code>fastboot oem unlock</code>を入力する</li>
-<li>Nexus5に、「Unlock bootloader?」と尋ねる画面が表示される</li>
-<li>ボリュームボタンを操作し「Yes」を選び電源ボタンを押す</li>
-</ol>
-
-
-<p>上記作業が成功すれば、Nexus5のブートローダー画面のLOCK STATEが「unlocked」に変化しています。</p>
-
-<p>ロックしたい場合は、<code>fastboot oem lock</code>と入力すれば、LOCK STATEが「locked」に変化します。</p>
-
-<h3>ROMの入手</h3>
-
-<hr />
-
-<p>ここは簡単です。</p>
-
-<p>純正のROMは、<a href="https://developers.google.com/android/nexus/images?hl=ja">Factory Images for Nexus Devices</a>から入手できます。</p>
-
-<p># カスタムROMは専用のサイトとか行けばよいと思います。</p>
-
-<h3>ROM焼き</h3>
-
-<hr />
-
-<p>これも簡単です。</p>
-
-<p>純正のROMの場合は、shellとバッチが用意されていますのでそれを実行するだけです。<br/>
-実行タイミングは、ブートローダー画面で行います。</p>
-
-<p>こんな感じでログが出たあとに端末が再起動すれば成功かと思います。</p>
+<p>以下のコードをコピペして適当に実行権を与えたファイルにしてください。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -199,19 +140,115 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sending 'bootloader' (2506 KB)...
-</span><span class='line'>OKAY [  0.288s]
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
 </span><span class='line'>
-</span><span class='line'>中略
+</span><span class='line'>function create() {
+</span><span class='line'>    dir=$1
+</span><span class='line'>    if [ ! -f "${dir}/.gitkeep" ]&&[ ! -z "${dir}" ]; then
+</span><span class='line'>        touch ${dir}/.gitkeep
+</span><span class='line'>        echo  "Create .gitkeep in `pwd`/${dir}"
+</span><span class='line'>    fi
+</span><span class='line'>}
 </span><span class='line'>
-</span><span class='line'>writing 'cache'...
-</span><span class='line'>OKAY [  1.904s]
-</span><span class='line'>rebooting...
+</span><span class='line'>function remove() {
+</span><span class='line'>    dir=$1
+</span><span class='line'>    if [ -f "${dir}/.gitkeep" ]&&[ ! -z "${dir}" ]; then
+</span><span class='line'>        rm ${dir}/.gitkeep
+</span><span class='line'>        echo  "Remove .gitkeep in `pwd`/${dir}"
+</span><span class='line'>    fi
+</span><span class='line'>}
 </span><span class='line'>
-</span><span class='line'>finished. total time: 99.240s</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>function start() {
+</span><span class='line'>    command=$1
+</span><span class='line'>    for DIR in * ; do
+</span><span class='line'>        if [ -d "${DIR}" ]; then
+</span><span class='line'>            if [ "${command}" = "create" ]; then
+</span><span class='line'>                create $DIR;
+</span><span class='line'>            fi
+</span><span class='line'>            if [ "${command}" = "remove" ]; then
+</span><span class='line'>                remove $DIR;
+</span><span class='line'>            fi
+</span><span class='line'>            (cd "${DIR}"; start $command;)
+</span><span class='line'>        fi
+</span><span class='line'>    done
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>command=$1
+</span><span class='line'>if [ -z "${command}" ]; then
+</span><span class='line'>    command="create"
+</span><span class='line'>fi
+</span><span class='line'>
+</span><span class='line'>if [ "${command}" != "remove" -a "${command}" != "create" ]; then
+</span><span class='line'>    echo "Usage : ./gitkeep.sh create or ./gitkeep.sh remove"
+</span><span class='line'>    exit 1
+</span><span class='line'>fi
+</span><span class='line'>
+</span><span class='line'>if ! git rev-parse 2&gt; /dev/null; then
+</span><span class='line'>    echo "Abort!!"
+</span><span class='line'>    echo "This directory is not git repository!!"
+</span><span class='line'>    exit 1
+</span><span class='line'>fi
+</span><span class='line'>
+</span><span class='line'>start $command;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>以上！！自分の作業備忘録でした！！</p>
+<h3>使い方</h3>
+
+<hr />
+
+<p>上記のコードをgittkeep.shとして保存していたと仮定した場合</p>
+
+<p>.gitkeepファイル作成する場合は、以下のコマンド</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sh gitkeep.sh create</span></code></pre></td></tr></table></div></figure>
+
+
+<p>.gitkeepファイルを削除する場合は、以下のコマンド</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sh gitkeep.sh remove</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
@@ -234,12 +271,12 @@
   
 
 
-<time datetime="2014-01-02T20:42:00+09:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2014</time>
+<time datetime="2014-01-18T00:02:00+09:00" pubdate data-updated="true">Jan 18<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/android/'>Android</a>
+    <a class='category' href='/blog/categories/git/'>git</a>
   
 </span>
 
@@ -248,7 +285,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/01/18/shell-gitkeep/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/01/18/shell-gitkeep/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -261,10 +298,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/01/01/find-delete/" title="Previous Post: findのexecオプションとxargsコマンドについて">&laquo; findのexecオプションとxargsコマンドについて</a>
+        <a class="basic-alignment left" href="/blog/2014/01/14/surfacepro/" title="Previous Post: Surface Pro2を買いました">&laquo; Surface Pro2を買いました</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/01/13/kancolle/" title="Next Post: 今更ながら、艦隊これくしょん(通称、艦これ)始めました">今更ながら、艦隊これくしょん(通称、艦これ)始めました &raquo;</a>
       
     </p>
   </footer>

@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="日経ソフトウェア7月号の特集「そのコードは古い!」を読んだ感想。 これとは別の技術書を書店まで買いに行きました。 そこで日経ソフトウェアを手に取りました。 いつもは、日経ソフトウェアを書店でパラパラ目を通す程度です(エンジニアに端くれかみたいな感想は兎も角)
-ただ、 &hellip;">
+  <meta name="description" content="DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。 簡単に言うと、よく言われる「依存性の注入」といいます。 が、なんのことかさっぱりわからないですね。
+少し言い換えてあげると 「 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,108 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T19:28:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。</p>
+
+<p>簡単に言うと、よく言われる「依存性の注入」といいます。</p>
+
+<p>が、なんのことかさっぱりわからないですね。
+少し言い換えてあげると</p>
+
+<h6>「依存性をモジュールもしくはクラス内部に抱え込まずに外部から依存内容を設定してあげる」</h6>
+
+<p>となります。</p>
+
+<p>擬似コードを出すとDI前にこんなコードとすると</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(){
+</span><span class='line'>    this.fuga = new Fuga("hogefuga");
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>DI後の擬似コードはこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public Hoge(Fuga fuga){
+</span><span class='line'>    this.fuga = fuga;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンストラクタの引数Fugaを差し替えるだけで容易に設定内容を変更できます。<br/>
+依存前のコードだと、依存性はFugaコンストラクタの中にありますが、依存後のコードは依存性は外部にあります。(引数の内容次第)<br/>
+このFugaのコンストラクタがリソースに関わる何かだとDI前のコードであればユニットテストが大変になりますね。<br/>
+しかし、DI後のコードであれば引数を差し替えるだけでユニットテストができるようになります。</p>
+
+<p>なので、DIをするメリットというと(個人的に)以下が挙げられます。</p>
+
+<ul>
+<li>依存しているものが外部にあるので、ユニットテストで差し替えが簡単にできる(外部からモックにしやすい)</li>
+<li>IFさえ同じものであれば、別の実装を行ったものを設定として渡してやることができる(柔軟性)</li>
+</ul>
+
+
+<p>面倒になるのは、事前準備ですがメリットのほうが大きいと個人的には思ってます。<br/>
+面倒な事前処理(主にコンストラクタ生成ですが)をやってくれるのがDIコンテナですね。</p>
+
+<p>よく使うDIコンテナだと、有名なjavaのコンテナはこんなところですかね。</p>
+
+<ul>
+<li>GoogleGuice</li>
+<li>Seaser2</li>
+<li>SpringFramework</li>
+</ul>
+
+
+<p>自分が使うときの基準だと、以下になりますね。</p>
+
+<ul>
+<li>Seaser2なプロダクト(SAStrutsとか)を使っている、もしくは使う場合は、「Seaser2」のDIコンテナ</li>
+<li>Spring関係の何かを使っている、もしくは使う場合は、「SpringFramework」のDIコンテナ(尤も殆ど使ったことないです)</li>
+<li>それ以外の場合なら、大体「GoogleGuice」(どこかに事例とかあればいいですし、大体がWicketとかで使います)</li>
+</ul>
+
+
+<p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
+使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1307,301 +1409,6 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/13/gocon-spring/">Go Conference 2013 Springに行って来ました。 #GoCon</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-13T10:02:00+09:00" pubdate data-updated="true">Apr 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>午前中と午後はモクモクとコード書いてました。。。<br/>
-XML周りの処理とかちょっとしたい感じだったので書いてみました。</p>
-
-<p>「XMLの構造が分かっていたら、 Unmarshal関数を使ったほうがいいね。」</p>
-
-<p>というのが感想です。<br/>
-真面目にDOMを用意してみるとかなりコード書かないといけないので辛い感じ。<br/>
-個人的には、XMLをDOMで操作するならRubyを使います(ぉぃ</p>
-
-<p>動作速度まで測ってませんが、多分Goのほうが圧倒的速度で処理してくれるでしょう・・・。<br/>
-機会があればやってみます。</p>
-
-<p>以下、セッションメモ</p>
-
-<h3>Goでの思考方法</h3>
-
-<hr />
-
-<p>class = type
-object = value
-method attache any type
-interface はmethod(?)</p>
-
-<p># 途中から何かしてたので聞き逃した。
-# 何処かにスライド上がってないだろうか？</p>
-
-<h3>Go言語で作るWebアプリ</h3>
-
-<hr />
-
-<p>Webサーバ作るときは、以下のやり方が基本</p>
-
-<ul>
-<li>http.Serverに渡して、http.Handlerで処理する</li>
-<li>ListenAndServerで起動する</li>
-<li>複数のハンドラを設定できる(http.serverMux型)</li>
-<li>ハンドラを実装するのは大変なのでhttp.HandlerFuncを使う</li>
-<li>serverMuxを作るのがめんどいなら、DefaultServerMuxというグローバル変数を使うといい</li>
-<li>静的なhtmlを表示する場合は、http.FileServerを指定してやればいい</li>
-</ul>
-
-
-<p>Restful APIを作る</p>
-
-<ul>
-<li>GoWebを使えば、楽にできる</li>
-<li>リクエストの受け取りやレスポンスをxmlやjsonで返せる</li>
-<li>ルーティング管理ができる</li>
-<li>Controllerを作るだけでいい</li>
-<li>インタフェースを実装すればよい感じ</li>
-</ul>
-
-
-<p>テストパッケージやnginxと連携とかテンプレートエンジンとかあるので話したかった・・・</p>
-
-<h3>GAE/Goの話</h3>
-
-<hr />
-
-<ul>
-<li>main関数はAppEngineのRuntimeがやるので、実装しなくてもよい</li>
-<li>構造体にデータ(kind)を作ってしまう</li>
-<li>keyを作成する(AppEngineユーザーにはお馴染みの処理)</li>
-<li>それからデータストアにputする</li>
-<li>SDKはPythonが起動→Goで書いたアプリ起動の流れ</li>
-<li>PythonとGoが連動してるのでGo単体のテストは辛い</li>
-<li>AppEngineとGoは安心して使いづらい(単体テストが厳しいため)</li>
-<li>Spin-Upは相当早い(Python 約386ms,Go 約48ms)</li>
-<li>使用メモリは、Pythonに比べて少ない</li>
-<li>Spin-Upと省メモリなので、Goは優位かも</li>
-<li>I/O待ちがあるので、常にGoが早いと言えない</li>
-<li>最初からAppEngineに入る場合には選択肢に入るかも</li>
-<li>無理に既存のものを載せかる必要性はない</li>
-<li>Pythonでメイン処理を書いて、GoをBackground処理にするという方法もアリ</li>
-</ul>
-
-
-<p># AppEngineで動かしてるオレオレのサービスの追加機能はGoで実装してみようかなぁ</p>
-
-<h3>GoRoutine&amp;Channelでの並行処理</h3>
-
-<hr />
-
-<ul>
-<li>並行処理のアプローチは「メモリのシェア」、「メッセージパッシング」の２つが大体使われる</li>
-<li>GoはCSPとパイ計算がベースになっている</li>
-<li>slectとclosureも並行処理で使える</li>
-<li>ユーザーランドだと関数のまえにgoをつけると、goroutineが実行できる</li>
-<li>gotoutineの終了は、処理が最後まで行った時、return文やgo_exitでできる</li>
-<li>channelでgoroutine同士でメッセージできる</li>
-<li>メッセージのバッファサイズも決めれる</li>
-<li>goroutineを複数やる場合、waitegroupを使えばいい</li>
-<li>Worker</li>
-<li>Selectは読み出しがブロックするのを待っている</li>
-<li>channelにはバッファ機能があり、バッファサイズ以上を書き込もうとするとブロックする(セマフォっぽいイメージ)</li>
-<li>Goroutineでcoroutineっぽいものもできる</li>
-<li>複数コアを使う場合、自分で明示的にコア設定してやる必要がある</li>
-<li>netchanが昔はあったが、今はdeprecatedになっている。(I/Fが複雑になりすぎたかららしい。ノウハウ貯まれば復活するかも)</li>
-</ul>
-
-
-<p>\ # channelのcloseはレシーバ側で行うっぽい？</p>
-
-<h3>goroutineのスケジューラの話</h3>
-
-<hr />
-
-<ul>
-<li>スタックコントローラーやプロセスコントローラーで実行されてる</li>
-<li>上を実現するため、Goは一部’アセンブラで書かれている</li>
-<li>スケジューラ:G(goroutine),M(ワーカースレッド、マシン),P(プロセス。MAXPROCSに指定できる最大値はこいつ)</li>
-<li>GOMAXPROCSは、スレッド数と同じではない(異なることもある)</li>
-<li><a href="https://gist.github.com/methane/5377227">スケジューラを解析していた方のメモ</a>に詳しく流れが記載されています</li>
-<li>go buildにsオプションをつけるとどんなランタイム呼ばれてるのかわかるようになる</li>
-</ul>
-
-
-<h3>Goのよいところ</h3>
-
-<hr />
-
-<p>最初の気に入らないところ</p>
-
-<ul>
-<li>第一印象、人形もコードもキモい！！違和感があった</li>
-<li>似てるようで違うところが多くてキモい(C++/Java/Pythonと比較して)</li>
-</ul>
-
-
-<p>良かったところ</p>
-
-<ul>
-<li>読みやすい</li>
-<li>シンプルな仕様(最近の言語は、便利機能多いけど複雑すぎる)</li>
-</ul>
-
-
-<p>Goを書き慣れてくると・・・<br/>
-印象が変わる!!</p>
-
-<ul>
-<li>他の言語の複雑な型宣言にムカつく(複雑になってくるとGoのほうが有利)</li>
-<li>ダックタイピングも複雑になってくると、動くことはわかるけどコードを読むときによく分からなくなる(Goだとinteeface型を作ればややこしくなくなる)</li>
-<li>オブジェクト指向もGoのほうが便利(PythonもJavaもクラス設計をしっかりしないといけない)</li>
-<li>スコープも調べるのが大変だし、アクセスしたいものもアクセスできないとかある(Goは大文字だとpublicそれ以外はpackage private)</li>
-<li>未使用なコードもGoだとビルド時に検出してくれる(dependencyを残すと大規模開発になるとメンテが大変になる。どうしてものこしたければ「_」をつける)</li>
-<li>エラー処理は、javaとかpythonはExceptionにしたがる(変なGoToしてるだけ、それは多値返せば、処理の流れは破綻しないでしょ)</li>
-<li>panicは本当にどうしようもないときにだけ使用する。普通はエラーできっちり返してあげる設計にするべき</li>
-<li>Goで解決したいものの多くは、サーバとかのインフラの並列処理</li>
-</ul>
-
-
-<p># 話聞いてると頷ける話で、確かに個人的にJavaはうざいと思うのは事実・・・
-# 個人的にAPIのサンプルがドキュメントに載ってたらいいなぁなんて思いました。。。</p>
-
-<h3>goでゲームを作る</h3>
-
-<hr />
-
-<ul>
-<li>画面、音、入力のライブラリがある</li>
-<li>なんか似たようなもので複数あるっぽい(描画だけでもGoGLとかglとか)</li>
-<li>GoGL,go-flwでできる</li>
-</ul>
-
-
-<p>大まかな流れ</p>
-
-<p>1 初期化で、キー入力とウィンドウ処理をしてやる(main関数ではこれだけにする)
-2 初期化のタイミングでウィンドウの設定をしてやる
-3 初期化以降はメインループを実行する
-4 ゲームのランを行う(ウィンドウが開いてる間実行するように実装する)
-5 フレームに対して描画を行う
-6 ゲームを実装してる本体でキーボードとかの入力を受け取るようにする
-7 描画メソッドではひたすら描画の実装をしてやる</p>
-
-<h3>A Case Study</h3>
-
-<hr />
-
-<ul>
-<li>Rubyにはいいところもあるが良くないところもある</li>
-<li>CloudFundryでEventMachineをRubyでやっていた</li>
-<li>Rubyは特に好きだ</li>
-</ul>
-
-
-<p>設立したベンチャー企業では
-+ 複数のOSサポート
-+ システムのスケールもさせたい
-+ そのためGo vs Node.jsになった</p>
-
-<p>Node.js</p>
-
-<ul>
-<li>v8ランタイム</li>
-<li>イベント駆動</li>
-<li>JSベース</li>
-<li>ランタイム依存</li>
-<li>JSベースなので(コールバック地獄)</li>
-<li>実験的な機能が・・・</li>
-</ul>
-
-
-<p>Go</p>
-
-<ul>
-<li>設計メンバーが良かった</li>
-<li>同期モデル</li>
-<li>プラットフォームのサポートがよかった</li>
-<li>新しい言語</li>
-<li>標準ライブラリはどう使えば？</li>
-<li>GCやスケジューラが隠れている</li>
-</ul>
-
-
-<p>いいところが多いので15分でGoを採用することになった(チームで決めた)</p>
-
-<ul>
-<li>学習が簡単だった</li>
-<li>標準でライブラリが揃っている</li>
-<li>なぜGoなのか(聞き取れなかった)</li>
-<li>GoのGCはスタックベースなので良かった。</li>
-<li>暗号化通信はOpenSSLのラッパーを用意した(パフォーマンスの問題？)</li>
-<li>文字列とバイト配列の変換</li>
-<li>SQLは低レベルすぎて辛いのでORMとドライバーは自前で用意した</li>
-<li>mapも遅い。多分1.1で治るはず・・・</li>
-<li>いけてない面もまだまだあるけど、Goを選択したのはよかった</li>
-<li>GoはIaaSやPaaSで主役になれる!!</li>
-</ul>
-
-
-<p>まとめ</p>
-
-<ul>
-<li>GoはGoogleが採用しているだけあってシステム書くには向いている</li>
-<li>Goは標準ライブラリが揃っている</li>
-<li>テストやドキュメントもビルトインである</li>
-<li>学習も楽にできる</li>
-<li>GCもStackベースなので遅延が起きることは少ない</li>
-<li>いくつかの問題は1.1で解決されることに期待!!</li>
-</ul>
-
-
-<p># 最後のセッションのこいつはうろ覚え(聞き取りながらで辛かった)</p>
-
-<h3>感想</h3>
-
-<hr />
-
-<p>Goに関してのいいところや悪いところを吸収できたかなーと思う。<br/>
-密度が濃い一日だったと思いました。　　
-なによりGoでモクモクできたのが良かったなーとおもいます。(まともに書いたのはアーリーアダプター以来だった思う。。。)
-コンパイルと実行が下のコマンドでできることには驚いた。(昔は8g,8lとかしてたコンパイルしてた記憶)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$go run &lt;プログラムファイル&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>仕事でシステム周りの実装するならGo言語をぜひとも採用させたいですね。。。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -1623,6 +1430,10 @@ interface はmethod(?)</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/18/shell-gitkeep/">gitkeepを作成、及び削除をするshellを作った</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/14/surfacepro/">Surface Pro2を買いました</a>
       </li>
     
@@ -1638,15 +1449,11 @@ interface はmethod(?)</p>
         <a href="/blog/2014/01/01/find-delete/">findのexecオプションとxargsコマンドについて</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/12/31/2013-summary/">2013年の振り返り</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.66666666666667%'>Android(4)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 113.33333333333333%'>git(2)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.66666666666667%'>Android(4)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(3)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
 </section
 
 

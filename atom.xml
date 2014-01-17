@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-01-14T23:23:36+09:00</updated>
+  <updated>2014-01-18T00:34:01+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,161 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[gitkeepを作成、及び削除をするshellを作った]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/01/18/shell-gitkeep/"/>
+    <updated>2014-01-18T00:02:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/01/18/shell-gitkeep</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>以下のようなディレクトリ構成のときに.gitkeepを作りたかったのです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>└── test
+</span><span class='line'>    ├── test1
+</span><span class='line'>    │   └── test2
+</span><span class='line'>    └── test3</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ですが、これを手で一つ一つ用意するのは非常に面倒なわけでして・・・<br/>
+ついカッとなって用意しました。</p>
+
+<p># chefお前のことだ!!<br/>
+# Railsなんかはきっちり用意してくれてるのにね</p>
+
+<h3>コード本体</h3>
+
+<hr />
+
+<p>以下のコードをコピペして適当に実行権を与えたファイルにしてください。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
+</span><span class='line'>
+</span><span class='line'>function create() {
+</span><span class='line'>    dir=$1
+</span><span class='line'>    if [ ! -f "${dir}/.gitkeep" ]&&[ ! -z "${dir}" ]; then
+</span><span class='line'>        touch ${dir}/.gitkeep
+</span><span class='line'>        echo  "Create .gitkeep in `pwd`/${dir}"
+</span><span class='line'>    fi
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>function remove() {
+</span><span class='line'>    dir=$1
+</span><span class='line'>    if [ -f "${dir}/.gitkeep" ]&&[ ! -z "${dir}" ]; then
+</span><span class='line'>        rm ${dir}/.gitkeep
+</span><span class='line'>        echo  "Remove .gitkeep in `pwd`/${dir}"
+</span><span class='line'>    fi
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>function start() {
+</span><span class='line'>    command=$1
+</span><span class='line'>    for DIR in * ; do
+</span><span class='line'>        if [ -d "${DIR}" ]; then
+</span><span class='line'>            if [ "${command}" = "create" ]; then
+</span><span class='line'>                create $DIR;
+</span><span class='line'>            fi
+</span><span class='line'>            if [ "${command}" = "remove" ]; then
+</span><span class='line'>                remove $DIR;
+</span><span class='line'>            fi
+</span><span class='line'>            (cd "${DIR}"; start $command;)
+</span><span class='line'>        fi
+</span><span class='line'>    done
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>command=$1
+</span><span class='line'>if [ -z "${command}" ]; then
+</span><span class='line'>    command="create"
+</span><span class='line'>fi
+</span><span class='line'>
+</span><span class='line'>if [ "${command}" != "remove" -a "${command}" != "create" ]; then
+</span><span class='line'>    echo "Usage : ./gitkeep.sh create or ./gitkeep.sh remove"
+</span><span class='line'>    exit 1
+</span><span class='line'>fi
+</span><span class='line'>
+</span><span class='line'>if ! git rev-parse 2&gt; /dev/null; then
+</span><span class='line'>    echo "Abort!!"
+</span><span class='line'>    echo "This directory is not git repository!!"
+</span><span class='line'>    exit 1
+</span><span class='line'>fi
+</span><span class='line'>
+</span><span class='line'>start $command;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使い方</h3>
+
+<hr />
+
+<p>上記のコードをgittkeep.shとして保存していたと仮定した場合</p>
+
+<p>.gitkeepファイル作成する場合は、以下のコマンド</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sh gitkeep.sh create</span></code></pre></td></tr></table></div></figure>
+
+
+<p>.gitkeepファイルを削除する場合は、以下のコマンド</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sh gitkeep.sh remove</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Surface Pro2を買いました]]></title>
@@ -3158,117 +3313,6 @@ RubyやGoとかが好きです。<br/>
 
 
 <p>これで英語化されるね。。。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Linuxに接続したHDDを知る方法]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/08/12/find-hdd/"/>
-    <updated>2013-08-12T00:09:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/08/12/find-hdd</id>
-    <content type="html"><![CDATA[<p>バックアップ作業とかマウントとかで指定するんだけど・・・<br/>
-どこだっけって探しまわるのも面倒なので、やり方をメモしておきます。</p>
-
-<h3>方法1:dmesgコマンドを使用</h3>
-
-<hr />
-
-<p>出力された結果をgrepします。</p>
-
-<h5>SATAの場合</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$dmesg | grep sd</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>USB,PATAの場合</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$dmesg |grep hd</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>方法2:dfコマンドを使用</h3>
-
-<hr />
-
-<p>自動マウントとかされている場合なんかだとこっちを使う</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$df</span></code></pre></td></tr></table></div></figure>
-
-
-<p>結果を見れば、どのディスクがありどんなパーティションがあるか一目瞭然です。</p>
-
-<h3>方法3:/dev配下の内容+fdiskコマンドを使用</h3>
-
-<hr />
-
-<p>接続中のデバイスを知るには、lsコマンドで/dev配下を知ります。<br/>
-以下の表のような感じになります。実際の割り当ては、OSやディストリに依存</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">パス</th>
-<th align="left">意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">/dev/hda</td>
-<td align="left">IDEプライマリー(USB)のマスターディスク(hd以降は何が割り当てられるかはOS依存)</td>
-</tr>
-<tr>
-<td align="left">/dev/hda1</td>
-<td align="left">数字が付けば、パーティション</td>
-</tr>
-<tr>
-<td align="left">/dev/sda</td>
-<td align="left">SATAもしくはSCSI</td>
-</tr>
-<tr>
-<td align="left">/dev/sda1</td>
-<td align="left">SATAもしくはSCSIのパーティション</td>
-</tr>
-<tr>
-<td align="left">/dev/md0</td>
-<td align="left">ソフトウェアRAID</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>接続中のデバイスがわかれば、以下のコマンドで詳細情報を得ます</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$fdisk -l /dev/sda</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>方法4:/dev配下の内容+hdparmコマンドを使用</h3>
-
-<hr />
-
-<p>方法3と同じようにします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$hdparm -i /dev/sda</span></code></pre></td></tr></table></div></figure>
-
-
-<p>fdiskがデバイスの情報に特化したものに対して、こっちは制御情報だったりステータスまで出てきます。</p>
-
-<h3>余談</h3>
-
-<hr />
-
-<p>単純にUSBで接続したディスクであれば、lsusbコマンドを使えばよかったりします。<br/>
-ターゲットのディスクがわかれば、マウントも簡単になります。<br/>
-マウントポイント(自分で決めて、作成する)を「/mnt/hdd」とした場合、以下のコマンドでマウント可能</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mount /dev/sda1 /mnt/hdd</span></code></pre></td></tr></table></div></figure>
-
-
-<p>自分は、方法1と方法3をよく使います。</p>
 ]]></content>
   </entry>
   
