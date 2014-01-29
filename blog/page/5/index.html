@@ -9,9 +9,11 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="午前中と午後はモクモクとコード書いてました。。。
-XML周りの処理とかちょっとしたい感じだったので書いてみました。 「XMLの構造が分かっていたら、 Unmarshal関数を使ったほうがいいね。」 というのが感想です。
-真面目にDOMを用意してみるとかなりコード書かないといけないので辛い感じ。 &hellip;">
+  <meta name="description" content="Emacsのscratchバッファってすごく便利ですよね。 特に以下のことによく使います。 ちょっとしたメモしたり
+URLメモを取ったり
+ちょっとした引用メモの整形とか
+マクロの実験とか まぁよく使うわけです・・・
+が、ついうっかりでEmacsを終了したりとか、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +75,137 @@ XML周りの処理とかちょっとしたい感じだったので書いてみ�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/14/emacs-scratch-setting/">EmacsのScratchバッファに設定を追加してみた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-14T22:06:00+09:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Emacsのscratchバッファってすごく便利ですよね。</p>
+
+<p>特に以下のことによく使います。</p>
+
+<ul>
+<li>ちょっとしたメモしたり</li>
+<li>URLメモを取ったり</li>
+<li>ちょっとした引用メモの整形とか</li>
+<li>マクロの実験とか</li>
+</ul>
+
+
+<p>まぁよく使うわけです・・・
+が、ついうっかりでEmacsを終了したりとか、Emacs本体がゾンビプロセスになったりとかでロストしてしまうことがあります。<br/>
+自分はこれでよく泣きました(> &lt;;)</p>
+
+<p>また、メモを保存しておこうと思った時にバッファの先頭にある初期メッセージが鬱陶しくなってきます。</p>
+
+<p>今回は、これらの問題を解決してしまいます。</p>
+
+<p>まずは、scratchの初期メッセージ消去します。<br/>
+以下の内容を「.emacs/init.el」に追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq initial-scratch-message "")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この設定を加えて、Emacsを再起動するとscratchバッファの初期メッセージがなくなります。
+即座に反映したければ、評価してもいいとおもいます。</p>
+
+<p>次に、Emacsが終了してしまったときにScratchバッファの保存と再起動時にScratchバッファの内容を復元する方法ですが・・・</p>
+
+<p>以下の内容を「.emacs/init.el」に追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(defun save-scratch-data ()
+</span><span class='line'>  (let ((str (progn
+</span><span class='line'>               (set-buffer (get-buffer "*scratch*"))
+</span><span class='line'>               (buffer-substring-no-properties
+</span><span class='line'>                (point-min) (point-max))))
+</span><span class='line'>        (file "~/.emacs.d/backups/.scratch"))
+</span><span class='line'>    (if (get-file-buffer (expand-file-name file))
+</span><span class='line'>        (setq buf (get-file-buffer (expand-file-name file)))
+</span><span class='line'>      (setq buf (find-file-noselect file)))
+</span><span class='line'>    (set-buffer buf)
+</span><span class='line'>    (erase-buffer)
+</span><span class='line'>    (insert str)
+</span><span class='line'>    (save-buffer)
+</span><span class='line'>    (kill-buffer buf)))
+</span><span class='line'>
+</span><span class='line'>(defadvice save-buffers-kill-emacs
+</span><span class='line'>  (before save-scratch-buffer activate)
+</span><span class='line'>  (save-scratch-data))
+</span><span class='line'>
+</span><span class='line'>(defun read-scratch-data ()
+</span><span class='line'>  (let ((file "~/.emacs.d/backups/.scratch"))
+</span><span class='line'>    (when (file-exists-p file)
+</span><span class='line'>      (set-buffer (get-buffer "*scratch*"))
+</span><span class='line'>      (erase-buffer)
+</span><span class='line'>      (insert-file-contents file))
+</span><span class='line'>    ))
+</span><span class='line'>
+</span><span class='line'>(read-scratch-data)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上のEmacsLispが何をやっているかと言うと・・・<br/>
+終了時にScratchの内容をファイルに書き込み、起動時に書き出したScratchバッファの内容を読み込みしているだけです。</p>
+
+<p>これで、Scratchバッファをちょっとしたメモ帳として大いに活用できますね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1252,59 +1385,6 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/25/java-map-iterator/">JavaのHashmapを使ったiteratorの実装</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-25T18:29:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>偶に忘れるのでメモしておきます。<br/>
-iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Map map = new HashMap();
-</span><span class='line'>for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
-</span><span class='line'>    Map.Entry entry = (Map.Entry)it.next();
-</span><span class='line'>    Object key = entry.getKey();
-</span><span class='line'>    Object value = entry.getValue();
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Javaを書かなくなると忘れてしまいますねw</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1326,6 +1406,10 @@ iterationは忘れたらダメだと思いつつも、偶にアレなんだっ�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/30/build-volley/">Volleyをビルドする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/18/shell-gitkeep/">gitkeepを作成、及び削除をするshellを作った</a>
       </li>
     
@@ -1341,15 +1425,11 @@ iterationは忘れたらダメだと思いつつも、偶にアレなんだっ�
         <a href="/blog/2014/01/02/write-android-rom/">Android端末のROM焼きをやってみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/01/01/find-delete/">findのexecオプションとxargsコマンドについて</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.66666666666667%'>Android(4)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(3)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 133.33333333333334%'>Android(5)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(3)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
 </section
 
 

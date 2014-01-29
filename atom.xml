@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-01-18T00:34:01+09:00</updated>
+  <updated>2014-01-30T00:55:57+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,95 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Volleyをビルドする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/01/30/build-volley/"/>
+    <updated>2014-01-30T00:36:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/01/30/build-volley</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>とある作業でAndroidの通信用ライブラリ「Volley」を使いたくなりました。<br/>
+が、毎回使うたびにeclipseでーとかやりたくないわけです。<br/>
+なので一度ビルドしてしまい、ライブラリ化してしまおうという魂胆です。</p>
+
+<p># 毎回、ビルドどうやるんだっけな？ってAnt Task見たりするのも面倒というオチもあったりw</p>
+
+<h3>ビルド前準備</h3>
+
+<hr />
+
+<p>Volleyにはビルド用のファイルとして、以下の2つがついています</p>
+
+<ul>
+<li>Ant</li>
+<li>Gradle</li>
+</ul>
+
+
+<p>ですが、Gradleでビルドしようとした場合、エラーになります。<br/>
+タスク一覧も見れませんでしたw</p>
+
+<p>という訳でしたのでAntでやります。</p>
+
+<p>その前に、VolleyはAndroid4.0がベースで作られているようなので、Android4.0のライブラリをインストールしておきます。</p>
+
+<h3>ビルド</h3>
+
+<hr />
+
+<p>以下のコマンドでビルドします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ant jar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>成功すれば、「volley/bin/volley.jar」というファイルが出来てます。</p>
+
+<h3>バージョン管理とか</h3>
+
+<hr />
+
+<p>ここからは完全に余談なのですが・・・</p>
+
+<p>こういうライブラリを使う場合だと、バージョンが重要だったりしてきます。</p>
+
+<p>では、どうすればいいかということなのですが、自分としてはgit submoduleを使うことをオススメします。</p>
+
+<p>こうすることで、本体コード(volleyを使う側)のバージョンアップに合わせて、都度volleyのバージョンアップを図ればいいことになります。</p>
+
+<p>こんな感じのディレクトリ構成とし、Volleyは都度上記コマンドでビルドする運用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Android
+</span><span class='line'>  |
+</span><span class='line'>  |- MainProject(自分が作成するアプリ)
+</span><span class='line'>  |
+</span><span class='line'>  |- Volley</span></code></pre></td></tr></table></div></figure>
+
+
+<p>git submoduleのコマンドは以下です。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule add https://android.googlesource.com/platform/frameworks/volley Volley</span></code></pre></td></tr></table></div></figure>
+
+
+<p>submodule化したものを更新する場合は、以下のコマンドです<br/>
+# 初回の場合は、updateではなくinitをしてsubmodule化したファイル類を取得する必要があります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule update</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[gitkeepを作成、及び削除をするshellを作った]]></title>
@@ -3287,32 +3376,6 @@ RubyやGoとかが好きです。<br/>
 <p>これで、「You&#8217;ve successfully authenticated」が出れば成功です。</p>
 
 <p>以上で複数の鍵を管理できますね。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Macのディレクトリ名を英語化する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/08/22/mac-dir/"/>
-    <updated>2013-08-22T00:09:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/08/22/mac-dir</id>
-    <content type="html"><![CDATA[<p>色々不便なのでやりました。<br/>
-理由は、「ソートや補完とかが辛い」です。</p>
-
-<p>英語化対象は、デフォルトで日本語化されているディレクトリです。<br/>
-(「デスクトップ」という名前のディレクトリなど)</p>
-
-<p>以下のコマンドを実行すれば、ディレクトリ名が英語化します。
-やっていることは単純で、再帰的に権限維持したまま対訳表があるディレクトリをコピーです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd /System/Library/CoreServices/SystemFolderLocalizations/
-</span><span class='line'>$ sudo mv Japanese.lproj Japanese.lproj.bak
-</span><span class='line'>$ sudo cp -pr en.lproj Japanese.lproj</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで英語化されるね。。。</p>
 ]]></content>
   </entry>
   

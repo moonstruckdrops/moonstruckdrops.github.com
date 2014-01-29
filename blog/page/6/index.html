@@ -9,10 +9,15 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。
-とりあえず、aospのmasterで構築してみます。 環境 Ubuntu12.04 x86_64
-GNU Global 6.2.8
-Apache2 GNU Globalのバージョンは、 &hellip;">
+  <meta name="description" content="偶に忘れるのでメモしておきます。
+iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。 1
+2
+3
+4
+5
+6
+Map map = new HashMap();
+for (Iterator it = map.entrySet().iterator(); it. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +79,59 @@ Apache2 GNU Globalのバージョンは、 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/25/java-map-iterator/">JavaのHashmapを使ったiteratorの実装</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-25T18:29:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>偶に忘れるのでメモしておきます。<br/>
+iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Map map = new HashMap();
+</span><span class='line'>for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
+</span><span class='line'>    Map.Entry entry = (Map.Entry)it.next();
+</span><span class='line'>    Object key = entry.getKey();
+</span><span class='line'>    Object value = entry.getValue();
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Javaを書かなくなると忘れてしまいますねw</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1074,6 +1132,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/30/build-volley/">Volleyをビルドする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/18/shell-gitkeep/">gitkeepを作成、及び削除をするshellを作った</a>
       </li>
     
@@ -1089,15 +1151,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2014/01/02/write-android-rom/">Android端末のROM焼きをやってみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/01/01/find-delete/">findのexecオプションとxargsコマンドについて</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.66666666666667%'>Android(4)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(3)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 133.33333333333334%'>Android(5)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(3)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
 </section
 
 

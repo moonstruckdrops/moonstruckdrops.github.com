@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-01-18T00:34:01+09:00</updated>
+  <updated>2014-01-30T00:55:57+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,86 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Volleyをビルドする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/01/30/build-volley/"/>
+    <updated>2014-01-30T00:36:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/01/30/build-volley</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>とある作業でAndroidの通信用ライブラリ「Volley」を使いたくなりました。<br/>
+が、毎回使うたびにeclipseでーとかやりたくないわけです。<br/>
+なので一度ビルドしてしまい、ライブラリ化してしまおうという魂胆です。</p>
+
+<p># 毎回、ビルドどうやるんだっけな？ってAnt Task見たりするのも面倒というオチもあったりw</p>
+
+<h3>ビルド前準備</h3>
+
+<hr />
+
+<p>Volleyにはビルド用のファイルとして、以下の2つがついています</p>
+
+<ul>
+<li>Ant</li>
+<li>Gradle</li>
+</ul>
+
+
+<p>ですが、Gradleでビルドしようとした場合、エラーになります。<br/>
+タスク一覧も見れませんでしたw</p>
+
+<p>という訳でしたのでAntでやります。</p>
+
+<p>その前に、VolleyはAndroid4.0がベースで作られているようなので、Android4.0のライブラリをインストールしておきます。</p>
+
+<h3>ビルド</h3>
+
+<hr />
+
+<p>以下のコマンドでビルドします。</p>
+
+<p><code>
+$ant jar
+</code></p>
+
+<p>成功すれば、「volley/bin/volley.jar」というファイルが出来てます。</p>
+
+<h3>バージョン管理とか</h3>
+
+<hr />
+
+<p>ここからは完全に余談なのですが・・・</p>
+
+<p>こういうライブラリを使う場合だと、バージョンが重要だったりしてきます。</p>
+
+<p>では、どうすればいいかということなのですが、自分としてはgit submoduleを使うことをオススメします。</p>
+
+<p>こうすることで、本体コード(volleyを使う側)のバージョンアップに合わせて、都度volleyのバージョンアップを図ればいいことになります。</p>
+
+<p>こんな感じのディレクトリ構成とし、Volleyは都度上記コマンドでビルドする運用</p>
+
+<p><code>
+Android
+  |
+  |- MainProject(自分が作成するアプリ)
+  |
+  |- Volley
+</code></p>
+
+<p>git submoduleのコマンドは以下です。
+<code>
+$git submodule add https://android.googlesource.com/platform/frameworks/volley Volley
+</code>
+submodule化したものを更新する場合は、以下のコマンドです<br/>
+# 初回の場合は、updateではなくinitをしてsubmodule化したファイル類を取得する必要があります
+<code>
+$git submodule update
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Android端末のROM焼きをやってみる]]></title>

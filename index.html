@@ -9,12 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 以下のようなディレクトリ構成のときに.gitkeepを作りたかったのです。 1
-2
-3
-4
-└── test ├── test1 │   └── test2 └── test3 ですが、これを手で一つ一つ用意するのは非常に面倒なわけでして・・・
-ついカッとなって用意しました。 # &hellip;">
+  <meta name="description" content="はじめに とある作業でAndroidの通信用ライブラリ「Volley」を使いたくなりました。
+が、毎回使うたびにeclipseでーとかやりたくないわけです。
+なので一度ビルドしてしまい、ライブラリ化してしまおうという魂胆です。 # 毎回、ビルドどうやるんだっけな？ってAnt &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +73,122 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/30/build-volley/">Volleyをビルドする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-30T00:36:00+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>とある作業でAndroidの通信用ライブラリ「Volley」を使いたくなりました。<br/>
+が、毎回使うたびにeclipseでーとかやりたくないわけです。<br/>
+なので一度ビルドしてしまい、ライブラリ化してしまおうという魂胆です。</p>
+
+<p># 毎回、ビルドどうやるんだっけな？ってAnt Task見たりするのも面倒というオチもあったりw</p>
+
+<h3>ビルド前準備</h3>
+
+<hr />
+
+<p>Volleyにはビルド用のファイルとして、以下の2つがついています</p>
+
+<ul>
+<li>Ant</li>
+<li>Gradle</li>
+</ul>
+
+
+<p>ですが、Gradleでビルドしようとした場合、エラーになります。<br/>
+タスク一覧も見れませんでしたw</p>
+
+<p>という訳でしたのでAntでやります。</p>
+
+<p>その前に、VolleyはAndroid4.0がベースで作られているようなので、Android4.0のライブラリをインストールしておきます。</p>
+
+<h3>ビルド</h3>
+
+<hr />
+
+<p>以下のコマンドでビルドします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ant jar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>成功すれば、「volley/bin/volley.jar」というファイルが出来てます。</p>
+
+<h3>バージョン管理とか</h3>
+
+<hr />
+
+<p>ここからは完全に余談なのですが・・・</p>
+
+<p>こういうライブラリを使う場合だと、バージョンが重要だったりしてきます。</p>
+
+<p>では、どうすればいいかということなのですが、自分としてはgit submoduleを使うことをオススメします。</p>
+
+<p>こうすることで、本体コード(volleyを使う側)のバージョンアップに合わせて、都度volleyのバージョンアップを図ればいいことになります。</p>
+
+<p>こんな感じのディレクトリ構成とし、Volleyは都度上記コマンドでビルドする運用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Android
+</span><span class='line'>  |
+</span><span class='line'>  |- MainProject(自分が作成するアプリ)
+</span><span class='line'>  |
+</span><span class='line'>  |- Volley</span></code></pre></td></tr></table></div></figure>
+
+
+<p>git submoduleのコマンドは以下です。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule add https://android.googlesource.com/platform/frameworks/volley Volley</span></code></pre></td></tr></table></div></figure>
+
+
+<p>submodule化したものを更新する場合は、以下のコマンドです<br/>
+# 初回の場合は、updateではなくinitをしてsubmodule化したファイル類を取得する必要があります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule update</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1840,210 +1953,6 @@ ActiveRecordと殆ど同じですね。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/29/timecapsule-mac-linux/">Time Capsule(NAS)をMacとLinuxの両方から使えるようにする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-11-29T00:18:00+09:00" pubdate data-updated="true">Nov 29<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>糞お高いNASを買ってしまいました・・・<br/>
-というか、買わざるを得ませんでしたorz</p>
-
-<p>とりあえず、こんな理由で選定</p>
-
-<ul>
-<li>自宅の外付けHDDが故障気味</li>
-<li>Macも自動でバックアップ取っておきたい</li>
-</ul>
-
-
-<p>勿論、QNAPでも良かったのですが、以下の理由で諦め</p>
-
-<ul>
-<li>HDDが別売とかでお高い(故障交換ができるのは強みですが・・・)</li>
-<li>サイズが大きい</li>
-<li>ルーター機能までついてるので省スペース</li>
-</ul>
-
-
-<p>で、バックアップだけではもったいないため、
-よく使うOSで表題のようにNAS利用を使用と思いました。</p>
-
-<h3>やってみる</h3>
-
-<hr />
-
-<p>やるまでに結構苦労しました。<br/>
-そもそも、どうやって手をつけるのか若干悩みましたw</p>
-
-<h5>障壁</h5>
-
-<hr />
-
-<p>Mac側(よしなにやってくれるが故の問題)</p>
-
-<ul>
-<li>GUI操作で自動的にマウントされる</li>
-<li>自動的にマウントされるが故に何処にマウントされたか不明</li>
-<li>マウント先不明の為、コマンドでlsとかcd実行できない</li>
-</ul>
-
-
-<p>Linux側</p>
-
-<ul>
-<li>使用プロトコルが分からない</li>
-<li>マウントするためのファイルシステムは？？？</li>
-<li>そもそもマウント先のIPとかディレクトリが不明</li>
-</ul>
-
-
-<h5>解決編</h5>
-
-<hr />
-
-<p>AirMacユーティリティをGUI操作して、以下を設定</p>
-
-<ul>
-<li>ファイル共有にチェック</li>
-<li>共有ディスクのセキュリティをアカウントに変更(デフォルトはディスクパスワード)</li>
-</ul>
-
-
-<p>他の項目は、すぐにわかりました</p>
-
-<ul>
-<li>IPはすぐに発覚(GW + 末尾に数字の1追加)</li>
-<li>プロトコルはafpもGUI操作時の情報で発覚</li>
-</ul>
-
-
-<p>Mac側は、afpをマウントする際のコマンド(mount_afp)を参照することでわかりました</p>
-
-<p>以下のコマンドを実行するとよいようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mount -t afp afp://YOUR_USERNAME:YOUR_PASSWORD@&lt;TimeCapsuleのIP&gt;/Data &lt;マウント先ディレクトリ</span></code></pre></td></tr></table></div></figure>
-
-
-<p>umountコマンドで普通に実行できます。</p>
-
-<p>Mac側が判明したので、Linux側もほぼ同じようにしてできました。
-但し、ファイルシステムを「cifs」に設定することやディスクの指定方法が異なりました。</p>
-
-<p>以下のようにすればできます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mount -t cifs -o user="YOUR_USERNAME",password="YOUR_PASSWORD" //&lt;TimeCapsuleのIP&gt; &lt;マウント先ディレクトリ&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>シェル化</h3>
-
-<hr />
-
-<p>一々、上記の内容を手打ちするのは面倒なので、シェル化しました。</p>
-
-<p>こんなことをします。</p>
-
-<ol>
-<li>マウント先のディレクトリをチェック</li>
-<li>ディレクトリがなければ作成</li>
-<li>ディレクトリにマウント実行</li>
-</ol>
-
-
-<p>以下の環境で動作確認しています。</p>
-
-<ul>
-<li>MacOSX 10.8.5</li>
-<li>CentOS6.4 x86_64</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/sh
-</span><span class='line'>
-</span><span class='line'># TimeCapsuleの共有ディスクをアカウント認証にしておくこと
-</span><span class='line'>USER="YOUR_USER_NAME"
-</span><span class='line'>PASSWORD="YOUR_PASSWORD"
-</span><span class='line'>MAC_DIRECTORY="/Volumes/timecapsule"
-</span><span class='line'>LINUX_DIRECTORY="/mnt/timecapsule"
-</span><span class='line'>TC_DIRECTORY="YOUR_TIMECAPSULE_DIRECTORY"
-</span><span class='line'>
-</span><span class='line'>if [ `echo "${OSTYPE}" |grep "linux*"` ]&&[ ! -d "$LINUX_DIRECTORY" ]; then
-</span><span class='line'>    mkdir -p "$LINUX_DIRECTORY"
-</span><span class='line'>elif [ ! -d "$MAC_DIRECTORY" ]; then
-</span><span class='line'>    mkdir -p "$MAC_DIRECTORY"
-</span><span class='line'>fi
-</span><span class='line'>
-</span><span class='line'>if [ `echo "${OSTYPE}" |grep "linux*"` ]; then
-</span><span class='line'>    # for Linux
-</span><span class='line'>    # use cifs-utils(RedHat)
-</span><span class='line'>    mount -t cifs -o user="$USER",password="$PASSWORD" //"$TC_DIRECTORY" "$LINUX_DIRECTORY"
-</span><span class='line'>else
-</span><span class='line'>    # for Mac
-</span><span class='line'>    # ユーザ:パスワード@TimeCapusleのIPアドレス
-</span><span class='line'>    mount -t afp afp://"$USER":"$PASSWORD"@"$TC_DIRECTORY" "$MAC_DIRECTORY"
-</span><span class='line'>fi</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2063,6 +1972,10 @@ ActiveRecordと殆ど同じですね。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/30/build-volley/">Volleyをビルドする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/01/18/shell-gitkeep/">gitkeepを作成、及び削除をするshellを作った</a>
       </li>
     
@@ -2078,15 +1991,11 @@ ActiveRecordと殆ど同じですね。</p>
         <a href="/blog/2014/01/02/write-android-rom/">Android端末のROM焼きをやってみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/01/01/find-delete/">findのexecオプションとxargsコマンドについて</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.66666666666667%'>Android(4)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(3)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 133.33333333333334%'>Android(5)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(3)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 126.66666666666667%'>Java(4)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
 </section
 
 
