@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Ruby - kurobaraのブログ</title>
+  <title>Logbackで動的にログの出力先を変更する - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Category: Ruby">
+  <meta name="description" content="はじめに といっても大したことではなく、「同僚にできないの？」って質問されたことが発端です。 やったこと無かったけど、気になったので調べてみることにしました。 業務要件的にも、以下のことはありそうな感じかなーとは思いましたがｗ あるログはデフォルトの出力先に
+致命的なエラーは、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.comblog/categories/ruby/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/02/15/logback-synamic-log/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -70,147 +71,150 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Ruby</h1>
+    
+      <h1 class="entry-title">Logbackで動的にログの出力先を変更する</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-15T21:42:00+09:00" pubdate data-updated="true">Feb 15<span>th</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><h3>はじめに</h3>
 
-  
-  <h2>2013</h2>
+<hr />
 
-<article>
-  
-<h1><a href="/blog/2013/11/25/ar-bulk-insert/">Rails(ActiveRecord)でBULK INSERTする方法</a></h1>
-<time datetime="2013-11-25T00:12:00+09:00" pubdate><span class='month'>Nov</span> <span class='day'>25</span> <span class='year'>2013</span></time>
+<p>といっても大したことではなく、「同僚にできないの？」って質問されたことが発端です。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
+<p>やったこと無かったけど、気になったので調べてみることにしました。</p>
 
+<p>業務要件的にも、以下のことはありそうな感じかなーとは思いましたがｗ</p>
 
-</article>
-
+<ul>
+<li>あるログはデフォルトの出力先に</li>
+<li>致命的なエラーは、ログの出力方法はそのままで別の出力先に</li>
+</ul>
 
 
-<article>
-  
-<h1><a href="/blog/2013/11/19/ar-memo-2/">ActiveRecordメモ その2</a></h1>
-<time datetime="2013-11-19T00:13:00+09:00" pubdate><span class='month'>Nov</span> <span class='day'>19</span> <span class='year'>2013</span></time>
+<h3>やり方</h3>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
+<hr />
 
+<p>割りと簡単に出来ました</p>
 
-</article>
+<p>手順としてはこんな感じ・・・</p>
 
-
-
-<article>
-  
-<h1><a href="/blog/2013/11/12/ar-memo/">ActiveRecordメモ</a></h1>
-<time datetime="2013-11-12T00:20:00+09:00" pubdate><span class='month'>Nov</span> <span class='day'>12</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
+<ol>
+<li>Loggerを取得する</li>
+<li>Loggerから変更対象の設定名でAppenderを取得する</li>
+<li>AppenderをFileAppenderにキャストする(コレがミソ)</li>
+<li>ログ出力を一時停止する</li>
+<li>setFileメソッドで出力先ファイルを変更する</li>
+<li>ログ出力を再開する</li>
+</ol>
 
 
-</article>
+<p>コードにするとこんな感じかな(loggerの取得方法は色々変りそうだけど・・・)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Logger logger = LoggerFactory.getLogger(LogbackLogging.class);
+</span><span class='line'>FileAppender&lt;ILoggingEvent&gt; fileAppender = (FileAppender&lt;ILoggingEvent&gt;) logbackLogger.getAppender("FILE");
+</span><span class='line'>fileAppender.stop();
+</span><span class='line'>fileAppender.setFile("your_new_log_file");
+</span><span class='line'>fileAppender.start();</span></code></pre></td></tr></table></div></figure>
 
 
+<p>実は、以下の２つのことで気が付きましたw</p>
 
-<article>
-  
-<h1><a href="/blog/2013/07/25/ruby-accessor/">Rubyでアクセス用のメソッドを定義する(アクセッサ)</a></h1>
-<time datetime="2013-07-25T20:56:00+09:00" pubdate><span class='month'>Jul</span> <span class='day'>25</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
+<ul>
+<li><a href="http://logback.qos.ch/apidocs/index.html">javadoc</a>(Appender<E>を実装してる)</li>
+<li>getAppenderメソッドの戻り値(Appender<E>が返される)</li>
+</ul>
 
 
-</article>
+<h3>感想</h3>
 
+<hr />
 
+<p>割りと簡単にできるんですねw</p>
 
-<article>
-  
-<h1><a href="/blog/2013/07/25/ruby-singleton/">RubyでSingletonパターンを実装する</a></h1>
-<time datetime="2013-07-25T18:33:00+09:00" pubdate><span class='month'>Jul</span> <span class='day'>25</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/07/02/ruby-struct/">RubyのStructクラスが便利</a></h1>
-<time datetime="2013-07-02T01:15:00+09:00" pubdate><span class='month'>Jul</span> <span class='day'>02</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/06/08/use-rubymine/">Rubymineを使ってみる</a></h1>
-<time datetime="2013-06-08T17:26:00+09:00" pubdate><span class='month'>Jun</span> <span class='day'>08</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/04/06/ranyo-rb/">万葉.rbに参加してきました。#everyrb</a></h1>
-<time datetime="2013-04-06T13:01:00+09:00" pubdate><span class='month'>Apr</span> <span class='day'>06</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/03/28/ruby-web-file/">Rubyで画像ファイルをダウンロードする</a></h1>
-<time datetime="2013-03-28T23:34:00+09:00" pubdate><span class='month'>Mar</span> <span class='day'>28</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/ruby/'>Ruby</a></span>
-</footer>
-
-
-</article>
-
+<p>後はこの処理をラップしたようなクラス&amp;静的メソッドを作ると汎用的に使えていいのではないだろうか。。。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-15T21:42:00+09:00" pubdate data-updated="true">Feb 15<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>Java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/02/15/logback-synamic-log/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/02/15/logback-synamic-log/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/01/30/build-volley/" title="Previous Post: Volleyをビルドする">&laquo; Volleyをビルドする</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

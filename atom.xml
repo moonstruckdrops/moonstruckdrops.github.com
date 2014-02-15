@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-01-30T00:55:57+09:00</updated>
+  <updated>2014-02-15T22:01:22+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,77 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Logbackで動的にログの出力先を変更する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/02/15/logback-synamic-log/"/>
+    <updated>2014-02-15T21:42:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/02/15/logback-synamic-log</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>といっても大したことではなく、「同僚にできないの？」って質問されたことが発端です。</p>
+
+<p>やったこと無かったけど、気になったので調べてみることにしました。</p>
+
+<p>業務要件的にも、以下のことはありそうな感じかなーとは思いましたがｗ</p>
+
+<ul>
+<li>あるログはデフォルトの出力先に</li>
+<li>致命的なエラーは、ログの出力方法はそのままで別の出力先に</li>
+</ul>
+
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>割りと簡単に出来ました</p>
+
+<p>手順としてはこんな感じ・・・</p>
+
+<ol>
+<li>Loggerを取得する</li>
+<li>Loggerから変更対象の設定名でAppenderを取得する</li>
+<li>AppenderをFileAppenderにキャストする(コレがミソ)</li>
+<li>ログ出力を一時停止する</li>
+<li>setFileメソッドで出力先ファイルを変更する</li>
+<li>ログ出力を再開する</li>
+</ol>
+
+
+<p>コードにするとこんな感じかな(loggerの取得方法は色々変りそうだけど・・・)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Logger logger = LoggerFactory.getLogger(LogbackLogging.class);
+</span><span class='line'>FileAppender&lt;ILoggingEvent&gt; fileAppender = (FileAppender&lt;ILoggingEvent&gt;) logbackLogger.getAppender("FILE");
+</span><span class='line'>fileAppender.stop();
+</span><span class='line'>fileAppender.setFile("your_new_log_file");
+</span><span class='line'>fileAppender.start();</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実は、以下の２つのことで気が付きましたw</p>
+
+<ul>
+<li><a href="http://logback.qos.ch/apidocs/index.html">javadoc</a>(Appender<E>を実装してる)</li>
+<li>getAppenderメソッドの戻り値(Appender<E>が返される)</li>
+</ul>
+
+
+<h3>感想</h3>
+
+<hr />
+
+<p>割りと簡単にできるんですねw</p>
+
+<p>後はこの処理をラップしたようなクラス&amp;静的メソッドを作ると汎用的に使えていいのではないだろうか。。。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Volleyをビルドする]]></title>
@@ -3252,130 +3323,6 @@ RubyやGoとかが好きです。<br/>
 
 <p>神保町でお安くOreiiy本(入門bash)をゲットしたので<br/>
 ちょっと気になることとかやってるうちに小ネタが出ましたw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SSHで複数の鍵を管理する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/08/22/ssh-config-setting/"/>
-    <updated>2013-08-22T21:29:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/08/22/ssh-config-setting</id>
-    <content type="html"><![CDATA[<p>SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
-ホスト毎の設定は「~/.ssh/config」で設定できます。</p>
-
-<h3>管理方法</h3>
-
-<hr />
-
-<p>以下の方法で管理します。</p>
-
-<ul>
-<li>鍵毎にprefixやsuffixをつける</li>
-<li>sshのconfigにホスト毎に設定をつける</li>
-</ul>
-
-
-<p>因みに、鍵がわかれば鍵ファイル名はなんでもいいです。</p>
-
-<h3>configの記載</h3>
-
-<hr />
-
-<p>以下のような形で記載します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Host github.com
-</span><span class='line'>    HostName        github.com
-</span><span class='line'>    IdentityFile    ~/.ssh/github_id_rsa
-</span><span class='line'>    User            git
-</span><span class='line'>    TCPKeepAlive    yes
-</span><span class='line'>    IdentitiesOnly  yes
-</span><span class='line'>Host hogehoge
-</span><span class='line'>    HostName        hogehoge
-</span><span class='line'>    Port            12345
-</span><span class='line'>    IdentityFile    ~/.ssh/hogehoge_id_rsa
-</span><span class='line'>    User            hogehoge
-</span><span class='line'>    Protocol        2</span></code></pre></td></tr></table></div></figure>
-
-
-<p>各項目は以下の内容を設定しています。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">設定項目</th>
-<th align="left">設定値</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">Host</td>
-<td align="left">次のHostキーワードが現れるまでの項目が１つの設定項目にする</td>
-</tr>
-<tr>
-<td align="left">HostName</td>
-<td align="left">ログイン先のホスト名</td>
-</tr>
-<tr>
-<td align="left">IdentityFile</td>
-<td align="left">SSHの鍵ファイル</td>
-</tr>
-<tr>
-<td align="left">User</td>
-<td align="left">ログインするユーザー名</td>
-</tr>
-<tr>
-<td align="left">TCPKeepAlive</td>
-<td align="left">持続的接続</td>
-</tr>
-<tr>
-<td align="left">IdentitiesOnly</td>
-<td align="left">IdentityFileを利用する場合に設定する</td>
-</tr>
-<tr>
-<td align="left">Port</td>
-<td align="left">ポート番号</td>
-</tr>
-<tr>
-<td align="left">Protocol</td>
-<td align="left">SSHのプロトコル指定</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>githubへのログインの場合は、上記の内容を記載します。</p>
-
-<h3>接続確認</h3>
-
-<hr />
-
-<p>以下のコマンドで確認します</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T &lt;Host&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>例えば、上記のconfigに設定したgithubへのアクセスは以下で確認します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T github.com</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで、「You&#8217;ve successfully authenticated」が出れば成功です。</p>
-
-<p>以上で複数の鍵を管理できますね。</p>
 ]]></content>
   </entry>
   
