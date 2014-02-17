@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-02-15T22:01:22+09:00</updated>
+  <updated>2014-02-18T02:05:08+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,76 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[マージが起きたらさっさと解消しようという教訓]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo/"/>
+    <updated>2014-02-18T02:00:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>Gitを使って開発してるのですが・・・</p>
+
+<p>複数人で1つのプロダクト開発を行ってたらコンフリクトは起こることはよく有ります</p>
+
+<p>俗に言うマージコンフリクトですね</p>
+
+<p>今回はそんなマージコンフリクトで起こった事を備忘録的に残します</p>
+
+<h3>まず結論・・・</h3>
+
+<hr />
+
+<p>気づいた時点(Github,gitlab,stashとか)で、さっさとコンフリクトは解消しましょう</p>
+
+<p>後にまとめて行うのは、無謀もいいとこです</p>
+
+<p>1つ2つのコミット差分ならまだしも<br/>
+10個のコミットが積み上げられ、かつその大半がコンフリクト起こすような状況だと直すのに苦労します</p>
+
+<p># 解消に1時間かかりましたorz</p>
+
+<p>なので、さっさと直してしまいましょう(他人の書いたコードまでは責任取れないよw)</p>
+
+<h3>コンフリクト解消時に起こったこと</h3>
+
+<hr />
+
+<p>上記のことだけなら、反省だけで次回からは行わないようにすればいいだけの話です</p>
+
+<p>ですが、コンフリクト解消時に奇妙なことが起こりました</p>
+
+<p>以下のような状態でmasterのコードをブランチにとりこんだ時(実際はもう少しコンフリクト解消することがありました)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(master) : (起点) - [コンフリクト有(1)] - [コンフリクト有(2)] - [コンフリクト有(3)] - [ファイル移動] - [コンフリクト有(4)] - [コンフリクト無]
+</span><span class='line'>              |  
+</span><span class='line'>(branch) :   [A] - [B] - [C]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンフリクト有(2)のコンフリクトを解消した瞬間に、ブランチの状態(merge/CONFLICT)だけでも、マージの継続をすることが出来なくなりました</p>
+
+<p>このコマンドだけが使えました</p>
+
+<ul>
+<li>continueは受け付け無い</li>
+<li>abortとskipは受け付ける</li>
+</ul>
+
+
+<p>そのため、一度abort→再マージをしたのですが・・・<br/>
+今度は、コンフリクト(3)で同じ現象。。。</p>
+
+<p>諦めてskipをしましたorz<br/>
+そうすると、マージが全てブランチに取り込まれました・・・(ファイル移動は取り込まれてないので別途実施)</p>
+
+<p>こういう恐ろしい事態(マージがうまくいかない)があったので、気をつけようねという自戒と対処結果のメモでしたw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Logbackで動的にログの出力先を変更する]]></title>
@@ -3277,52 +3347,6 @@ RubyやGoとかが好きです。<br/>
 
 <p>最後になりましたが関係者の皆様､<br/>
 今まで本当にありがとうございました｡</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iTerm2のMetaキーを変更する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key/"/>
-    <updated>2013-08-25T13:11:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>MetaキーはEmacsライクのように使いたい人です。<br/>
-変更と書けば物凄く大げさな内容です。</p>
-
-<h3>変更方法</h3>
-
-<hr />
-
-<p>iTerm2の環境設定で変更します。</p>
-
-<ol>
-<li>Profiles</li>
-<li>Left option key acts asで+Escを選択</li>
-<li>Right option key acts asで+Escを選択</li>
-<li>閉じる</li>
-</ol>
-
-
-<p>これだけ。<br/>
-これで、optionキーがMetaキーとして動作します。</p>
-
-<h3>他の方法は？</h3>
-
-<hr />
-
-<p>方法としては幾らでもあって思いつくだけでもこんだけですね。</p>
-
-<ol>
-<li>Keyremap4macbookを使って変更する</li>
-<li>inputrcファイルを作成する</li>
-</ol>
-
-
-<p>神保町でお安くOreiiy本(入門bash)をゲットしたので<br/>
-ちょっと気になることとかやってるうちに小ネタが出ましたw</p>
 ]]></content>
   </entry>
   
