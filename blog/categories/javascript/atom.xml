@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: JavaScript | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2014-02-21T00:43:47+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[JavaScriptのproxyでハマったこと]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/02/21/forget-js/"/>
+    <updated>2014-02-21T00:26:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/02/21/forget-js</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>JavaScriptを書いてる訳ですが・・・<br/>
+久しぶりに書いて、初歩的なことでアレ？ってなったので備忘録的にメモしておきます</p>
+
+<h3>thisを自由に変更できるproxy関数を使う</h3>
+
+<hr />
+
+<p>大体、以下のような感じで、関数とコンテキスト(thisに設定するオブジェクト)を指定するわけです。</p>
+
+<p>ですが、以下２つのコードで嵌まりました。</p>
+
+<p>```
+var obj = {</p>
+
+<pre><code>doSomething : function() {
+    alert('test');
+}
+</code></pre>
+
+<p>};
+$('button#hoge').click($.proxy(obj.doSomething(), obj));
+```</p>
+
+<p>```
+var obj = {</p>
+
+<pre><code>doSomething : function() {
+    alert('test');
+}
+</code></pre>
+
+<p>};
+$('button#hoge').click($.proxy(obj.doSomething, obj));
+```</p>
+
+<p>一見、違いがなさそうなのですが・・・<br/>
+実は、実行タイミングに違いがあります 。<br/>
+一番、上の例だとイベント登録時に実行してしまいますが、<br/>
+下のものはイベント実行時に正しく実行してくれます。</p>
+
+<p>こんな、しょうもないことで詰まりましたw</p>
+
+<h3>即時関数</h3>
+
+<hr />
+
+<p>グローバルに変数割り当てなくてお得な感じ<br/>
+あと、アレですね使い捨てできる(ぉぃ</p>
+
+<p><code>
+(function() {
+  alert('test');
+})();
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

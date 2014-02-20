@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Java - kurobaraのブログ</title>
+  <title>JavaScriptのproxyでハマったこと - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Category: Java">
+  <meta name="description" content="はじめに JavaScriptを書いてる訳ですが・・・
+久しぶりに書いて、初歩的なことでアレ？ってなったので備忘録的にメモしておきます thisを自由に変更できるproxy関数を使う 大体、以下のような感じで、関数とコンテキスト(thisに設定するオブジェクト)を指定するわけです。 ですが、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.comblog/categories/java/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/02/21/forget-js/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -70,94 +71,153 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Java</h1>
+    
+      <h1 class="entry-title">JavaScriptのproxyでハマったこと</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-21T00:26:00+09:00" pubdate data-updated="true">Feb 21<span>st</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
+
+
+<div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>JavaScriptを書いてる訳ですが・・・<br/>
+久しぶりに書いて、初歩的なことでアレ？ってなったので備忘録的にメモしておきます</p>
+
+<h3>thisを自由に変更できるproxy関数を使う</h3>
+
+<hr />
+
+<p>大体、以下のような感じで、関数とコンテキスト(thisに設定するオブジェクト)を指定するわけです。</p>
+
+<p>ですが、以下２つのコードで嵌まりました。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var obj = {
+</span><span class='line'>    doSomething : function() {
+</span><span class='line'>        alert('test');
+</span><span class='line'>    }
+</span><span class='line'>};
+</span><span class='line'>$('button#hoge').click($.proxy(obj.doSomething(), obj)); </span></code></pre></td></tr></table></div></figure>
 
 
 
-  
-  <h2>2014</h2>
 
-<article>
-  
-<h1><a href="/blog/2014/02/15/logback-synamic-log/">Logbackで動的にログの出力先を変更する</a></h1>
-<time datetime="2014-02-15T21:42:00+09:00" pubdate><span class='month'>Feb</span> <span class='day'>15</span> <span class='year'>2014</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/java/'>Java</a></span>
-</footer>
-
-
-</article>
-
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var obj = {
+</span><span class='line'>    doSomething : function() {
+</span><span class='line'>        alert('test');
+</span><span class='line'>    }
+</span><span class='line'>};
+</span><span class='line'>$('button#hoge').click($.proxy(obj.doSomething, obj)); </span></code></pre></td></tr></table></div></figure>
 
 
-  
-  <h2>2013</h2>
+<p>一見、違いがなさそうなのですが・・・<br/>
+実は、実行タイミングに違いがあります 。<br/>
+一番、上の例だとイベント登録時に実行してしまいますが、<br/>
+下のものはイベント実行時に正しく実行してくれます。</p>
 
-<article>
-  
-<h1><a href="/blog/2013/12/23/java-logging/">log4j 2を使った。おまけで他のloggingも用意した。</a></h1>
-<time datetime="2013-12-23T03:27:00+09:00" pubdate><span class='month'>Dec</span> <span class='day'>23</span> <span class='year'>2013</span></time>
+<p>こんな、しょうもないことで詰まりましたw</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/java/'>Java</a></span>
-</footer>
+<h3>即時関数</h3>
 
+<hr />
 
-</article>
+<p>グローバルに変数割り当てなくてお得な感じ<br/>
+あと、アレですね使い捨てできる(ぉぃ</p>
 
-
-
-<article>
-  
-<h1><a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a></h1>
-<time datetime="2013-06-27T19:28:00+09:00" pubdate><span class='month'>Jun</span> <span class='day'>27</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/java/'>Java</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/06/27/dependency-injection/">Dependency Injectionについて</a></h1>
-<time datetime="2013-06-27T19:28:00+09:00" pubdate><span class='month'>Jun</span> <span class='day'>27</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/java/'>Java</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/03/25/java-map-iterator/">JavaのHashmapを使ったiteratorの実装</a></h1>
-<time datetime="2013-03-25T18:29:00+09:00" pubdate><span class='month'>Mar</span> <span class='day'>25</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/java/'>Java</a></span>
-</footer>
-
-
-</article>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(function() {
+</span><span class='line'>  alert('test');
+</span><span class='line'>})();</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-21T00:26:00+09:00" pubdate data-updated="true">Feb 21<span>st</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/javascript/'>JavaScript</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/02/21/forget-js/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/02/21/forget-js/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/02/18/git-merge-conflict-memo/" title="Previous Post: マージが起きたらさっさと解消しようという教訓">&laquo; マージが起きたらさっさと解消しようという教訓</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

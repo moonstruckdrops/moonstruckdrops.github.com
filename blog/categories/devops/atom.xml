@@ -4,7 +4,7 @@
   <title><![CDATA[Category: DevOps | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/devops/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-02-18T02:05:20+09:00</updated>
+  <updated>2014-02-21T00:43:47+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -161,15 +161,15 @@ $openssl passwd -1
         "ssh_password":"vagrant",
         "ssh_port": 22,
         "shutdown_command": "shutdown -h now",
-        "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+        "guest_additions_path": "VBoxGuestAdditions_.iso",
         "virtualbox_version_file": ".vbox_version",
         "vboxmanage":[
-            ["modifyvm", "{{.Name}}", "--memory", "1024"],
-            ["modifyvm", "{{.Name}}", "--cpus", "2"]
+            ["modifyvm", "", "--memory", "1024"],
+            ["modifyvm", "", "--cpus", "2"]
         ],
         "http_directory": "./builders/",
         "boot_command": [
-            "&lt;tab&gt; text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg&lt;enter&gt;&lt;wait&gt;"
+            "&lt;tab&gt; text ks=http://:/ks.cfg&lt;enter&gt;&lt;wait&gt;"
         ]
     }
 ],
