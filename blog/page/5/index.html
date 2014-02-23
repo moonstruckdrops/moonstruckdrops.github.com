@@ -9,9 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="前置き 事の発端はある人と作業してたことから始まりました。。。
-というのも、自分が海外に行ってるいる間、作業をお願いしていました。 作業をお願いしていたのはいいのですが
-彼は普段使っていないGitを使ってみたかったようです。 今回は、そのとき伝えたことをネタにします。 &hellip;">
+  <meta name="description" content="そんなことがあったのでメモしておく。 どういうことかと ProjectStructureでSDKとか設定する訳なのだが・・・
+これ、MacだとSDKの場所をGUIで選べって方式なんですよね。 それはそれで便利だし楽でいいんだけども /usr/ディレクトリ配下にあるものは選択できない!! ( ﾟдﾟ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +72,86 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/29/intellij-select/">IntelliJ IDEAで/usrディレクトリ配下のものが選択できなかった</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-29T00:32:00+09:00" pubdate data-updated="true">May 29<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>そんなことがあったのでメモしておく。</p>
+
+<h3>どういうことかと</h3>
+
+<hr />
+
+<p>ProjectStructureでSDKとか設定する訳なのだが・・・<br/>
+これ、MacだとSDKの場所をGUIで選べって方式なんですよね。</p>
+
+<p>それはそれで便利だし楽でいいんだけども</p>
+
+<h4>/usr/ディレクトリ配下にあるものは選択できない!!</h4>
+
+<p>( ﾟдﾟ)</p>
+
+<p>Macの隠しディレクトリを表示する以下のコマンドを実行しても選択することが出来なかった。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$defaults write com.apple.finder AppleShowAllFiles -boolean true
+</span><span class='line'>$killall</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>結局どうしたか</h3>
+
+<hr />
+
+<p>ものすごく力技ですが・・・</p>
+
+<h4>ホームディレクトリから/usr/ディレクトリまでシンボリックリンク張っちゃいました</h4>
+
+<p>とりあえずこの方法で解決しました。<br/>
+あんまりよくないというのは理解していますが、しょうもないことに時間取られるのも嫌だったのでこうしました。<br/>
+うまい解決方法あったら教えて下さい。</p>
+
+<h3>正直なところ</h3>
+
+<hr />
+
+<p>そんなところにファイル置いてるほうが悪いのでは？と言われるかもしれないですが、SDKとかって「/usr/local」の下に入れたくなるじゃないですか。<br/>
+特にLinuxとか弄ってると</p>
+
+<p>ぶっちゃけ、IDEAが悪いわけではきっとないと思っているし、ステマでもなんでもないです。</p>
+
+<p>本当だよ。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1152,163 +1231,6 @@ Apacheのディレクトリ制限を噛ますことでアクセス制限なん�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/02/httpd-webdav/">3分で認証とか考慮しないWebDavを構築してみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-02T00:30:00+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>大したことはないし、そこらへんに構築メモは転がってるので要らないと思うけど・・・</p>
-
-<p>という訳で、一から最低限の機能のみを構築しますという体で進めます。<br/>
-日本語の文字化け対策にエンコーディングを入れてーみたいなことはしません。</p>
-
-<p>動かすことのみに注力します。</p>
-
-<h3>環境</h3>
-
-<hr />
-
-<p>・CentOS6.3 x86_64</p>
-
-<h3>Apacheのインストール</h3>
-
-<hr />
-
-<p>以下のコマンドでApacheをインストールします。<br/>
-このとき、インストールするパッケージはdevelにします。(色々必要なものが一緒に入るので)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo yum install httpd-devel</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>モジュールの確認</h3>
-
-<hr />
-
-<p>WebDavは、Apacheの追加モジュールです。<br/>
-develパッケージでインストールした場合、自動でインストールされますが念の為に確認します。<br/>
-以下の２つが、「/etc/httpd/conf/httpd.conf」に記載されているか確認します。</p>
-
-<ul>
-<li>LoadModule dav_module modules/mod_dav.so</li>
-<li>LoadModule dav_fs_module modules/mod_dav_fs.so</li>
-</ul>
-
-
-<p>記載が無ければ、「/usr/lib/httpd/modules/」に上記モジュールがあるか確認します。<br/>
-モジュールが存在していれば、追加しましょう。</p>
-
-<h3>WebDavの設定</h3>
-
-<hr />
-
-<p>以下の内容で、「/etc/httpd/conf.d/webdav.conf」を作成します。<br/>
-ACLやBasic認証とかもここで設定できますが、最低限動作なので実施しません。<br/>
-因みに、ディレクトリに対して細かい設定ができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#
-</span><span class='line'># This is to permit URL access to WebDav.
-</span><span class='line'>#
-</span><span class='line'>Alias /webdav/ "/var/www/html/webdav/"
-</span><span class='line'>&lt;IfModule mod_dav.c&gt;
-</span><span class='line'>    DAVMinTimeout 600
-</span><span class='line'>    &lt;Location /webdav&gt;
-</span><span class='line'>        DAV On
-</span><span class='line'>    &lt;/Location&gt;
-</span><span class='line'>&lt;/IfModule&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>WebDav用のディレクトリ作成</h3>
-
-<hr />
-
-<p>WebDavとして共有するためのディレクトリを作成します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo mkdir -p /var/www/html/webdav</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ディレクトリをApacheから制御できるように所有者・所有グループを「apache」に変更します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo chown apache:apache /var/www/html/webdav</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>iptablesの設定</h3>
-
-<hr />
-
-<p>iptablesを未設定のままにすると、iptablesによってアクセスできないので、80番ポートのアクセスを許可するように設定変更します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo emacs /etc/sysconfig/iptables</span></code></pre></td></tr></table></div></figure>
-
-
-<p>80番での通信を許可するよう、以下の内容をREJECTの前に追加します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT</span></code></pre></td></tr></table></div></figure>
-
-
-<p>iptablesを再起動します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo /etc/init.d/iptables restart</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Apacheの起動</h3>
-
-<hr />
-
-<p>以下のコマンドで起動します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo /etc/init.d/httpd start</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://localhost/webdav">http://localhost/webdav</a>にアクセス出来れば完了です。</p>
-
-<p>この程度だと、大したことないし知ってれば３分要らないかもw</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1330,6 +1252,10 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/02/23/homebrew-package-version/">Homebrewでバージョンを指定してパッケージをインストールする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/21/forget-js/">JavaScriptのproxyでハマったこと</a>
       </li>
     
@@ -1345,15 +1271,11 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
         <a href="/blog/2014/01/30/build-volley/">Volleyをビルドする</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/01/18/shell-gitkeep/">gitkeepを作成、及び削除をするshellを作った</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 133.33333333333334%'>Android(5)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 126.66666666666667%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 133.33333333333334%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 106.66666666666667%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 126.66666666666667%'>Mac(4)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 133.33333333333334%'>Android(5)</a> <a href='/blog/categories/devlove' style='font-size: 106.66666666666667%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 106.66666666666667%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 106.66666666666667%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 126.66666666666667%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 106.66666666666667%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 106.66666666666667%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 106.66666666666667%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 133.33333333333334%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 106.66666666666667%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 153.33333333333334%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 133.33333333333334%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 133.33333333333334%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(9)</a> <a href='/blog/categories/shellscript' style='font-size: 106.66666666666667%'>ShellScript(1)</a> <a href='/blog/categories/戯言' style='font-size: 153.33333333333334%'>戯言(8)</a> </span>
 </section
 
 

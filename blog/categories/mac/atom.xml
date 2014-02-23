@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mac | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/mac/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-02-21T00:43:47+09:00</updated>
+  <updated>2014-02-23T21:05:06+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,99 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Homebrewでバージョンを指定してパッケージをインストールする]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/02/23/homebrew-package-version/"/>
+    <updated>2014-02-23T20:52:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/02/23/homebrew-package-version</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>某モバイルアプリでですね、要求しているビルド用のパッケージが<br/>
+今、インストールされているものよりも古いバージョンでした。</p>
+
+<p>そのままだと、ビルド出来ないのでバージョンを古くしようとしたのがキッカケです。。。</p>
+
+<p># 某モバイルアプリはAndroidで、ビルドパッケージはGradleなんですけどw</p>
+
+<h3>インストール(される|した)バージョンを確認</h3>
+
+<hr />
+
+<p>バージョンを確認します。</p>
+
+<p><code>
+$brew info gradle
+</code></p>
+
+<p>するとこんな感じで結果が出ます</p>
+
+<p><code>
+gradle: stable 1.10
+http://www.gradle.org/
+/usr/local/Cellar/gradle/1.10 (143 files, 42M) *
+  Built from source
+From: https://github.com/Homebrew/homebrew/commits/master/Library/Formula/gradle.rb
+</code></p>
+
+<h3>インストール可能なバージョンを調べる</h3>
+
+<hr />
+
+<p>古いバージョンと言いつつも、バージョンがあるかどうかも調べないといけません。<br/>
+という訳で、バージョンを調べます。</p>
+
+<p><code>
+$brew versions gradle
+</code></p>
+
+<p>すると、こんな感じでズラズラとバージョンと対応するgitのハッシュ値が出てきます。</p>
+
+<p><code>
+  https://github.com/Homebrew/homebrew-versions
+1.10     git checkout 2b10422 Library/Formula/gradle.rb
+1.9      git checkout 5bab5e9 Library/Formula/gradle.rb
+1.8      git checkout 9214e60 Library/Formula/gradle.rb
+1.7      git checkout f826cc9 Library/Formula/gradle.rb
+...
+</code></p>
+
+<p>これで、一つ前のバージョンがあることが分かりますね。<br/>
+このタイミングでパッケージは削除しましょう。</p>
+
+<p><code>
+$brew remove gradle
+</code></p>
+
+<h3>古いバージョンをインストールするよ</h3>
+
+<hr />
+
+<p>ハッシュ値がわかったので、そのFormulaだけ前のバージョンに戻せばいいわけです。<br/>
+戻した後にインストールすれば、古いバージョンのパッケージがインストールできるという・・・</p>
+
+<p><code>
+$ cd /usr/local/Library/Formula
+$ git checkout 5bab5e9 gradle.rb
+</code></p>
+
+<p>バージョンを確認してからのインストール</p>
+
+<p>```
+$brew info gradle
+gradle: stable 1.9, devel 1.10-rc-1
+http://www.gradle.org/
+Not installed
+From: https://github.com/Homebrew/homebrew/commits/master/Library/Formula/gradle.rb</p>
+
+<p>$brew install gradle
+```</p>
+
+<p>と、簡単にできましたとさ</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Time Capsule(NAS)をMacとLinuxの両方から使えるようにする]]></title>
