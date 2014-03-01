@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Solr | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/solr/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2014-03-01T20:42:39+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[MacにSolrをインストールして動かしてみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac/"/>
+    <updated>2014-03-01T20:18:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>Solrといえば、全文検索システムですね。</p>
+
+<p>で、これをMacにインストールしてみようということやってみます。</p>
+
+<p>とはいえ、普通にtarballダウンロードして解凍→java -jarだと面白くないですね。</p>
+
+<p>折角、Homebrewを使ってるのでパッケージ管理の上で実施してみます。</p>
+
+<h3>インストール</h3>
+
+<hr />
+
+<p>Homebrew使いであれば、お馴染みのコマンドでスンナリインストールされます。</p>
+
+<p><code>
+$brew install solr
+</code></p>
+
+<h3>Solrの起動</h3>
+
+<hr />
+
+<p>ぶっちゃけ、こいつが若干の癖ものだったりします。</p>
+
+<p># 記事書くキッカケw</p>
+
+<h5>一言で言うと、solrの設定(solr.xml)があるパスをフルパスで渡して上げる</h5>
+
+<p>実はこれだけです、インストールしたSolrはサンプルが同梱してあるので起動してみます。</p>
+
+<p><code>
+$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-DIH/solr/
+</code></p>
+
+<p>スキーマレスのサンプルなら
+<code>
+$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-schemaless/solr/
+</code></p>
+
+<p>マルチコアのサンプルなら</p>
+
+<p><code>
+$solr /usr/local/Cellar/solr/4.7.0/libexec/example/multicore/
+</code></p>
+
+<p>正しく動いていれば、「http://localhost:8983/solr/」で管理画面にアクセスできます</p>
+
+<p>自分でスキーマや設定を作成したい場合、このあたりの設定をコピー&amp;修正して同様の手順で実行してやれば良さそうですね</p>
+]]></content>
+  </entry>
+  
+</feed>

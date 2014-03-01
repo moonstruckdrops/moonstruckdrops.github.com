@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rubyでアクセス用のメソッドを定義する(アクセッサ) - kurobaraのブログ</title>
+  <title>MacにSolrをインストールして動かしてみる - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="なんてことはない、ただの整理です。 通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。 Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。 以下のようなModuleクラスにあるものを使います &hellip;">
+  <meta name="description" content="はじめに Solrといえば、全文検索システムですね。 で、これをMacにインストールしてみようということやってみます。 とはいえ、普通にtarballダウンロードして解凍→java -jarだと面白くないですね。 折角、Homebrewを使ってるのでパッケージ管理の上で実施してみます。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -74,7 +74,7 @@
   
   <header>
     
-      <h1 class="entry-title">Rubyでアクセス用のメソッドを定義する(アクセッサ)</h1>
+      <h1 class="entry-title">MacにSolrをインストールして動かしてみる</h1>
     
     
       <p class="meta">
@@ -90,105 +90,66 @@
   
 
 
-<time datetime="2013-07-25T20:56:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
+<time datetime="2014-03-01T20:18:00+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>なんてことはない、ただの整理です。</p>
+<div class="entry-content"><h3>はじめに</h3>
 
-<p>通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。</p>
+<hr />
 
-<p>Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。</p>
+<p>Solrといえば、全文検索システムですね。</p>
 
-<p>以下のようなModuleクラスにあるものを使います</p>
+<p>で、これをMacにインストールしてみようということやってみます。</p>
 
-<ul>
-<li>attr_reader : 参照(読み出し)できるようにする(getter)</li>
-<li>attr_writer : 代入(書き込み)できるようにする(setter)</li>
-<li>attr_accessor : 参照、代入の両方できるようにする(getter/setter)</li>
-</ul>
+<p>とはいえ、普通にtarballダウンロードして解凍→java -jarだと面白くないですね。</p>
 
+<p>折角、Homebrewを使ってるのでパッケージ管理の上で実施してみます。</p>
 
-<p>それぞれ、使い方は以下のような形になります。</p>
+<h3>インストール</h3>
+
+<hr />
+
+<p>Homebrew使いであれば、お馴染みのコマンドでスンナリインストールされます。</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Accessor
-</span><span class='line'>
-</span><span class='line'>    attr_reader :name,:hoge
-</span><span class='line'>    attr_writer :fuga,:piyo
-</span><span class='line'>    attr_accessor :access
-</span><span class='line'>    
-</span><span class='line'>    def initialize
-</span><span class='line'>        @name = "kurobara"
-</span><span class='line'>        @hoge = "hogehoge"
-</span><span class='line'>        @fuga = "fugafuga"
-</span><span class='line'>        @piyo = "piypiyo"
-</span><span class='line'>        @access = "OK"
-</span><span class='line'>    end
-</span><span class='line'>
-</span><span class='line'>    def print_fuga_piyo
-</span><span class='line'>        p '---------------------'
-</span><span class='line'>        puts "fuga = " + @fuga
-</span><span class='line'>        puts "piyo = " + @piyo
-</span><span class='line'>    end
-</span><span class='line'>
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>a = Accessor.new()
-</span><span class='line'>puts a.name
-</span><span class='line'>puts a.hoge  
-</span><span class='line'>a.print_fuga_piyo
-</span><span class='line'>p "代入操作"
-</span><span class='line'>a.fuga = "fuga2fuga2"
-</span><span class='line'>a.piyo = "piyo2piyo2"
-</span><span class='line'>a.print_fuga_piyo
-</span><span class='line'>p '---------------------'
-</span><span class='line'>puts 'a.access = ' + a.access
-</span><span class='line'>p "代入操作"
-</span><span class='line'>a.access = "OKOK"
-</span><span class='line'>puts 'a.access = ' + a.access</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install solr</span></code></pre></td></tr></table></div></figure>
 
 
-<p>こんな感じで使えちゃいます。。。<br/>
-今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
-attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
+<h3>Solrの起動</h3>
+
+<hr />
+
+<p>ぶっちゃけ、こいつが若干の癖ものだったりします。</p>
+
+<p># 記事書くキッカケw</p>
+
+<h5>一言で言うと、solrの設定(solr.xml)があるパスをフルパスで渡して上げる</h5>
+
+<p>実はこれだけです、インストールしたSolrはサンプルが同梱してあるので起動してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-DIH/solr/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>スキーマレスのサンプルなら</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-schemaless/solr/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マルチコアのサンプルなら</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/multicore/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>正しく動いていれば、「http://localhost:8983/solr/」で管理画面にアクセスできます</p>
+
+<p>自分でスキーマや設定を作成したい場合、このあたりの設定をコピー&amp;修正して同様の手順で実行してやれば良さそうですね</p>
 </div>
 
 
@@ -211,12 +172,12 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
   
 
 
-<time datetime="2013-07-25T20:56:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
+<time datetime="2014-03-01T20:18:00+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+    <a class='category' href='/blog/categories/solr/'>Solr</a>
   
 </span>
 
@@ -225,7 +186,7 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -238,10 +199,8 @@ attr_accessorばっかり使うので、attr_reader,att_writerを忘れてまし
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/07/25/ruby-singleton/" title="Previous Post: RubyでSingletonパターンを実装する">&laquo; RubyでSingletonパターンを実装する</a>
+        <a class="basic-alignment left" href="/blog/2014/02/23/homebrew-package-version/" title="Previous Post: Homebrewでバージョンを指定してパッケージをインストールする">&laquo; Homebrewでバージョンを指定してパッケージをインストールする</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/08/11/make-disk-backup/" title="Next Post: DDコマンドで物理ディスクをバックアップする">DDコマンドで物理ディスクをバックアップする &raquo;</a>
       
     </p>
   </footer>

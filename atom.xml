@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-02-23T21:05:06+09:00</updated>
+  <updated>2014-03-01T20:42:39+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MacにSolrをインストールして動かしてみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac/"/>
+    <updated>2014-03-01T20:18:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>Solrといえば、全文検索システムですね。</p>
+
+<p>で、これをMacにインストールしてみようということやってみます。</p>
+
+<p>とはいえ、普通にtarballダウンロードして解凍→java -jarだと面白くないですね。</p>
+
+<p>折角、Homebrewを使ってるのでパッケージ管理の上で実施してみます。</p>
+
+<h3>インストール</h3>
+
+<hr />
+
+<p>Homebrew使いであれば、お馴染みのコマンドでスンナリインストールされます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install solr</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Solrの起動</h3>
+
+<hr />
+
+<p>ぶっちゃけ、こいつが若干の癖ものだったりします。</p>
+
+<p># 記事書くキッカケw</p>
+
+<h5>一言で言うと、solrの設定(solr.xml)があるパスをフルパスで渡して上げる</h5>
+
+<p>実はこれだけです、インストールしたSolrはサンプルが同梱してあるので起動してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-DIH/solr/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>スキーマレスのサンプルなら</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-schemaless/solr/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マルチコアのサンプルなら</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/multicore/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>正しく動いていれば、「http://localhost:8983/solr/」で管理画面にアクセスできます</p>
+
+<p>自分でスキーマや設定を作成したい場合、このあたりの設定をコピー&amp;修正して同様の手順で実行してやれば良さそうですね</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Homebrewでバージョンを指定してパッケージをインストールする]]></title>
@@ -2927,50 +2988,6 @@ ActiveRecordの検証メソッドが実行されないことに注意かも。</
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Octpressで記事を一度公開停止→再公開をしたい場合の方法]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page/"/>
-    <updated>2013-10-19T10:24:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page</id>
-    <content type="html"><![CDATA[<p>何個か前の記事を加筆修正したときの手順をまとめます。<br/>
-但し、このやり方はpush内容を残したくないときのやり方に加えて、<br/>
-ハッシュ値を知ってれば参照できてしまうという点があります。<br/>
-(公開されているページは修正されたものが表示されます)</p>
-
-<h3>記事の公開停止方法</h3>
-
-<hr />
-
-<p>以下の順序で変更を行います</p>
-
-<ol>
-<li>octpressでgithubにpushしているディレクトリに移動する</li>
-<li>gitコマンドで記事をpushしたコミットまで遡って、 変更取り消しを行う</li>
-</ol>
-
-
-<p>それぞれコマンドは以下のようになります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$cd ~/octpress/_deploy
-</span><span class='line'>$git push -f origin master:HEAD^^</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで、２つ前の記事公開の状態まで変更することができました。
-同じ方法をとれば、記事の順序を入れ替え(削除)した状態で公開することも出来ると思います。<br/>
-(git rebase後にpush origin masterなどすればです)</p>
-
-<h3>再公開方法</h3>
-
-<hr />
-
-<p>普通に記事を生成して再度サーバにpushして下さい。<br/>
-ファイルの日付や記事の日付を修正していなければ、
-公開停止前と同じURLになります。</p>
 ]]></content>
   </entry>
   
