@@ -5,14 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>削除してしまったDropboxのデータを復元する - kurobaraのブログ</title>
+  <title>RubyでSolrを使うときに気をつけること - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="簡単な経緯 このブログ記事を書くキッカケになった内容を以下に記述します。 お馬鹿すぎて笑えますwww Dropboxアプリ起動
-アプリを起動したまま、あるコマンドを実行
-Dropboxと同期したディレクトリが2で実行したコマンドで削除される
-1のDropboxアプリが削除した状態を同期開始 &hellip;">
+  <meta name="description" content="はじめに タイトルは釣り臭が半端ないですねw 正確なことを言うと使用ライブラリは、
+特性を理解の上で使いましょうということが言いたいだけです RubyでSolrを使う際のライブラリと言えば 大体、以下の２つになると思います RSolr
+sunspot 前者は、シンプルな機能に対して、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +20,7 @@ Dropboxと同期したディレクトリが2で実行したコマンドで削除
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/07/13/recover-dropbox-data/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/03/23/ruby-solr/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +76,7 @@ Dropboxと同期したディレクトリが2で実行したコマンドで削除
   
   <header>
     
-      <h1 class="entry-title">削除してしまったDropboxのデータを復元する</h1>
+      <h1 class="entry-title">RubyでSolrを使うときに気をつけること</h1>
     
     
       <p class="meta">
@@ -93,58 +92,130 @@ Dropboxと同期したディレクトリが2で実行したコマンドで削除
   
 
 
-<time datetime="2013-07-13T17:06:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+<time datetime="2014-03-23T12:31:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h3>簡単な経緯</h3>
+<div class="entry-content"><h3>はじめに</h3>
 
 <hr />
 
-<p>このブログ記事を書くキッカケになった内容を以下に記述します。</p>
+<p>タイトルは釣り臭が半端ないですねw</p>
 
-<p>お馬鹿すぎて笑えますwww</p>
+<p>正確なことを言うと使用ライブラリは、<br/>
+特性を理解の上で使いましょうということが言いたいだけです</p>
 
-<ol>
-<li>Dropboxアプリ起動</li>
-<li>アプリを起動したまま、あるコマンドを実行</li>
-<li>Dropboxと同期したディレクトリが2で実行したコマンドで削除される</li>
-<li>1のDropboxアプリが削除した状態を同期開始</li>
-<li>削除だけなので、同期が一瞬で終わってしまう</li>
-<li>Dropboxサーバのデータが削除</li>
-</ol>
-
-
-<p>こんな感じでした・・・
-実際は、Dropboxのディレクトリだけでなくもっと影響がでかくて涙を流しています。</p>
-
-<h3>復元の手順</h3>
+<h3>RubyでSolrを使う際のライブラリと言えば</h3>
 
 <hr />
 
-<p>復活の呪文を唱えるにも条件があります。</p>
+<p>大体、以下の２つになると思います</p>
 
-<h4>削除してからの日数が30日以内であれば、復元可能</h4>
+<ul>
+<li><a href="https://github.com/rsolr/rsolr">RSolr</a></li>
+<li><a href="http://sunspot.github.io/">sunspot</a></li>
+</ul>
 
-<p>というものです。</p>
 
-<p>幸いなことに削除した次の日に気がついたので、自分はこの条件を満たしていました。</p>
+<p>前者は、シンプルな機能に対して、後者は多機能になっています</p>
 
-<p>で、肝心の復元の手順ですが、以下で実施します。</p>
+<h3>RSolr</h3>
+
+<hr />
+
+<p>ここら編は、ドキュメントを見たほうがよいですが自分の理解をダラっと</p>
+
+<ul>
+<li>接続やプロキシは、自分で設定できる(タイムアウトやリトライ設定も可能)</li>
+<li>上記の為、(実装に応じるが)自由に検索先のスキーマを変更できる</li>
+<li>検索クエリ(ファセットクエリ等も含む)は自前で実装しないといけない</li>
+<li>rowsやstartなども自前で実装する必要がある</li>
+<li>更新や削除(クエリベースやidベースで)もできる上にメソッドとして用意してある</li>
+<li>responseはハッシュになっているので、自前で検索結果を整形(ActiveRecordオブジェクト等)する必要がある</li>
+<li>ページングも対応している</li>
+</ul>
+
+
+<p>一声で言うと・・・</p>
+
+<ul>
+<li>クエリ構築は自前でやる必要がある</li>
+<li>検索結果の整形も自前でやる必要がある</li>
+<li>実装次第で、接続先のSolrも自由に変更することができる</li>
+</ul>
+
+
+<p>シンプルとか言っておきながら、結構ありますね<sup>^;;</sup></p>
+
+<p>実際、使うとわかりますがかなりシンプルですよ</p>
+
+<h3>sunspot</h3>
+
+<hr />
+
+<p>こちらもドキュメントを見たほうがよいのですが・・・</p>
+
+<ul>
+<li>検索クエリ(facetクエリなら)をDSLライクに記述できる</li>
+<li>検索はdismaxで行ってくれる</li>
+<li>検索クエリの結果はActiveRecordオブジェクトで取得できる</li>
+<li>全文検索も直感的に記述できるうえにboost値も設定できる</li>
+<li>ページングやグルーピングにも対応している</li>
+<li>緯度、経度のデータも検索できる</li>
+<li>検索ハイライトやスキーマデータの結合にも対応している</li>
+<li>indexingもsunspotのみで完結することができる(削除もできます)</li>
+<li>勿論、手動でクエリを構築することも可能</li>
+<li>sunspot自体がRSolrに依存しているので、その気になればRSolrの機能も一応使うことができる</li>
+</ul>
+
+
+<p>これだけ、高機能なので当然の如く欠点もありまして・・・</p>
 
 <ol>
-<li>Dropboxのウェブサイトにログイン</li>
-<li>画面右上の「削除済みファイル」をクリック</li>
-<li>ファイル名の横に表示されている逆三角を押下し復元をクリック</li>
+<li>Solrのスキーマ定義がsunspotに依存した形になってしまうこと</li>
+<li>indexするデータの一部もsunspotに依存した形になってしまうこと</li>
+<li>Solrのフィールドに対応する形でActiveRecordのmodelクラスに定義が必要になること</li>
+<li>sunspotが吐き出すクエリを理解しないと使いづらいこと</li>
+<li>sunspot自体がmethod_missingを使った実装なのでコードが読みづらいこと・・・</li>
 </ol>
 
 
-<h4><a href="https://www.dropbox.com/help/296/ja">公式の手順</a></h4>
+<h3>日本語を扱う場合の注意点</h3>
 
-<p>これで削除したファイルが復元できます。</p>
+<hr />
+
+<p>基本的に、検索文字列の処理はSolr側のtokenizerで行われます。</p>
+
+<p>ところがsunspotで日本語を使う場合だと、全文字列がエスケープされてしまいます。</p>
+
+<p>例えば、「あいうえお」を検索したい場合だと「\あ\い\う\え\お」になってしまいます。</p>
+
+<p>因みに、英語検索は問題ありません。</p>
+
+<p>原因がどこにあるかと言うと、 <a href="https://github.com/sunspot/sunspot/blob/master/sunspot/lib/sunspot/query/restriction.rb">restriction.rb</a>にあります。</p>
+
+<p>具体的な箇所は、このmodule内で使用されているescapeメソッドが原因です。<br/>
+このescapeメソッドの実装は、<a href="https://github.com/rsolr/rsolr/blob/master/lib/rsolr/char.rb">char.rb</a>ですね。<br/>
+つまり、RSolr側の不具合に近いでしょう。<br/>
+また、RSolrを使って自前で実装するときもこのescapeメソッドを使用しないほうがいいです。</p>
+
+<p>sunspotの依存gem側の問題なので、簡単に修正するのも難しいですね。</p>
+
+<h3>対処方法は？</h3>
+
+<hr />
+
+<p>モンキーパッチを使えば、対処できました。</p>
+
+<p>escapeメソッドを使っているところを全部上書き実装すればいいだけです。</p>
+
+<p>Railsで使う場合だと、「config/initialize/sunspot.rb」みたいなのを作ればいいですね。<br/>
+その中で、上記の処理を使えば対応可能です。</p>
+
+<p>まぁ、根本解決ではないなと思いますが・・・</p>
 </div>
 
 
@@ -167,12 +238,12 @@ Dropboxと同期したディレクトリが2で実行したコマンドで削除
   
 
 
-<time datetime="2013-07-13T17:06:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+<time datetime="2014-03-23T12:31:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/xi-yan/'>戯言</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -181,7 +252,7 @@ Dropboxと同期したディレクトリが2で実行したコマンドで削除
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/07/13/recover-dropbox-data/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/07/13/recover-dropbox-data/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/03/23/ruby-solr/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/03/23/ruby-solr/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -194,10 +265,8 @@ Dropboxと同期したディレクトリが2で実行したコマンドで削除
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/07/02/ruby-struct/" title="Previous Post: RubyのStructクラスが便利">&laquo; RubyのStructクラスが便利</a>
+        <a class="basic-alignment left" href="/blog/2014/03/01/install-solr-for-mac/" title="Previous Post: MacにSolrをインストールして動かしてみる">&laquo; MacにSolrをインストールして動かしてみる</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/07/13/kyoto-gas-study/" title="Next Post: GoogleAppsScript勉強会に行って来ました">GoogleAppsScript勉強会に行って来ました &raquo;</a>
       
     </p>
   </footer>

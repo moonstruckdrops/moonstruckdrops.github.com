@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-03-01T20:42:39+09:00</updated>
+  <updated>2014-03-23T12:42:37+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,131 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyでSolrを使うときに気をつけること]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/03/23/ruby-solr/"/>
+    <updated>2014-03-23T12:31:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/03/23/ruby-solr</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>タイトルは釣り臭が半端ないですねw</p>
+
+<p>正確なことを言うと使用ライブラリは、<br/>
+特性を理解の上で使いましょうということが言いたいだけです</p>
+
+<h3>RubyでSolrを使う際のライブラリと言えば</h3>
+
+<hr />
+
+<p>大体、以下の２つになると思います</p>
+
+<ul>
+<li><a href="https://github.com/rsolr/rsolr">RSolr</a></li>
+<li><a href="http://sunspot.github.io/">sunspot</a></li>
+</ul>
+
+
+<p>前者は、シンプルな機能に対して、後者は多機能になっています</p>
+
+<h3>RSolr</h3>
+
+<hr />
+
+<p>ここら編は、ドキュメントを見たほうがよいですが自分の理解をダラっと</p>
+
+<ul>
+<li>接続やプロキシは、自分で設定できる(タイムアウトやリトライ設定も可能)</li>
+<li>上記の為、(実装に応じるが)自由に検索先のスキーマを変更できる</li>
+<li>検索クエリ(ファセットクエリ等も含む)は自前で実装しないといけない</li>
+<li>rowsやstartなども自前で実装する必要がある</li>
+<li>更新や削除(クエリベースやidベースで)もできる上にメソッドとして用意してある</li>
+<li>responseはハッシュになっているので、自前で検索結果を整形(ActiveRecordオブジェクト等)する必要がある</li>
+<li>ページングも対応している</li>
+</ul>
+
+
+<p>一声で言うと・・・</p>
+
+<ul>
+<li>クエリ構築は自前でやる必要がある</li>
+<li>検索結果の整形も自前でやる必要がある</li>
+<li>実装次第で、接続先のSolrも自由に変更することができる</li>
+</ul>
+
+
+<p>シンプルとか言っておきながら、結構ありますね<sup>^;;</sup></p>
+
+<p>実際、使うとわかりますがかなりシンプルですよ</p>
+
+<h3>sunspot</h3>
+
+<hr />
+
+<p>こちらもドキュメントを見たほうがよいのですが・・・</p>
+
+<ul>
+<li>検索クエリ(facetクエリなら)をDSLライクに記述できる</li>
+<li>検索はdismaxで行ってくれる</li>
+<li>検索クエリの結果はActiveRecordオブジェクトで取得できる</li>
+<li>全文検索も直感的に記述できるうえにboost値も設定できる</li>
+<li>ページングやグルーピングにも対応している</li>
+<li>緯度、経度のデータも検索できる</li>
+<li>検索ハイライトやスキーマデータの結合にも対応している</li>
+<li>indexingもsunspotのみで完結することができる(削除もできます)</li>
+<li>勿論、手動でクエリを構築することも可能</li>
+<li>sunspot自体がRSolrに依存しているので、その気になればRSolrの機能も一応使うことができる</li>
+</ul>
+
+
+<p>これだけ、高機能なので当然の如く欠点もありまして・・・</p>
+
+<ol>
+<li>Solrのスキーマ定義がsunspotに依存した形になってしまうこと</li>
+<li>indexするデータの一部もsunspotに依存した形になってしまうこと</li>
+<li>Solrのフィールドに対応する形でActiveRecordのmodelクラスに定義が必要になること</li>
+<li>sunspotが吐き出すクエリを理解しないと使いづらいこと</li>
+<li>sunspot自体がmethod_missingを使った実装なのでコードが読みづらいこと・・・</li>
+</ol>
+
+
+<h3>日本語を扱う場合の注意点</h3>
+
+<hr />
+
+<p>基本的に、検索文字列の処理はSolr側のtokenizerで行われます。</p>
+
+<p>ところがsunspotで日本語を使う場合だと、全文字列がエスケープされてしまいます。</p>
+
+<p>例えば、「あいうえお」を検索したい場合だと「\あ\い\う\え\お」になってしまいます。</p>
+
+<p>因みに、英語検索は問題ありません。</p>
+
+<p>原因がどこにあるかと言うと、 <a href="https://github.com/sunspot/sunspot/blob/master/sunspot/lib/sunspot/query/restriction.rb">restriction.rb</a>にあります。</p>
+
+<p>具体的な箇所は、このmodule内で使用されているescapeメソッドが原因です。<br/>
+このescapeメソッドの実装は、<a href="https://github.com/rsolr/rsolr/blob/master/lib/rsolr/char.rb">char.rb</a>ですね。<br/>
+つまり、RSolr側の不具合に近いでしょう。<br/>
+また、RSolrを使って自前で実装するときもこのescapeメソッドを使用しないほうがいいです。</p>
+
+<p>sunspotの依存gem側の問題なので、簡単に修正するのも難しいですね。</p>
+
+<h3>対処方法は？</h3>
+
+<hr />
+
+<p>モンキーパッチを使えば、対処できました。</p>
+
+<p>escapeメソッドを使っているところを全部上書き実装すればいいだけです。</p>
+
+<p>Railsで使う場合だと、「config/initialize/sunspot.rb」みたいなのを作ればいいですね。<br/>
+その中で、上記の処理を使えば対応可能です。</p>
+
+<p>まぁ、根本解決ではないなと思いますが・・・</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails(ActiveRecord)でBULK INSERTする方法]]></title>
@@ -477,209 +602,6 @@ puts 'a.access = ' + a.access
 <p>こんな感じで使えちゃいます。。。<br/>
 今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
 attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RubyでSingletonパターンを実装する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-singleton/"/>
-    <updated>2013-07-25T18:33:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/07/25/ruby-singleton</id>
-    <content type="html"><![CDATA[<p>このまえ、友人とデザインパターンの話をしてたような気がするので書いてみた。</p>
-
-<p>SingletonはGOFのデザインパターンの一つです。<br/>
-使い所は、システム内で絶対に一つにしておかないといけないもの仕組みのものに使います。<br/>
-例えば、アプリの設定とか見た目(Look&amp;Feel)とかシステムの何かを管理するだとかに使ったりします。</p>
-
-<p>Singletonは以下の条件を満たす必要があります。</p>
-
-<ul>
-<li>作成したクラスのインスタンスは一つだけであることが保証されている</li>
-<li>コード上のどこからでも、生成した1つだけのインスタンスにアクセスできる</li>
-</ul>
-
-
-<p>Javaで上の条件を満たすものはこんな感じ</p>
-
-<p>```
-final class Singleton {</p>
-
-<pre><code>private static Singleton instance;
-private Singleton(){};
-
-public static synchronized Singleton getInstance(){
-    if(instance == null){
-        instance = new Singleton();
-    }
-    return instance;
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>これと同じ実装をRubyでやるとこんな感じになります。</p>
-
-<p>```
-class Singleton
-  @@singleton_obj = nil
-  @@count = 0</p>
-
-<p>  # 以下の行をコメントアウトすると
-  # オブジェクトが再生成されるので
-  # シングルトンにならない
-  private_class_method:new</p>
-
-<p>  def initialize</p>
-
-<pre><code>@@count = 1
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.get_instance</p>
-
-<pre><code>if @@singleton_obj == nil
-  @@singleton_obj = new
-end
-@@singleton_obj
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.count_up</p>
-
-<pre><code>@@count+=1
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.print_count</p>
-
-<pre><code>p @@count
-</code></pre>
-
-<p>  end</p>
-
-<p>end</p>
-
-<p>p '-----------------------'
-p '初回インスタンス取得'
-p Singleton.get_instance
-Singleton.print_count
-p '-----------------------'
-p '２回目のインスタンス取得でオブジェクトに変更がない'
-p Singleton.get_instance
-Singleton.count_up
-Singleton.print_count
-p '-----------------------'
-p 'newするとエラーが飛ぶ'
-begin
-  Singleton.new
-rescue
-  p 'newでエラーが飛んだ'
-end
-```</p>
-
-<p>結構長いですねw</p>
-
-<p>上記のコードの実行結果は、以下になります。<br/>
-オブジェクトに変化が無いことがわかりますね。<br/>
-つまり、オブジェクトが１つであることが、保証されています。</p>
-
-<p>```
-"-----------------------"
-"初回インスタンス取得"</p>
-
-<h1>&lt;Singleton:0x007f91519026f0></h1>
-
-<p>1
-"-----------------------"
-"２回目のインスタンス取得でオブジェクトに変更がない"</p>
-
-<h1>&lt;Singleton:0x007f91519026f0></h1>
-
-<p>2
-"-----------------------"
-"newするとエラーが飛ぶ"
-"newでエラーが飛んだ"
-```</p>
-
-<p>自力でSingletonを実装すると上記のようなコードなのですが、<br/>
-実は、Rubyにはsingletonをやってくれる便利なモジュールがあります。<br/>
-これを使うと、Mix-inしたクラスのインスタンスは常に同じものを返してくれます。</p>
-
-<p>```
-require 'singleton'</p>
-
-<p>class MySingleton</p>
-
-<p>  include Singleton</p>
-
-<p>  @@count = 0</p>
-
-<p>  def initialize</p>
-
-<pre><code>@@count = 1
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.count_up</p>
-
-<pre><code>@@count+=1
-</code></pre>
-
-<p>  end</p>
-
-<p>  def self.print_count</p>
-
-<pre><code>p @@count
-</code></pre>
-
-<p>  end
-end</p>
-
-<p>p '-----------------------'
-p '初回インスタンス取得'
-p MySingleton.instance
-MySingleton.print_count
-p '-----------------------'
-p '２回目のインスタンス取得でオブジェクトに変更がない'
-p MySingleton.instance
-MySingleton.count_up
-MySingleton.print_count
-p '-----------------------'
-p 'newするとエラーが飛ぶ'
-begin
-  MySingleton.new
-rescue
-  p 'newでエラーが飛んだ'
-end
-```</p>
-
-<p>実行結果は、こんな感じ</p>
-
-<p>```
-"-----------------------"
-"初回インスタンス取得"</p>
-
-<h1>&lt;MySingleton:0x007fd2fa8c9658></h1>
-
-<p>1
-"-----------------------"
-"２回目のインスタンス取得でオブジェクトに変更がない"</p>
-
-<h1>&lt;MySingleton:0x007fd2fa8c9658></h1>
-
-<p>2
-"-----------------------"
-"newするとエラーが飛ぶ"
-"newでエラーが飛んだ"
-```</p>
-
-<p>モジュールを使うと、スッキリとしたコードになりますね。<br/>
-当たり前ですが、newしようとするとエラーになります。</p>
 ]]></content>
   </entry>
   
