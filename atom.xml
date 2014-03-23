@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-03-23T21:08:26+09:00</updated>
+  <updated>2014-03-23T22:33:29+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,344 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Android Bazaar and Conference 2014 Springに行ってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/03/23/abc-2014-spring/"/>
+    <updated>2014-03-23T22:12:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/03/23/abc-2014-spring</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>もう殆ど、Androidをやっていない身ですが情報追っかけ程度に参加してきました。</p>
+
+<p>因みに、当日は寝坊してやべぇって言ってたのは内緒w</p>
+
+<p>興味が湧いたセッションは2つぐらいだったので、それさえ聴ければいいかなーぐらいの感覚で行ってきました。</p>
+
+<p>というわけで、当日のメモに加筆修正したものを残します。</p>
+
+<h3>UI/UXデザイントレンド 2014</h3>
+
+<hr />
+
+<h4>デザイントレンド</h4>
+
+<ul>
+<li>質感がわかるようなデザインに変わりつつ</li>
+<li>スキュモーフィズムからフラットデザインへ
+
+<ul>
+<li>装飾を外してシンプルに</li>
+<li>flatvsrealism.com</li>
+</ul>
+</li>
+<li>フラットのほうが意図が伝わりやすい
+
+<ul>
+<li>Androidのデザインガイドラインもフラットなものに変わっている</li>
+<li>Googleも力を入れていることがわかる</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Androido UI</h4>
+
+<h5>2011年のTrend</h5>
+
+<ul>
+<li>派手</li>
+<li>白いテキスト</li>
+<li>リアルで立体的なアイコン</li>
+<li>この当時はiPhoneが流行っていたので、似たようなデザインになるような感じ</li>
+</ul>
+
+
+<h5>2012年のTrend</h5>
+
+<ul>
+<li>黒やダークな背景</li>
+<li>ダークやマットな色</li>
+<li>水色や白のテキスト</li>
+<li>レイアウトがグリッドスタイル</li>
+<li>ON/OFFボタンなど、ルールが破綻してるところもあった</li>
+<li>ボーダレスUI(ひと目でボタンなのかわからないようなものを指す)</li>
+</ul>
+
+
+<h5>2013年のTrend</h5>
+
+<ul>
+<li>白や明るい背景</li>
+<li>カードスタイル(Googleの殆どのアプリが対応)</li>
+<li>影を入れたりして立体感を出している
+
+<ul>
+<li>(GooglePlayでの)評価が上がりやすい</li>
+<li>platformとの統一感が重要</li>
+</ul>
+</li>
+<li>ボーダレスUIは健在・・・</li>
+<li>シンプルなアイコンやイラスト</li>
+</ul>
+
+
+<h4>2014年(1Q)のTrend</h4>
+
+<ul>
+<li>Yahoo weatheアプリのような感じになりつつある
+
+<ul>
+<li>カードスタイルから変わる</li>
+</ul>
+</li>
+<li>端末のスペックが上がってきたから対応できるようになってきた
+
+<ul>
+<li>写真やグラデーション</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Android wear</h4>
+
+<ul>
+<li>サークルUI
+
+<ul>
+<li>アイコンが丸くなっているものが増えてきた</li>
+<li>フラットで押したりする領域が分からないという問題への回答かも</li>
+</ul>
+</li>
+<li>より大きな書体</li>
+<li>写真やビジュアルリッチに</li>
+</ul>
+
+
+<h4>webサイトデザインとの違い</h4>
+
+<ul>
+<li>スケーラブル、モニターによっての情報量が違う
+
+<ul>
+<li>スマホ向けは、シンプル・単機能・担当直入な処理デザインに</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>QAメモ</h4>
+
+<ul>
+<li>アプリのUIデザインはどうするの？
+
+<ul>
+<li>ゲームUIとアプリUIとは全く違うので、機能を入れ過ぎないようにする</li>
+</ul>
+</li>
+<li>インタラクションにもデザイナーが関わってやっていくほうがよい
+
+<ul>
+<li>ダサいものになりづらい</li>
+<li>エンジニアも積極的にデザイナーと一緒にやっていく</li>
+</ul>
+</li>
+<li>流行を追っかけるためのデザインサイト
+
+<ul>
+<li>Android niceties</li>
+</ul>
+</li>
+<li>デザインにも事業戦略が必要
+
+<ul>
+<li>古い端末もサポートするのか？など
+
+<ul>
+<li>2.x系はもう切ってもいいかも</li>
+<li>１つで全部の対応は難しいので避けたほうがよい</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>トレンドの変遷(最近のAndroidアプリのトレンドについて)</h3>
+
+<hr />
+
+<h4>はじめに</h4>
+
+<ul>
+<li>セッションはAndroid Pattern Cookbookの解説&amp;補足</li>
+<li><a href="https://play.google.com/store/apps/details?id=yanzm.products.patterncookbook">AndroidPatternCoockbookのデモアプリ</a>あるので確認しながらだと理解進むかも</li>
+<li>最近の開発は、タブレット対応も必須</li>
+</ul>
+
+
+<h4>ダッシュボードデザイン</h4>
+
+<ul>
+<li>メインコンテンツが複数ある場合、機能が視認しやすいので優位</li>
+<li>1回操作挟むのは、ダメじゃね？</li>
+</ul>
+
+
+<h4>タブ</h4>
+
+<ul>
+<li>スワイプでタブ間の行き来ができるように</li>
+<li>各コンテンツのスワイプはできない・・・</li>
+</ul>
+
+
+<h4>NvigationDrawer</h4>
+
+<ul>
+<li>ガイドライン化</li>
+<li>メジャーなものは大体NvigationDrawerを使ってる</li>
+<li>アイコン左、カウンターは右</li>
+</ul>
+
+
+<h4>アプリの世界観も重要</h4>
+
+<ul>
+<li>FeedlyやEvernoteが筆頭
+
+<ul>
+<li>出しすぎなところもあるけど・・・</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>上部にユーザー情報を表示が多い</h4>
+
+<ul>
+<li>アカウント切り替えが難しいタイプも・・・</li>
+</ul>
+
+
+<h4>オリジナリティを出す</h4>
+
+<ul>
+<li>黒はデザインが難しい</li>
+</ul>
+
+
+<h4>アクションバー</h4>
+
+<ul>
+<li>アクションバーとコンテンツの配色は雰囲気になる
+
+<ul>
+<li>白だと明るい、清潔感が出やすい</li>
+<li>白+黒だと引き締まる</li>
+</ul>
+</li>
+<li>アクションバーの背景
+
+<ul>
+<li>下に影をつけるものも多い</li>
+</ul>
+</li>
+<li>フレームワークのアクションバーを使ったほうがよい
+
+<ul>
+<li>アプリの世界観次第で独自路線があるならいいけど。</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>フォント</h4>
+
+<ul>
+<li>ライセンス問題になりやすいので、フォントはアプリに内蔵しないほうがいい</li>
+<li>fontFamilyを使うと改善できる可能性がある
+
+<ul>
+<li>font同士を組み合わせて使うほうといい</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>ヘルプポップアップ</h4>
+
+<ul>
+<li>注目させたい場合、アニメーションを使うと注目させやすい</li>
+</ul>
+
+
+<h4>インストラクション</h4>
+
+<ul>
+<li>「ここを押す」などの表示を入れやすい</li>
+</ul>
+
+
+<h4>チュートリアル</h4>
+
+<ul>
+<li>読む？テキスト量は減らしたほうがいい</li>
+<li>画像で伝え、1行ぐらいがいい</li>
+<li>無くてもいいかの検討も重要</li>
+</ul>
+
+
+<h4>viewpager</h4>
+
+<ul>
+<li>スクロールできるタブ</li>
+<li>タイトルストリップ</li>
+<li>インジケータ
+
+<ul>
+<li>ページの移動でアイコンが変わるもの</li>
+</ul>
+</li>
+<li>ページ切り替えでエフェクト</li>
+</ul>
+
+
+<h4>タブレット対応</h4>
+
+<ul>
+<li>スケールアップは微妙な対応
+
+<ul>
+<li>データ量が無ければ、それでもいいかも</li>
+<li>画像入れるなりで、余白を減らす</li>
+</ul>
+</li>
+<li>macroreflow
+
+<ul>
+<li>グリッドの並び替え
+
+<ul>
+<li>数も重要になる</li>
+</ul>
+</li>
+<li>スマホはリストで対応してやるといい</li>
+</ul>
+</li>
+<li>master/detailパターン
+
+<ul>
+<li>gmailアプリとかgoogle playアプリ</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Railsで定数を定義する]]></title>
@@ -2571,246 +2909,6 @@ ActiveRecordと殆ど同じですね。</p>
 
 <p>コードベースで、バルクインサートやバルクアップデートができるところがいいですね。<br/>
 データをまとめて引っ張って→データ処理→まとめて更新なんかの使い方では便利かもｗ</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ActiveRecordメモ その2]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/11/19/ar-memo-2/"/>
-    <updated>2013-11-19T00:13:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/11/19/ar-memo-2</id>
-    <content type="html"><![CDATA[<p>前回書いたので、メモをまたまた残しておく</p>
-
-<p>今回は、以下の３つを書き起こす。</p>
-
-<ul>
-<li>既存行の更新処理</li>
-<li>データ保存系メソッドの違い</li>
-<li>既存行の削除処理</li>
-<li>コールバック</li>
-</ul>
-
-
-<h3>既存行の更新</h3>
-
-<hr />
-
-<p>1.更新する行を特定してから更新するやり方</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
-</span><span class='line'>table.name = "column name"
-</span><span class='line'>table.save
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2.属性の値を変更してからモデルオブジェクトを取得するやり方</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
-</span><span class='line'>table.update_attribute(:name, "column_name")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上はシンボルを使って、特定の１カラムのみの更新の場合</p>
-
-<p>まとめて行を更新する場合、ハッシュを使いますね。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
-</span><span class='line'>table.update_attributes(name: "column_name", text: "ActiveRecord")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因みに、Railsだとこんな感じで使ってますね。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def update
-</span><span class='line'>  table = Tables.find(params[:id])
-</span><span class='line'>  if table.update_attributes(params[:table])
-</span><span class='line'>    redirect_to action: :index
-</span><span class='line'>  else
-</span><span class='line'>    redirect_to action: :edit
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3.行の読み込みと更新を一度に行う方法</p>
-
-<p>これは特に言うこともないですね。<br/>
-指定した行を更新し、結果をDBに反映、そのままオブジェクトを取得します</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.update(12, name: "column_name", text: "ActiveRecord")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因みに、update_allメソッドを使えばまとめて更新することができます。<br/>
-第1引数にupdate文、第2引数にwhere句を指定という形でやります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tbales.update_all("name = column_name, text = ActiveRecord", "id = 12")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>戻り値は、データベースのアダプターによって異なるようです。<br/>
-大体、更新行数が返るようですが、Oracleだけ何故か違うみたいです。。。</p>
-
-<h3>データ保存系メソッドの違い</h3>
-
-<hr />
-
-<table>
-<thead>
-<tr>
-<th align="left">メソッド </th>
-<th align="left"> 違い </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">save    </td>
-<td align="left">レコードが保存された場合、trueを返し、そうでなければnilを返す</td>
-</tr>
-<tr>
-<td align="left">save!   </td>
-<td align="left">保存が成功した、trueを返し、そうでなければ例外を発生</td>
-</tr>
-<tr>
-<td align="left">create  </td>
-<td align="left">保存に成功したかどうかは関係なく、ActiveRecordオブジェクトを返す。データが保存されたかどうかの確認は検証チェックが必要</td>
-</tr>
-<tr>
-<td align="left">create! </td>
-<td align="left">成功時は、ActiveRecordオブジェクトを返し、そうでなければ例外を発生</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>なので、使い分けはこんな感じに行う</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>if table.save
-</span><span class='line'>  検証と保存に成功
-</span><span class='line'>else
-</span><span class='line'>  検証エラー
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>begin
-</span><span class='line'>  table.save!
-</span><span class='line'>rescue ActiveRecord::RecordInvalid =&gt; error
-</span><span class='line'>  検証エラー
-</span><span class='line'>rescue ActiveRecord::RecordNotSaved =&gt; error
-</span><span class='line'>  保存に失敗(コールバックで保存が出来なかった)
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>既存行の削除処理</h3>
-
-<hr />
-
-<p>これは２種類の方法があります。<br/>
-１つ目、データベースを直接操作する感じのやり方</p>
-
-<p>こんな感じで、id指定で削除できます。<br/>
-idを格納した配列を指定することで、まとめて削除もできます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.delete(12)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>SQLのwhereを使ってまとめて削除する方法</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.delete_all(["id = 12"])</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これもupdate_allメソッドと同じで削除した行数が返ってきます。</p>
-
-<p>もう一つのやり方は、destroyメソッドを使う方法です。<br/>
-こいつは、削除というよりもデータの凍結ですね。</p>
-
-<p>特定の行のみ凍結</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.destroy(12)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>まとめて凍結する方法</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.destroy_all("name = ?", "column_name")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因みにdeleteメソッドを使った場合、<br/>
-ActiveRecordの検証メソッドが実行されないことに注意かも。</p>
-
-<h3>コールバック順序</h3>
-
-<hr />
-
-<p>コールバックで独自に処理を入れたい場合ってあると思うので、ついでにメモしておく</p>
-
-<p>新規レコードでmodel.saveを実行した場合、以下の順序でコールバックされる</p>
-
-<ol>
-<li>before_validation</li>
-<li>検証処理</li>
-<li>after_validation</li>
-<li>before_save</li>
-<li>before_create</li>
-<li>挿入処理</li>
-<li>after_create</li>
-<li>after_save</li>
-</ol>
-
-
-<p>更新の場合だと以下になる</p>
-
-<ol>
-<li>before_validation</li>
-<li>検証処理</li>
-<li>after_validation</li>
-<li>before_save</li>
-<li>before_update</li>
-<li>更新処理</li>
-<li>after_update</li>
-<li>after_save</li>
-</ol>
-
-
-<p>削除(model.destroy)だと、以下になる</p>
-
-<ol>
-<li>before_destroy</li>
-<li>destroy処理</li>
-<li>after_destory</li>
-</ol>
-
-
-<p>ここまでそれなりに書いたので、もうちょい参照系も書いておきたいなw</p>
 ]]></content>
   </entry>
   

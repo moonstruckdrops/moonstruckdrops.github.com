@@ -9,9 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="参加メモメモ。 オープニング Matzからの挨拶。
-楽しい設計の言語が真面目に仕事になって嬉しい。
-万葉をよろしく!! 基調公演(島田さん) 言葉は軽く聞こえるけど、会社経営だとすごい!! 最近思う「コミュニティと会社の私」 会社は孤立している。契約とか仕事程度(内側のつながりはない) &hellip;">
+  <meta name="description" content="Octpressが便利すぎ。。。
+Bloggerとは何だったんだって感じです。 どうも、どうもこんにちは。kurobaraです。 便利すぎるんで、 「ちょっと、外部に公開できないけどーみたいな感じで何でも書けるようなブログ」 欲しくなるわけですよ。(主に会社で、ですが・・・) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +72,139 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/08/rsync-octpress/">rsyncを使って自前サーバでOctpressを運用する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-08T21:35:00+09:00" pubdate data-updated="true">Apr 8<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Octpressが便利すぎ。。。<br/>
+Bloggerとは何だったんだって感じです。</p>
+
+<p>どうも、どうもこんにちは。kurobaraです。</p>
+
+<p>便利すぎるんで、</p>
+
+<p>「ちょっと、外部に公開できないけどーみたいな感じで何でも書けるようなブログ」</p>
+
+<p>欲しくなるわけですよ。(主に会社で、ですが・・・)</p>
+
+<p>結論から先に言っちゃうと、自前サーバでOctpressを動かせます。<br/>
+Apacheのディレクトリ制限を噛ますことでアクセス制限なんてこともできます。</p>
+
+<p>という訳で、Octpressを自前サーバで動かす方法をやってみます。</p>
+
+<h3>準備</h3>
+
+<hr />
+
+<p>思いつく感じのこと</p>
+
+<ul>
+<li>クライアントから自前のサーバにSSHでアクセスできること</li>
+<li>クライアントにrsyncがあること</li>
+<li>クライアントでOctpressが動作すること</li>
+</ul>
+
+
+<p>こんな感じ、移行で設定します。</p>
+
+<h3>Rakefileの編集</h3>
+
+<hr />
+
+<p>Rakeコマンドを使ってる訳なので、deploy先を変更するため以下のように編集します。</p>
+
+<ul>
+<li>「ssh_user」を実際のユーザー名とサーバ名に変更します</li>
+<li>「document_root」でサーバ配置のディレクトリを指定します</li>
+<li>「ssh_port」はデフォルトで22ですが、必要に応じて変えます</li>
+<li>「deploy_default」をpushからrsyncに変更します。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh_user       = "user@server"
+</span><span class='line'>ssh_port       = 22
+</span><span class='line'>document_root  = "/var/www/html/"
+</span><span class='line'>rsync_delete   = true
+</span><span class='line'>deploy_default = "rsync"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ぶっちゃけ、自前サーバで動かすだけならこれで終わりです。<br/>
+が、これだけだと寂しいのでサブディレクトリで動作するようにしてみます。<br/>
+# 当たり前ですが、普通はサブディレクトリ単位でコンテンツをApacheに配備すると思います。</p>
+
+<h3>サブディレクトリ運用</h3>
+
+<hr />
+
+<p>http://＜サーバURL＞/hoge のようにサブディレクトリ運用する場合は、以下のようにします。</p>
+
+<ul>
+<li>サブディレクトリを作成します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake set_root_dir[hoge]</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>_config.yamlでサブディレクトリを追加します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>url: http://&lt;サーバURL&gt;/hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Rakefileのdocument_rootをサブディレクトリに変更します</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>document_root = "/var/www/html/octopress"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは、Apache2でサブディレクトリの設定を施してやれば動作します。<br/>
+認証を付けたければ、認証の設定をすれば認証付きのBlogになります。</p>
+
+<p>これで、要件を満たせたので作業メモとか残せて幸せになれますね。(多分)</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1074,171 +1206,6 @@ Ubuntuのapt-getでインストールもできますが、ソースコードを�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/24/markdown-mode/">Emacsでmarkdown-modeを使用する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-24T00:38:00+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Emacsでmarkdown-modeを使用してみます。<br/>
-markdownの編集で使えるモードで結構便利なので紹介してみます。</p>
-
-<h4>インストール</h4>
-
-<hr />
-
-<p>Emacsのパッケージインストーラからインストールをします。<br/>
-以下を実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x package-list-packages</span></code></pre></td></tr></table></div></figure>
-
-
-<p>markdown-modeを選択してインストールを実施します。</p>
-
-<p>他にmarkdownコマンドが使用できるようにする必要がありますので、合わせてインストールします。<br/>
-MacOSXだとHomebrewを使用すれば一発でインストール出来ます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install markdown</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>設定</h4>
-
-<hr />
-
-<ul>
-<li>markdown-modeを使用できるように「.emacs.d/init.el」に以下を追加</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>markdown-modeで使用できる拡張子を追加</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上の設定では、.markdownと付くファイルは、markdown-modeを使用する設定です。<br/>
-他に使用したいmarkdown-modeを使用したい拡張子があれば、同じようにして追加します。(下は.txtと付くファイルをmarkdown-modeで開きます)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.txt" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>エラー対処</h4>
-
-<hr />
-
-<p>プレビューを実行しようとすると、以下のようなエラーが発生します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/bin/bash: markdown: command not found</span></code></pre></td></tr></table></div></figure>
-
-
-<p>原因は、以下の２点が考えられます。</p>
-
-<ol>
-<li>markdownコマンドがインストールされていない</li>
-<li>Emacsが認識しているパスと環境変数のパスが異なる</li>
-</ol>
-
-
-<p>1に関しては、markdownコマンドをインストールをすれば解決します。<br/>
-2に関してですが、以下のようにしてEmacs側にパスを通してやれば解決できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(dolist (dir (list
-</span><span class='line'>              "/sbin"
-</span><span class='line'>              "/usr/sbin"
-</span><span class='line'>              "/bin"
-</span><span class='line'>              "/usr/bin"
-</span><span class='line'>              "/opt/local/bin"
-</span><span class='line'>              "/sw/bin"
-</span><span class='line'>              "/usr/local/bin"
-</span><span class='line'>              (expand-file-name "~/bin")
-</span><span class='line'>              (expand-file-name "~/.emacs.d/bin")
-</span><span class='line'>              ))
-</span><span class='line'> (when (and (file-exists-p dir) (not (member dir exec-path)))
-</span><span class='line'>   (setenv "PATH" (concat dir ":" (getenv "PATH")))
-</span><span class='line'>   (setq exec-path (append (list dir) exec-path))))</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>プレビュー</h4>
-
-<hr />
-
-<ul>
-<li><em>markdown-output</em>バッファでプレビューを確認する</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c m</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>ブラウザでプレビューを確認する(一時ファイルを作成します)</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c v</span></code></pre></td></tr></table></div></figure>
-
-
-<p><a href="http://jblevins.org/projects/markdown-mode/">公式</a>にその他の使用方法が掲載されていますので、その他の機能はそちらを参照してください。</p>
-
-<p>ブラウザでプレビューしていて、かつOctpress用の記事を編集する場合、注意してください。</p>
-
-<p>そのままデプロイするとhtmlファイルまでアップロードされてしまうので、２重投稿になるので気をつけてください。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -1260,6 +1227,10 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/23/abc-2014-spring/">Android Bazaar and Conference 2014 Springに行ってきた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/23/rails-consts/">Railsで定数を定義する</a>
       </li>
     
@@ -1275,15 +1246,11 @@ MacOSXだとHomebrewを使用すれば一発でインストール出来ます。
         <a href="/blog/2014/02/23/homebrew-package-version/">Homebrewでバージョンを指定してパッケージをインストールする</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/02/21/forget-js/">JavaScriptのproxyでハマったこと</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.27272727272728%'>Android(5)</a> <a href='/blog/categories/devlove' style='font-size: 105.45454545454545%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.45454545454545%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 116.36363636363636%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 105.45454545454545%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 121.81818181818181%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.45454545454545%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.45454545454545%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 127.27272727272728%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.45454545454545%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 143.63636363636363%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 127.27272727272728%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 127.27272727272728%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(11)</a> <a href='/blog/categories/shellscript' style='font-size: 105.45454545454545%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.45454545454545%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 143.63636363636363%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.72727272727272%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.45454545454545%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.45454545454545%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 116.36363636363636%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 105.45454545454545%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 121.81818181818181%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.45454545454545%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.45454545454545%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 127.27272727272728%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.45454545454545%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 143.63636363636363%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 127.27272727272728%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 127.27272727272728%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(11)</a> <a href='/blog/categories/shellscript' style='font-size: 105.45454545454545%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.45454545454545%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 143.63636363636363%'>戯言(8)</a> </span>
 </section
 
 

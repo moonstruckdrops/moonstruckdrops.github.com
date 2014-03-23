@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-03-23T21:08:26+09:00</updated>
+  <updated>2014-03-23T22:33:29+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,344 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Android Bazaar and Conference 2014 Springに行ってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/03/23/abc-2014-spring/"/>
+    <updated>2014-03-23T22:12:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/03/23/abc-2014-spring</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>もう殆ど、Androidをやっていない身ですが情報追っかけ程度に参加してきました。</p>
+
+<p>因みに、当日は寝坊してやべぇって言ってたのは内緒w</p>
+
+<p>興味が湧いたセッションは2つぐらいだったので、それさえ聴ければいいかなーぐらいの感覚で行ってきました。</p>
+
+<p>というわけで、当日のメモに加筆修正したものを残します。</p>
+
+<h3>UI/UXデザイントレンド 2014</h3>
+
+<hr />
+
+<h4>デザイントレンド</h4>
+
+<ul>
+<li>質感がわかるようなデザインに変わりつつ</li>
+<li>スキュモーフィズムからフラットデザインへ
+
+<ul>
+<li>装飾を外してシンプルに</li>
+<li>flatvsrealism.com</li>
+</ul>
+</li>
+<li>フラットのほうが意図が伝わりやすい
+
+<ul>
+<li>Androidのデザインガイドラインもフラットなものに変わっている</li>
+<li>Googleも力を入れていることがわかる</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Androido UI</h4>
+
+<h5>2011年のTrend</h5>
+
+<ul>
+<li>派手</li>
+<li>白いテキスト</li>
+<li>リアルで立体的なアイコン</li>
+<li>この当時はiPhoneが流行っていたので、似たようなデザインになるような感じ</li>
+</ul>
+
+
+<h5>2012年のTrend</h5>
+
+<ul>
+<li>黒やダークな背景</li>
+<li>ダークやマットな色</li>
+<li>水色や白のテキスト</li>
+<li>レイアウトがグリッドスタイル</li>
+<li>ON/OFFボタンなど、ルールが破綻してるところもあった</li>
+<li>ボーダレスUI(ひと目でボタンなのかわからないようなものを指す)</li>
+</ul>
+
+
+<h5>2013年のTrend</h5>
+
+<ul>
+<li>白や明るい背景</li>
+<li>カードスタイル(Googleの殆どのアプリが対応)</li>
+<li>影を入れたりして立体感を出している
+
+<ul>
+<li>(GooglePlayでの)評価が上がりやすい</li>
+<li>platformとの統一感が重要</li>
+</ul>
+</li>
+<li>ボーダレスUIは健在・・・</li>
+<li>シンプルなアイコンやイラスト</li>
+</ul>
+
+
+<h4>2014年(1Q)のTrend</h4>
+
+<ul>
+<li>Yahoo weatheアプリのような感じになりつつある
+
+<ul>
+<li>カードスタイルから変わる</li>
+</ul>
+</li>
+<li>端末のスペックが上がってきたから対応できるようになってきた
+
+<ul>
+<li>写真やグラデーション</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Android wear</h4>
+
+<ul>
+<li>サークルUI
+
+<ul>
+<li>アイコンが丸くなっているものが増えてきた</li>
+<li>フラットで押したりする領域が分からないという問題への回答かも</li>
+</ul>
+</li>
+<li>より大きな書体</li>
+<li>写真やビジュアルリッチに</li>
+</ul>
+
+
+<h4>webサイトデザインとの違い</h4>
+
+<ul>
+<li>スケーラブル、モニターによっての情報量が違う
+
+<ul>
+<li>スマホ向けは、シンプル・単機能・担当直入な処理デザインに</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>QAメモ</h4>
+
+<ul>
+<li>アプリのUIデザインはどうするの？
+
+<ul>
+<li>ゲームUIとアプリUIとは全く違うので、機能を入れ過ぎないようにする</li>
+</ul>
+</li>
+<li>インタラクションにもデザイナーが関わってやっていくほうがよい
+
+<ul>
+<li>ダサいものになりづらい</li>
+<li>エンジニアも積極的にデザイナーと一緒にやっていく</li>
+</ul>
+</li>
+<li>流行を追っかけるためのデザインサイト
+
+<ul>
+<li>Android niceties</li>
+</ul>
+</li>
+<li>デザインにも事業戦略が必要
+
+<ul>
+<li>古い端末もサポートするのか？など
+
+<ul>
+<li>2.x系はもう切ってもいいかも</li>
+<li>１つで全部の対応は難しいので避けたほうがよい</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>トレンドの変遷(最近のAndroidアプリのトレンドについて)</h3>
+
+<hr />
+
+<h4>はじめに</h4>
+
+<ul>
+<li>セッションはAndroid Pattern Cookbookの解説&amp;補足</li>
+<li><a href="https://play.google.com/store/apps/details?id=yanzm.products.patterncookbook">AndroidPatternCoockbookのデモアプリ</a>あるので確認しながらだと理解進むかも</li>
+<li>最近の開発は、タブレット対応も必須</li>
+</ul>
+
+
+<h4>ダッシュボードデザイン</h4>
+
+<ul>
+<li>メインコンテンツが複数ある場合、機能が視認しやすいので優位</li>
+<li>1回操作挟むのは、ダメじゃね？</li>
+</ul>
+
+
+<h4>タブ</h4>
+
+<ul>
+<li>スワイプでタブ間の行き来ができるように</li>
+<li>各コンテンツのスワイプはできない・・・</li>
+</ul>
+
+
+<h4>NvigationDrawer</h4>
+
+<ul>
+<li>ガイドライン化</li>
+<li>メジャーなものは大体NvigationDrawerを使ってる</li>
+<li>アイコン左、カウンターは右</li>
+</ul>
+
+
+<h4>アプリの世界観も重要</h4>
+
+<ul>
+<li>FeedlyやEvernoteが筆頭
+
+<ul>
+<li>出しすぎなところもあるけど・・・</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>上部にユーザー情報を表示が多い</h4>
+
+<ul>
+<li>アカウント切り替えが難しいタイプも・・・</li>
+</ul>
+
+
+<h4>オリジナリティを出す</h4>
+
+<ul>
+<li>黒はデザインが難しい</li>
+</ul>
+
+
+<h4>アクションバー</h4>
+
+<ul>
+<li>アクションバーとコンテンツの配色は雰囲気になる
+
+<ul>
+<li>白だと明るい、清潔感が出やすい</li>
+<li>白+黒だと引き締まる</li>
+</ul>
+</li>
+<li>アクションバーの背景
+
+<ul>
+<li>下に影をつけるものも多い</li>
+</ul>
+</li>
+<li>フレームワークのアクションバーを使ったほうがよい
+
+<ul>
+<li>アプリの世界観次第で独自路線があるならいいけど。</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>フォント</h4>
+
+<ul>
+<li>ライセンス問題になりやすいので、フォントはアプリに内蔵しないほうがいい</li>
+<li>fontFamilyを使うと改善できる可能性がある
+
+<ul>
+<li>font同士を組み合わせて使うほうといい</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>ヘルプポップアップ</h4>
+
+<ul>
+<li>注目させたい場合、アニメーションを使うと注目させやすい</li>
+</ul>
+
+
+<h4>インストラクション</h4>
+
+<ul>
+<li>「ここを押す」などの表示を入れやすい</li>
+</ul>
+
+
+<h4>チュートリアル</h4>
+
+<ul>
+<li>読む？テキスト量は減らしたほうがいい</li>
+<li>画像で伝え、1行ぐらいがいい</li>
+<li>無くてもいいかの検討も重要</li>
+</ul>
+
+
+<h4>viewpager</h4>
+
+<ul>
+<li>スクロールできるタブ</li>
+<li>タイトルストリップ</li>
+<li>インジケータ
+
+<ul>
+<li>ページの移動でアイコンが変わるもの</li>
+</ul>
+</li>
+<li>ページ切り替えでエフェクト</li>
+</ul>
+
+
+<h4>タブレット対応</h4>
+
+<ul>
+<li>スケールアップは微妙な対応
+
+<ul>
+<li>データ量が無ければ、それでもいいかも</li>
+<li>画像入れるなりで、余白を減らす</li>
+</ul>
+</li>
+<li>macroreflow
+
+<ul>
+<li>グリッドの並び替え
+
+<ul>
+<li>数も重要になる</li>
+</ul>
+</li>
+<li>スマホはリストで対応してやるといい</li>
+</ul>
+</li>
+<li>master/detailパターン
+
+<ul>
+<li>gmailアプリとかgoogle playアプリ</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Volleyをビルドする]]></title>
@@ -598,157 +936,6 @@ From query = new Select().from(Item.class).innerJoin(Hoge.class).on("Hoge.id = I
 <p>一応ソースコードを紛失したapkのバイナリが取り出せました。<br/>
 別の端末にインストールできる。<br/>
 よかったよかった。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Androidのソースコード検索サービスを構築してみる]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/25/gnu-global/"/>
-    <updated>2013-03-25T12:17:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/25/gnu-global</id>
-    <content type="html"><![CDATA[<p>色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。<br/>
-とりあえず、aospのmasterで構築してみます。</p>
-
-<h4>環境</h4>
-
-<hr />
-
-<ul>
-<li>Ubuntu12.04 x86_64</li>
-<li><a href="http://www.gnu.org/software/global/">GNU Global 6.2.8</a></li>
-<li>Apache2</li>
-</ul>
-
-
-<p>GNU Globalのバージョンは、なるべく新しいものを入れるようにします。。。<br/>
-Ubuntuのapt-getでインストールもできますが、ソースコードを解析した結果が正しくgenerateされません。<br/>
-6.2.8だと正しく解析できました。(公式もdebianで配布しているパッケージは古いと記載があったので、Ubuntuも同じ感じでしょう)</p>
-
-<h4>事前準備</h4>
-
-<hr />
-
-<p>事前準備として、以下を実施します。</p>
-
-<ul>
-<li>GNU Globalのインストール</li>
-<li>Apache2のインストール</li>
-<li>Androidのソースコードをダウンロード</li>
-</ul>
-
-
-<h6>GNU Globalのインストール</h6>
-
-<hr />
-
-<p>前述のように、UbuntuのリポジトリにあるGNU Globalは古いのでソースコードの解析が正しく行われません。<br/>
-そのため、ビルドしてインストールします。</p>
-
-<ol>
-<li>ソースコードの取得(<a href="http://www.gnu.org/software/global/">ここ</a>からダウンロード)</li>
-<li>ビルド(ここではデフォルト設定で行います)
-<code>
-$./configure --prefix=/usr/local/global
-$make
-</code></li>
-<li>インストール
-<code>
-$sudo make install
-</code>
-ビルドの際に付与するオプションはご自身で設定してください。</li>
-</ol>
-
-
-<h6>Apache2のインストール</h6>
-
-<hr />
-
-<p>普通にインストールします。
-<code>
-$sudo apt-get install apache2
-</code></p>
-
-<p>UbuntuっていうかDebian系使いづらいなぁ・・・。</p>
-
-<h6>Androidのソースコード取得</h6>
-
-<hr />
-
-<p>(公式)[]にしたがって実施します。<br/>
-今回は「/var/aosp」のディレクトリ配下に保存することとします。</p>
-
-<h4>コード解析(タグ作成)の実施</h4>
-
-<hr />
-
-<p>以下のコマンドで実行します</p>
-
-<p><code>
-$cd /var/aosp
-$gtags -v
-</code></p>
-
-<h4>タグのHtml化</h4>
-
-<hr />
-
-<p>以下のコマンドで実行します。</p>
-
-<p>```
-$cd /var/aosp
-$htags -afsnDvo --title Android --item-order=s --show-position --fixed-guid --auto-completion</p>
-
-<p>```</p>
-
-<p>非常に長いオプションですが、ソースコード検索フォームのhtmlが生成されます。<br/>
-検索に加えて、検索フォームの上で入力補完をできるようにしていますので、CGIの実行が必要です。</p>
-
-<h4>Apache2の設定</h4>
-
-<hr />
-
-<p>以下のコマンドでブラウザから参照可能なディレクトリを作成します。
-<code>
-$mkdir -p /var/www/aosp
-</code></p>
-
-<p>コンテンツの配備を実施します。<br/>
-特に意図はないですが、コピーだとめんどいのでシンボリックリンクにします。
-<code>
-$cd /var/www/aosp
-$ln -s ../aosp/HTML HTML
-</code></p>
-
-<p>/etc/apache2/sites-enable/defaultsを編集します。</p>
-
-<p>```
-ScriptAlias /cgi-bin/ /var/www/aosp/HTML
-<Directory "</var/www/aosp/HTML/cgi-bin"></p>
-
-<pre><code>AllowOverride None
-Options +ExecCGI
-AddHandler cgi-script .cgi .pl
-Order allow,deny
-Allow from all
-</code></pre>
-
-<p></Directory>
-```</p>
-
-<p>編集完了後、apache2を再起動します。
-<code>
-$/etc/init.d/apache2 restart
-</code></p>
-
-<p>ブラウザ上で<a href="http://localhost/aosp">http://localhost/aosp</a>にアクセスして、画面が表示されることを確認します。</p>
-
-<h4>感想</h4>
-
-<hr />
-
-<p><a href="https://sites.google.com/site/devcollaboration/codesearch">こういうサービス</a>が、既に世の中にある訳で・・・</p>
-
-<p>自分がやる必要ってあんまりないんじゃないかなーとか。。。</p>
 ]]></content>
   </entry>
   
