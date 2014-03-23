@@ -5,15 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>EmacsのScratchバッファに設定を追加してみた - kurobaraのブログ</title>
+  <title>Railsで定数を定義する - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Emacsのscratchバッファってすごく便利ですよね。 特に以下のことによく使います。 ちょっとしたメモしたり
-URLメモを取ったり
-ちょっとした引用メモの整形とか
-マクロの実験とか まぁよく使うわけです・・・
-が、ついうっかりでEmacsを終了したりとか、 &hellip;">
+  <meta name="description" content="はじめに Railsで定数を作るとき、いつもどうしてたっけ？っていう個人まとめをつくってみました。 決定版みたいなものが無い感じというのもあったりするので参照用という感じです。 グローバルな定数定義 以下のような感じの内容で、「config/initializers」 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +18,7 @@ URLメモを取ったり
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/04/14/emacs-scratch-setting/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/03/23/rails-consts/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -78,7 +74,7 @@ URLメモを取ったり
   
   <header>
     
-      <h1 class="entry-title">EmacsのScratchバッファに設定を追加してみた</h1>
+      <h1 class="entry-title">Railsで定数を定義する</h1>
     
     
       <p class="meta">
@@ -94,109 +90,146 @@ URLメモを取ったり
   
 
 
-<time datetime="2013-04-14T22:06:00+09:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time>
+<time datetime="2014-03-23T20:34:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Emacsのscratchバッファってすごく便利ですよね。</p>
+<div class="entry-content"><h3>はじめに</h3>
 
-<p>特に以下のことによく使います。</p>
+<hr />
+
+<p>Railsで定数を作るとき、いつもどうしてたっけ？っていう個人まとめをつくってみました。</p>
+
+<p>決定版みたいなものが無い感じというのもあったりするので参照用という感じです。</p>
+
+<h3>グローバルな定数定義</h3>
+
+<hr />
+
+<p>以下のような感じの内容で、「config/initializers」に適当なRubyファイルを作成して定義します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>HOGE = "HOGE"
+</span><span class='line'>FUGA = "FUGA"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>もしくは、yamlに定数を切り出して、実行タイミング(Rails起動時)にロードという方式でもいいかもしれません。<br/>
+# yamlに切り出すと管理が大変になるかも・・・という欠点は無きにしもあらずですね。</p>
+
+<p>欠点は以下が考えられます。</p>
 
 <ul>
-<li>ちょっとしたメモしたり</li>
-<li>URLメモを取ったり</li>
-<li>ちょっとした引用メモの整形とか</li>
-<li>マクロの実験とか</li>
+<li>namespaceの概念が無いので少々使いづらい</li>
+<li>環境ごとに値を変更したい場合、切り替え処理を自前でやる必要がある</li>
 </ul>
 
 
-<p>まぁよく使うわけです・・・
-が、ついうっかりでEmacsを終了したりとか、Emacs本体がゾンビプロセスになったりとかでロストしてしまうことがあります。<br/>
-自分はこれでよく泣きました(> &lt;;)</p>
+<p>特に、環境差分とか無ければこれでいいかもしれませんね。<br/>
+# 尤も、namespaceを使わなくて済む程度という前提が付きますが・・・</p>
 
-<p>また、メモを保存しておこうと思った時にバッファの先頭にある初期メッセージが鬱陶しくなってきます。</p>
+<h3>コントローラー内で共通な定数定義</h3>
 
-<p>今回は、これらの問題を解決してしまいます。</p>
+<hr />
 
-<p>まずは、scratchの初期メッセージ消去します。<br/>
-以下の内容を「.emacs/init.el」に追加します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(setq initial-scratch-message "")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>この設定を加えて、Emacsを再起動するとscratchバッファの初期メッセージがなくなります。
-即座に反映したければ、評価してもいいとおもいます。</p>
-
-<p>次に、Emacsが終了してしまったときにScratchバッファの保存と再起動時にScratchバッファの内容を復元する方法ですが・・・</p>
-
-<p>以下の内容を「.emacs/init.el」に追加します。</p>
+<p>以下のような感じで、app/controllers/application_controller.rb 内で定義します</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(defun save-scratch-data ()
-</span><span class='line'>  (let ((str (progn
-</span><span class='line'>               (set-buffer (get-buffer "*scratch*"))
-</span><span class='line'>               (buffer-substring-no-properties
-</span><span class='line'>                (point-min) (point-max))))
-</span><span class='line'>        (file "~/.emacs.d/backups/.scratch"))
-</span><span class='line'>    (if (get-file-buffer (expand-file-name file))
-</span><span class='line'>        (setq buf (get-file-buffer (expand-file-name file)))
-</span><span class='line'>      (setq buf (find-file-noselect file)))
-</span><span class='line'>    (set-buffer buf)
-</span><span class='line'>    (erase-buffer)
-</span><span class='line'>    (insert str)
-</span><span class='line'>    (save-buffer)
-</span><span class='line'>    (kill-buffer buf)))
-</span><span class='line'>
-</span><span class='line'>(defadvice save-buffers-kill-emacs
-</span><span class='line'>  (before save-scratch-buffer activate)
-</span><span class='line'>  (save-scratch-data))
-</span><span class='line'>
-</span><span class='line'>(defun read-scratch-data ()
-</span><span class='line'>  (let ((file "~/.emacs.d/backups/.scratch"))
-</span><span class='line'>    (when (file-exists-p file)
-</span><span class='line'>      (set-buffer (get-buffer "*scratch*"))
-</span><span class='line'>      (erase-buffer)
-</span><span class='line'>      (insert-file-contents file))
-</span><span class='line'>    ))
-</span><span class='line'>
-</span><span class='line'>(read-scratch-data)</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController &lt; ActionController::Base
+</span><span class='line'>  HOGE = "HOGE"
+</span><span class='line'>  FUGA = "FUGA"
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>上のEmacsLispが何をやっているかと言うと・・・<br/>
-終了時にScratchの内容をファイルに書き込み、起動時に書き出したScratchバッファの内容を読み込みしているだけです。</p>
+<p>単にApplicationControllerがすべてのcontrollerのスーパークラスになっているから参照できるというだけの話です。
+# あまりここに定義はしたくないですね。</p>
 
-<p>これで、Scratchバッファをちょっとしたメモ帳として大いに活用できますね。</p>
+<h3>rails_configを使って環境ごとに変更する</h3>
+
+<hr />
+
+<p><a href="https://github.com/railsjedi/rails_config">rails_config</a>というgemを使う方法ですね。</p>
+
+<p>以下をGemfileに記述し、インストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem 'rails_config'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>rails_configを使うように初期設定をします(ただのインストールですが)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g rails_config:install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ファイルに関しては以下の通り</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">環境</th>
+<th align="left">ファイルパス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">全ての環境で共通</td>
+<td align="left">config/settings.yml</td>
+</tr>
+<tr>
+<td align="left">ローカル環境</td>
+<td align="left">config/settings.local.yml</td>
+</tr>
+<tr>
+<td align="left">開発環境</td>
+<td align="left">config/settings/development.yml</td>
+</tr>
+<tr>
+<td align="left">テスト環境</td>
+<td align="left">config/settings/test.yml</td>
+</tr>
+<tr>
+<td align="left">本番環境</td>
+<td align="left">config/settings/production.yml</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>YAMLの記述は以下のような感じで行います</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>hoge:
+</span><span class='line'>  fuga: 'fugafuga'
+</span><span class='line'>  test: 'test'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用する場合は、以下のようなコードで出来ます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Settings.hoge[:fuga]
+</span><span class='line'>Settings.hoge['fuga']
+</span><span class='line'>Settings[:hoge][:fuga]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>他に、同じようなことをする有名なgemに、「settingslogic」があります。<br/>
+以下の感想でsettingslogicはあまりつかわないです。</p>
+
+<ul>
+<li>一つのファイルで全て定義なのでファイルが肥大化しそう</li>
+<li>クラス定義も作る必要があるので若干面倒(シンプルに使えない)</li>
+</ul>
+
 </div>
 
 
@@ -219,12 +252,12 @@ URLメモを取ったり
   
 
 
-<time datetime="2013-04-14T22:06:00+09:00" pubdate data-updated="true">Apr 14<span>th</span>, 2013</time>
+<time datetime="2014-03-23T20:34:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/emacs/'>Emacs</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -233,7 +266,7 @@ URLメモを取ったり
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/04/14/emacs-scratch-setting/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/04/14/emacs-scratch-setting/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/03/23/rails-consts/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/03/23/rails-consts/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -246,10 +279,8 @@ URLメモを取ったり
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/13/gocon-spring/" title="Previous Post: Go Conference 2013 springに行って来ました。 #GoCon">&laquo; Go Conference 2013 springに行って来ました。 #GoCon</a>
+        <a class="basic-alignment left" href="/blog/2014/03/23/ruby-solr/" title="Previous Post: RubyでSolrを使うときに気をつけること">&laquo; RubyでSolrを使うときに気をつけること</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/04/22/zip-pass/" title="Next Post: コマンドで暗号化Zipファイルを作成する">コマンドで暗号化Zipファイルを作成する &raquo;</a>
       
     </p>
   </footer>

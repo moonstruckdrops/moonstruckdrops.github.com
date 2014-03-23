@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-03-23T12:42:37+09:00</updated>
+  <updated>2014-03-23T21:08:26+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,138 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Railsで定数を定義する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/03/23/rails-consts/"/>
+    <updated>2014-03-23T20:34:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/03/23/rails-consts</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>Railsで定数を作るとき、いつもどうしてたっけ？っていう個人まとめをつくってみました。</p>
+
+<p>決定版みたいなものが無い感じというのもあったりするので参照用という感じです。</p>
+
+<h3>グローバルな定数定義</h3>
+
+<hr />
+
+<p>以下のような感じの内容で、「config/initializers」に適当なRubyファイルを作成して定義します</p>
+
+<p><code>
+HOGE = "HOGE"
+FUGA = "FUGA"
+</code></p>
+
+<p>もしくは、yamlに定数を切り出して、実行タイミング(Rails起動時)にロードという方式でもいいかもしれません。<br/>
+# yamlに切り出すと管理が大変になるかも・・・という欠点は無きにしもあらずですね。</p>
+
+<p>欠点は以下が考えられます。</p>
+
+<ul>
+<li>namespaceの概念が無いので少々使いづらい</li>
+<li>環境ごとに値を変更したい場合、切り替え処理を自前でやる必要がある</li>
+</ul>
+
+
+<p>特に、環境差分とか無ければこれでいいかもしれませんね。<br/>
+# 尤も、namespaceを使わなくて済む程度という前提が付きますが・・・</p>
+
+<h3>コントローラー内で共通な定数定義</h3>
+
+<hr />
+
+<p>以下のような感じで、app/controllers/application_controller.rb 内で定義します</p>
+
+<p><code>
+class ApplicationController &lt; ActionController::Base
+  HOGE = "HOGE"
+  FUGA = "FUGA"
+end
+</code></p>
+
+<p>単にApplicationControllerがすべてのcontrollerのスーパークラスになっているから参照できるというだけの話です。
+# あまりここに定義はしたくないですね。</p>
+
+<h3>rails_configを使って環境ごとに変更する</h3>
+
+<hr />
+
+<p><a href="https://github.com/railsjedi/rails_config">rails_config</a>というgemを使う方法ですね。</p>
+
+<p>以下をGemfileに記述し、インストールします。</p>
+
+<p><code>
+gem 'rails_config'
+</code></p>
+
+<p>rails_configを使うように初期設定をします(ただのインストールですが)
+<code>
+$rails g rails_config:install
+</code></p>
+
+<p>ファイルに関しては以下の通り</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">環境</th>
+<th align="left">ファイルパス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">全ての環境で共通</td>
+<td align="left">config/settings.yml</td>
+</tr>
+<tr>
+<td align="left">ローカル環境</td>
+<td align="left">config/settings.local.yml</td>
+</tr>
+<tr>
+<td align="left">開発環境</td>
+<td align="left">config/settings/development.yml</td>
+</tr>
+<tr>
+<td align="left">テスト環境</td>
+<td align="left">config/settings/test.yml</td>
+</tr>
+<tr>
+<td align="left">本番環境</td>
+<td align="left">config/settings/production.yml</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>YAMLの記述は以下のような感じで行います</p>
+
+<p><code>
+hoge:
+  fuga: 'fugafuga'
+  test: 'test'
+</code></p>
+
+<p>使用する場合は、以下のようなコードで出来ます。</p>
+
+<p><code>
+Settings.hoge[:fuga]
+Settings.hoge['fuga']
+Settings[:hoge][:fuga]
+</code></p>
+
+<p>他に、同じようなことをする有名なgemに、「settingslogic」があります。<br/>
+以下の感想でsettingslogicはあまりつかわないです。</p>
+
+<ul>
+<li>一つのファイルで全て定義なのでファイルが肥大化しそう</li>
+<li>クラス定義も作る必要があるので若干面倒(シンプルに使えない)</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyでSolrを使うときに気をつけること]]></title>
@@ -535,73 +667,6 @@ Hoge.where(:title => "title").first_or_create do |p|</p>
 <p>結局は裏で2回SQL発行してるだけなんですけどね。(selectとinsert)</p>
 
 <p>と、まぁ色々とありますがこんなところで。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rubyでアクセス用のメソッドを定義する(アクセッサ)]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor/"/>
-    <updated>2013-07-25T20:56:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/07/25/ruby-accessor</id>
-    <content type="html"><![CDATA[<p>なんてことはない、ただの整理です。</p>
-
-<p>通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。</p>
-
-<p>Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。</p>
-
-<p>以下のようなModuleクラスにあるものを使います</p>
-
-<ul>
-<li>attr_reader : 参照(読み出し)できるようにする(getter)</li>
-<li>attr_writer : 代入(書き込み)できるようにする(setter)</li>
-<li>attr_accessor : 参照、代入の両方できるようにする(getter/setter)</li>
-</ul>
-
-
-<p>それぞれ、使い方は以下のような形になります。</p>
-
-<p>```
-class Accessor</p>
-
-<pre><code>attr_reader :name,:hoge
-attr_writer :fuga,:piyo
-attr_accessor :access
-
-def initialize
-    @name = "kurobara"
-    @hoge = "hogehoge"
-    @fuga = "fugafuga"
-    @piyo = "piypiyo"
-    @access = "OK"
-end
-
-def print_fuga_piyo
-    p '---------------------'
-    puts "fuga = " + @fuga
-    puts "piyo = " + @piyo
-end
-</code></pre>
-
-<p>end</p>
-
-<p>a = Accessor.new()
-puts a.name
-puts a.hoge<br/>
-a.print_fuga_piyo
-p "代入操作"
-a.fuga = "fuga2fuga2"
-a.piyo = "piyo2piyo2"
-a.print_fuga_piyo
-p '---------------------'
-puts 'a.access = ' + a.access
-p "代入操作"
-a.access = "OKOK"
-puts 'a.access = ' + a.access
-```</p>
-
-<p>こんな感じで使えちゃいます。。。<br/>
-今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
-attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
 ]]></content>
   </entry>
   
