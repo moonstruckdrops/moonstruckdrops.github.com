@@ -9,7 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに もう殆ど、Androidをやっていない身ですが情報追っかけ程度に参加してきました。 因みに、当日は寝坊してやべぇって言ってたのは内緒w 興味が湧いたセッションは2つぐらいだったので、それさえ聴ければいいかなーぐらいの感覚で行ってきました。 というわけで、 &hellip;">
+  <meta name="description" content="はじめに 今更ながら、Rails3.2のアプリをRails4までアップデートしました。
+そのとき出たエラーと解消方法を残します。 当該のエラー それがこれ 1
+couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +73,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/26/update-gemfile/">jQueryが見つからないよエラーの解消法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-26T23:32:00+09:00" pubdate data-updated="true">Mar 26<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>今更ながら、Rails3.2のアプリをRails4までアップデートしました。<br/>
+そのとき出たエラーと解消方法を残します。</p>
+
+<h3>当該のエラー</h3>
+
+<hr />
+
+<p>それがこれ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>couldn't find file 'jquery'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>正直、なんで？という感じ</p>
+
+<h3>解消方法</h3>
+
+<hr />
+
+<p>Gemfileの記述が変わってたことが原因でした<br/>
+(asset compile周りの仕様変更)</p>
+
+<p>Rails3.x系は、Gemfileに以下がありました</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>group :assets do
+</span><span class='line'>
+</span><span class='line'>ここにasset compileで使用するgemがある
+</span><span class='line'>
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ところが、Rails4系になるとasset groupは無くなる仕様に変わったみたいです。<br/>
+代わりの設定は、<code>config/application.rb</code>になるようです。</p>
+
+<p>メジャーアップデートの前に、<a href="http://railscasts.com/episodes/415-upgrading-to-rails-4?language=ja&amp;view=asciicast">移行ガイド</a>に目を通せってことですねw</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1393,188 +1474,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/18/shell-gitkeep/">Gitkeepを作成、及び削除をするshellを作った</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-18T00:02:00+09:00" pubdate data-updated="true">Jan 18<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>以下のようなディレクトリ構成のときに.gitkeepを作りたかったのです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>└── test
-</span><span class='line'>    ├── test1
-</span><span class='line'>    │   └── test2
-</span><span class='line'>    └── test3</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ですが、これを手で一つ一つ用意するのは非常に面倒なわけでして・・・<br/>
-ついカッとなって用意しました。</p>
-
-<p># chefお前のことだ!!<br/>
-# Railsなんかはきっちり用意してくれてるのにね</p>
-
-<h3>コード本体</h3>
-
-<hr />
-
-<p>以下のコードをコピペして適当に実行権を与えたファイルにしてください。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
-</span><span class='line'>
-</span><span class='line'>function create() {
-</span><span class='line'>    dir=$1
-</span><span class='line'>    if [ ! -f "${dir}/.gitkeep" ]&&[ ! -z "${dir}" ]; then
-</span><span class='line'>        touch ${dir}/.gitkeep
-</span><span class='line'>        echo  "Create .gitkeep in `pwd`/${dir}"
-</span><span class='line'>    fi
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>function remove() {
-</span><span class='line'>    dir=$1
-</span><span class='line'>    if [ -f "${dir}/.gitkeep" ]&&[ ! -z "${dir}" ]; then
-</span><span class='line'>        rm ${dir}/.gitkeep
-</span><span class='line'>        echo  "Remove .gitkeep in `pwd`/${dir}"
-</span><span class='line'>    fi
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>function start() {
-</span><span class='line'>    command=$1
-</span><span class='line'>    for DIR in * ; do
-</span><span class='line'>        if [ -d "${DIR}" ]; then
-</span><span class='line'>            if [ "${command}" = "create" ]; then
-</span><span class='line'>                create $DIR;
-</span><span class='line'>            fi
-</span><span class='line'>            if [ "${command}" = "remove" ]; then
-</span><span class='line'>                remove $DIR;
-</span><span class='line'>            fi
-</span><span class='line'>            (cd "${DIR}"; start $command;)
-</span><span class='line'>        fi
-</span><span class='line'>    done
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>command=$1
-</span><span class='line'>if [ -z "${command}" ]; then
-</span><span class='line'>    command="create"
-</span><span class='line'>fi
-</span><span class='line'>
-</span><span class='line'>if [ "${command}" != "remove" -a "${command}" != "create" ]; then
-</span><span class='line'>    echo "Usage : ./gitkeep.sh create or ./gitkeep.sh remove"
-</span><span class='line'>    exit 1
-</span><span class='line'>fi
-</span><span class='line'>
-</span><span class='line'>if ! git rev-parse 2&gt; /dev/null; then
-</span><span class='line'>    echo "Abort!!"
-</span><span class='line'>    echo "This directory is not git repository!!"
-</span><span class='line'>    exit 1
-</span><span class='line'>fi
-</span><span class='line'>
-</span><span class='line'>start $command;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>使い方</h3>
-
-<hr />
-
-<p>上記のコードをgittkeep.shとして保存していたと仮定した場合</p>
-
-<p>.gitkeepファイル作成する場合は、以下のコマンド</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sh gitkeep.sh create</span></code></pre></td></tr></table></div></figure>
-
-
-<p>.gitkeepファイルを削除する場合は、以下のコマンド</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$sh gitkeep.sh remove</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1594,6 +1493,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/03/26/update-gemfile/">jQueryが見つからないよエラーの解消法</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/23/abc-2014-spring/">Android Bazaar and Conference 2014 Springに行ってきた</a>
       </li>
     
@@ -1609,15 +1512,11 @@
         <a href="/blog/2014/03/01/install-solr-for-mac/">MacにSolrをインストールして動かしてみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/02/23/homebrew-package-version/">Homebrewでバージョンを指定してパッケージをインストールする</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.72727272727272%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.45454545454545%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.45454545454545%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 116.36363636363636%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 105.45454545454545%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 121.81818181818181%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.45454545454545%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.45454545454545%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.45454545454545%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 127.27272727272728%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.45454545454545%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 143.63636363636363%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 127.27272727272728%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 127.27272727272728%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(11)</a> <a href='/blog/categories/shellscript' style='font-size: 105.45454545454545%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.45454545454545%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 143.63636363636363%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
 </section
 
 

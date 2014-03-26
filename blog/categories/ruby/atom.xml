@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-03-23T22:33:29+09:00</updated>
+  <updated>2014-03-26T23:41:44+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,54 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[jQueryが見つからないよエラーの解消法]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile/"/>
+    <updated>2014-03-26T23:32:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>今更ながら、Rails3.2のアプリをRails4までアップデートしました。<br/>
+そのとき出たエラーと解消方法を残します。</p>
+
+<h3>当該のエラー</h3>
+
+<hr />
+
+<p>それがこれ</p>
+
+<p><code>
+couldn't find file 'jquery'
+</code></p>
+
+<p>正直、なんで？という感じ</p>
+
+<h3>解消方法</h3>
+
+<hr />
+
+<p>Gemfileの記述が変わってたことが原因でした<br/>
+(asset compile周りの仕様変更)</p>
+
+<p>Rails3.x系は、Gemfileに以下がありました</p>
+
+<p>```
+group :assets do</p>
+
+<p>ここにasset compileで使用するgemがある</p>
+
+<p>end
+```</p>
+
+<p>ところが、Rails4系になるとasset groupは無くなる仕様に変わったみたいです。<br/>
+代わりの設定は、<code>config/application.rb</code>になるようです。</p>
+
+<p>メジャーアップデートの前に、<a href="http://railscasts.com/episodes/415-upgrading-to-rails-4?language=ja&amp;view=asciicast">移行ガイド</a>に目を通せってことですねw</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Railsで定数を定義する]]></title>
@@ -607,66 +655,6 @@ ActiveRecordの検証メソッドが実行されないことに注意かも。</
 
 
 <p>ここまでそれなりに書いたので、もうちょい参照系も書いておきたいなw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ActiveRecordメモ]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo/"/>
-    <updated>2013-11-12T00:20:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/11/12/ar-memo</id>
-    <content type="html"><![CDATA[<p>使ってるけど、意外と知らなかったのでメモ</p>
-
-<h3>抽出方法は全部同じ</h3>
-
-<hr />
-
-<p>whereの条件指定の方法ですね。</p>
-
-<p>以下の３つは、全て同じSQLを発行します</p>
-
-<p>1.Hashで条件設定する方法(AR独自チックな感じで大体使う方法)</p>
-
-<p><code>
-Hoge.where(:title =&gt; "title", :id =&gt; 1)
-</code></p>
-
-<p>2.プレースホルダで地道にパラメータ設定する方法(どの言語でも通用する)</p>
-
-<p><code>
-Hoge.where("title = ? and id = ?", "title1", 1)
-</code></p>
-
-<p>3.シンボルで対応付けをわかりやすくする方法</p>
-
-<p><code>
-Hoge.where("title = :title and id = :id", {:title =&gt; "title", :id =&gt;1})
-</code></p>
-
-<h3>抽出結果がなかったらレコードの新規作成をする</h3>
-
-<hr />
-
-<p>これ、一発でできるメソッドあったんですね。<br/>
-知らなかった。。。</p>
-
-<p>どうやらfirst_or_createというメソッドを使えばよいみたい。<br/>
-で、ブロックを取ることができるので、ブロック内で挿入する値を自由に設定できる</p>
-
-<p>以下のような感じで書くとできる模様。</p>
-
-<p>```
-Hoge.where(:title => "title").first_or_create do |p|</p>
-
-<pre><code>p.body = "hogehoge"
-</code></pre>
-
-<p>end
-```</p>
-
-<p>結局は裏で2回SQL発行してるだけなんですけどね。(selectとinsert)</p>
-
-<p>と、まぁ色々とありますがこんなところで。</p>
 ]]></content>
   </entry>
   
