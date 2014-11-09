@@ -9,9 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 今更ながら、Rails3.2のアプリをRails4までアップデートしました。
-そのとき出たエラーと解消方法を残します。 当該のエラー それがこれ 1
-couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &hellip;">
+  <meta name="description" content="やりたいこと Emacsを再起動せず、設定内容を反映させたい 解決編 追加した部分だけ、評価する 1
+M-x eval-region 今、現在実行している全てのバッファの式を再評価する 1
+M-x eval-buffer そもそもの設定ファイルを読みなおす 1
+M-x load-file RET &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,104 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/09/reload-config-emacs/">Emacsを再起動せずに設定を反映させる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-09T12:23:00+09:00" pubdate data-updated="true">Nov 9<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>やりたいこと</h3>
+
+<hr />
+
+<p>Emacsを再起動せず、設定内容を反映させたい</p>
+
+<h3>解決編</h3>
+
+<hr />
+
+<p>追加した部分だけ、評価する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-region</span></code></pre></td></tr></table></div></figure>
+
+
+<p>今、現在実行している全てのバッファの式を再評価する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-buffer</span></code></pre></td></tr></table></div></figure>
+
+
+<p>そもそもの設定ファイルを読みなおす</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x load-file RET ~/.emacs.d/init.el</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/31/gocon-spring/">Gocon-spring</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-31T13:49:00+09:00" pubdate data-updated="true">May 31<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1260,220 +1359,6 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/15/logback-synamic-log/">Logbackで動的にログの出力先を変更する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-15T21:42:00+09:00" pubdate data-updated="true">Feb 15<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>といっても大したことではなく、「同僚にできないの？」って質問されたことが発端です。</p>
-
-<p>やったこと無かったけど、気になったので調べてみることにしました。</p>
-
-<p>業務要件的にも、以下のことはありそうな感じかなーとは思いましたがｗ</p>
-
-<ul>
-<li>あるログはデフォルトの出力先に</li>
-<li>致命的なエラーは、ログの出力方法はそのままで別の出力先に</li>
-</ul>
-
-
-<h3>やり方</h3>
-
-<hr />
-
-<p>割りと簡単に出来ました</p>
-
-<p>手順としてはこんな感じ・・・</p>
-
-<ol>
-<li>Loggerを取得する</li>
-<li>Loggerから変更対象の設定名でAppenderを取得する</li>
-<li>AppenderをFileAppenderにキャストする(コレがミソ)</li>
-<li>ログ出力を一時停止する</li>
-<li>setFileメソッドで出力先ファイルを変更する</li>
-<li>ログ出力を再開する</li>
-</ol>
-
-
-<p>コードにするとこんな感じかな(loggerの取得方法は色々変りそうだけど・・・)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Logger logger = LoggerFactory.getLogger(LogbackLogging.class);
-</span><span class='line'>FileAppender&lt;ILoggingEvent&gt; fileAppender = (FileAppender&lt;ILoggingEvent&gt;) logbackLogger.getAppender("FILE");
-</span><span class='line'>fileAppender.stop();
-</span><span class='line'>fileAppender.setFile("your_new_log_file");
-</span><span class='line'>fileAppender.start();</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実は、以下の２つのことで気が付きましたw</p>
-
-<ul>
-<li><a href="http://logback.qos.ch/apidocs/index.html">javadoc</a>(Appender<E>を実装してる)</li>
-<li>getAppenderメソッドの戻り値(Appender<E>が返される)</li>
-</ul>
-
-
-<h3>感想</h3>
-
-<hr />
-
-<p>割りと簡単にできるんですねw</p>
-
-<p>後はこの処理をラップしたようなクラス&amp;静的メソッドを作ると汎用的に使えていいのではないだろうか。。。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/30/build-volley/">Volleyをビルドする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-30T00:36:00+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>とある作業でAndroidの通信用ライブラリ「Volley」を使いたくなりました。<br/>
-が、毎回使うたびにeclipseでーとかやりたくないわけです。<br/>
-なので一度ビルドしてしまい、ライブラリ化してしまおうという魂胆です。</p>
-
-<p># 毎回、ビルドどうやるんだっけな？ってAnt Task見たりするのも面倒というオチもあったりw</p>
-
-<h3>ビルド前準備</h3>
-
-<hr />
-
-<p>Volleyにはビルド用のファイルとして、以下の2つがついています</p>
-
-<ul>
-<li>Ant</li>
-<li>Gradle</li>
-</ul>
-
-
-<p>ですが、Gradleでビルドしようとした場合、エラーになります。<br/>
-タスク一覧も見れませんでしたw</p>
-
-<p>という訳でしたのでAntでやります。</p>
-
-<p>その前に、VolleyはAndroid4.0がベースで作られているようなので、Android4.0のライブラリをインストールしておきます。</p>
-
-<h3>ビルド</h3>
-
-<hr />
-
-<p>以下のコマンドでビルドします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ant jar</span></code></pre></td></tr></table></div></figure>
-
-
-<p>成功すれば、「volley/bin/volley.jar」というファイルが出来てます。</p>
-
-<h3>バージョン管理とか</h3>
-
-<hr />
-
-<p>ここからは完全に余談なのですが・・・</p>
-
-<p>こういうライブラリを使う場合だと、バージョンが重要だったりしてきます。</p>
-
-<p>では、どうすればいいかということなのですが、自分としてはgit submoduleを使うことをオススメします。</p>
-
-<p>こうすることで、本体コード(volleyを使う側)のバージョンアップに合わせて、都度volleyのバージョンアップを図ればいいことになります。</p>
-
-<p>こんな感じのディレクトリ構成とし、Volleyは都度上記コマンドでビルドする運用</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Android
-</span><span class='line'>  |
-</span><span class='line'>  |- MainProject(自分が作成するアプリ)
-</span><span class='line'>  |
-</span><span class='line'>  |- Volley</span></code></pre></td></tr></table></div></figure>
-
-
-<p>git submoduleのコマンドは以下です。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule add https://android.googlesource.com/platform/frameworks/volley Volley</span></code></pre></td></tr></table></div></figure>
-
-
-<p>submodule化したものを更新する場合は、以下のコマンドです<br/>
-# 初回の場合は、updateではなくinitをしてsubmodule化したファイル類を取得する必要があります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule update</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1493,6 +1378,14 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/09/reload-config-emacs/">Emacsを再起動せずに設定を反映させる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/31/gocon-spring/">gocon-spring</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/26/update-gemfile/">jQueryが見つからないよエラーの解消法</a>
       </li>
     
@@ -1504,19 +1397,11 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
         <a href="/blog/2014/03/23/rails-consts/">Railsで定数を定義する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/03/23/ruby-solr/">RubyでSolrを使うときに気をつけること</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/01/install-solr-for-mac/">MacにSolrをインストールして動かしてみる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(4)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
 </section
 
 

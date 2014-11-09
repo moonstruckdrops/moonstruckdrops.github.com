@@ -9,10 +9,15 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。
-とりあえず、aospのmasterで構築してみます。 環境 Ubuntu12.04 x86_64
-GNU Global 6.2.8
-Apache2 GNU Globalのバージョンは、 &hellip;">
+  <meta name="description" content="少しばかり、やることがあったのでやってみた。
+煩悩丸出しですいませんw HTTP Responseのbodyを利用する 直感的ではないけど、素直なやりかた 書き込みモードでファイルを開く
+urlで接続したbodyデータをファイルに書き込む 1
+2
+3
+4
+5
+6
+def save_file(url &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +79,154 @@ Apache2 GNU Globalのバージョンは、 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/28/ruby-web-file/">Rubyで画像ファイルをダウンロードする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-28T23:34:00+09:00" pubdate data-updated="true">Mar 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>少しばかり、やることがあったのでやってみた。<br/>
+煩悩丸出しですいませんw</p>
+
+<h3>HTTP Responseのbodyを利用する</h3>
+
+<hr />
+
+<p>直感的ではないけど、素直なやりかた</p>
+
+<ol>
+<li>書き込みモードでファイルを開く</li>
+<li>urlで接続したbodyデータをファイルに書き込む</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
+</span><span class='line'>   filename = File.basename(url)
+</span><span class='line'>   open(filename, "wb") do  |file|
+</span><span class='line'>          file.puts Net::HTTP.get_response(URI.parse(url)).body
+</span><span class='line'>   end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>open-uriを使用する方法</h3>
+
+<hr />
+
+<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
+
+<ol>
+<li>書き込みモードでファイルを開く</li>
+<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
+</span><span class='line'>    filename = File.basename(url)
+</span><span class='line'>    open(filename, 'wb') do |file|
+</span><span class='line'>        open(url) do |data|
+</span><span class='line'>            file.write(data.read)
+</span><span class='line'>      end
+</span><span class='line'>    end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/25/java-map-iterator/">JavaのHashmapを使ったiteratorの実装</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-25T18:29:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>偶に忘れるのでメモしておきます。<br/>
+iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Map map = new HashMap();
+</span><span class='line'>for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
+</span><span class='line'>    Map.Entry entry = (Map.Entry)it.next();
+</span><span class='line'>    Object key = entry.getKey();
+</span><span class='line'>    Object value = entry.getValue();
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Javaを書かなくなると忘れてしまいますねw</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1074,6 +1227,14 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/09/reload-config-emacs/">Emacsを再起動せずに設定を反映させる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/31/gocon-spring/">gocon-spring</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/26/update-gemfile/">jQueryが見つからないよエラーの解消法</a>
       </li>
     
@@ -1085,19 +1246,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2014/03/23/rails-consts/">Railsで定数を定義する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/03/23/ruby-solr/">RubyでSolrを使うときに気をつけること</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/01/install-solr-for-mac/">MacにSolrをインストールして動かしてみる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(4)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
 </section
 
 

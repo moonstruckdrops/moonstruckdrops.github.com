@@ -9,12 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 以下のようなディレクトリ構成のときに.gitkeepを作りたかったのです。 1
-2
-3
-4
-└── test ├── test1 │   └── test2 └── test3 ですが、これを手で一つ一つ用意するのは非常に面倒なわけでして・・・
-ついカッとなって用意しました。 # &hellip;">
+  <meta name="description" content="はじめに といっても大したことではなく、「同僚にできないの？」って質問されたことが発端です。 やったこと無かったけど、気になったので調べてみることにしました。 業務要件的にも、以下のことはありそうな感じかなーとは思いましたがｗ あるログはデフォルトの出力先に
+致命的なエラーは、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +72,220 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/15/logback-synamic-log/">Logbackで動的にログの出力先を変更する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-15T21:42:00+09:00" pubdate data-updated="true">Feb 15<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>といっても大したことではなく、「同僚にできないの？」って質問されたことが発端です。</p>
+
+<p>やったこと無かったけど、気になったので調べてみることにしました。</p>
+
+<p>業務要件的にも、以下のことはありそうな感じかなーとは思いましたがｗ</p>
+
+<ul>
+<li>あるログはデフォルトの出力先に</li>
+<li>致命的なエラーは、ログの出力方法はそのままで別の出力先に</li>
+</ul>
+
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>割りと簡単に出来ました</p>
+
+<p>手順としてはこんな感じ・・・</p>
+
+<ol>
+<li>Loggerを取得する</li>
+<li>Loggerから変更対象の設定名でAppenderを取得する</li>
+<li>AppenderをFileAppenderにキャストする(コレがミソ)</li>
+<li>ログ出力を一時停止する</li>
+<li>setFileメソッドで出力先ファイルを変更する</li>
+<li>ログ出力を再開する</li>
+</ol>
+
+
+<p>コードにするとこんな感じかな(loggerの取得方法は色々変りそうだけど・・・)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Logger logger = LoggerFactory.getLogger(LogbackLogging.class);
+</span><span class='line'>FileAppender&lt;ILoggingEvent&gt; fileAppender = (FileAppender&lt;ILoggingEvent&gt;) logbackLogger.getAppender("FILE");
+</span><span class='line'>fileAppender.stop();
+</span><span class='line'>fileAppender.setFile("your_new_log_file");
+</span><span class='line'>fileAppender.start();</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実は、以下の２つのことで気が付きましたw</p>
+
+<ul>
+<li><a href="http://logback.qos.ch/apidocs/index.html">javadoc</a>(Appender<E>を実装してる)</li>
+<li>getAppenderメソッドの戻り値(Appender<E>が返される)</li>
+</ul>
+
+
+<h3>感想</h3>
+
+<hr />
+
+<p>割りと簡単にできるんですねw</p>
+
+<p>後はこの処理をラップしたようなクラス&amp;静的メソッドを作ると汎用的に使えていいのではないだろうか。。。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/30/build-volley/">Volleyをビルドする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-30T00:36:00+09:00" pubdate data-updated="true">Jan 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>とある作業でAndroidの通信用ライブラリ「Volley」を使いたくなりました。<br/>
+が、毎回使うたびにeclipseでーとかやりたくないわけです。<br/>
+なので一度ビルドしてしまい、ライブラリ化してしまおうという魂胆です。</p>
+
+<p># 毎回、ビルドどうやるんだっけな？ってAnt Task見たりするのも面倒というオチもあったりw</p>
+
+<h3>ビルド前準備</h3>
+
+<hr />
+
+<p>Volleyにはビルド用のファイルとして、以下の2つがついています</p>
+
+<ul>
+<li>Ant</li>
+<li>Gradle</li>
+</ul>
+
+
+<p>ですが、Gradleでビルドしようとした場合、エラーになります。<br/>
+タスク一覧も見れませんでしたw</p>
+
+<p>という訳でしたのでAntでやります。</p>
+
+<p>その前に、VolleyはAndroid4.0がベースで作られているようなので、Android4.0のライブラリをインストールしておきます。</p>
+
+<h3>ビルド</h3>
+
+<hr />
+
+<p>以下のコマンドでビルドします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ant jar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>成功すれば、「volley/bin/volley.jar」というファイルが出来てます。</p>
+
+<h3>バージョン管理とか</h3>
+
+<hr />
+
+<p>ここからは完全に余談なのですが・・・</p>
+
+<p>こういうライブラリを使う場合だと、バージョンが重要だったりしてきます。</p>
+
+<p>では、どうすればいいかということなのですが、自分としてはgit submoduleを使うことをオススメします。</p>
+
+<p>こうすることで、本体コード(volleyを使う側)のバージョンアップに合わせて、都度volleyのバージョンアップを図ればいいことになります。</p>
+
+<p>こんな感じのディレクトリ構成とし、Volleyは都度上記コマンドでビルドする運用</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Android
+</span><span class='line'>  |
+</span><span class='line'>  |- MainProject(自分が作成するアプリ)
+</span><span class='line'>  |
+</span><span class='line'>  |- Volley</span></code></pre></td></tr></table></div></figure>
+
+
+<p>git submoduleのコマンドは以下です。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule add https://android.googlesource.com/platform/frameworks/volley Volley</span></code></pre></td></tr></table></div></figure>
+
+
+<p>submodule化したものを更新する場合は、以下のコマンドです<br/>
+# 初回の場合は、updateではなくinitをしてsubmodule化したファイル類を取得する必要があります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule update</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1406,644 +1616,6 @@ storywriterさん、よろしくお願いします。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/19/active-android/">ActiveAndroidを使ってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-19T00:58:00+09:00" pubdate data-updated="true">Dec 19<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>はじめに</h2>
-
-<hr />
-
-<p>久しぶりにオレオレ用のAndroidアプリを書きました。<br/>
-その際、DBを使ったのですが、面倒くさいことはしたくなかったので<br/>
-Android向けO/R Mapperである<a href="https://github.com/pardom/ActiveAndroid">ActiveAndroid</a>使いました。</p>
-
-<p>その時のメモを備忘録な感じで残します。</p>
-
-<h2>準備</h2>
-
-<hr />
-
-<p>以下のようにして、ライブラリを自分でビルドします。<br/>
-ビルド完了後、プロジェクトのビルドパスにライブラリを追加します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone https://github.com/pardom/ActiveAndroid.git
-</span><span class='line'>$ cd ActiveAndroid
-</span><span class='line'>$ sh gradlew build</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>設定</h2>
-
-<hr />
-
-<p>2種類の方法で利用準備ができます。</p>
-
-<ol>
-<li>AndroidManifest.xmlに設定する</li>
-<li>Applicationクラスを継承した独自のクラスを用意する</li>
-</ol>
-
-
-<p>1のやり方は以下のような形で定義します。</p>
-
-<ul>
-<li>meta-dataタグを用意し、そこにDB名前とバージョンを記載</li>
-<li>android:nameに「com.activeandroid.app.Application」を記載</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;application
-</span><span class='line'>        android:allowBackup="true"
-</span><span class='line'>        android:name="com.activeandroid.app.Application"&gt;
-</span><span class='line'>        ・・・
-</span><span class='line'>
-</span><span class='line'>        &lt;meta-data android:name="AA_DB_NAME" android:value="test.db" /&gt;
-</span><span class='line'>        &lt;meta-data android:name="AA_DB_VERSION" android:value="1" /&gt;
-</span><span class='line'>
-</span><span class='line'>        ・・・
-</span><span class='line'>
-</span><span class='line'>&lt;/application&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2のやり方は、以下のようにして設定内容を組み立て、起動と停止処理を組み込みます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public class MyApplication extends Application {
-</span><span class='line'>
-</span><span class='line'>  @Override
-</span><span class='line'>  public void onCreate() {
-</span><span class='line'>    super.onCreate();
-</span><span class='line'>    Builder builder = new Configuration.Builder(getBaseContext());
-</span><span class='line'>    builder.setCacheSize(1024*1024*4);
-</span><span class='line'>    builder.setDatabaseName("test.db");
-</span><span class='line'>    builder.setDatabaseVersion(1);
-</span><span class='line'>    ActiveAndroid.initialize(builder.create(), true);
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  @Override
-</span><span class='line'>  public void onTerminate() {
-</span><span class='line'>    super.onTerminate();
-</span><span class='line'>    ActiveAndroid.dispose();
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記の内容では、以下のものを設定しています。</p>
-
-<ul>
-<li>キャッシュサイズ4MB</li>
-<li>DBを「test.db」</li>
-<li>バージョンを「1」</li>
-<li>ActiveAndroidのログを有効化(initializeメソッドのtrueのこと)</li>
-</ul>
-
-
-<p>個人的には、以下の理由から組み立てて実行するほうがよいかと思います。</p>
-
-<ul>
-<li>ActiveAndroidの設定に引きづられず、自分のアプリに影響が出ないこと</li>
-<li>DBのキャッシュサイズを決められる(デフォルトが1KBのため)</li>
-<li>progurdによる難読化ができる(AndroidManifest.xmlに書けば見え見えになりますが、コードだと難読化ができる)</li>
-</ul>
-
-
-<p>尤も、最後のはコード上でstaticに文字列として定義するとあまり意味がないですが・・・</p>
-
-<h2>モデル定義</h2>
-
-<hr />
-
-<p>以下のような感じでアノテーションをつける形で定義します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>@Table(name = "Items")
-</span><span class='line'>public class Item extends Model {
-</span><span class='line'>
-</span><span class='line'>  @Column(name = "id", notNull = true)
-</span><span class='line'>  public int id;
-</span><span class='line'>
-</span><span class='line'>  @Column(name = "name", unique = true, onUpdate = ForeignKeyAction.NO_ACTION)
-</span><span class='line'>  public String name;
-</span><span class='line'>
-</span><span class='line'>  @Column(name = "category", onNullConflict = ConflictAction.REPLACE)
-</span><span class='line'>  public String category;
-</span><span class='line'>
-</span><span class='line'>  public List&lt;Test&gt; tests() {
-</span><span class='line'>    return getMany(Test.class, "test");
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>アノテーションに付けれる内容は以下の表のような感じのものです。<br/>
-殆どが<a href="http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html">Android本家のページ</a>のConstants(CONFLICT_XXXと記載されたもの)なので<br/>
-こちらの説明を読んで設定すればよいかと思います。</p>
-
-<table>
-<thead>
-<tr>
-<th> 定義先 </th>
-<th> 定義内容 </th>
-<th> 意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> クラス </td>
-<td> name      </td>
-<td> 対応するテーブル名</td>
-</tr>
-<tr>
-<td> 変数   </td>
-<td> name      </td>
-<td> 対応するカラム名</td>
-</tr>
-<tr>
-<td>      </td>
-<td> length           </td>
-<td> 長さの制約(デフォルト -1(無制限?))</td>
-</tr>
-<tr>
-<td>      </td>
-<td> notNull          </td>
-<td> not null制約(デフォルト false)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> onNullConflict   </td>
-<td> null制約違反時の動作を設定する(デフォルトはFAIL, 設定内容はAndroid公式参照)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> onDelete         </td>
-<td> 削除時の外部キーの動作設定(CASCADE, RESTRICT等が設定可能)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> onUpdate         </td>
-<td> 更新時の外部キーの動作設定(CASCADE, RESTRICT等が設定可能)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> unique           </td>
-<td> ユニーク制約(デフォルト false)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> onUniqueConflict </td>
-<td> ユニーク制約違反時の動作を設定\n(デフォルトはFAIL, 設定内容はAndroid公式参照)</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>意味が必ずしも正しいかと言われると少し自信がありませんが、多分こんな感じかと。</p>
-
-<p>また、1対Nのような関係を作るときは、getMenyメソッドを実装したヘルパーメソッドを作る必要があるようです。</p>
-
-<h2>クエリ</h2>
-
-<p>クエリについて、書いていきます。</p>
-
-<p>以下を使ったことがあればすんなり理解できるかと・・・</p>
-
-<ul>
-<li>JavaのO/R Mapper(s2jdbc等)</li>
-<li>RubyのActiveRecord</li>
-</ul>
-
-
-<h3>挿入</h3>
-
-<hr />
-
-<p>以下のような感じで記載します。<br/>
-ActiveRecordと殆ど同じですね。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Item item = new Item();
-</span><span class='line'>item.name = "test";
-</span><span class='line'>item.save();</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下のようにすれば、バルクインサートもできます。
-また、トランザクションも併せて記載します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ActiveAndroid.beginTransaction();
-</span><span class='line'>try{
-</span><span class='line'>  for(int i = 0; i &lt; 1000; i++ ){
-</span><span class='line'>    Item item = new Item();
-</span><span class='line'>    item.name = "test_" + i;
-</span><span class='line'>    item.save();
-</span><span class='line'>  }
-</span><span class='line'>  ActiveAndroid.setTransactionSuccessful();
-</span><span class='line'>}finally{
-</span><span class='line'>  ActiveAndroid.endTransaction();
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>トランザクション中にエラーが出てもthrowされないので、注意して下さい。<br/>
-コンフリクト周りでエラーが出る場合は、モデルのアノテーションに定義した内容が適用されます。</p>
-
-<h3>削除</h3>
-
-<hr />
-
-<p>やり方は、以下の３種類です。</p>
-
-<ol>
-<li>オブジェクトをロードしてから削除する方法</li>
-<li>静的メソッドを使用して削除する方法</li>
-<li>クエリを組み立てて削除する方法</li>
-</ol>
-
-
-<p>1のやり方は、以下です。<br/>
-一度、selectしてから削除という感じです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Item item = Item.load(Item.class, 1);
-</span><span class='line'>item.delete();</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2のやり方は、以下です。<br/>
-主キーさえ分かっていれば、こちらのほうが無駄なクエリを発行しない分早いです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Item.delete(Item.class, 1);</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3のやり方は、以下です。<br/>
-複数の行をまとめて削除できたりします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>new Delete().from(Item.class).where("Id = ? and name = ?", 1, "test").execute();</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>参照</h3>
-
-<hr />
-
-<p>これも直感的に記述できます。<br/>
-使い方は、s2jdbcに似ています。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Item result = new Select().from(Item.class).executeSingle();
-</span><span class='line'>
-</span><span class='line'>List&lt;Item&gt; resultSet = new Select("id", "name").from(Item.class).execute();
-</span><span class='line'>
-</span><span class='line'>List&lt;Item&gt; resultSet = new Select().from(Item.class).where("Id = ? and name = ?", 1, "test").execute();</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記のような形で実行できます。</p>
-
-<ul>
-<li>先頭１つのカラムデータのみ取得</li>
-<li>カラムを指定した取り方</li>
-<li>条件付き(s2jdcのようにandメソッドとかはありません)</li>
-</ul>
-
-
-<p>テーブル結合時は、以下のような形で記述します。<br/>
-現状では、以下の方法しか手段がないようです。</p>
-
-<ol>
-<li>ActiveAndroidでクエリオブジェクト作成</li>
-<li>1で作成したクエリオブジェクトからsqlを作成</li>
-<li>2のsqlを直接実行しCursorクラスのオブジェクトを取得</li>
-<li>Cusorクラスからデータを取得する(whileループ等で・・・)</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>From query = new Select().from(Item.class).innerJoin(Hoge.class).on("Hoge.id = Item.id");
-</span><span class='line'>
-</span><span class='line'>Cursor cursor = Cache.openDatabase().rawQuery(query.toSql(), query.getArguments());</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>感想</h2>
-
-<hr />
-
-<p>こんな感じな印象でした。簡単なものだと今後も使うかも。</p>
-
-<ul>
-<li>ActiveRecordライクなので、扱い易い</li>
-<li>Modelクラスを継承したクラスを作るだけで、面倒な処理を大幅に軽減できる</li>
-<li>テーブル定義にコードが引きづられやすくなるので注意</li>
-<li>複雑なクエリの場合、通常のSQLiteのDB操作と変わらなくなる</li>
-</ul>
-
-
-<h2>資料</h2>
-
-<hr />
-
-<p>身内向けの勉強会で、ActiveAndroidについて発表してきました。
-その時、書いた資料とかも残しておきます。</p>
-
-<iframe src="http://www.slideshare.net/slideshow/embed_code/29216122 " width="595" height="446" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen></iframe>
-
-
-<p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/29/timecapsule-mac-linux/">Time Capsule(NAS)をMacとLinuxの両方から使えるようにする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-11-29T00:18:00+09:00" pubdate data-updated="true">Nov 29<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>糞お高いNASを買ってしまいました・・・<br/>
-というか、買わざるを得ませんでしたorz</p>
-
-<p>とりあえず、こんな理由で選定</p>
-
-<ul>
-<li>自宅の外付けHDDが故障気味</li>
-<li>Macも自動でバックアップ取っておきたい</li>
-</ul>
-
-
-<p>勿論、QNAPでも良かったのですが、以下の理由で諦め</p>
-
-<ul>
-<li>HDDが別売とかでお高い(故障交換ができるのは強みですが・・・)</li>
-<li>サイズが大きい</li>
-<li>ルーター機能までついてるので省スペース</li>
-</ul>
-
-
-<p>で、バックアップだけではもったいないため、
-よく使うOSで表題のようにNAS利用を使用と思いました。</p>
-
-<h3>やってみる</h3>
-
-<hr />
-
-<p>やるまでに結構苦労しました。<br/>
-そもそも、どうやって手をつけるのか若干悩みましたw</p>
-
-<h5>障壁</h5>
-
-<hr />
-
-<p>Mac側(よしなにやってくれるが故の問題)</p>
-
-<ul>
-<li>GUI操作で自動的にマウントされる</li>
-<li>自動的にマウントされるが故に何処にマウントされたか不明</li>
-<li>マウント先不明の為、コマンドでlsとかcd実行できない</li>
-</ul>
-
-
-<p>Linux側</p>
-
-<ul>
-<li>使用プロトコルが分からない</li>
-<li>マウントするためのファイルシステムは？？？</li>
-<li>そもそもマウント先のIPとかディレクトリが不明</li>
-</ul>
-
-
-<h5>解決編</h5>
-
-<hr />
-
-<p>AirMacユーティリティをGUI操作して、以下を設定</p>
-
-<ul>
-<li>ファイル共有にチェック</li>
-<li>共有ディスクのセキュリティをアカウントに変更(デフォルトはディスクパスワード)</li>
-</ul>
-
-
-<p>他の項目は、すぐにわかりました</p>
-
-<ul>
-<li>IPはすぐに発覚(GW + 末尾に数字の1追加)</li>
-<li>プロトコルはafpもGUI操作時の情報で発覚</li>
-</ul>
-
-
-<p>Mac側は、afpをマウントする際のコマンド(mount_afp)を参照することでわかりました</p>
-
-<p>以下のコマンドを実行するとよいようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mount -t afp afp://YOUR_USERNAME:YOUR_PASSWORD@&lt;TimeCapsuleのIP&gt;/Data &lt;マウント先ディレクトリ</span></code></pre></td></tr></table></div></figure>
-
-
-<p>umountコマンドで普通に実行できます。</p>
-
-<p>Mac側が判明したので、Linux側もほぼ同じようにしてできました。
-但し、ファイルシステムを「cifs」に設定することやディスクの指定方法が異なりました。</p>
-
-<p>以下のようにすればできます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mount -t cifs -o user="YOUR_USERNAME",password="YOUR_PASSWORD" //&lt;TimeCapsuleのIP&gt; &lt;マウント先ディレクトリ&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>シェル化</h3>
-
-<hr />
-
-<p>一々、上記の内容を手打ちするのは面倒なので、シェル化しました。</p>
-
-<p>こんなことをします。</p>
-
-<ol>
-<li>マウント先のディレクトリをチェック</li>
-<li>ディレクトリがなければ作成</li>
-<li>ディレクトリにマウント実行</li>
-</ol>
-
-
-<p>以下の環境で動作確認しています。</p>
-
-<ul>
-<li>MacOSX 10.8.5</li>
-<li>CentOS6.4 x86_64</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/sh
-</span><span class='line'>
-</span><span class='line'># TimeCapsuleの共有ディスクをアカウント認証にしておくこと
-</span><span class='line'>USER="YOUR_USER_NAME"
-</span><span class='line'>PASSWORD="YOUR_PASSWORD"
-</span><span class='line'>MAC_DIRECTORY="/Volumes/timecapsule"
-</span><span class='line'>LINUX_DIRECTORY="/mnt/timecapsule"
-</span><span class='line'>TC_DIRECTORY="YOUR_TIMECAPSULE_DIRECTORY"
-</span><span class='line'>
-</span><span class='line'>if [ `echo "${OSTYPE}" |grep "linux*"` ]&&[ ! -d "$LINUX_DIRECTORY" ]; then
-</span><span class='line'>    mkdir -p "$LINUX_DIRECTORY"
-</span><span class='line'>elif [ ! -d "$MAC_DIRECTORY" ]; then
-</span><span class='line'>    mkdir -p "$MAC_DIRECTORY"
-</span><span class='line'>fi
-</span><span class='line'>
-</span><span class='line'>if [ `echo "${OSTYPE}" |grep "linux*"` ]; then
-</span><span class='line'>    # for Linux
-</span><span class='line'>    # use cifs-utils(RedHat)
-</span><span class='line'>    mount -t cifs -o user="$USER",password="$PASSWORD" //"$TC_DIRECTORY" "$LINUX_DIRECTORY"
-</span><span class='line'>else
-</span><span class='line'>    # for Mac
-</span><span class='line'>    # ユーザ:パスワード@TimeCapusleのIPアドレス
-</span><span class='line'>    mount -t afp afp://"$USER":"$PASSWORD"@"$TC_DIRECTORY" "$MAC_DIRECTORY"
-</span><span class='line'>fi</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -2065,6 +1637,14 @@ ActiveRecordと殆ど同じですね。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/09/reload-config-emacs/">Emacsを再起動せずに設定を反映させる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/31/gocon-spring/">gocon-spring</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/03/26/update-gemfile/">jQueryが見つからないよエラーの解消法</a>
       </li>
     
@@ -2076,19 +1656,11 @@ ActiveRecordと殆ど同じですね。</p>
         <a href="/blog/2014/03/23/rails-consts/">Railsで定数を定義する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/03/23/ruby-solr/">RubyでSolrを使うときに気をつけること</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/01/install-solr-for-mac/">MacにSolrをインストールして動かしてみる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(3)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(6)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(4)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
 </section
 
 

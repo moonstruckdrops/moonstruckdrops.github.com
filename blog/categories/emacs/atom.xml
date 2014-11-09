@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Emacs | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-03-26T23:41:44+09:00</updated>
+  <updated>2014-11-09T12:29:21+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,41 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Emacsを再起動せずに設定を反映させる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/11/09/reload-config-emacs/"/>
+    <updated>2014-11-09T12:23:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/11/09/reload-config-emacs</id>
+    <content type="html"><![CDATA[<h3>やりたいこと</h3>
+
+<hr />
+
+<p>Emacsを再起動せず、設定内容を反映させたい</p>
+
+<h3>解決編</h3>
+
+<hr />
+
+<p>追加した部分だけ、評価する</p>
+
+<p><code>
+M-x eval-region
+</code></p>
+
+<p>今、現在実行している全てのバッファの式を再評価する</p>
+
+<p><code>
+M-x eval-buffer
+</code></p>
+
+<p>そもそもの設定ファイルを読みなおす</p>
+
+<p><code>
+M-x load-file RET ~/.emacs.d/init.el
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Vi(Vim) on Emacsを思いつきでやってみた]]></title>
