@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: iOS | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/ios/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2014-11-15T17:13:24+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOSで複数のmodalを同時に閉じる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/11/15/back-multi-modal/"/>
+    <updated>2014-11-15T17:02:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/11/15/back-multi-modal</id>
+    <content type="html"><![CDATA[<h3>こんな状況</h3>
+
+<hr />
+
+<p>[A→B→C→Dの順で画面を開いた状況で、D->Aへ戻りたいという状況</p>
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>戻りたいところのmodalを指定すると、その前のものは全て閉じることができました</p>
+
+<p><code>
+self.presentingViewController?.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+</code></p>
+
+<p>画面遷移の状態を覚えてないと辛い感じですね</p>
+
+<h3>元ネタ</h3>
+
+<hr />
+
+<p><a href="dismissViewControllerAnimated:completion:">https://developer.apple.com/library/ios/documentation/uikit/reference/UIViewController_Class/index.html#//apple_ref/occ/instm/UIViewController/dismissViewControllerAnimated:completion:</a></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>2013年の振り返り - kurobaraのブログ</title>
+  <title>iOSで複数のmodalを同時に閉じる - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 年の瀬なので、今年一年を振り返ってみました。
-思えば、今年一年は色々とあったなーと思いました。 上半期(1~6月)、下半期(7~12月)の２つのセクションで振り返りたいと思います。 上半期(1~6月) この頃はあまりモノ作りというものをやってなかったような気がします。 # &hellip;">
+  <meta name="description" content="こんな状況 [A→B→C→Dの順で画面を開いた状況で、D->Aへ戻りたいという状況 やり方 戻りたいところのmodalを指定すると、その前のものは全て閉じることができました 1
+self.presentingViewController?.presentingViewController?. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/12/31/2013-summary/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/11/15/back-multi-modal/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -75,7 +75,7 @@
   
   <header>
     
-      <h1 class="entry-title">2013年の振り返り</h1>
+      <h1 class="entry-title">iOSで複数のmodalを同時に閉じる</h1>
     
     
       <p class="meta">
@@ -91,84 +91,36 @@
   
 
 
-<time datetime="2013-12-31T22:09:00+09:00" pubdate data-updated="true">Dec 31<span>st</span>, 2013</time>
+<time datetime="2014-11-15T17:02:00+09:00" pubdate data-updated="true">Nov 15<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h3>はじめに</h3>
+<div class="entry-content"><h3>こんな状況</h3>
 
 <hr />
 
-<p>年の瀬なので、今年一年を振り返ってみました。<br/>
-思えば、今年一年は色々とあったなーと思いました。</p>
+<p>[A→B→C→Dの順で画面を開いた状況で、D->Aへ戻りたいという状況</p>
 
-<p>上半期(1~6月)、下半期(7~12月)の２つのセクションで振り返りたいと思います。</p>
-
-<h3>上半期(1~6月)</h3>
+<h3>やり方</h3>
 
 <hr />
 
-<p>この頃はあまりモノ作りというものをやってなかったような気がします。</p>
+<p>戻りたいところのmodalを指定すると、その前のものは全て閉じることができました</p>
 
-<p># どちらかというとR&amp;Dライクな何かでしょうかね・・・。</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.presentingViewController?.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)</span></code></pre></td></tr></table></div></figure>
 
-<p>とはいえ、元々自分が何がしたかったのかを思い出せた出来事がありました。</p>
 
-<p># 出来事についての詳細は割愛します。</p>
+<p>画面遷移の状態を覚えてないと辛い感じですね</p>
 
-<p>ここまででは、やりたいことを思い出しただけですね。</p>
-
-<p>そうそう、忘れてはいけないイベントがありましたね。</p>
-
-<h5>GoogleI/Oへの参加</h5>
-
-<p>これが、上半期の中で一番デカイイベントでした。</p>
-
-<p># 初めての海外ということもありますがw</p>
-
-<p>世界のエンジニアと交流することで色々と刺激やツッコミを貰ったりしました。<br/>
-ここで、自分が本当にやりたいことをやるためには行動が必要だということを学びました。</p>
-
-<p># 勿論、技術ネタも学んできましたよ。</p>
-
-<h3>下半期(7~12月)</h3>
+<h3>元ネタ</h3>
 
 <hr />
 
-<p>さて、実際に行動をする訳ですが、まぁ色々と駄目出しをいただくわけでして・・・</p>
-
-<p>結局、転職という道を選びました。</p>
-
-<p># 自宅も引っ越しするという・・・</p>
-
-<p>今は、晴れてRailsをやっています。</p>
-
-<p>やはり、今まで事業的な視点を持っていないことが結構キツイですね。<br/>
-キツイ中でもやり甲斐はあってかなり楽しくやれています。</p>
-
-<p># 技術が楽しいというのもあるし、コードや開発プロセス、標準使用ツールなどが自分に合ってるというのもあるかもしれないです。</p>
-
-<p>転職して「Androidという最新でイケイケなことを捨ててWeb業界に来たの？」よく言われます。</p>
-
-<p>元々、Androidというかmobile系がやりたかったというわけではないということが理由としてデカイです。</p>
-
-<h3>終わりに</h3>
-
-<hr />
-
-<p>お茶を濁してる部分がかなりありますが、其処はアレがあるということで・・・</p>
-
-<p>さて、来年はどうなることですかね。<br/>
-もう少し、事業的なことにも目を向ける必要がありそうですね。</p>
-
-<p>今(2013年)以上に充実した生活を送りたいですね。</p>
-
-<p># そろそろ、婚活的なアレもいるんだろうか・・・</p>
-
-<p>というわけで、振り返りになってない振り返りでしたw</p>
+<p><a href="dismissViewControllerAnimated:completion:">https://developer.apple.com/library/ios/documentation/uikit/reference/UIViewController_Class/index.html#//apple_ref/occ/instm/UIViewController/dismissViewControllerAnimated:completion:</a></p>
 </div>
 
 
@@ -191,12 +143,12 @@
   
 
 
-<time datetime="2013-12-31T22:09:00+09:00" pubdate data-updated="true">Dec 31<span>st</span>, 2013</time>
+<time datetime="2014-11-15T17:02:00+09:00" pubdate data-updated="true">Nov 15<span>th</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/xi-yan/'>戯言</a>
+    <a class='category' href='/blog/categories/ios/'>iOS</a>
   
 </span>
 
@@ -205,7 +157,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/12/31/2013-summary/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/12/31/2013-summary/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/11/15/back-multi-modal/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/11/15/back-multi-modal/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -218,10 +170,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/12/23/java-logging/" title="Previous Post: log4j 2を使った。おまけで他のloggingも用意した。">&laquo; log4j 2を使った。おまけで他のloggingも用意した。</a>
+        <a class="basic-alignment left" href="/blog/2014/11/09/reload-config-emacs/" title="Previous Post: Emacsを再起動せずに設定を反映させる">&laquo; Emacsを再起動せずに設定を反映させる</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/01/01/find-delete/" title="Next Post: findのexecオプションとxargsコマンドについて">findのexecオプションとxargsコマンドについて &raquo;</a>
       
     </p>
   </footer>
