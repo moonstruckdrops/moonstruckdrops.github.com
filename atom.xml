@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-11-15T17:13:24+09:00</updated>
+  <updated>2014-12-23T00:23:11+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,168 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Web API The Good Parts2章]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/12/22/web-api-good-parts-2/"/>
+    <updated>2014-12-22T23:18:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/12/22/web-api-good-parts-2</id>
+    <content type="html"><![CDATA[<h2>前置き</h2>
+
+<h4>近況</h4>
+
+<hr />
+
+<p>ざっくりと書くと、お前エンジニアなのに勉強しなくていいの？という状態</p>
+
+<ol>
+<li>免許が取れたので単車を乗り回している(運転が楽しくて毎日、運転しているような)</li>
+<li>昨年よりも比較的、仲がいい友人(男女問わず)と遊ぶ機会が多くなったかも&#8230;</li>
+<li>気の合う仲間と組んで、(Swiftで)アプリ作っている</li>
+<li>その気の合う仲間への技術指導していたり&#8230;</li>
+</ol>
+
+
+<p>なんだか、教えることが多くなって自分が学習している時間が比較的減ってきているそんな感じががが</p>
+
+<h4>そういう訳なので</h4>
+
+<hr />
+
+<p>本屋でざっくりと見かけてツボに嵌った本を読んでいこうかと</p>
+
+<p>「Web API The Good Parts」</p>
+
+<p>なのですが、上記3,4が結構あるので中々進まないという(ぉぃ</p>
+
+<p>ということなので、なるたけ気になるところ(覚えておくべきところ)だけまとめていこうかなと</p>
+
+<p>斜め読みした感じでは、結構ツボに嵌る内容なので自分のバイブルに入選してもいいかなと思ってたり。</p>
+
+<h2>エンドポイント設計</h2>
+
+<ol>
+<li>公開する機能を先に設計する</li>
+<li>覚えやすく、どんな機能を持つURIかひと目で分かるようにする</li>
+<li>HTTPメソッドの活用</li>
+<li>設計の注意点</li>
+<li>クエリパラメータ</li>
+<li>ログインや認証</li>
+<li>ホスト名とエンドポイント</li>
+</ol>
+
+
+<h4>1に関して</h4>
+
+<hr />
+
+<p>どんなAPIが必要かどうかを先に洗い出しておく</p>
+
+<h4>2に関して</h4>
+
+<hr />
+
+<ul>
+<li>短く入力しやすいURI</li>
+<li>人間が読んで理解できるURI</li>
+<li>大文字、小文字が混在しないURI</li>
+<li>改造しやすいURI</li>
+<li>サーバ側アーキテクチャが反映されていないURI</li>
+<li>ルールが統一されたURI</li>
+</ul>
+
+
+<h4>3に関して</h4>
+
+<hr />
+
+<p>HTTPメソッドを有効活用</p>
+
+<ul>
+<li>Restfulな形で活用すれば、一般的な形</li>
+</ul>
+
+
+<h4>4に関して</h4>
+
+<hr />
+
+<ul>
+<li>複数形の名詞を利用する</li>
+<li>利用する単語に気をつける((ProgramableWeb)[http://www.programmableweb.com/]等、他のサービスを参考に)</li>
+<li>スペースやエンコードが必要な文字は避ける</li>
+<li>単語をつなげる場合はハイフンにする(SEO的に有利なことも)</li>
+</ul>
+
+
+<h4>5に関して</h4>
+
+<hr />
+
+<ul>
+<li>相対位置を使用する場合、データ数が多くなると取得件数が減ること、更新頻度が高いものは不整合が起きやすくなることに注意</li>
+<li>絶対位置を使用する場合、クエリパラメータが「x以降」,「この日付よりも古いもの」という形でクエリパラメータをもたせたほうがよい</li>
+<li>日付の形式は、RFC3339に規定されている「1970-01-01T00:00:00Z」の形にする</li>
+<li>絞り込みのパラメータは、「q」のような形は曖昧検索に取られやすいので完全一致の場合は適切なパラメータにすること</li>
+<li>一意なリソースを表すのに必要な情報: パス</li>
+<li>省略可能: クエリパラメータ</li>
+</ul>
+
+
+<h4>6に関して</h4>
+
+<hr />
+
+<ul>
+<li>OAuthを使用して、標準的な形にする</li>
+</ul>
+
+
+<p>標準的なOAuthに則るとエラーメッセージ(RFC6749, RFC6750)は、以下のような形式となる
+(当然ながらhttpステータスは401)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>  "error": "invalid_token"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>7に関して</h4>
+
+<hr />
+
+<ul>
+<li>ホスト名にapiを入れるのが主流</li>
+<li>企業で複数のサービスをホストする場合、例外的なホスト名</li>
+<li>サービスとしてのapiの場合はホスト名にapiをいれたほうがよい(外部から使われるため)</li>
+<li>プラットフォームの場合、service等をホスト名にいれる</li>
+</ul>
+
+
+<h2>まとめ</h2>
+
+<hr />
+
+<ul>
+<li>一般的なURI設計がそのまま適用できる</li>
+<li>APIならではのルール、デファクトスタンダードがある</li>
+<li>URIはリソースを表すものなので、URIとHTTPメソッドの組み合わせで処理の対象と内容を設計をする</li>
+</ul>
+
+
+<h4>Good</h4>
+
+<ul>
+<li>覚えやすく、どんな機能を持つかが一目で分かるようにエンドポイントにする</li>
+<li>適切なHTTPメソッドを利用する</li>
+<li>適切な英単語を利用し、単数形、複数形にも注意する</li>
+<li>認証はOAuth2.0を使う</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOSで複数のmodalを同時に閉じる]]></title>
@@ -1896,280 +2058,6 @@
 <p># そろそろ、婚活的なアレもいるんだろうか・・・</p>
 
 <p>というわけで、振り返りになってない振り返りでしたw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[log4j 2を使った。おまけで他のloggingも用意した。]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/12/23/java-logging/"/>
-    <updated>2013-12-23T03:27:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/12/23/java-logging</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>今はRails使いですが、数年前まではJava使いでした。<br/>
-何やらlog4jがメジャーバージョンアップ始めたという噂を聞いたので試してみました。<br/>
-因みに、自分が最後に使っていたのは「slf4j + logback」です。</p>
-
-<h3>コード類</h3>
-
-<hr />
-
-<p>コードは<a href="https://github.com/moonstruckdrops/java-logging-sample/tree/master/Log4j2Sample">github</a>に置きました。<br/>
-どれも必要最低限のライブラリしか使っていませんので、動作の参考になるかと思います。</p>
-
-<p>特にivy, maven, gradleを使うと必要以上のライブラリまで取ってくるので、解決に困っている方がいれば役立つかも・・・</p>
-
-<p># 自分が偶に忘れるなんてことは言えない・・・</p>
-
-<h3>log4j 2.x</h3>
-
-<hr />
-
-<p><a href="http://logging.apache.org/log4j/2.x/index.html">本家</a>曰く、何やらこんなことが増えたらしい。</p>
-
-<ul>
-<li>APIの分離</li>
-<li>パフォーマンス(性能)改良</li>
-<li>multiple API(commons-logging, slf4j)のサポート</li>
-<li>設定の自動リロード</li>
-<li>logbackライクなFilter設定</li>
-<li>plugin機構の追加</li>
-</ul>
-
-
-<p>後は、地味に細かい改良があったりします。。。</p>
-
-<h3>セットアップ</h3>
-
-<hr />
-
-<p>ライブラリ(2013/12/22時点)は、以下のものがあればよいようです。</p>
-
-<ul>
-<li>log4j-api-2.0-beta9.jar</li>
-<li>log4j-core-2.0-beta9.jar</li>
-</ul>
-
-
-<p>slf4jと連携させたいときは、以下を追加します。</p>
-
-<ul>
-<li>log4j-slf4j-impl-2.0-beta9.jar</li>
-<li>slf4j-api.1.7.5.jar</li>
-</ul>
-
-
-<p>Gradleだとこんな感じですね。(transitiveをつけるのは余計なライブラリをダウンロードさせないため)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>dependencies {
-</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-core:2.0-beta9') {transitive = false}
-</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-api:2.0-beta9') {transitive = false}
-</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-slf4j-impl:2.0-beta9') {transitive = false}
-</span><span class='line'>    compile ('org.slf4j:slf4j-api:1.7.5') {transitive = false}
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>このあたりを参考にするといいかも</p>
-
-<ul>
-<li><a href="http://logging.apache.org/log4j/2.x/maven-artifacts.html">maven連携</a></li>
-<li><a href="http://logging.apache.org/log4j/2.x/log4j-slf4j-impl/">slf4j連携の注意点</a></li>
-</ul>
-
-
-<p>設定ファイルの置き場ですが、こちらは「クラスパス」が通ったところに置けばよいでしょう。<br/>
-# eclipseとかだとsrcの直下の置けばよいです。</p>
-
-<p>因みに、この設定ファイルですが以下に変更となったようです。</p>
-
-<ul>
-<li>log4j2.xmlもしくはlog4j2.jsonのどちらかを設定ファイルとする</li>
-<li>propertiesファイルでは記載できなくなった</li>
-<li>ファイル名の規則が「log4j2」になった</li>
-</ul>
-
-
-<p># Javaの特徴という感じだったのでプロパティファイル結構好きだったんだけどなぁ(日本語書くとアレなのは置いておいて)<br/>
-# 複雑なことは書けないという致命傷もあったので、設定が複雑なことには向かなかったというのも分かる<br/>
-# jsonのサポートは今風かも。</p>
-
-<p>ログの設定にjsonを使う場合は、以下のライブラリを追加する必要があるようです。</p>
-
-<ul>
-<li>jackson-core-2.2.2.jar</li>
-<li>jackson-databind-2.2.2.jar</li>
-</ul>
-
-
-<h3>設定</h3>
-
-<hr />
-
-<p>ログって基本、一度設定してしまうと何か特別な理由が無い限り設定変更ってしませんよね。<br/>
-# ログ分析が必要になったとか、ログレベルの変更をする必要が出たとか</p>
-
-<ul>
-<li><a href="http://logging.apache.org/log4j/2.x/manual/architecture.html">デフォルト</a>はERRORとFATALのみ表示(ログレベルは、FATAL > ERROR> WARN > INFO > DEBUG > TRACE)</li>
-<li><a href="http://logging.apache.org/log4j/2.x/manual/layouts.html">指定できる出力フォーマット</a></li>
-<li><a href="http://logging.apache.org/log4j/2.x/manual/appenders.html">appender</a>は、コンソールやファイルの出力するフォーマット定義</li>
-<li>loggersは、どのappendersを使うかを指定することでログの出力方式を決定できます</li>
-<li>最低限、appenderとloggersを設定すれば動きます。</li>
-</ul>
-
-
-<p>以下のような感じでlog4j2.xmlを設定します。</p>
-
-<ul>
-<li>Consoleとログファイルの両方にログを出力するようにしています</li>
-<li>ログファイルの出力は、JSONを設定しています</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-</span><span class='line'>&lt;configuration status="OFF"&gt;
-</span><span class='line'>  &lt;appenders&gt;
-</span><span class='line'>    &lt;Console name="Console" target="SYSTEM_OUT"&gt;
-</span><span class='line'>      &lt;PatternLayout&gt;
-</span><span class='line'>        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
-</span><span class='line'>      &lt;/PatternLayout&gt;
-</span><span class='line'>    &lt;/Console&gt;
-</span><span class='line'>
-</span><span class='line'>    &lt;RollingFile name="RollingFile" fileName="log4j2_sample_log.log" filePattern="log4j2_sample_log_%d{yyyy-MM-dd}.log.gz"&gt;
-</span><span class='line'>      &lt;JSONLayout complete="true" charset="UTF-8" /&gt;
-</span><span class='line'>      &lt;Policies&gt;
-</span><span class='line'>        &lt;TimeBasedTriggeringPolicy /&gt;
-</span><span class='line'>      &lt;/Policies&gt;
-</span><span class='line'>    &lt;/RollingFile&gt;
-</span><span class='line'>  &lt;/appenders&gt;
-</span><span class='line'>
-</span><span class='line'>  &lt;loggers&gt;
-</span><span class='line'>    &lt;root level="trace"&gt;
-</span><span class='line'>      &lt;appender-ref ref="Console" /&gt;
-</span><span class='line'>      &lt;appender-ref ref="RollingFile" /&gt;
-</span><span class='line'>    &lt;/root&gt;
-</span><span class='line'>  &lt;/loggers&gt;
-</span><span class='line'>    
-</span><span class='line'>&lt;/configuration&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他にも出来そうなこと</p>
-
-<ul>
-<li><code>「&lt;property name="LOG_PATH" value="" /&gt;」</code>のように定義することもできるような感じなので柔軟に出来そうですね。</li>
-<li>appenderを追加すれば、状況に応じたログ出力が出来そう(普通のログとJSONのログ等)</li>
-<li>JSONでログ出力すれば、ログの分析がしやすそう(分析基盤(Fluentdとか)を使ったり作ればですが)</li>
-</ul>
-
-
-<h3>おまけ(その1)</h3>
-
-<hr />
-
-<p>いつもSLF4jを使用するときの組み合わせを忘れるので、ここにメモします。
-SLF4jはFacadeパターンを採っていまして、以下のメリットがあるようです。</p>
-
-<ul>
-<li>柔軟な切り替え</li>
-<li>効率化</li>
-</ul>
-
-
-<p>これのお陰で、移行とかがスムーズにできるというわけです。
-以下の表に組み合わせをメモしておきます。</p>
-
-<table>
-<thead>
-<tr>
-<th> </th>
-<th>Log4j</th>
-<th>Log4j2</th>
-<th>Logback</th>
-<th>Logging</th>
-<th>Simple</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SLF4J/コア</td>
-<td>slf4j-api.jar</td>
-<td>slf4j-api.jar</td>
-<td>slf4j-api.jar</td>
-<td>slf4j-api.jar</td>
-<td>slf4j-api.jar</td>
-</tr>
-<tr>
-<td>SLF4J/アダブタ</td>
-<td>slf4j-log4j12.jar</td>
-<td>log4j-slf4j-impl</td>
-<td>logback-classic.jar, logback-core.jar</td>
-<td>slf4j-jdk14.jar</td>
-<td>slf4j-simple.jar</td>
-</tr>
-<tr>
-<td>ロギング・ライブラリ</td>
-<td>log4j-1.2.x.jar</td>
-<td>log4j-core, log4j-api</td>
-<td>logback-classic.jar, logback-core.jar</td>
-<td>java.util.logging</td>
-<td>slf4j-simple.jar</td>
-</tr>
-</tbody>
-</table>
-
-
-<p># どちらかと言うとこちらのほうが必要だったかもw</p>
-
-<h3>おまけ(その2)</h3>
-
-<hr />
-
-<p>ついでといってはなんですが、他にJavaでよく使いそうなloggingも用意しました。<br/>
-どれも必要最低限のライブラリしか使っていませんので、動作の参考になるかと思います。</p>
-
-<ul>
-<li>Commons Logging + SimpleLog</li>
-<li>SLF4j + Log4j</li>
-<li>SLF4j + Logback</li>
-<li>SLF4j + Log4j2</li>
-</ul>
-
-
-<p><a href="https://github.com/moonstruckdrops/java-logging-sample">ここ</a>に置きました。</p>
-
-<p>Gradleがあれば使えるようにしてあります。</p>
 ]]></content>
   </entry>
   

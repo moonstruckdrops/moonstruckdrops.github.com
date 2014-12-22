@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: API | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/api/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2014-12-23T00:23:25+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Web API The Good Parts2章]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2014/12/22/web-api-good-parts-2/"/>
+    <updated>2014-12-22T23:18:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2014/12/22/web-api-good-parts-2</id>
+    <content type="html"><![CDATA[<h2>前置き</h2>
+
+<h4>近況</h4>
+
+<hr />
+
+<p>ざっくりと書くと、お前エンジニアなのに勉強しなくていいの？という状態</p>
+
+<ol>
+<li>免許が取れたので単車を乗り回している(運転が楽しくて毎日、運転しているような)</li>
+<li>昨年よりも比較的、仲がいい友人(男女問わず)と遊ぶ機会が多くなったかも...</li>
+<li>気の合う仲間と組んで、(Swiftで)アプリ作っている</li>
+<li>その気の合う仲間への技術指導していたり...</li>
+</ol>
+
+
+<p>なんだか、教えることが多くなって自分が学習している時間が比較的減ってきているそんな感じががが</p>
+
+<h4>そういう訳なので</h4>
+
+<hr />
+
+<p>本屋でざっくりと見かけてツボに嵌った本を読んでいこうかと</p>
+
+<p>「Web API The Good Parts」</p>
+
+<p>なのですが、上記3,4が結構あるので中々進まないという(ぉぃ</p>
+
+<p>ということなので、なるたけ気になるところ(覚えておくべきところ)だけまとめていこうかなと</p>
+
+<p>斜め読みした感じでは、結構ツボに嵌る内容なので自分のバイブルに入選してもいいかなと思ってたり。</p>
+
+<h2>エンドポイント設計</h2>
+
+<ol>
+<li>公開する機能を先に設計する</li>
+<li>覚えやすく、どんな機能を持つURIかひと目で分かるようにする</li>
+<li>HTTPメソッドの活用</li>
+<li>設計の注意点</li>
+<li>クエリパラメータ</li>
+<li>ログインや認証</li>
+<li>ホスト名とエンドポイント</li>
+</ol>
+
+
+<h4>1に関して</h4>
+
+<hr />
+
+<p>どんなAPIが必要かどうかを先に洗い出しておく</p>
+
+<h4>2に関して</h4>
+
+<hr />
+
+<ul>
+<li>短く入力しやすいURI</li>
+<li>人間が読んで理解できるURI</li>
+<li>大文字、小文字が混在しないURI</li>
+<li>改造しやすいURI</li>
+<li>サーバ側アーキテクチャが反映されていないURI</li>
+<li>ルールが統一されたURI</li>
+</ul>
+
+
+<h4>3に関して</h4>
+
+<hr />
+
+<p>HTTPメソッドを有効活用</p>
+
+<ul>
+<li>Restfulな形で活用すれば、一般的な形</li>
+</ul>
+
+
+<h4>4に関して</h4>
+
+<hr />
+
+<ul>
+<li>複数形の名詞を利用する</li>
+<li>利用する単語に気をつける((ProgramableWeb)[http://www.programmableweb.com/]等、他のサービスを参考に)</li>
+<li>スペースやエンコードが必要な文字は避ける</li>
+<li>単語をつなげる場合はハイフンにする(SEO的に有利なことも)</li>
+</ul>
+
+
+<h4>5に関して</h4>
+
+<hr />
+
+<ul>
+<li>相対位置を使用する場合、データ数が多くなると取得件数が減ること、更新頻度が高いものは不整合が起きやすくなることに注意</li>
+<li>絶対位置を使用する場合、クエリパラメータが「x以降」,「この日付よりも古いもの」という形でクエリパラメータをもたせたほうがよい</li>
+<li>日付の形式は、RFC3339に規定されている「1970-01-01T00:00:00Z」の形にする</li>
+<li>絞り込みのパラメータは、「q」のような形は曖昧検索に取られやすいので完全一致の場合は適切なパラメータにすること</li>
+<li>一意なリソースを表すのに必要な情報: パス</li>
+<li>省略可能: クエリパラメータ</li>
+</ul>
+
+
+<h4>6に関して</h4>
+
+<hr />
+
+<ul>
+<li>OAuthを使用して、標準的な形にする</li>
+</ul>
+
+
+<p>標準的なOAuthに則るとエラーメッセージ(RFC6749, RFC6750)は、以下のような形式となる
+(当然ながらhttpステータスは401)</p>
+
+<p><code>
+{
+  "error": "invalid_token"
+}
+</code></p>
+
+<h4>7に関して</h4>
+
+<hr />
+
+<ul>
+<li>ホスト名にapiを入れるのが主流</li>
+<li>企業で複数のサービスをホストする場合、例外的なホスト名</li>
+<li>サービスとしてのapiの場合はホスト名にapiをいれたほうがよい(外部から使われるため)</li>
+<li>プラットフォームの場合、service等をホスト名にいれる</li>
+</ul>
+
+
+<h2>まとめ</h2>
+
+<hr />
+
+<ul>
+<li>一般的なURI設計がそのまま適用できる</li>
+<li>APIならではのルール、デファクトスタンダードがある</li>
+<li>URIはリソースを表すものなので、URIとHTTPメソッドの組み合わせで処理の対象と内容を設計をする</li>
+</ul>
+
+
+<h4>Good</h4>
+
+<ul>
+<li>覚えやすく、どんな機能を持つかが一目で分かるようにエンドポイントにする</li>
+<li>適切なHTTPメソッドを利用する</li>
+<li>適切な英単語を利用し、単数形、複数形にも注意する</li>
+<li>認証はOAuth2.0を使う</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
