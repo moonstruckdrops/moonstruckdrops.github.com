@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Emacs | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2014-12-23T00:23:25+09:00</updated>
+  <updated>2015-01-08T01:04:06+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Emacsのバージョンで分岐をさせたい]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/01/08/emacs-version/"/>
+    <updated>2015-01-08T00:51:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/01/08/emacs-version</id>
+    <content type="html"><![CDATA[<h3>発端</h3>
+
+<hr />
+
+<p>Emacsのバージョンを最新にしたことで色々設定が楽に書けることがわかった<br/>
+そのため、最新内容を反映させた</p>
+
+<p>とはいえ、下位互換もある程度保ちたかった<br/>
+(全部、追従すればいいのだがそうもいかない環境もあるので)</p>
+
+<h3>最初に試してみた</h3>
+
+<hr />
+
+<p>普通にバージョンを取得してみた</p>
+
+<p><code>
+(emacs-version)
+"GNU Emacs 24.4.1 (x86_64-apple-darwin14.0.0, NS apple-appkit-1343.16)
+ of 2015-01-04 on hoge.local"
+</code></p>
+
+<p>文字列のマッチング処理が多くなりそうで結構めんどくさい・・・</p>
+
+<h3>結果的にこうした</h3>
+
+<hr />
+
+<p>普通のmajor/minor バージョン判定を複合した条件判定するだけの関数を用意</p>
+
+<p>24.3以下の判定</p>
+
+<p><code>
+(defvar is-less-than-or-equal-24-3 (and (&lt;= emacs-major-version 24) (&lt;= emacs-minor-version 3)))
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Emacsを再起動せずに設定を反映させる]]></title>
