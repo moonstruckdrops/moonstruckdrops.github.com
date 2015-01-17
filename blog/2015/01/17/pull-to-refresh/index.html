@@ -5,13 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>jQueryが見つからないよエラーの解消法 - kurobaraのブログ</title>
+  <title>AndroidのPull To Refreshをちょっとだけ調べた - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 今更ながら、Rails3.2のアプリをRails4までアップデートしました。
-そのとき出たエラーと解消方法を残します。 当該のエラー それがこれ 1
-couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &hellip;">
+  <meta name="description" content="はじめに ここの内容は完全に備忘録です。
+何故かというと、自分がちょっと実現したい機能があったけどできるのだろうかと調べてみたメモだからです。 普通のPull To Refresh 所謂、下向きに引っ張るとListViewが更新されるやつですね。 これはAPI Level19のSupport V4 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/01/17/pull-to-refresh/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,7 +75,7 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
   
   <header>
     
-      <h1 class="entry-title">jQueryが見つからないよエラーの解消法</h1>
+      <h1 class="entry-title">AndroidのPull to Refreshをちょっとだけ調べた</h1>
     
     
       <p class="meta">
@@ -92,7 +91,7 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
   
 
 
-<time datetime="2014-03-26T23:32:00+09:00" pubdate data-updated="true">Mar 26<span>th</span>, 2014</time>
+<time datetime="2015-01-17T23:58:00+09:00" pubdate data-updated="true">Jan 17<span>th</span>, 2015</time>
         
       </p>
     
@@ -103,46 +102,89 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
 
 <hr />
 
-<p>今更ながら、Rails3.2のアプリをRails4までアップデートしました。<br/>
-そのとき出たエラーと解消方法を残します。</p>
+<p>ここの内容は完全に備忘録です。<br/>
+何故かというと、自分がちょっと実現したい機能があったけどできるのだろうかと調べてみたメモだからです。</p>
 
-<h3>当該のエラー</h3>
-
-<hr />
-
-<p>それがこれ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>couldn't find file 'jquery'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>正直、なんで？という感じ</p>
-
-<h3>解消方法</h3>
+<h3>普通のPull To Refresh</h3>
 
 <hr />
 
-<p>Gemfileの記述が変わってたことが原因でした<br/>
-(asset compile周りの仕様変更)</p>
+<p>所謂、下向きに引っ張るとListViewが更新されるやつですね。</p>
 
-<p>Rails3.x系は、Gemfileに以下がありました</p>
+<p>これはAPI Level19のSupport V4 Libraryにて機能提供されているので、簡単に実現できます。<br/>
+(ちょっと癖はあるかもしれませんが・・・)</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>group :assets do
-</span><span class='line'>
-</span><span class='line'>ここにasset compileで使用するgemがある
-</span><span class='line'>
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+<p>以下にデモとReferenceを記載</p>
+
+<ul>
+<li><a href="https://developer.android.com/samples/SwipeRefreshLayoutBasic/index.html">SwipeRefreshLayoutBasic</a></li>
+<li><a href="https://developer.android.com/reference/android/support/v4/widget/SwipeRefreshLayout.html">SwipeRefreshLayout</a></li>
+</ul>
 
 
-<p>ところが、Rails4系になるとasset groupは無くなる仕様に変わったみたいです。<br/>
-代わりの設定は、<code>config/application.rb</code>になるようです。</p>
+<p># デモを見ればわかりますが、扱うだけなら非常に楽に使えるような感じになっています(カスタムは面倒臭さそう)<br/>
+# ぐぐれば、いっぱい記事は見つかるので詳細はそちらに譲ります</p>
 
-<p>メジャーアップデートの前に、<a href="http://railscasts.com/episodes/415-upgrading-to-rails-4?language=ja&amp;view=asciicast">移行ガイド</a>に目を通せってことですねw</p>
+<h3>やりたかったこと</h3>
+
+<hr />
+
+<p>下から上にListViewを引っ張ると、ListViewが更新されること<br/>
+俗に言う、bottomup to refreshってやつです</p>
+
+<h3>調べてみた</h3>
+
+<hr />
+
+<h4>ライブラリは？</h4>
+
+<p><a href="https://github.com/chrisbanes/Android-PullToRefresh">Android-PullToRefresh</a>が、対応している
+但し、作者がdeprecated宣言</p>
+
+<h4>カスタム実装は？</h4>
+
+<p>少し試してみた感じだと、標準機能を駆使して実現(Classの継承など)は、まず無理かも</p>
+
+<p># そもそも、そんな感じで簡単にrefreshする機能を上下を入れ替え作られているような感じにはなってなかった</p>
+
+<h4>ソースコードを見れば？</h4>
+
+<p>結論から言うと、onTouchEventでアニメーションの実施の有無など詳細な条件判定とかやっているので今のところ難しそう</p>
+
+<p><a href="https://android.googlesource.com/platform/frameworks/support/+/refs/heads/master/v4/java/android/support/v4/widget/SwipeRefreshLayout.java">SwipeRefreshLayout.java</a></p>
+
+<p># 追いかけた結果を書くのは割愛します</p>
+
+<h5>他の人はどうなの？</h5>
+
+<p>同じことを考える方はいらっしゃるようですね。</p>
+
+<p><a href="http://stackoverflow.com/questions/24867204/swiperefreshlayout-pull-from-bottom">SwipeRefreshLayout - Pull From Bottom</a></p>
+
+<p>ざっくり書くと、こんな感じ</p>
+
+<ul>
+<li>今のAPIだと簡単には無理</li>
+<li>OSSのコードをコピーして、自前で<a href="https://bitbucket.org/andreyice/swiperefreshlayoutbottom">実装</a>した</li>
+<li><a href="http://www.oodlestechnologies.com/blogs/Implementing-Pull-to-refresh-(like-in-Facebook-mobile-app)-for-ANDROID-using-Titanium">ここ</a>を参考に実装すればもしかしたらできるかも</li>
+</ul>
+
+
+<p># ソースコード見た感触とあまり変わらない(´・ω・｀)</p>
+
+<h3>ちょっと調べてとりあえず分かったこと</h3>
+
+<hr />
+
+<p>API叩いて直ぐ実現可能というわけではないようですね(´・ω・｀)</p>
+
+<ul>
+<li>クラスを継承した独自のLayoutにすればなんとかできそうかもしれない</li>
+<li>但し、onTouchEventを自前で実装するのと処理中のアニメーションを挟むため、一筋縄ではいかない</li>
+<li>実現方法の参考実装はあるので、うまくできそうかやってみればいいかもしれない</li>
+<li>deprecated宣言しているが、ライブラリを使えば楽にはできる(その後のメンテナンスコストは払う必要は出そうだが・・・)</li>
+</ul>
+
 </div>
 
 
@@ -165,12 +207,12 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
   
 
 
-<time datetime="2014-03-26T23:32:00+09:00" pubdate data-updated="true">Mar 26<span>th</span>, 2014</time>
+<time datetime="2015-01-17T23:58:00+09:00" pubdate data-updated="true">Jan 17<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+    <a class='category' href='/blog/categories/android/'>Android</a>
   
 </span>
 
@@ -179,7 +221,7 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/01/17/pull-to-refresh/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/01/17/pull-to-refresh/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -192,10 +234,8 @@ couldn't find file 'jquery' 正直、なんで？という感じ 解消方法 &h
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/03/23/abc-2014-spring/" title="Previous Post: Android Bazaar and Conference 2014 Springに行ってきた">&laquo; Android Bazaar and Conference 2014 Springに行ってきた</a>
+        <a class="basic-alignment left" href="/blog/2015/01/08/emacs-version/" title="Previous Post: Emacsのバージョンで分岐をさせたい">&laquo; Emacsのバージョンで分岐をさせたい</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/05/31/gocon-spring/" title="Next Post: gocon-spring">gocon-spring &raquo;</a>
       
     </p>
   </footer>

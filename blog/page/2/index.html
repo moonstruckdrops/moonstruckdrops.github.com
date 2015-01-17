@@ -9,8 +9,7 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 某モバイルアプリでですね、要求しているビルド用のパッケージが
-今、インストールされているものよりも古いバージョンでした。 そのままだと、ビルド出来ないのでバージョンを古くしようとしたのがキッカケです。。。 # 某モバイルアプリはAndroidで、 &hellip;">
+  <meta name="description" content="はじめに Solrといえば、全文検索システムですね。 で、これをMacにインストールしてみようということやってみます。 とはいえ、普通にtarballダウンロードして解凍→java -jarだと面白くないですね。 折角、Homebrewを使ってるのでパッケージ管理の上で実施してみます。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +71,94 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/01/install-solr-for-mac/">MacにSolrをインストールして動かしてみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-01T20:18:00+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>Solrといえば、全文検索システムですね。</p>
+
+<p>で、これをMacにインストールしてみようということやってみます。</p>
+
+<p>とはいえ、普通にtarballダウンロードして解凍→java -jarだと面白くないですね。</p>
+
+<p>折角、Homebrewを使ってるのでパッケージ管理の上で実施してみます。</p>
+
+<h3>インストール</h3>
+
+<hr />
+
+<p>Homebrew使いであれば、お馴染みのコマンドでスンナリインストールされます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install solr</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Solrの起動</h3>
+
+<hr />
+
+<p>ぶっちゃけ、こいつが若干の癖ものだったりします。</p>
+
+<p># 記事書くキッカケw</p>
+
+<h5>一言で言うと、solrの設定(solr.xml)があるパスをフルパスで渡して上げる</h5>
+
+<p>実はこれだけです、インストールしたSolrはサンプルが同梱してあるので起動してみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-DIH/solr/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>スキーマレスのサンプルなら</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-schemaless/solr/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マルチコアのサンプルなら</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/multicore/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>正しく動いていれば、「http://localhost:8983/solr/」で管理画面にアクセスできます</p>
+
+<p>自分でスキーマや設定を作成したい場合、このあたりの設定をコピー&amp;修正して同様の手順で実行してやれば良さそうですね</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1247,117 +1334,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/01/find-delete/">Findのexecオプションとxargsコマンドについて</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-01T21:36:00+09:00" pubdate data-updated="true">Jan 1<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>年が明けましたね。</p>
-
-<p>せっかくの休みなので、今まで溜め込んだファイルの整理をすることにしました。</p>
-
-<p>無駄なファイルが山ほどあって、検索からの削除を便利にしよう</p>
-
-<p>そう思ったのが今回の発端です。</p>
-
-<p>さて、やります。</p>
-
-<h3>ファイル検索といえば</h3>
-
-<hr />
-
-<p>findコマンドを使いますね。</p>
-
-<p>execオプションやパイプとともにxargsコマンドを駆使して検索したファイルに対して処理をします。</p>
-
-<p>今回の要件ファイル削除系だとこんな感じですね。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -exec rm {} \;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>xargsを使う場合だと、こっちですね。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -print0 | xargs -0 -n1 rm</span></code></pre></td></tr></table></div></figure>
-
-
-<p>因みに、print0オプションを有効にすると区切り文字がスペースから \0 に変更されます。<br/>
-ファイル名にスペースがあるかもしれない場合とかはつけておくことがよいと思います。</p>
-
-<p>他にxargsの-0オプションも上記同様のものです。-n&lt;数字>は1 コマンドラインにつき最大の数字分ずつ引数として使用するという意味になります。</p>
-
-<h3>execオプションでxargsと同様の処理</h3>
-
-<hr />
-
-<p>これをする場合は、+を使えばよいようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -exec rm {}+</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これだけだと意味があるような、ないような<sup>^;;</sup></p>
-
-<h3>findのdeleteオプション</h3>
-
-<hr />
-
-<p>OS依存になるようですが、findコマンドにはdeleteオプションがあるようです。<br/>
-これを使えば、上記のようにコマンドの組み合わせをせずともファイル検索→ファイル削除も同時にできるようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -print0 -delete</span></code></pre></td></tr></table></div></figure>
-
-
-<p>検索と同時に削除なので、危険な感じがしますが、便利に使えると思います。</p>
-
-<h3>まとめ</h3>
-
-<hr />
-
-<p>大したことでもないですが、こんな感じですね</p>
-
-<ul>
-<li>findとxargsを組み合わせる場合、find側はprint0オプション、xargs側は-0オプションを付けたほうが安全</li>
-<li>findコマンドでxargsと同様のことがしたい場合、execオプションの末尾を;から+に変更する</li>
-<li>検索+削除の場合、findコマンドのdeleteオプションを使うと便利</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1379,6 +1355,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/17/pull-to-refresh/">AndroidのPull To Refreshをちょっとだけ調べた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/08/emacs-version/">Emacsのバージョンで分岐をさせたい</a>
       </li>
     
@@ -1394,15 +1374,11 @@
         <a href="/blog/2014/11/09/reload-config-emacs/">Emacsを再起動せずに設定を反映させる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/05/31/gocon-spring/">gocon-spring</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(6)</a> <a href='/blog/categories/api' style='font-size: 105.0%'>API(1)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 135.0%'>Android(7)</a> <a href='/blog/categories/api' style='font-size: 105.0%'>API(1)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
 </section
 
 
