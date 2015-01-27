@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>マージが起きたらさっさと解消しようという教訓 - kurobaraのブログ</title>
+  <title>Octopressでの画像の表示 - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに Gitを使って開発してるのですが・・・ 複数人で1つのプロダクト開発を行ってたらコンフリクトは起こることはよく有ります 俗に言うマージコンフリクトですね 今回はそんなマージコンフリクトで起こった事を備忘録的に残します まず結論・・・ 気づいた時点(Github,gitlab, &hellip;">
+  <meta name="description" content="はじめに 常々、画像ファイルってどう表示するのだっけ？と思っていたのでやってみた感じ ファイルの格納先 octopress/source/imagesディレクトリに画像ファイルを格納する themeで表示している画像が最初から格納されているので、ビビらず画像ファイルを格納すること 指定方法 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/01/28/octopress-picture/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -74,7 +74,7 @@
   
   <header>
     
-      <h1 class="entry-title">マージが起きたらさっさと解消しようという教訓</h1>
+      <h1 class="entry-title">Octopressでの画像の表示</h1>
     
     
       <p class="meta">
@@ -90,7 +90,7 @@
   
 
 
-<time datetime="2014-02-18T02:00:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2014</time>
+<time datetime="2015-01-28T00:55:00+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2015</time>
         
       </p>
     
@@ -101,64 +101,29 @@
 
 <hr />
 
-<p>Gitを使って開発してるのですが・・・</p>
+<p>常々、画像ファイルってどう表示するのだっけ？と思っていたのでやってみた感じ</p>
 
-<p>複数人で1つのプロダクト開発を行ってたらコンフリクトは起こることはよく有ります</p>
-
-<p>俗に言うマージコンフリクトですね</p>
-
-<p>今回はそんなマージコンフリクトで起こった事を備忘録的に残します</p>
-
-<h3>まず結論・・・</h3>
+<h3>ファイルの格納先</h3>
 
 <hr />
 
-<p>気づいた時点(Github,gitlab,stashとか)で、さっさとコンフリクトは解消しましょう</p>
+<p><code>octopress/source/images</code>ディレクトリに画像ファイルを格納する</p>
 
-<p>後にまとめて行うのは、無謀もいいとこです</p>
+<p>themeで表示している画像が最初から格納されているので、ビビらず画像ファイルを格納すること</p>
 
-<p>1つ2つのコミット差分ならまだしも<br/>
-10個のコミットが積み上げられ、かつその大半がコンフリクト起こすような状況だと直すのに苦労します</p>
-
-<p># 解消に1時間かかりましたorz</p>
-
-<p>なので、さっさと直してしまいましょう(他人の書いたコードまでは責任取れないよw)</p>
-
-<h3>コンフリクト解消時に起こったこと</h3>
+<h3>指定方法</h3>
 
 <hr />
 
-<p>上記のことだけなら、反省だけで次回からは行わないようにすればいいだけの話です</p>
+<p><a href="http://octopress.org/docs/plugins/image-tag/">公式</a>を参照すればできる模様</p>
 
-<p>ですが、コンフリクト解消時に奇妙なことが起こりました</p>
-
-<p>以下のような状態でmasterのコードをブランチにとりこんだ時(実際はもう少しコンフリクト解消することがありました)</p>
+<p>そのため前述の格納先を相対URLで指定すると、以下の形になる</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(master) : (起点) - [コンフリクト有(1)] - [コンフリクト有(2)] - [コンフリクト有(3)] - [ファイル移動] - [コンフリクト有(4)] - [コンフリクト無]
-</span><span class='line'>              |  
-</span><span class='line'>(branch) :   [A] - [B] - [C]</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>![hoge](/images/hoge.jpg)</span></code></pre></td></tr></table></div></figure>
 
 
-<p>コンフリクト有(2)のコンフリクトを解消した瞬間に、ブランチの状態(merge/CONFLICT)だけでも、マージの継続をすることが出来なくなりました</p>
-
-<p>このコマンドだけが使えました</p>
-
-<ul>
-<li>continueは受け付け無い</li>
-<li>abortとskipは受け付ける</li>
-</ul>
-
-
-<p>そのため、一度abort→再マージをしたのですが・・・<br/>
-今度は、コンフリクト(3)で同じ現象。。。</p>
-
-<p>諦めてskipをしましたorz<br/>
-そうすると、マージが全てブランチに取り込まれました・・・(ファイル移動は取り込まれてないので別途実施)</p>
-
-<p>こういう恐ろしい事態(マージがうまくいかない)があったので、気をつけようねという自戒と対処結果のメモでしたw</p>
+<p>こんな感じでやると画像を表示できる</p>
 </div>
 
 
@@ -181,12 +146,12 @@
   
 
 
-<time datetime="2014-02-18T02:00:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2014</time>
+<time datetime="2015-01-28T00:55:00+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/git/'>git</a>
+    <a class='category' href='/blog/categories/markdown/'>markdown</a>
   
 </span>
 
@@ -195,7 +160,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/01/28/octopress-picture/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/01/28/octopress-picture/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -208,10 +173,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/02/15/logback-synamic-log/" title="Previous Post: Logbackで動的にログの出力先を変更する">&laquo; Logbackで動的にログの出力先を変更する</a>
+        <a class="basic-alignment left" href="/blog/2015/01/28/timecapsule-eth0/" title="Previous Post: TimeCapsuleのethernetを確認する">&laquo; TimeCapsuleのethernetを確認する</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/02/21/forget-js/" title="Next Post: JavaScriptのproxyでハマったこと">JavaScriptのproxyでハマったこと &raquo;</a>
       
     </p>
   </footer>

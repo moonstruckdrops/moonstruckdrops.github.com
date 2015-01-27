@@ -4,7 +4,7 @@
   <title><![CDATA[Category: markdown | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/markdown/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-01-28T00:51:31+09:00</updated>
+  <updated>2015-01-28T01:04:06+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,41 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Octopressでの画像の表示]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/01/28/octopress-picture/"/>
+    <updated>2015-01-28T00:55:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/01/28/octopress-picture</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>常々、画像ファイルってどう表示するのだっけ？と思っていたのでやってみた感じ</p>
+
+<h3>ファイルの格納先</h3>
+
+<hr />
+
+<p><code>octopress/source/images</code>ディレクトリに画像ファイルを格納する</p>
+
+<p>themeで表示している画像が最初から格納されているので、ビビらず画像ファイルを格納すること</p>
+
+<h3>指定方法</h3>
+
+<hr />
+
+<p><a href="http://octopress.org/docs/plugins/image-tag/">公式</a>を参照すればできる模様</p>
+
+<p>そのため前述の格納先を相対URLで指定すると、以下の形になる</p>
+
+<p><code>
+![hoge](/images/hoge.jpg)
+</code></p>
+
+<p>こんな感じでやると画像を表示できる</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[rsyncを使って自前サーバでOctpressを運用する]]></title>
@@ -369,308 +404,6 @@ default_asides: [custom/asides/about.html, asides/recent_posts.html, custom/asid
 
 <p>Octopressもいいけど、Quiitaをブログ代わりにするのもいいかも。<br/>
 悩ましいなぁ。。。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[markdown記法のメモ]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/11/octpress/"/>
-    <updated>2013-03-11T23:42:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/11/octpress</id>
-    <content type="html"><![CDATA[<p>今までBloggerでブログを書いていました。<br/>
-どうにも書きづらいところも出てきたので移行しようかどうしようか検討しています。<br/>
-移行の検討材料として、以下があります。</p>
-
-<ul>
-<li>コードが貼り付けやすい</li>
-<li>記事のストックができる</li>
-<li>記事が書きやすい</li>
-<li>バージョン管理までとは行かなくても手元に記事を残せる(もしくは復元も容易)</li>
-</ul>
-
-
-<p>今回は、移行するにあたって記法の基礎から書いてみます。</p>
-
-<h4>改行</h4>
-
-<hr />
-
-<p>改行したい文字の後ろに空文字(空白)を２つ挿入</p>
-
-<h4>強調</h4>
-
-<hr />
-
-<p><strong>こんな感じで強調できます。</strong></p>
-
-<p>**こんな感じで書けば強調できます。**</p>
-
-<h4>見出し</h4>
-
-<hr />
-
-<p>今まで表示しているような見出しは以下のような感じで表示します。</p>
-
-<ul>
-<li># h1タグの見出し</li>
-<li>#### h4タグの見出し</li>
-<li>###### h6タグの見出し</li>
-</ul>
-
-
-<h4>リスト</h4>
-
-<hr />
-
-<p>リストを表現する際の注意事項は、「リストの上下に空行をいれる」です。<br/>
-上下に空行を入れない場合、リストとして認識されません。(期待している表示にならず残念な表示になります)<br/>
-wikiのような感じでレベルの表現もできないことも注意すること。</p>
-
-<h6>順序付きのリスト</h6>
-
-<hr />
-
-<p>以下のような数字付きのリストを表示したい場合、「数字.」を先頭につければ表示できます。</p>
-
-<ol>
-<li>これは「1.」を先頭につけてます</li>
-<li>これは「2.」を先頭につけてます</li>
-</ol>
-
-
-<h6>順序なしのリスト</h6>
-
-<hr />
-
-<p>要点を書く際の順序なしリストを表示したい場合、「+」「*」「-」を先頭につければ表示できます。</p>
-
-<ul>
-<li>これは「+」を先頭につけてます</li>
-<li>これは「*」を先頭につけてます</li>
-<li>これは「-」を先頭につけてます</li>
-</ul>
-
-
-<h4>段落</h4>
-
-<hr />
-
-<p>段落は、行と行の間に空行を入れれば自動的に段落が分けられる。</p>
-
-<h4>水平線</h4>
-
-<hr />
-
-<p>水平線は以下のいずれかで表示できます。<br/>
-* * <em><br/>
-*<strong><br/>
-*</strong></em>*<br/>
-- - -<br/>
----------------------------------------</p>
-
-<h4>引用</h4>
-
-<hr />
-
-<p>引用は「>」をつけると、引用表示できます。<br/>
-引用は以下のように組み合わせて使用することもできます。</p>
-
-<blockquote><ul>
-<li>引用とリストの組み合わせて表示してます</li>
-</ul>
-</blockquote>
-
-<h4>リンク</h4>
-
-<hr />
-
-<p>以下の形式で表現します。</p>
-
-<ul>
-<li>[リンクのテキスト](リンクのアドレス "リンクのタイトル")</li>
-<li>[リンクのテキスト](リンクのアドレス)</li>
-</ul>
-
-
-<h4>コード</h4>
-
-<hr />
-
-<p>コードは以下のような感じで表現します。<br/>
-(グレイブアクセントを使用する)</p>
-
-<p><code>
-p 'Hello!!'
-</code></p>
-
-<p>上記は以下のように記載しています。</p>
-
-<blockquote><p>```<br/>
-p 'Hello!!'<br/>
-```</p></blockquote>
-
-<h4>画像</h4>
-
-<hr />
-
-<p>[画像の代替テキスト](画像のアドレス) という感じで記載します。<br/>
-リンクと同じ方法ですね。</p>
-
-<h4>その他</h4>
-
-<hr />
-
-<h6>エスケープ</h6>
-
-<hr />
-
-<p>markdownの先頭に「\」(バックスラッシュ)を追加すれば、エスケープできます。</p>
-
-<h5>インラインHTML</h5>
-
-<p>以下のようにしてインラインHTMLを書くこともできます。</p>
-
-<p>```</p>
-
-<table>
- <tr>
-  <td>表</td>
- </tr>
-</table>
-
-
-<p>```</p>
-
-<h6>テーブル</h6>
-
-<hr />
-
-<p>残念ながらマークダウン記法では使用できません。<br/>
-ですが、octpressでは使用することができます。<br/>
-<a href="http://www.mk-mode.com/octopress/2013/01/10/octopress-table-tag/">こちらのサイト</a>を参考にさせて頂きました。</p>
-
-<ul>
-<li>以下のようなCSSファイルを作成します。(値は適宜調整してください)
-```</li>
-<li><ul>
-<li>table {
-border-style:solid;
-border-width:1px;
-border-color:#e7e3e7;
-margin: 10px 0 30px 0;
-}</li>
-</ul>
-</li>
-<li><ul>
-<li>table th, * + table td {
-border-style:dashed;
-border-width:1px;
-border-color:#8888AA;
-}</li>
-</ul>
-</li>
-<li><ul>
-<li>table th {
-border-top:    1px #666688 solid;
-border-bottom: 2px #666688 solid;
-font-weight:bold;
-background-color: #C0C0C0;
-padding: 2px 9px;
-}</li>
-</ul>
-</li>
-<li><ul>
-<li>table td {
-border-bottom: 1px #666688 solid;
-background-color: #F0F0F0;
-padding: 0 10px;
-}</li>
-</ul>
-</li>
-<li><ul>
-<li>table th[align="left"], * + table td[align="left"] {
-text-align:left;
-}</li>
-</ul>
-</li>
-<li><ul>
-<li>table th[align="right"], * + table td[align="right"] {
-text-align:right;
-}</li>
-</ul>
-</li>
-<li><ul>
-<li>table th[align="center"], * + table td[align="center"] {
-text-align:center;
-}
-```</li>
-</ul>
-</li>
-<li><p>CSSを読み込むように「source/_includes/head.html」を編集します。
-<code>
-&lt;link href="http://moonstruckdrops.github.com/stylesheets/table.css" rel="stylesheet" type="text/css"&gt;
-</code></p></li>
-<li><p>記述方法は以下のようにします
-<code>
-| Left align | Right align | Center align |
-|:-----------|------------:|:------------:|
-| This       |        This |     This     |
-| column     |      column |    column    |
-| will       |        will |     will     |
-| be         |          be |      be      |
-| left       |       right |    center    |
-| aligned    |     aligned |   aligned    |
-</code></p></li>
-</ul>
-
-
-<p>こんな感じで表示されます。
-リスト同じく上下に空行は必須です。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left"> Left align </th>
-<th align="right"> Right align </th>
-<th align="center"> Center align </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> This       </td>
-<td align="right">        This </td>
-<td align="center">     This     </td>
-</tr>
-<tr>
-<td align="left"> column     </td>
-<td align="right">      column </td>
-<td align="center">    column    </td>
-</tr>
-<tr>
-<td align="left"> will       </td>
-<td align="right">        will </td>
-<td align="center">     will     </td>
-</tr>
-<tr>
-<td align="left"> be         </td>
-<td align="right">          be </td>
-<td align="center">      be      </td>
-</tr>
-<tr>
-<td align="left"> left       </td>
-<td align="right">       right </td>
-<td align="center">    center    </td>
-</tr>
-<tr>
-<td align="left"> aligned    </td>
-<td align="right">     aligned </td>
-<td align="center">   aligned    </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>とまぁ、こんなにあるけど覚えることが少ないので慣れればこちらのほうがいいかもしれないですね。</p>
 ]]></content>
   </entry>
   
