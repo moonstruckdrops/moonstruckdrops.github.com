@@ -9,8 +9,7 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに ここの内容は完全に備忘録です。
-何故かというと、自分がちょっと実現したい機能があったけどできるのだろうかと調べてみたメモだからです。 普通のPull To Refresh 所謂、下向きに引っ張るとListViewが更新されるやつですね。 これはAPI Level19のSupport V4 &hellip;">
+  <meta name="description" content="備忘録的に TimeCapsuleのIPアドレスを固定にしたかったので、MACアドレスを調べる必要が出てきた また同じことにならないようにメモしておく 確認方法 下記の図のように、AirMacユーティリティを開き機器のタイトルを選択すると表示されます ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +71,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/28/timecapsule-eth0/">TimeCapsuleのethernetを確認する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-28T00:45:00+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>備忘録的に</h3>
+
+<hr />
+
+<p>TimeCapsuleのIPアドレスを固定にしたかったので、MACアドレスを調べる必要が出てきた</p>
+
+<p>また同じことにならないようにメモしておく</p>
+
+<h3>確認方法</h3>
+
+<hr />
+
+<p>下記の図のように、AirMacユーティリティを開き機器のタイトルを選択すると表示されます</p>
+
+<p><img src="/images/airmac.png" alt="AirMac" /></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1224,158 +1273,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/23/ruby-solr/">RubyでSolrを使うときに気をつけること</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-23T12:31:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>タイトルは釣り臭が半端ないですねw</p>
-
-<p>正確なことを言うと使用ライブラリは、<br/>
-特性を理解の上で使いましょうということが言いたいだけです</p>
-
-<h3>RubyでSolrを使う際のライブラリと言えば</h3>
-
-<hr />
-
-<p>大体、以下の２つになると思います</p>
-
-<ul>
-<li><a href="https://github.com/rsolr/rsolr">RSolr</a></li>
-<li><a href="http://sunspot.github.io/">sunspot</a></li>
-</ul>
-
-
-<p>前者は、シンプルな機能に対して、後者は多機能になっています</p>
-
-<h3>RSolr</h3>
-
-<hr />
-
-<p>ここら編は、ドキュメントを見たほうがよいですが自分の理解をダラっと</p>
-
-<ul>
-<li>接続やプロキシは、自分で設定できる(タイムアウトやリトライ設定も可能)</li>
-<li>上記の為、(実装に応じるが)自由に検索先のスキーマを変更できる</li>
-<li>検索クエリ(ファセットクエリ等も含む)は自前で実装しないといけない</li>
-<li>rowsやstartなども自前で実装する必要がある</li>
-<li>更新や削除(クエリベースやidベースで)もできる上にメソッドとして用意してある</li>
-<li>responseはハッシュになっているので、自前で検索結果を整形(ActiveRecordオブジェクト等)する必要がある</li>
-<li>ページングも対応している</li>
-</ul>
-
-
-<p>一声で言うと・・・</p>
-
-<ul>
-<li>クエリ構築は自前でやる必要がある</li>
-<li>検索結果の整形も自前でやる必要がある</li>
-<li>実装次第で、接続先のSolrも自由に変更することができる</li>
-</ul>
-
-
-<p>シンプルとか言っておきながら、結構ありますね<sup>^;;</sup></p>
-
-<p>実際、使うとわかりますがかなりシンプルですよ</p>
-
-<h3>sunspot</h3>
-
-<hr />
-
-<p>こちらもドキュメントを見たほうがよいのですが・・・</p>
-
-<ul>
-<li>検索クエリ(facetクエリなら)をDSLライクに記述できる</li>
-<li>検索はdismaxで行ってくれる</li>
-<li>検索クエリの結果はActiveRecordオブジェクトで取得できる</li>
-<li>全文検索も直感的に記述できるうえにboost値も設定できる</li>
-<li>ページングやグルーピングにも対応している</li>
-<li>緯度、経度のデータも検索できる</li>
-<li>検索ハイライトやスキーマデータの結合にも対応している</li>
-<li>indexingもsunspotのみで完結することができる(削除もできます)</li>
-<li>勿論、手動でクエリを構築することも可能</li>
-<li>sunspot自体がRSolrに依存しているので、その気になればRSolrの機能も一応使うことができる</li>
-</ul>
-
-
-<p>これだけ、高機能なので当然の如く欠点もありまして・・・</p>
-
-<ol>
-<li>Solrのスキーマ定義がsunspotに依存した形になってしまうこと</li>
-<li>indexするデータの一部もsunspotに依存した形になってしまうこと</li>
-<li>Solrのフィールドに対応する形でActiveRecordのmodelクラスに定義が必要になること</li>
-<li>sunspotが吐き出すクエリを理解しないと使いづらいこと</li>
-<li>sunspot自体がmethod_missingを使った実装なのでコードが読みづらいこと・・・</li>
-</ol>
-
-
-<h3>日本語を扱う場合の注意点</h3>
-
-<hr />
-
-<p>基本的に、検索文字列の処理はSolr側のtokenizerで行われます。</p>
-
-<p>ところがsunspotで日本語を使う場合だと、全文字列がエスケープされてしまいます。</p>
-
-<p>例えば、「あいうえお」を検索したい場合だと「\あ\い\う\え\お」になってしまいます。</p>
-
-<p>因みに、英語検索は問題ありません。</p>
-
-<p>原因がどこにあるかと言うと、 <a href="https://github.com/sunspot/sunspot/blob/master/sunspot/lib/sunspot/query/restriction.rb">restriction.rb</a>にあります。</p>
-
-<p>具体的な箇所は、このmodule内で使用されているescapeメソッドが原因です。<br/>
-このescapeメソッドの実装は、<a href="https://github.com/rsolr/rsolr/blob/master/lib/rsolr/char.rb">char.rb</a>ですね。<br/>
-つまり、RSolr側の不具合に近いでしょう。<br/>
-また、RSolrを使って自前で実装するときもこのescapeメソッドを使用しないほうがいいです。</p>
-
-<p>sunspotの依存gem側の問題なので、簡単に修正するのも難しいですね。</p>
-
-<h3>対処方法は？</h3>
-
-<hr />
-
-<p>モンキーパッチを使えば、対処できました。</p>
-
-<p>escapeメソッドを使っているところを全部上書き実装すればいいだけです。</p>
-
-<p>Railsで使う場合だと、「config/initialize/sunspot.rb」みたいなのを作ればいいですね。<br/>
-その中で、上記の処理を使えば対応可能です。</p>
-
-<p>まぁ、根本解決ではないなと思いますが・・・</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1395,6 +1292,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/28/timecapsule-eth0/">TimeCapsuleのethernetを確認する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/17/pull-to-refresh/">AndroidのPull To Refreshをちょっとだけ調べた</a>
       </li>
     
@@ -1410,15 +1311,11 @@
         <a href="/blog/2014/11/15/back-multi-modal/">iOSで複数のmodalを同時に閉じる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/09/reload-config-emacs/">Emacsを再起動せずに設定を反映させる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 135.0%'>Android(7)</a> <a href='/blog/categories/api' style='font-size: 105.0%'>API(1)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 125.0%'>Mac(5)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 135.0%'>Android(7)</a> <a href='/blog/categories/api' style='font-size: 105.0%'>API(1)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(8)</a> <a href='/blog/categories/mac' style='font-size: 130.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 125.0%'>markdown(5)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
 </section
 
 
