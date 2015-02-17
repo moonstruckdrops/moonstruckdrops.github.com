@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-01-28T01:04:06+09:00</updated>
+  <updated>2015-02-18T01:30:08+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,80 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Linuxのログイン履歴確認]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/02/18/linux-login-check/"/>
+    <updated>2015-02-18T01:20:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/02/18/linux-login-check</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>毎度なんだっけ？ってなって思い出すのが面倒なので、備忘録的にログイン履歴確認方法を記録</p>
+
+<h3>最近ログインしたアカウント一覧</h3>
+
+<hr />
+
+<p>以下のコマンドで確認できる</p>
+
+<p><code>
+$last
+</code></p>
+
+<p>実行結果(上に行くほど最新)</p>
+
+<p><code>
+root     tty1                          Tue May  6 18:59 - crash  (00:16)
+root     tty1                          Tue May  6 18:58 - 18:59  (00:00)
+reboot   system boot  2.6.32-431.11.2. Tue May  6 17:16 - 21:21  (04:04)
+</code></p>
+
+<h3>ログファイルから確認する</h3>
+
+<hr />
+
+<p>もう少し細かく見る場合はログファイルを確認する<br/>
+バイナリなので中を見たいときはwhoコマンドを使用する</p>
+
+<p><code>
+$who /var/log/wtmp
+</code></p>
+
+<p>実行結果(ログファイルなので、ファイル末尾が新しい)</p>
+
+<p><code>
+root     tty1         2014-05-06 18:58
+root     tty1         2014-05-06 18:59
+root     tty1         2014-05-06 19:19
+</code></p>
+
+<h3>各アカウントの最終ログインの一覧</h3>
+
+<hr />
+
+<p>普段利用していないアカウントでログインされていないか確認できる<br/>
+以下のコマンドで確認できる</p>
+
+<p><code>
+$lastlog
+</code></p>
+
+<p>実行結果(各アカウントの最終ログインが表示)</p>
+
+<p><code>
+ユーザ名         ポート   場所             最近のログイン
+root             tty1                      **一度もログインしていません**
+bin                                        **一度もログインしていません**
+daemon                                     **一度もログインしていません**
+adm                                        **一度もログインしていません**
+lp                                         **一度もログインしていません**
+sync                                       **一度もログインしていません**
+shutdown                                   **一度もログインしていません**
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[findのexecオプションとxargsコマンドについて]]></title>
@@ -482,87 +556,6 @@ $dd if=/dev/zero of=/dev/sdc
 <p>このコマンド本当に便利。<br/>
 LinuxとかMacのディスクだけでなくって、Windowsなディスクまで丸ごとコピーできるところが素敵。<br/>
 ファイル指定はできないけどw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Linux上にあるユーザーアカウントの追加と削除をする]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add/"/>
-    <updated>2013-04-24T23:40:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/04/24/linux-user-add</id>
-    <content type="html"><![CDATA[<p>すごくド基礎なのですが・・・。<br/>
-ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
-
-<h3>ユーザーアカウントの追加</h3>
-
-<hr />
-
-<p>基本中の基本ですね。<br/>
-以下のコマンドのような感じで追加します。</p>
-
-<p><code>
-$useradd -u 500 -g wheel -m kurobara
-</code></p>
-
-<p>以下の表によく使用するオプションを記載します。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">オプション</th>
-<th align="left">意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">c コメント      </td>
-<td align="left">ユーザーのコメントを設定</td>
-</tr>
-<tr>
-<td align="left">d ディレクトリ  </td>
-<td align="left">ユーザーのログインディレクトリを指定</td>
-</tr>
-<tr>
-<td align="left">e mm/dd/yy </td>
-<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
-</tr>
-<tr>
-<td align="left">g グループ   </td>
-<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
-</tr>
-<tr>
-<td align="left">G グループ    </td>
-<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
-</tr>
-<tr>
-<td align="left">u ユーザーID </td>
-<td align="left">ユーザーのユーザーIDを指定</td>
-</tr>
-<tr>
-<td align="left">s シェル </td>
-<td align="left">ユーザーのログインシェルを指定</td>
-</tr>
-<tr>
-<td align="left">m        </td>
-<td align="left">ホームディレクトリの作成を自動で行う</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>ユーザーアカウントの削除</h3>
-
-<hr />
-
-<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
-なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
-但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
-
-<p><code>
-$userdel &lt;ユーザーアカウント名&gt;
-</code></p>
-
-<p>常識ですね(ぉぃ</p>
 ]]></content>
   </entry>
   
