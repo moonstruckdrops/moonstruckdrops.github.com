@@ -9,8 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに RailsでRake Taskなんか作ったときは、バッチ処理するようなことを書くと思います。
-多分ですが・・・ この前、バルクインサートをすることがあったのでやり方を残しておきます。 因みに、普通にrubyスクリプトの中でも使うこともできると思います(これも多分w) やり方 &hellip;">
+  <meta name="description" content="はじめに 糞お高いNASを買ってしまいました・・・
+というか、買わざるを得ませんでしたorz とりあえず、こんな理由で選定 自宅の外付けHDDが故障気味
+Macも自動でバックアップ取っておきたい 勿論、QNAPでも良かったのですが、以下の理由で諦め HDDが別売とかでお高い( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +73,210 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/29/timecapsule-mac-linux/">Time Capsule(NAS)をMacとLinuxの両方から使えるようにする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-29T00:18:00+09:00" pubdate data-updated="true">Nov 29<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>糞お高いNASを買ってしまいました・・・<br/>
+というか、買わざるを得ませんでしたorz</p>
+
+<p>とりあえず、こんな理由で選定</p>
+
+<ul>
+<li>自宅の外付けHDDが故障気味</li>
+<li>Macも自動でバックアップ取っておきたい</li>
+</ul>
+
+
+<p>勿論、QNAPでも良かったのですが、以下の理由で諦め</p>
+
+<ul>
+<li>HDDが別売とかでお高い(故障交換ができるのは強みですが・・・)</li>
+<li>サイズが大きい</li>
+<li>ルーター機能までついてるので省スペース</li>
+</ul>
+
+
+<p>で、バックアップだけではもったいないため、
+よく使うOSで表題のようにNAS利用を使用と思いました。</p>
+
+<h3>やってみる</h3>
+
+<hr />
+
+<p>やるまでに結構苦労しました。<br/>
+そもそも、どうやって手をつけるのか若干悩みましたw</p>
+
+<h5>障壁</h5>
+
+<hr />
+
+<p>Mac側(よしなにやってくれるが故の問題)</p>
+
+<ul>
+<li>GUI操作で自動的にマウントされる</li>
+<li>自動的にマウントされるが故に何処にマウントされたか不明</li>
+<li>マウント先不明の為、コマンドでlsとかcd実行できない</li>
+</ul>
+
+
+<p>Linux側</p>
+
+<ul>
+<li>使用プロトコルが分からない</li>
+<li>マウントするためのファイルシステムは？？？</li>
+<li>そもそもマウント先のIPとかディレクトリが不明</li>
+</ul>
+
+
+<h5>解決編</h5>
+
+<hr />
+
+<p>AirMacユーティリティをGUI操作して、以下を設定</p>
+
+<ul>
+<li>ファイル共有にチェック</li>
+<li>共有ディスクのセキュリティをアカウントに変更(デフォルトはディスクパスワード)</li>
+</ul>
+
+
+<p>他の項目は、すぐにわかりました</p>
+
+<ul>
+<li>IPはすぐに発覚(GW + 末尾に数字の1追加)</li>
+<li>プロトコルはafpもGUI操作時の情報で発覚</li>
+</ul>
+
+
+<p>Mac側は、afpをマウントする際のコマンド(mount_afp)を参照することでわかりました</p>
+
+<p>以下のコマンドを実行するとよいようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mount -t afp afp://YOUR_USERNAME:YOUR_PASSWORD@&lt;TimeCapsuleのIP&gt;/Data &lt;マウント先ディレクトリ</span></code></pre></td></tr></table></div></figure>
+
+
+<p>umountコマンドで普通に実行できます。</p>
+
+<p>Mac側が判明したので、Linux側もほぼ同じようにしてできました。
+但し、ファイルシステムを「cifs」に設定することやディスクの指定方法が異なりました。</p>
+
+<p>以下のようにすればできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mount -t cifs -o user="YOUR_USERNAME",password="YOUR_PASSWORD" //&lt;TimeCapsuleのIP&gt; &lt;マウント先ディレクトリ&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>シェル化</h3>
+
+<hr />
+
+<p>一々、上記の内容を手打ちするのは面倒なので、シェル化しました。</p>
+
+<p>こんなことをします。</p>
+
+<ol>
+<li>マウント先のディレクトリをチェック</li>
+<li>ディレクトリがなければ作成</li>
+<li>ディレクトリにマウント実行</li>
+</ol>
+
+
+<p>以下の環境で動作確認しています。</p>
+
+<ul>
+<li>MacOSX 10.8.5</li>
+<li>CentOS6.4 x86_64</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/sh
+</span><span class='line'>
+</span><span class='line'># TimeCapsuleの共有ディスクをアカウント認証にしておくこと
+</span><span class='line'>USER="YOUR_USER_NAME"
+</span><span class='line'>PASSWORD="YOUR_PASSWORD"
+</span><span class='line'>MAC_DIRECTORY="/Volumes/timecapsule"
+</span><span class='line'>LINUX_DIRECTORY="/mnt/timecapsule"
+</span><span class='line'>TC_DIRECTORY="YOUR_TIMECAPSULE_DIRECTORY"
+</span><span class='line'>
+</span><span class='line'>if [ `echo "${OSTYPE}" |grep "linux*"` ]&&[ ! -d "$LINUX_DIRECTORY" ]; then
+</span><span class='line'>    mkdir -p "$LINUX_DIRECTORY"
+</span><span class='line'>elif [ ! -d "$MAC_DIRECTORY" ]; then
+</span><span class='line'>    mkdir -p "$MAC_DIRECTORY"
+</span><span class='line'>fi
+</span><span class='line'>
+</span><span class='line'>if [ `echo "${OSTYPE}" |grep "linux*"` ]; then
+</span><span class='line'>    # for Linux
+</span><span class='line'>    # use cifs-utils(RedHat)
+</span><span class='line'>    mount -t cifs -o user="$USER",password="$PASSWORD" //"$TC_DIRECTORY" "$LINUX_DIRECTORY"
+</span><span class='line'>else
+</span><span class='line'>    # for Mac
+</span><span class='line'>    # ユーザ:パスワード@TimeCapusleのIPアドレス
+</span><span class='line'>    mount -t afp afp://"$USER":"$PASSWORD"@"$TC_DIRECTORY" "$MAC_DIRECTORY"
+</span><span class='line'>fi</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1896,59 +2101,6 @@ RubyやGoとかが好きです。<br/>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/22/mac-dir/">Macのディレクトリ名を英語化する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-22T00:09:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>色々不便なのでやりました。<br/>
-理由は、「ソートや補完とかが辛い」です。</p>
-
-<p>英語化対象は、デフォルトで日本語化されているディレクトリです。<br/>
-(「デスクトップ」という名前のディレクトリなど)</p>
-
-<p>以下のコマンドを実行すれば、ディレクトリ名が英語化します。
-やっていることは単純で、再帰的に権限維持したまま対訳表があるディレクトリをコピーです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd /System/Library/CoreServices/SystemFolderLocalizations/
-</span><span class='line'>$ sudo mv Japanese.lproj Japanese.lproj.bak
-</span><span class='line'>$ sudo cp -pr en.lproj Japanese.lproj</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで英語化されるね。。。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -1970,6 +2122,10 @@ RubyやGoとかが好きです。<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/17/apache-plus-tomcat/">なぜApacheとTomcatを連携させるのか</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/18/api-life-cycle/">APIを作る際のAPIバージョンに関するメモ</a>
       </li>
     
@@ -1985,15 +2141,11 @@ RubyやGoとかが好きです。<br/>
         <a href="/blog/2015/01/28/timecapsule-eth0/">TimeCapsuleのethernetを確認する</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/01/17/pull-to-refresh/">AndroidのPull To Refreshをちょっとだけ調べた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 135.0%'>Android(7)</a> <a href='/blog/categories/api' style='font-size: 110.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 125.0%'>Java(5)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 145.0%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 130.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 130.0%'>markdown(6)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 135.0%'>Android(7)</a> <a href='/blog/categories/api' style='font-size: 110.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(6)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 145.0%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 130.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 130.0%'>markdown(6)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
 </section
 
 

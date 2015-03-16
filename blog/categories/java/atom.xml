@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-02-19T00:10:07+09:00</updated>
+  <updated>2015-03-17T00:15:30+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,58 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[なぜApacheとTomcatを連携させるのか]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/03/17/apache-plus-tomcat/"/>
+    <updated>2015-03-17T00:12:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/03/17/apache-plus-tomcat</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>同僚とApacheとTomcatって何で連携させるんだっけ？<br/>
+という話が出たので備忘録的に記載しておきます</p>
+
+<p>ぶっちゃけ、今更感がすごい内容ですが・・・</p>
+
+<h3>Apache</h3>
+
+<hr />
+
+<p>ざっくり言うと、クライアントのブラウザからアクセスし、サービスを提供するためのWebサーバソフトウェア</p>
+
+<h3>Tomcat</h3>
+
+<hr />
+
+<p>こちらもざっくり言うと、以下のもの</p>
+
+<ul>
+<li>「サーブレット・コンテナ」(Servlet等を動作させるために必要なWebアプリケーションサーバ)</li>
+<li>Servletのインスタンス管理やセッションの管理</li>
+<li>Webサーバ機能有り(主に開発とデバッグ用)</li>
+</ul>
+
+
+<h3>連携理由</h3>
+
+<hr />
+
+<p>開発、デバッグ用途としてWebサーバ機能があるので、問題はないのですが
+そもそもとして、ApacheなどのWebサーバの性能と同等に捌けるかは疑問があったりするところ</p>
+
+<p>なので、以下の処理分担としたほうが効率よく捌けるため連携をさせることが多い</p>
+
+<ul>
+<li>静的コンテンツ(HTMLや画像ファイルなど)の処理はApacheが担当(何故なら、高速でTomcatに比べて高速に処理できるから)</li>
+<li>動的コンテンツに関しての処理をTomcatが担当</li>
+</ul>
+
+
+<p>所謂、餅は餅屋ということですな</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Logbackで動的にログの出力先を変更する]]></title>
@@ -481,30 +533,6 @@ public Hoge(Fuga fuga){</p>
 
 <p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
 使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JavaのHashmapを使ったiteratorの実装]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator/"/>
-    <updated>2013-03-25T18:29:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/03/25/java-map-iterator</id>
-    <content type="html"><![CDATA[<p>偶に忘れるのでメモしておきます。<br/>
-iterationは忘れたらダメだと思いつつも、偶にアレなんだっけ？ってなります。</p>
-
-<p>```
-Map map = new HashMap();
-for (Iterator it = map.entrySet().iterator(); it.hasNext();) {</p>
-
-<pre><code>Map.Entry entry = (Map.Entry)it.next();
-Object key = entry.getKey();
-Object value = entry.getValue();
-</code></pre>
-
-<p>}
-```</p>
-
-<p>Javaを書かなくなると忘れてしまいますねw</p>
 ]]></content>
   </entry>
   

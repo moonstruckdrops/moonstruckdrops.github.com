@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-02-19T00:09:54+09:00</updated>
+  <updated>2015-03-17T00:15:30+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,58 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[なぜApacheとTomcatを連携させるのか]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/03/17/apache-plus-tomcat/"/>
+    <updated>2015-03-17T00:12:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/03/17/apache-plus-tomcat</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>同僚とApacheとTomcatって何で連携させるんだっけ？<br/>
+という話が出たので備忘録的に記載しておきます</p>
+
+<p>ぶっちゃけ、今更感がすごい内容ですが・・・</p>
+
+<h3>Apache</h3>
+
+<hr />
+
+<p>ざっくり言うと、クライアントのブラウザからアクセスし、サービスを提供するためのWebサーバソフトウェア</p>
+
+<h3>Tomcat</h3>
+
+<hr />
+
+<p>こちらもざっくり言うと、以下のもの</p>
+
+<ul>
+<li>「サーブレット・コンテナ」(Servlet等を動作させるために必要なWebアプリケーションサーバ)</li>
+<li>Servletのインスタンス管理やセッションの管理</li>
+<li>Webサーバ機能有り(主に開発とデバッグ用)</li>
+</ul>
+
+
+<h3>連携理由</h3>
+
+<hr />
+
+<p>開発、デバッグ用途としてWebサーバ機能があるので、問題はないのですが
+そもそもとして、ApacheなどのWebサーバの性能と同等に捌けるかは疑問があったりするところ</p>
+
+<p>なので、以下の処理分担としたほうが効率よく捌けるため連携をさせることが多い</p>
+
+<ul>
+<li>静的コンテンツ(HTMLや画像ファイルなど)の処理はApacheが担当(何故なら、高速でTomcatに比べて高速に処理できるから)</li>
+<li>動的コンテンツに関しての処理をTomcatが担当</li>
+</ul>
+
+
+<p>所謂、餅は餅屋ということですな</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[APIを作る際のAPIバージョンに関するメモ]]></title>
@@ -1729,95 +1781,6 @@
 <p>割りと簡単にできるんですねw</p>
 
 <p>後はこの処理をラップしたようなクラス&amp;静的メソッドを作ると汎用的に使えていいのではないだろうか。。。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Volleyをビルドする]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/01/30/build-volley/"/>
-    <updated>2014-01-30T00:36:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/01/30/build-volley</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>とある作業でAndroidの通信用ライブラリ「Volley」を使いたくなりました。<br/>
-が、毎回使うたびにeclipseでーとかやりたくないわけです。<br/>
-なので一度ビルドしてしまい、ライブラリ化してしまおうという魂胆です。</p>
-
-<p># 毎回、ビルドどうやるんだっけな？ってAnt Task見たりするのも面倒というオチもあったりw</p>
-
-<h3>ビルド前準備</h3>
-
-<hr />
-
-<p>Volleyにはビルド用のファイルとして、以下の2つがついています</p>
-
-<ul>
-<li>Ant</li>
-<li>Gradle</li>
-</ul>
-
-
-<p>ですが、Gradleでビルドしようとした場合、エラーになります。<br/>
-タスク一覧も見れませんでしたw</p>
-
-<p>という訳でしたのでAntでやります。</p>
-
-<p>その前に、VolleyはAndroid4.0がベースで作られているようなので、Android4.0のライブラリをインストールしておきます。</p>
-
-<h3>ビルド</h3>
-
-<hr />
-
-<p>以下のコマンドでビルドします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ant jar</span></code></pre></td></tr></table></div></figure>
-
-
-<p>成功すれば、「volley/bin/volley.jar」というファイルが出来てます。</p>
-
-<h3>バージョン管理とか</h3>
-
-<hr />
-
-<p>ここからは完全に余談なのですが・・・</p>
-
-<p>こういうライブラリを使う場合だと、バージョンが重要だったりしてきます。</p>
-
-<p>では、どうすればいいかということなのですが、自分としてはgit submoduleを使うことをオススメします。</p>
-
-<p>こうすることで、本体コード(volleyを使う側)のバージョンアップに合わせて、都度volleyのバージョンアップを図ればいいことになります。</p>
-
-<p>こんな感じのディレクトリ構成とし、Volleyは都度上記コマンドでビルドする運用</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Android
-</span><span class='line'>  |
-</span><span class='line'>  |- MainProject(自分が作成するアプリ)
-</span><span class='line'>  |
-</span><span class='line'>  |- Volley</span></code></pre></td></tr></table></div></figure>
-
-
-<p>git submoduleのコマンドは以下です。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule add https://android.googlesource.com/platform/frameworks/volley Volley</span></code></pre></td></tr></table></div></figure>
-
-
-<p>submodule化したものを更新する場合は、以下のコマンドです<br/>
-# 初回の場合は、updateではなくinitをしてsubmodule化したファイル類を取得する必要があります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git submodule update</span></code></pre></td></tr></table></div></figure>
-
-
-
 ]]></content>
   </entry>
   
