@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-03-17T00:15:30+09:00</updated>
+  <updated>2015-03-17T02:03:04+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,450 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Heroku上でJersey + Jetty + Gradleを動かす]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/03/17/jersey-on-heroku/"/>
+    <updated>2015-03-17T01:14:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/03/17/jersey-on-heroku</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>JavaでRestfulといえば、JAX-RSが有名ですね。</p>
+
+<p>それを扱いやすくしたFrameworkといえば、<a href="https://jersey.java.net/">Jersey</a>になります。<br/>
+これをHerokuで動かすようにしてみます。</p>
+
+<p>ついでにオワコン臭漂うmavenを辞めて、Gradleでビルドができるようにもしてみます</p>
+
+<h3>目標</h3>
+
+<hr />
+
+<p>以下ができていること</p>
+
+<ul>
+<li>Heroku上でJerseyが動くこと</li>
+<li>HerokuではJettyがサーブレット・コンテナとして動くこと</li>
+<li>ビルドツールには、デフォルトのmavenではなくGradleであること</li>
+</ul>
+
+
+<h3>Jersey</h3>
+
+<hr />
+
+<p>まずはmaven ArchTypeから必要なファイルを準備</p>
+
+<p><a href="https://jersey.java.net/download.html">ここ</a>を参考にすると、ArchTypeは2種類あることが分かります。</p>
+
+<p>今回はJettyで動かすので、サーブレットコンテナ用のものを使います</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes -DarchetypeArtifactId=jersey-quickstart-webapp -DarchetypeVersion=2.17</span></code></pre></td></tr></table></div></figure>
+
+
+<p>必要項目を聞かれますので、以下のような感じで入力していきます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Define value for property 'groupId': : kurobara
+</span><span class='line'>Define value for property 'artifactId': : kurobara
+</span><span class='line'>Define value for property 'version': 1.0-SNAPSHOT:
+</span><span class='line'>Define value for property 'package': kurobara: kurobara</span></code></pre></td></tr></table></div></figure>
+
+
+<p>成功すれば、以下の構成になります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>├── pom.xml
+</span><span class='line'>├── src
+</span><span class='line'>│   └── main
+</span><span class='line'>│       ├── java
+</span><span class='line'>│       │   └── kurobara
+</span><span class='line'>│       │       └── MyResource.java
+</span><span class='line'>│       ├── resources
+</span><span class='line'>│       └── webapp
+</span><span class='line'>│           ├── WEB-INF
+</span><span class='line'>│           │   └── web.xml
+</span><span class='line'>│           └── index.jsp</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mavenの削除</h3>
+
+<hr />
+
+<p>普通に考えると、mavenを使わなければpom.xmlを残してもよいかと思います(自分も最初は思いました)
+Herokuではmavenがデフォルトで使われますので、削除してしまいます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rm pom.xml</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どうやら、mavenとGradleの両方のビルドファイルが存在するとHerokuではmavenのものが最優先で使われるようです</p>
+
+<h3>Gradleの追加</h3>
+
+<hr />
+
+<p>以下の内容を<code>build.gradle</code>に記載します</p>
+
+<p>このファイルのミソは<code>task stage(dependsOn: ['clean', 'installApp'])</code>を記載していることです。
+Herokuではこのタスクが必要なようです。</p>
+
+<p><a href="https://github.com/heroku/devcenter-gradle">公式</a>を参考にしました。</p>
+
+<p>多分、必要無いと思いますが念のためgradlewも用意しました(自分は一応、これもファイルに追加しています)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>apply plugin: "java"
+</span><span class='line'>apply plugin: "war"
+</span><span class='line'>apply plugin: "jetty"
+</span><span class='line'>apply plugin: 'application'
+</span><span class='line'>
+</span><span class='line'>group = "kurobara"
+</span><span class='line'>version = 1.0
+</span><span class='line'>sourceCompatibility = 1.7
+</span><span class='line'>mainClassName = "kurobara"
+</span><span class='line'>applicationName = "kurobara"
+</span><span class='line'>
+</span><span class='line'>def defaultEncoding = 'UTF-8'
+</span><span class='line'>[
+</span><span class='line'>  compileJava,
+</span><span class='line'>  compileTestJava,
+</span><span class='line'>  javadoc
+</span><span class='line'>]*.options*.encoding = defaultEncoding
+</span><span class='line'>
+</span><span class='line'>repositories {
+</span><span class='line'>  mavenLocal()
+</span><span class='line'>  maven { url "http://maven.seasar.org/maven2" }
+</span><span class='line'>  mavenCentral()
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>dependencies {
+</span><span class='line'>  compile 'org.eclipse.jetty:jetty-server:9.2.10.v20150310'
+</span><span class='line'>  compile 'org.eclipse.jetty:jetty-webapp:9.2.10.v20150310'
+</span><span class='line'>  compile 'org.glassfish.jersey.core:jersey-server:2.17'
+</span><span class='line'>  compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.17'
+</span><span class='line'>
+</span><span class='line'>  testCompile 'junit:junit:4.10'
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>task stage(dependsOn: ['clean', 'installApp'])
+</span><span class='line'>
+</span><span class='line'>[jettyRun, jettyRunWar]*.httpPort = 8090
+</span><span class='line'>[jettyRun, jettyRunWar]*.contextPath = 'kurobara'
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>task wrapper(type: Wrapper) {
+</span><span class='line'>  gradleVersion = '1.6'
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Jettyの準備</h3>
+
+<hr />
+
+<p>最低限度の内容でJettyサーバが動くようにします</p>
+
+<p>mainメソッドにサーバの実装を記載します。</p>
+
+<p>Gradleに記載したように、これがmainClassになります(mainClassNameを参照)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import org.eclipse.jetty.server.Server;
+</span><span class='line'>import org.eclipse.jetty.webapp.WebAppContext;
+</span><span class='line'>
+</span><span class='line'>public class Main {
+</span><span class='line'>
+</span><span class='line'>  public static void main(String[] args) throws Exception {
+</span><span class='line'>      Server server = new Server(Integer.valueOf(System.getenv("PORT")));
+</span><span class='line'>
+</span><span class='line'>      WebAppContext context = new WebAppContext();
+</span><span class='line'>      context.setServer(server);
+</span><span class='line'>      context.setContextPath("/");
+</span><span class='line'>      context.setResourceBase("src/main/webapp");
+</span><span class='line'>      context.setClassLoader(Main.class.getClassLoader());
+</span><span class='line'>      server.setHandler(context);
+</span><span class='line'>
+</span><span class='line'>      server.start();
+</span><span class='line'>      server.join();
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下の構成になるようにMainクラスを配置します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>├── build.gradle
+</span><span class='line'>├── src
+</span><span class='line'>│   └── main
+</span><span class='line'>│       ├── java
+</span><span class='line'>│       │   └── kurobara
+</span><span class='line'>│       │       ├── Main.java &lt;- これを追加
+</span><span class='line'>│       │       └── MyResource.java
+</span><span class='line'>│       ├── resources
+</span><span class='line'>│       └── webapp
+</span><span class='line'>│           ├── WEB-INF
+</span><span class='line'>│           │   └── web.xml
+</span><span class='line'>│           └── index.jsp</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>動作確認</h3>
+
+<hr />
+
+<p>まずは、テストが動くかどうか確認</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$gradle clean
+</span><span class='line'>$gradle test</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次にアプリをビルドし、サーバを起動</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$gradle clean
+</span><span class='line'>$gradle build
+</span><span class='line'>$gradle jettyRunWar</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のコマンドで<code>Got it!</code>が返却されるか確認</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>curl -v http://localhost:8090/kurobara/webapi/myresource</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Heroku環境用の準備</h3>
+
+<hr />
+
+<p>Herokuで動かすJavaのバージョンを指定するsystem.propertiesを作成<br/>
+(以下のようにとりあえず確実に動作するバージョンを指定)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>java.runtime.version=1.7</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Procfileに記載するスクリプトファイルの確認</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$gradle stage</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こういう形にビルド結果が出力されているので、アプリケーション起動スクリプトのファイルパスを確認する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>├── build
+</span><span class='line'>│   ├── classes
+</span><span class='line'>│   │   └── main
+</span><span class='line'>│   │       └── kurobara
+</span><span class='line'>│   │           ├── Main.class
+</span><span class='line'>│   │           └── MyResource.class
+</span><span class='line'>│   ├── dependency-cache
+</span><span class='line'>│   ├── install
+</span><span class='line'>│   │   └── kurobara
+</span><span class='line'>│   │       ├── bin
+</span><span class='line'>│   │       │   ├── kurobara &lt;- これが起動用ファイル
+</span><span class='line'>│   │       │   └── kurobara.bat</span></code></pre></td></tr></table></div></figure>
+
+
+<p>生成したスクリプトファイルパスをProcfileに記載</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>web: ./build/install/kurobara/bin/kurobara</span></code></pre></td></tr></table></div></figure>
+
+
+<p>不要ファイルを無視するように.gitignoreを作成<br/>
+(Herokuへのデプロイはgitのため)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>build/
+</span><span class='line'>.gradle/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最終的に以下の構成になります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>├── .gitignore
+</span><span class='line'>├── Procfile
+</span><span class='line'>├── build.gradle
+</span><span class='line'>├── src
+</span><span class='line'>│   └── main
+</span><span class='line'>│       ├── java
+</span><span class='line'>│       │   └── moonstruckdrops
+</span><span class='line'>│       │       ├── Main.java
+</span><span class='line'>│       │       └── MyResource.java
+</span><span class='line'>│       ├── resources
+</span><span class='line'>│       └── webapp
+</span><span class='line'>│           ├── WEB-INF
+</span><span class='line'>│           │   └── web.xml
+</span><span class='line'>│           └── index.jsp
+</span><span class='line'>└── system.properties</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Herokuへdeploy</h3>
+
+<hr />
+
+<p>herokuへloginする</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ brew install heroku
+</span><span class='line'>$ heroku login</span></code></pre></td></tr></table></div></figure>
+
+
+<p>サーバへデプロイする</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git init
+</span><span class='line'>$ git add .
+</span><span class='line'>$ git commit -m "Ready to deploy"
+</span><span class='line'>$ git remote add heroku your_heroku_path
+</span><span class='line'>$ git push heroku master</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のコマンドで<code>Got it!</code>が返却されるか動作確認</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$curl -v http://your_app.herokuapp.com/webapi/myresource</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>感想</h3>
+
+<hr />
+
+<p>書くと簡単でしたが、実際にやってみると思った以上に嵌まりどころが多かった</p>
+
+<p>特に以下が盛大な罠でした</p>
+
+<ul>
+<li>Procfileに書くファイルはどれなのか</li>
+<li><code>heroku logs</code>を確認すると<code>app crash</code>と表示されて何がなんだかわからんかったこと</li>
+<li><code>app crash</code>起因ですがweb.xmlはいじらなくてもいいのか？なんて思ったこと</li>
+</ul>
+
+
+<p>一度環境さえ準備できれば開発に専念できるようになるので、非常に楽ですね</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なぜApacheとTomcatを連携させるのか]]></title>
@@ -1710,77 +2154,6 @@
 そうすると、マージが全てブランチに取り込まれました・・・(ファイル移動は取り込まれてないので別途実施)</p>
 
 <p>こういう恐ろしい事態(マージがうまくいかない)があったので、気をつけようねという自戒と対処結果のメモでしたw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Logbackで動的にログの出力先を変更する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/02/15/logback-synamic-log/"/>
-    <updated>2014-02-15T21:42:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/02/15/logback-synamic-log</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>といっても大したことではなく、「同僚にできないの？」って質問されたことが発端です。</p>
-
-<p>やったこと無かったけど、気になったので調べてみることにしました。</p>
-
-<p>業務要件的にも、以下のことはありそうな感じかなーとは思いましたがｗ</p>
-
-<ul>
-<li>あるログはデフォルトの出力先に</li>
-<li>致命的なエラーは、ログの出力方法はそのままで別の出力先に</li>
-</ul>
-
-
-<h3>やり方</h3>
-
-<hr />
-
-<p>割りと簡単に出来ました</p>
-
-<p>手順としてはこんな感じ・・・</p>
-
-<ol>
-<li>Loggerを取得する</li>
-<li>Loggerから変更対象の設定名でAppenderを取得する</li>
-<li>AppenderをFileAppenderにキャストする(コレがミソ)</li>
-<li>ログ出力を一時停止する</li>
-<li>setFileメソッドで出力先ファイルを変更する</li>
-<li>ログ出力を再開する</li>
-</ol>
-
-
-<p>コードにするとこんな感じかな(loggerの取得方法は色々変りそうだけど・・・)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Logger logger = LoggerFactory.getLogger(LogbackLogging.class);
-</span><span class='line'>FileAppender&lt;ILoggingEvent&gt; fileAppender = (FileAppender&lt;ILoggingEvent&gt;) logbackLogger.getAppender("FILE");
-</span><span class='line'>fileAppender.stop();
-</span><span class='line'>fileAppender.setFile("your_new_log_file");
-</span><span class='line'>fileAppender.start();</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実は、以下の２つのことで気が付きましたw</p>
-
-<ul>
-<li><a href="http://logback.qos.ch/apidocs/index.html">javadoc</a>(Appender<E>を実装してる)</li>
-<li>getAppenderメソッドの戻り値(Appender<E>が返される)</li>
-</ul>
-
-
-<h3>感想</h3>
-
-<hr />
-
-<p>割りと簡単にできるんですねw</p>
-
-<p>後はこの処理をラップしたようなクラス&amp;静的メソッドを作ると汎用的に使えていいのではないだろうか。。。</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-03-17T00:15:30+09:00</updated>
+  <updated>2015-03-17T02:03:04+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,335 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Heroku上でJersey + Jetty + Gradleを動かす]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/03/17/jersey-on-heroku/"/>
+    <updated>2015-03-17T01:14:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/03/17/jersey-on-heroku</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>JavaでRestfulといえば、JAX-RSが有名ですね。</p>
+
+<p>それを扱いやすくしたFrameworkといえば、<a href="https://jersey.java.net/">Jersey</a>になります。<br/>
+これをHerokuで動かすようにしてみます。</p>
+
+<p>ついでにオワコン臭漂うmavenを辞めて、Gradleでビルドができるようにもしてみます</p>
+
+<h3>目標</h3>
+
+<hr />
+
+<p>以下ができていること</p>
+
+<ul>
+<li>Heroku上でJerseyが動くこと</li>
+<li>HerokuではJettyがサーブレット・コンテナとして動くこと</li>
+<li>ビルドツールには、デフォルトのmavenではなくGradleであること</li>
+</ul>
+
+
+<h3>Jersey</h3>
+
+<hr />
+
+<p>まずはmaven ArchTypeから必要なファイルを準備</p>
+
+<p><a href="https://jersey.java.net/download.html">ここ</a>を参考にすると、ArchTypeは2種類あることが分かります。</p>
+
+<p>今回はJettyで動かすので、サーブレットコンテナ用のものを使います</p>
+
+<p><code>
+mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes -DarchetypeArtifactId=jersey-quickstart-webapp -DarchetypeVersion=2.17
+</code></p>
+
+<p>必要項目を聞かれますので、以下のような感じで入力していきます</p>
+
+<p><code>
+Define value for property 'groupId': : kurobara
+Define value for property 'artifactId': : kurobara
+Define value for property 'version': 1.0-SNAPSHOT:
+Define value for property 'package': kurobara: kurobara
+</code></p>
+
+<p>成功すれば、以下の構成になります</p>
+
+<p><code>
+├── pom.xml
+├── src
+│   └── main
+│       ├── java
+│       │   └── kurobara
+│       │       └── MyResource.java
+│       ├── resources
+│       └── webapp
+│           ├── WEB-INF
+│           │   └── web.xml
+│           └── index.jsp
+</code></p>
+
+<h3>mavenの削除</h3>
+
+<hr />
+
+<p>普通に考えると、mavenを使わなければpom.xmlを残してもよいかと思います(自分も最初は思いました)
+Herokuではmavenがデフォルトで使われますので、削除してしまいます</p>
+
+<p><code>
+rm pom.xml
+</code></p>
+
+<p>どうやら、mavenとGradleの両方のビルドファイルが存在するとHerokuではmavenのものが最優先で使われるようです</p>
+
+<h3>Gradleの追加</h3>
+
+<hr />
+
+<p>以下の内容を<code>build.gradle</code>に記載します</p>
+
+<p>このファイルのミソは<code>task stage(dependsOn: ['clean', 'installApp'])</code>を記載していることです。
+Herokuではこのタスクが必要なようです。</p>
+
+<p><a href="https://github.com/heroku/devcenter-gradle">公式</a>を参考にしました。</p>
+
+<p>多分、必要無いと思いますが念のためgradlewも用意しました(自分は一応、これもファイルに追加しています)</p>
+
+<p>```
+apply plugin: "java"
+apply plugin: "war"
+apply plugin: "jetty"
+apply plugin: 'application'</p>
+
+<p>group = "kurobara"
+version = 1.0
+sourceCompatibility = 1.7
+mainClassName = "kurobara"
+applicationName = "kurobara"</p>
+
+<p>def defaultEncoding = 'UTF-8'
+[
+  compileJava,
+  compileTestJava,
+  javadoc
+]<em>.options</em>.encoding = defaultEncoding</p>
+
+<p>repositories {
+  mavenLocal()
+  maven { url "http://maven.seasar.org/maven2" }
+  mavenCentral()
+}</p>
+
+<p>dependencies {
+  compile 'org.eclipse.jetty:jetty-server:9.2.10.v20150310'
+  compile 'org.eclipse.jetty:jetty-webapp:9.2.10.v20150310'
+  compile 'org.glassfish.jersey.core:jersey-server:2.17'
+  compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.17'</p>
+
+<p>  testCompile 'junit:junit:4.10'
+}</p>
+
+<p>task stage(dependsOn: ['clean', 'installApp'])</p>
+
+<p>[jettyRun, jettyRunWar]<em>.httpPort = 8090
+[jettyRun, jettyRunWar]</em>.contextPath = 'kurobara'</p>
+
+<p>task wrapper(type: Wrapper) {
+  gradleVersion = '1.6'
+}
+```</p>
+
+<h3>Jettyの準備</h3>
+
+<hr />
+
+<p>最低限度の内容でJettyサーバが動くようにします</p>
+
+<p>mainメソッドにサーバの実装を記載します。</p>
+
+<p>Gradleに記載したように、これがmainClassになります(mainClassNameを参照)</p>
+
+<p>```
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;</p>
+
+<p>public class Main {</p>
+
+<p>  public static void main(String[] args) throws Exception {</p>
+
+<pre><code>  Server server = new Server(Integer.valueOf(System.getenv("PORT")));
+
+  WebAppContext context = new WebAppContext();
+  context.setServer(server);
+  context.setContextPath("/");
+  context.setResourceBase("src/main/webapp");
+  context.setClassLoader(Main.class.getClassLoader());
+  server.setHandler(context);
+
+  server.start();
+  server.join();
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<p>以下の構成になるようにMainクラスを配置します</p>
+
+<p><code>
+├── build.gradle
+├── src
+│   └── main
+│       ├── java
+│       │   └── kurobara
+│       │       ├── Main.java &lt;- これを追加
+│       │       └── MyResource.java
+│       ├── resources
+│       └── webapp
+│           ├── WEB-INF
+│           │   └── web.xml
+│           └── index.jsp
+</code></p>
+
+<h3>動作確認</h3>
+
+<hr />
+
+<p>まずは、テストが動くかどうか確認</p>
+
+<p><code>
+$gradle clean
+$gradle test
+</code></p>
+
+<p>次にアプリをビルドし、サーバを起動</p>
+
+<p><code>
+$gradle clean
+$gradle build
+$gradle jettyRunWar
+</code></p>
+
+<p>以下のコマンドで<code>Got it!</code>が返却されるか確認</p>
+
+<p><code>
+curl -v http://localhost:8090/kurobara/webapi/myresource
+</code></p>
+
+<h3>Heroku環境用の準備</h3>
+
+<hr />
+
+<p>Herokuで動かすJavaのバージョンを指定するsystem.propertiesを作成<br/>
+(以下のようにとりあえず確実に動作するバージョンを指定)</p>
+
+<p><code>
+java.runtime.version=1.7
+</code></p>
+
+<p>Procfileに記載するスクリプトファイルの確認</p>
+
+<p><code>
+$gradle stage
+</code></p>
+
+<p>こういう形にビルド結果が出力されているので、アプリケーション起動スクリプトのファイルパスを確認する</p>
+
+<p><code>
+├── build
+│   ├── classes
+│   │   └── main
+│   │       └── kurobara
+│   │           ├── Main.class
+│   │           └── MyResource.class
+│   ├── dependency-cache
+│   ├── install
+│   │   └── kurobara
+│   │       ├── bin
+│   │       │   ├── kurobara &lt;- これが起動用ファイル
+│   │       │   └── kurobara.bat
+</code></p>
+
+<p>生成したスクリプトファイルパスをProcfileに記載</p>
+
+<p><code>
+web: ./build/install/kurobara/bin/kurobara
+</code></p>
+
+<p>不要ファイルを無視するように.gitignoreを作成<br/>
+(Herokuへのデプロイはgitのため)</p>
+
+<p><code>
+build/
+.gradle/
+</code></p>
+
+<p>最終的に以下の構成になります</p>
+
+<p><code>
+├── .gitignore
+├── Procfile
+├── build.gradle
+├── src
+│   └── main
+│       ├── java
+│       │   └── moonstruckdrops
+│       │       ├── Main.java
+│       │       └── MyResource.java
+│       ├── resources
+│       └── webapp
+│           ├── WEB-INF
+│           │   └── web.xml
+│           └── index.jsp
+└── system.properties
+</code></p>
+
+<h3>Herokuへdeploy</h3>
+
+<hr />
+
+<p>herokuへloginする</p>
+
+<p><code>
+$ brew install heroku
+$ heroku login
+</code></p>
+
+<p>サーバへデプロイする</p>
+
+<p><code>
+$ git init
+$ git add .
+$ git commit -m "Ready to deploy"
+$ git remote add heroku your_heroku_path
+$ git push heroku master
+</code></p>
+
+<p>以下のコマンドで<code>Got it!</code>が返却されるか動作確認</p>
+
+<p><code>
+$curl -v http://your_app.herokuapp.com/webapi/myresource
+</code></p>
+
+<h3>感想</h3>
+
+<hr />
+
+<p>書くと簡単でしたが、実際にやってみると思った以上に嵌まりどころが多かった</p>
+
+<p>特に以下が盛大な罠でした</p>
+
+<ul>
+<li>Procfileに書くファイルはどれなのか</li>
+<li><code>heroku logs</code>を確認すると<code>app crash</code>と表示されて何がなんだかわからんかったこと</li>
+<li><code>app crash</code>起因ですがweb.xmlはいじらなくてもいいのか？なんて思ったこと</li>
+</ul>
+
+
+<p>一度環境さえ準備できれば開発に専念できるようになるので、非常に楽ですね</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[なぜApacheとTomcatを連携させるのか]]></title>
@@ -383,81 +712,6 @@ SLF4jはFacadeパターンを採っていまして、以下のメリットがあ
 <p><a href="https://github.com/moonstruckdrops/java-logging-sample">ここ</a>に置きました。</p>
 
 <p>Gradleがあれば使えるようにしてあります。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dependency Injectionについて]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/06/27/dependency-injection/"/>
-    <updated>2013-06-27T19:28:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/06/27/dependency-injection</id>
-    <content type="html"><![CDATA[<p>DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。</p>
-
-<p>簡単に言うと、よく言われる「依存性の注入」といいます。</p>
-
-<p>が、なんのことかさっぱりわからないですね。
-少し言い換えてあげると</p>
-
-<h6>「依存性をモジュールもしくはクラス内部に抱え込まずに外部から依存内容を設定してあげる」</h6>
-
-<p>となります。</p>
-
-<p>擬似コードを出すとDI前にこんなコードとすると
-```
-public Hoge(){</p>
-
-<pre><code>this.fuga = new Fuga("hogefuga");
-</code></pre>
-
-<p>}
-```</p>
-
-<p>DI後の擬似コードはこんな感じ
-```
-public Hoge(Fuga fuga){</p>
-
-<pre><code>this.fuga = fuga;
-</code></pre>
-
-<p>}
-```</p>
-
-<p>コンストラクタの引数Fugaを差し替えるだけで容易に設定内容を変更できます。<br/>
-依存前のコードだと、依存性はFugaコンストラクタの中にありますが、依存後のコードは依存性は外部にあります。(引数の内容次第)<br/>
-このFugaのコンストラクタがリソースに関わる何かだとDI前のコードであればユニットテストが大変になりますね。<br/>
-しかし、DI後のコードであれば引数を差し替えるだけでユニットテストができるようになります。</p>
-
-<p>なので、DIをするメリットというと(個人的に)以下が挙げられます。</p>
-
-<ul>
-<li>依存しているものが外部にあるので、ユニットテストで差し替えが簡単にできる(外部からモックにしやすい)</li>
-<li>IFさえ同じものであれば、別の実装を行ったものを設定として渡してやることができる(柔軟性)</li>
-</ul>
-
-
-<p>面倒になるのは、事前準備ですがメリットのほうが大きいと個人的には思ってます。<br/>
-面倒な事前処理(主にコンストラクタ生成ですが)をやってくれるのがDIコンテナですね。</p>
-
-<p>よく使うDIコンテナだと、有名なjavaのコンテナはこんなところですかね。</p>
-
-<ul>
-<li>GoogleGuice</li>
-<li>Seaser2</li>
-<li>SpringFramework</li>
-</ul>
-
-
-<p>自分が使うときの基準だと、以下になりますね。</p>
-
-<ul>
-<li>Seaser2なプロダクト(SAStrutsとか)を使っている、もしくは使う場合は、「Seaser2」のDIコンテナ</li>
-<li>Spring関係の何かを使っている、もしくは使う場合は、「SpringFramework」のDIコンテナ(尤も殆ど使ったことないです)</li>
-<li>それ以外の場合なら、大体「GoogleGuice」(どこかに事例とかあればいいですし、大体がWicketとかで使います)</li>
-</ul>
-
-
-<p>AndroidにもDIコンテナ(RoboguiceやDagger)あるのですが、殆ど使いませんね。<br/>
-使い勝手が悪かったり、ドキュメントがなかったりなので・・・</p>
 ]]></content>
   </entry>
   
