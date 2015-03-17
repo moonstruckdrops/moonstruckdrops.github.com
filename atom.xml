@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-03-17T02:03:04+09:00</updated>
+  <updated>2015-03-18T00:07:35+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,66 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[BuildConfigを使用して、環境ごとに値を取得仕分けてみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/03/17/android-build-config/"/>
+    <updated>2015-03-17T23:57:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/03/17/android-build-config</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>WebAPIと連携するようなAndroidアプリを作っているのですが
+開発と本番で接続先を切り替える必要が出てきました。</p>
+
+<p>それのライトな対応方法をメモ</p>
+
+<h3>build.gradleを編集</h3>
+
+<hr />
+
+<p>以下のような形で記載</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>buildTypes {
+</span><span class='line'>  debug {
+</span><span class='line'>    buildConfigField "String", "API_URL", "\"http://api-dev.hoge.co.jp\""
+</span><span class='line'>  }
+</span><span class='line'>  release {
+</span><span class='line'>    buildConfigField "String", "API_URL", "\"http://api.hoge.co.jp\""
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ソースコード側</h3>
+
+<hr />
+
+<p>以下のように特に気にせずBuildConfigを参照すればよい</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>String url = BuildConfig.API_URL</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ビルド環境に応じた値が取得できる</p>
+
+<h3>できたけど・・・</h3>
+
+<hr />
+
+<p>これぐらいなら、まぁbuild.gradleでいいやという気がするもののパラメータ増えたら収拾つかなくなる予感</p>
+
+<p>真面目にやるならBuild Variantsを使うほうがよいかと思います</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Heroku上でJersey + Jetty + Gradleを動かす]]></title>
@@ -2084,76 +2144,6 @@ Herokuではこのタスクが必要なようです。</p>
 </span><span class='line'>  alert('test');
 </span><span class='line'>})();</span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[マージが起きたらさっさと解消しようという教訓]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo/"/>
-    <updated>2014-02-18T02:00:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>Gitを使って開発してるのですが・・・</p>
-
-<p>複数人で1つのプロダクト開発を行ってたらコンフリクトは起こることはよく有ります</p>
-
-<p>俗に言うマージコンフリクトですね</p>
-
-<p>今回はそんなマージコンフリクトで起こった事を備忘録的に残します</p>
-
-<h3>まず結論・・・</h3>
-
-<hr />
-
-<p>気づいた時点(Github,gitlab,stashとか)で、さっさとコンフリクトは解消しましょう</p>
-
-<p>後にまとめて行うのは、無謀もいいとこです</p>
-
-<p>1つ2つのコミット差分ならまだしも<br/>
-10個のコミットが積み上げられ、かつその大半がコンフリクト起こすような状況だと直すのに苦労します</p>
-
-<p># 解消に1時間かかりましたorz</p>
-
-<p>なので、さっさと直してしまいましょう(他人の書いたコードまでは責任取れないよw)</p>
-
-<h3>コンフリクト解消時に起こったこと</h3>
-
-<hr />
-
-<p>上記のことだけなら、反省だけで次回からは行わないようにすればいいだけの話です</p>
-
-<p>ですが、コンフリクト解消時に奇妙なことが起こりました</p>
-
-<p>以下のような状態でmasterのコードをブランチにとりこんだ時(実際はもう少しコンフリクト解消することがありました)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(master) : (起点) - [コンフリクト有(1)] - [コンフリクト有(2)] - [コンフリクト有(3)] - [ファイル移動] - [コンフリクト有(4)] - [コンフリクト無]
-</span><span class='line'>              |  
-</span><span class='line'>(branch) :   [A] - [B] - [C]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コンフリクト有(2)のコンフリクトを解消した瞬間に、ブランチの状態(merge/CONFLICT)だけでも、マージの継続をすることが出来なくなりました</p>
-
-<p>このコマンドだけが使えました</p>
-
-<ul>
-<li>continueは受け付け無い</li>
-<li>abortとskipは受け付ける</li>
-</ul>
-
-
-<p>そのため、一度abort→再マージをしたのですが・・・<br/>
-今度は、コンフリクト(3)で同じ現象。。。</p>
-
-<p>諦めてskipをしましたorz<br/>
-そうすると、マージが全てブランチに取り込まれました・・・(ファイル移動は取り込まれてないので別途実施)</p>
-
-<p>こういう恐ろしい事態(マージがうまくいかない)があったので、気をつけようねという自戒と対処結果のメモでしたw</p>
 ]]></content>
   </entry>
   

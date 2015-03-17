@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-03-17T02:03:04+09:00</updated>
+  <updated>2015-03-18T00:07:35+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,65 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[BuildConfigを使用して、環境ごとに値を取得仕分けてみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/03/17/android-build-config/"/>
+    <updated>2015-03-17T23:57:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/03/17/android-build-config</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>WebAPIと連携するようなAndroidアプリを作っているのですが
+開発と本番で接続先を切り替える必要が出てきました。</p>
+
+<p>それのライトな対応方法をメモ</p>
+
+<h3>build.gradleを編集</h3>
+
+<hr />
+
+<p>以下のような形で記載</p>
+
+<p>```
+buildTypes {
+  debug {</p>
+
+<pre><code>buildConfigField "String", "API_URL", "\"http://api-dev.hoge.co.jp\""
+</code></pre>
+
+<p>  }
+  release {</p>
+
+<pre><code>buildConfigField "String", "API_URL", "\"http://api.hoge.co.jp\""
+</code></pre>
+
+<p>  }
+}
+```</p>
+
+<h3>ソースコード側</h3>
+
+<hr />
+
+<p>以下のように特に気にせずBuildConfigを参照すればよい</p>
+
+<p><code>
+String url = BuildConfig.API_URL
+</code></p>
+
+<p>ビルド環境に応じた値が取得できる</p>
+
+<h3>できたけど・・・</h3>
+
+<hr />
+
+<p>これぐらいなら、まぁbuild.gradleでいいやという気がするもののパラメータ増えたら収拾つかなくなる予感</p>
+
+<p>真面目にやるならBuild Variantsを使うほうがよいかと思います</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[AndroidのPull To Refreshをちょっとだけ調べた]]></title>
@@ -637,361 +696,6 @@ rebooting...</p>
 ```</p>
 
 <p>以上！！自分の作業備忘録でした！！</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ActiveAndroidを使ってみた]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/12/19/active-android/"/>
-    <updated>2013-12-19T00:58:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/12/19/active-android</id>
-    <content type="html"><![CDATA[<h2>はじめに</h2>
-
-<hr />
-
-<p>久しぶりにオレオレ用のAndroidアプリを書きました。<br/>
-その際、DBを使ったのですが、面倒くさいことはしたくなかったので<br/>
-Android向けO/R Mapperである<a href="https://github.com/pardom/ActiveAndroid">ActiveAndroid</a>使いました。</p>
-
-<p>その時のメモを備忘録な感じで残します。</p>
-
-<h2>準備</h2>
-
-<hr />
-
-<p>以下のようにして、ライブラリを自分でビルドします。<br/>
-ビルド完了後、プロジェクトのビルドパスにライブラリを追加します。</p>
-
-<p><code>
-$ git clone https://github.com/pardom/ActiveAndroid.git
-$ cd ActiveAndroid
-$ sh gradlew build
-</code></p>
-
-<h2>設定</h2>
-
-<hr />
-
-<p>2種類の方法で利用準備ができます。</p>
-
-<ol>
-<li>AndroidManifest.xmlに設定する</li>
-<li>Applicationクラスを継承した独自のクラスを用意する</li>
-</ol>
-
-
-<p>1のやり方は以下のような形で定義します。</p>
-
-<ul>
-<li>meta-dataタグを用意し、そこにDB名前とバージョンを記載</li>
-<li>android:nameに「com.activeandroid.app.Application」を記載</li>
-</ul>
-
-
-<p>```
-&lt;application</p>
-
-<pre><code>    android:allowBackup="true"
-    android:name="com.activeandroid.app.Application"&gt;
-    ・・・
-
-    &lt;meta-data android:name="AA_DB_NAME" android:value="test.db" /&gt;
-    &lt;meta-data android:name="AA_DB_VERSION" android:value="1" /&gt;
-
-    ・・・
-</code></pre>
-
-<p></application>
-```</p>
-
-<p>2のやり方は、以下のようにして設定内容を組み立て、起動と停止処理を組み込みます。</p>
-
-<p>```
-public class MyApplication extends Application {</p>
-
-<p>  @Override
-  public void onCreate() {</p>
-
-<pre><code>super.onCreate();
-Builder builder = new Configuration.Builder(getBaseContext());
-builder.setCacheSize(1024*1024*4);
-builder.setDatabaseName("test.db");
-builder.setDatabaseVersion(1);
-ActiveAndroid.initialize(builder.create(), true);
-</code></pre>
-
-<p>  }</p>
-
-<p>  @Override
-  public void onTerminate() {</p>
-
-<pre><code>super.onTerminate();
-ActiveAndroid.dispose();
-</code></pre>
-
-<p>  }
-```</p>
-
-<p>上記の内容では、以下のものを設定しています。</p>
-
-<ul>
-<li>キャッシュサイズ4MB</li>
-<li>DBを「test.db」</li>
-<li>バージョンを「1」</li>
-<li>ActiveAndroidのログを有効化(initializeメソッドのtrueのこと)</li>
-</ul>
-
-
-<p>個人的には、以下の理由から組み立てて実行するほうがよいかと思います。</p>
-
-<ul>
-<li>ActiveAndroidの設定に引きづられず、自分のアプリに影響が出ないこと</li>
-<li>DBのキャッシュサイズを決められる(デフォルトが1KBのため)</li>
-<li>progurdによる難読化ができる(AndroidManifest.xmlに書けば見え見えになりますが、コードだと難読化ができる)</li>
-</ul>
-
-
-<p>尤も、最後のはコード上でstaticに文字列として定義するとあまり意味がないですが・・・</p>
-
-<h2>モデル定義</h2>
-
-<hr />
-
-<p>以下のような感じでアノテーションをつける形で定義します。</p>
-
-<p>```
-@Table(name = "Items")
-public class Item extends Model {</p>
-
-<p>  @Column(name = "id", notNull = true)
-  public int id;</p>
-
-<p>  @Column(name = "name", unique = true, onUpdate = ForeignKeyAction.NO_ACTION)
-  public String name;</p>
-
-<p>  @Column(name = "category", onNullConflict = ConflictAction.REPLACE)
-  public String category;</p>
-
-<p>  public List<Test> tests() {</p>
-
-<pre><code>return getMany(Test.class, "test");
-</code></pre>
-
-<p>  }
-}
-```</p>
-
-<p>アノテーションに付けれる内容は以下の表のような感じのものです。<br/>
-殆どが<a href="http://developer.android.com/reference/android/database/sqlite/SQLiteDatabase.html">Android本家のページ</a>のConstants(CONFLICT_XXXと記載されたもの)なので<br/>
-こちらの説明を読んで設定すればよいかと思います。</p>
-
-<table>
-<thead>
-<tr>
-<th> 定義先 </th>
-<th> 定義内容 </th>
-<th> 意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> クラス </td>
-<td> name      </td>
-<td> 対応するテーブル名</td>
-</tr>
-<tr>
-<td> 変数   </td>
-<td> name      </td>
-<td> 対応するカラム名</td>
-</tr>
-<tr>
-<td>      </td>
-<td> length           </td>
-<td> 長さの制約(デフォルト -1(無制限?))</td>
-</tr>
-<tr>
-<td>      </td>
-<td> notNull          </td>
-<td> not null制約(デフォルト false)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> onNullConflict   </td>
-<td> null制約違反時の動作を設定する(デフォルトはFAIL, 設定内容はAndroid公式参照)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> onDelete         </td>
-<td> 削除時の外部キーの動作設定(CASCADE, RESTRICT等が設定可能)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> onUpdate         </td>
-<td> 更新時の外部キーの動作設定(CASCADE, RESTRICT等が設定可能)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> unique           </td>
-<td> ユニーク制約(デフォルト false)</td>
-</tr>
-<tr>
-<td>      </td>
-<td> onUniqueConflict </td>
-<td> ユニーク制約違反時の動作を設定\n(デフォルトはFAIL, 設定内容はAndroid公式参照)</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>意味が必ずしも正しいかと言われると少し自信がありませんが、多分こんな感じかと。</p>
-
-<p>また、1対Nのような関係を作るときは、getMenyメソッドを実装したヘルパーメソッドを作る必要があるようです。</p>
-
-<h2>クエリ</h2>
-
-<p>クエリについて、書いていきます。</p>
-
-<p>以下を使ったことがあればすんなり理解できるかと・・・</p>
-
-<ul>
-<li>JavaのO/R Mapper(s2jdbc等)</li>
-<li>RubyのActiveRecord</li>
-</ul>
-
-
-<h3>挿入</h3>
-
-<hr />
-
-<p>以下のような感じで記載します。<br/>
-ActiveRecordと殆ど同じですね。</p>
-
-<p><code>
-Item item = new Item();
-item.name = "test";
-item.save();
-</code></p>
-
-<p>以下のようにすれば、バルクインサートもできます。
-また、トランザクションも併せて記載します。</p>
-
-<p>```
-ActiveAndroid.beginTransaction();
-try{
-  for(int i = 0; i &lt; 1000; i++ ){</p>
-
-<pre><code>Item item = new Item();
-item.name = "test_" + i;
-item.save();
-</code></pre>
-
-<p>  }
-  ActiveAndroid.setTransactionSuccessful();
-}finally{
-  ActiveAndroid.endTransaction();
-}
-```</p>
-
-<p>トランザクション中にエラーが出てもthrowされないので、注意して下さい。<br/>
-コンフリクト周りでエラーが出る場合は、モデルのアノテーションに定義した内容が適用されます。</p>
-
-<h3>削除</h3>
-
-<hr />
-
-<p>やり方は、以下の３種類です。</p>
-
-<ol>
-<li>オブジェクトをロードしてから削除する方法</li>
-<li>静的メソッドを使用して削除する方法</li>
-<li>クエリを組み立てて削除する方法</li>
-</ol>
-
-
-<p>1のやり方は、以下です。<br/>
-一度、selectしてから削除という感じです。
-<code>
-Item item = Item.load(Item.class, 1);
-item.delete();
-</code></p>
-
-<p>2のやり方は、以下です。<br/>
-主キーさえ分かっていれば、こちらのほうが無駄なクエリを発行しない分早いです。</p>
-
-<p><code>
-Item.delete(Item.class, 1);
-</code></p>
-
-<p>3のやり方は、以下です。<br/>
-複数の行をまとめて削除できたりします。</p>
-
-<p><code>
-new Delete().from(Item.class).where("Id = ? and name = ?", 1, "test").execute();
-</code></p>
-
-<h3>参照</h3>
-
-<hr />
-
-<p>これも直感的に記述できます。<br/>
-使い方は、s2jdbcに似ています。</p>
-
-<p>```
-Item result = new Select().from(Item.class).executeSingle();</p>
-
-<p>List<Item> resultSet = new Select("id", "name").from(Item.class).execute();</p>
-
-<p>List<Item> resultSet = new Select().from(Item.class).where("Id = ? and name = ?", 1, "test").execute();
-```</p>
-
-<p>上記のような形で実行できます。</p>
-
-<ul>
-<li>先頭１つのカラムデータのみ取得</li>
-<li>カラムを指定した取り方</li>
-<li>条件付き(s2jdcのようにandメソッドとかはありません)</li>
-</ul>
-
-
-<p>テーブル結合時は、以下のような形で記述します。<br/>
-現状では、以下の方法しか手段がないようです。</p>
-
-<ol>
-<li>ActiveAndroidでクエリオブジェクト作成</li>
-<li>1で作成したクエリオブジェクトからsqlを作成</li>
-<li>2のsqlを直接実行しCursorクラスのオブジェクトを取得</li>
-<li>Cusorクラスからデータを取得する(whileループ等で・・・)</li>
-</ol>
-
-
-<p>```
-From query = new Select().from(Item.class).innerJoin(Hoge.class).on("Hoge.id = Item.id");</p>
-
-<p>Cursor cursor = Cache.openDatabase().rawQuery(query.toSql(), query.getArguments());
-```</p>
-
-<h2>感想</h2>
-
-<hr />
-
-<p>こんな感じな印象でした。簡単なものだと今後も使うかも。</p>
-
-<ul>
-<li>ActiveRecordライクなので、扱い易い</li>
-<li>Modelクラスを継承したクラスを作るだけで、面倒な処理を大幅に軽減できる</li>
-<li>テーブル定義にコードが引きづられやすくなるので注意</li>
-<li>複雑なクエリの場合、通常のSQLiteのDB操作と変わらなくなる</li>
-</ul>
-
-
-<h2>資料</h2>
-
-<hr />
-
-<p>身内向けの勉強会で、ActiveAndroidについて発表してきました。
-その時、書いた資料とかも残しておきます。</p>
-
-<p><iframe src="http://www.slideshare.net/slideshow/embed_code/29216122 " width="595" height="446" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen></iframe> </p>
 ]]></content>
   </entry>
   
