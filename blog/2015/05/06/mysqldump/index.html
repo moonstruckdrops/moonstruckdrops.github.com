@@ -5,13 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>SSHで複数の鍵を管理する - kurobaraのブログ</title>
+  <title>テーブル単位のmysqldump - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
-ホスト毎の設定は「~/.ssh/config」で設定できます。 管理方法 以下の方法で管理します。 鍵毎にprefixやsuffixをつける
-sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
+  <meta name="description" content="めちゃくちゃ基礎的な内容なのですが、備忘録を兼ねてメモしておく DBまるごと よくやるmysqldumpコマンド 1
+$mysqldump -u root -p development_db &gt; db_backup.sql テーブル単位 tオプションは、「テーブル作成情報（CREATE &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +19,7 @@ sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/08/22/ssh-config-setting/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/05/06/mysqldump/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,7 +75,7 @@ sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">SSHで複数の鍵を管理する</h1>
+      <h1 class="entry-title">テーブル単位のmysqldump</h1>
     
     
       <p class="meta">
@@ -92,129 +91,41 @@ sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
   
 
 
-<time datetime="2013-08-22T21:29:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
+<time datetime="2015-05-06T23:39:00+09:00" pubdate data-updated="true">May 6<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>SSHで鍵やユーザ名を複数のホストで使い分けないといけないときは結構面倒です。
-ホスト毎の設定は「~/.ssh/config」で設定できます。</p>
+<div class="entry-content"><h2>めちゃくちゃ基礎的な内容なのですが、備忘録を兼ねてメモしておく</h2>
 
-<h3>管理方法</h3>
+<h3>DBまるごと</h3>
 
-<hr />
-
-<p>以下の方法で管理します。</p>
-
-<ul>
-<li>鍵毎にprefixやsuffixをつける</li>
-<li>sshのconfigにホスト毎に設定をつける</li>
-</ul>
-
-
-<p>因みに、鍵がわかれば鍵ファイル名はなんでもいいです。</p>
-
-<h3>configの記載</h3>
-
-<hr />
-
-<p>以下のような形で記載します。</p>
+<p>よくやるmysqldumpコマンド</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Host github.com
-</span><span class='line'>    HostName        github.com
-</span><span class='line'>    IdentityFile    ~/.ssh/github_id_rsa
-</span><span class='line'>    User            git
-</span><span class='line'>    TCPKeepAlive    yes
-</span><span class='line'>    IdentitiesOnly  yes
-</span><span class='line'>Host hogehoge
-</span><span class='line'>    HostName        hogehoge
-</span><span class='line'>    Port            12345
-</span><span class='line'>    IdentityFile    ~/.ssh/hogehoge_id_rsa
-</span><span class='line'>    User            hogehoge
-</span><span class='line'>    Protocol        2</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqldump -u root -p development_db  &gt; db_backup.sql</span></code></pre></td></tr></table></div></figure>
 
 
-<p>各項目は以下の内容を設定しています。</p>
+<h3>テーブル単位</h3>
 
-<table>
-<thead>
-<tr>
-<th align="left">設定項目</th>
-<th align="left">設定値</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">Host</td>
-<td align="left">次のHostキーワードが現れるまでの項目が１つの設定項目にする</td>
-</tr>
-<tr>
-<td align="left">HostName</td>
-<td align="left">ログイン先のホスト名</td>
-</tr>
-<tr>
-<td align="left">IdentityFile</td>
-<td align="left">SSHの鍵ファイル</td>
-</tr>
-<tr>
-<td align="left">User</td>
-<td align="left">ログインするユーザー名</td>
-</tr>
-<tr>
-<td align="left">TCPKeepAlive</td>
-<td align="left">持続的接続</td>
-</tr>
-<tr>
-<td align="left">IdentitiesOnly</td>
-<td align="left">IdentityFileを利用する場合に設定する</td>
-</tr>
-<tr>
-<td align="left">Port</td>
-<td align="left">ポート番号</td>
-</tr>
-<tr>
-<td align="left">Protocol</td>
-<td align="left">SSHのプロトコル指定</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>githubへのログインの場合は、上記の内容を記載します。</p>
-
-<h3>接続確認</h3>
-
-<hr />
-
-<p>以下のコマンドで確認します</p>
+<p>tオプションは、「テーブル作成情報（CREATE TABLE ステートメント）を書き込まない」という内容を指す<br/>
+migrationなどで先にテーブルを作った場合とかに有効活用できる</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T &lt;Host&gt;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqldump -u root -p -t development_db my_table1 my_table2 &gt; table_backup.sql</span></code></pre></td></tr></table></div></figure>
 
 
-<p>例えば、上記のconfigに設定したgithubへのアクセスは以下で確認します。</p>
+<p>上のコマンドのようにテーブル名は複数指定可能(my_table1, my_table2などが該当)</p>
+
+<h3>リストア</h3>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ssh -T github.com</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mysql -u root -p development_db &lt; summaries.sql</span></code></pre></td></tr></table></div></figure>
 
 
-<p>これで、「You&#8217;ve successfully authenticated」が出れば成功です。</p>
 
-<p>以上で複数の鍵を管理できますね。</p>
 </div>
 
 
@@ -237,12 +148,12 @@ sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
   
 
 
-<time datetime="2013-08-22T21:29:00+09:00" pubdate data-updated="true">Aug 22<span>nd</span>, 2013</time>
+<time datetime="2015-05-06T23:39:00+09:00" pubdate data-updated="true">May 6<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/linux/'>Linux</a>
+    <a class='category' href='/blog/categories/mysql/'>MySQL</a>
   
 </span>
 
@@ -251,7 +162,7 @@ sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/08/22/ssh-config-setting/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/08/22/ssh-config-setting/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/05/06/mysqldump/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/05/06/mysqldump/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -264,10 +175,8 @@ sshのconfigにホスト毎に設定をつける 因みに、 &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/22/mac-dir/" title="Previous Post: Macのディレクトリ名を英語化する">&laquo; Macのディレクトリ名を英語化する</a>
+        <a class="basic-alignment left" href="/blog/2015/03/17/android-build-config/" title="Previous Post: BuildConfigを使用して、環境ごとに値を取得仕分けてみる">&laquo; BuildConfigを使用して、環境ごとに値を取得仕分けてみる</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/08/25/iterm-meta-key/" title="Next Post: iTerm2のMetaキーを変更する">iTerm2のMetaキーを変更する &raquo;</a>
       
     </p>
   </footer>
