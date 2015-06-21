@@ -9,12 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="あなた誰？ @kurobaraと言います。
-SIerとして勤めていました。
-AppEngineやAndroid、サーバサイド(インフラ込)なことをしているエンジニアです。
-RubyやGoとかが好きです。
-勉強会だとYokohama.rbやKyotoGDGとかによく出没しています。
-その他、 &hellip;">
+  <meta name="description" content="昨日(日付の上では、一昨日)にあったGo Conference 2013 autumnに行ってきました。 野良Hackathonがあったので、久々のGo慣らしも兼ねてpackerで１つ環境用意してやるかといった感じでやってました。
+勿論、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +72,387 @@ RubyやGoとかが好きです。
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/16/packer-basic/">packerを使用して、VirtualMachineで動くVagrant用のBoxファイルを作成した</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-16T00:23:00+09:00" pubdate data-updated="true">Oct 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>昨日(日付の上では、一昨日)にあったGo Conference 2013 autumnに行ってきました。</p>
+
+<p>野良Hackathonがあったので、久々のGo慣らしも兼ねてpackerで１つ環境用意してやるかといった感じでやってました。<br/>
+勿論、イメージ作ってる待ち時間の間にpackerのソースも読んでました<br/>
+正直、ドキュメント読んで(?)ってなったところもあったので読んだとかそんな感じです。</p>
+
+<p>Google I/O以来に会った<a href="https://twitter.com/ymotongpoo">@ymotongpoo</a>さんにLTやらね？って誘われた。<br/>
+然しながら、Goのネタが今手元に無かったので、LT時刻までにpackerで環境用意できたらやるって言ったけど、出来なかったのでLT諦めた。<br/>
+後で、すごい誤った。(完成したのは、LT終了して暫くしてからだった)<br/>
+<a href="https://twitter.com/ymotongpoo">@ymotongpoo</a>さん、もし見てたら次回のGoConではLTやれるように準備しておきます。</p>
+
+<p>という訳で、代わり(?)に表題の内容をやります。</p>
+
+<h2>最終ゴール</h2>
+
+<hr />
+
+<p>以下のコマンドでVirtualBox上で動作するCentOS6.4(64bit)が起動してログインできるようにする</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$vagrant up</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但し、Vagrant側では、特にアプリケーションのインストールを実施せず、packer側で以下の２点を満たすこと</p>
+
+<ul>
+<li>最小インストールしたパッケージを全て最新化すること</li>
+<li>Gitをインストールすること</li>
+</ul>
+
+
+<h2>前提</h2>
+
+<hr />
+
+<p>前提がないとお話にならないので、以下が入ってることにします。</p>
+
+<ul>
+<li>Vagrant 1.3.4</li>
+<li>VirtualBox 4.2.16</li>
+<li>Go 1.1.2</li>
+</ul>
+
+
+<p>こいつらが入ってない場合は、入れて下さい。</p>
+
+<p>あと、実行環境はMacでやってますが、Linuxも似たような感じでできると思います。<br/>
+Windowsは知らないですが多分できるんじゃないかなぁと思います。</p>
+
+<h3>packerのインストール</h3>
+
+<hr />
+
+<p>packerをインストールします。<br/>
+公式の手順に従えば1発でインストールできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew tap homebrew/binary
+</span><span class='line'>$brew install packer</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>OSインストール用のkickstartファイルを用意する</h3>
+
+<hr />
+
+<p>kickstartは、RHEL系(CentOSなど)OS のインストール&amp;セットアップが自動化できることを指します。<br/>
+で、一応OSインストールした時の構成がOS側で記録されていまして、「/root/anaconda-ks.cfg」がkickstartファイルになります。<br/>
+他にも、system-config-kickstart.noarchをインストールすることでGUIで設定ファイルを用意できるようになっています。</p>
+
+<p>以下のような感じで最小構成インストールファイルを用意します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>install
+</span><span class='line'>cdrom
+</span><span class='line'>lang en_US.UTF-8
+</span><span class='line'>keyboard us
+</span><span class='line'>network --bootproto=dhcp
+</span><span class='line'>rootpw --iscrypted $1$FB.fOroc$b2.YcN30BjrYxlUbECUxO1
+</span><span class='line'>firewall --enabled --service=ssh
+</span><span class='line'>authconfig --enableshadow --passalgo=sha512
+</span><span class='line'>selinux --disabled
+</span><span class='line'>timezone UTC
+</span><span class='line'>bootloader --location=mbr
+</span><span class='line'>
+</span><span class='line'>text
+</span><span class='line'>skipx
+</span><span class='line'>zerombr
+</span><span class='line'>
+</span><span class='line'>clearpart --all --initlabel
+</span><span class='line'>autopart
+</span><span class='line'>
+</span><span class='line'>auth  --useshadow  --enablemd5
+</span><span class='line'>firstboot --disabled
+</span><span class='line'>reboot
+</span><span class='line'>
+</span><span class='line'>%packages --nobase
+</span><span class='line'>@core
+</span><span class='line'>%end
+</span><span class='line'>
+</span><span class='line'>%post
+</span><span class='line'>/usr/bin/yum -y install sudo
+</span><span class='line'>/usr/sbin/groupadd moonstruckdrops
+</span><span class='line'>/usr/sbin/useradd moonstruckdrops -g moonstruckdrops -G wheel
+</span><span class='line'>echo "moonstruckdrops"|passwd --stdin moonstruckdrops
+</span><span class='line'>echo "moonstruckdrops        ALL=(ALL)       NOPASSWD: ALL" &gt;&gt; /etc/sudoers.d/moonstruckdrops
+</span><span class='line'>chmod 0440 /etc/sudoers.d/moonstruckdrops
+</span><span class='line'>%end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最小インストールを実施した後にsudoをインストールし、ログインユーザーを新規に追加しています。</p>
+
+<p>因みに、rootパスワードは以下のコマンドで生成します。<br/>
+生成された文字列をrootpwに記述します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$openssl passwd -1</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>jsonファイルを作成する</h3>
+
+<hr />
+
+<p>細かい解説は抜きにして、以下のような感じで作成します。<br/>
+大体、ドキュメントに書いてあるので直感的に分かるかと思います。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>    "builders": [
+</span><span class='line'>        {
+</span><span class='line'>            "type": "virtualbox",
+</span><span class='line'>            "vm_name": "centos_box",
+</span><span class='line'>            "guest_os_type": "RedHat_64",
+</span><span class='line'>            "disk_size": "20000",
+</span><span class='line'>            "format": "ovf",
+</span><span class='line'>            "hard_drive_interface":"sata",
+</span><span class='line'>            "boot_wait": "5s",
+</span><span class='line'>            "iso_url": "http://ftp.iij.ad.jp/pub/linux/centos/6.4/isos/x86_64/CentOS-6.4-x86_64-minimal.iso",
+</span><span class='line'>            "iso_checksum_type": "md5",
+</span><span class='line'>            "iso_checksum": "4a5fa01c81cc300f4729136e28ebe600",
+</span><span class='line'>            "ssh_username":"root",
+</span><span class='line'>            "ssh_password":"vagrant",
+</span><span class='line'>            "ssh_port": 22,
+</span><span class='line'>            "shutdown_command": "shutdown -h now",
+</span><span class='line'>            "guest_additions_path": "VBoxGuestAdditions_.iso",
+</span><span class='line'>            "virtualbox_version_file": ".vbox_version",
+</span><span class='line'>            "vboxmanage":[
+</span><span class='line'>                ["modifyvm", "", "--memory", "1024"],
+</span><span class='line'>                ["modifyvm", "", "--cpus", "2"]
+</span><span class='line'>            ],
+</span><span class='line'>            "http_directory": "./builders/",
+</span><span class='line'>            "boot_command": [
+</span><span class='line'>                "&lt;tab&gt; text ks=http://:/ks.cfg&lt;enter&gt;&lt;wait&gt;"
+</span><span class='line'>            ]
+</span><span class='line'>        }
+</span><span class='line'>    ],
+</span><span class='line'>    "provisioners": [{
+</span><span class='line'>        "type": "shell",
+</span><span class='line'>        "inline": [
+</span><span class='line'>            "sleep 30",
+</span><span class='line'>            "sudo yum -y update",
+</span><span class='line'>            "sudo yum -y install git"
+</span><span class='line'>            ]
+</span><span class='line'>    }],
+</span><span class='line'>    "post-processors": [{
+</span><span class='line'>        "type": "vagrant",
+</span><span class='line'>        "output": "centos.box"
+</span><span class='line'>    }]
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ビルドしてイメージを作成する</h3>
+
+<hr />
+
+<h5>作成したjsonに誤りがないことを確認する</h5>
+
+<p>以下のコマンドを使用して確認する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$packer validate</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下の実行結果になれば、エラーなく記述できている</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Template validated successfully.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーだと、こんな感じでどこが誤っているか教えてくれる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Failed to parse template: Error in line 14, char 8: invalid character '"' after object key:value pair</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>ビルドを行う</h5>
+
+<p>うまくいけば、期待した結果の仮想マシンができている</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$packer build -only=virtualbox centos.json</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>vagrantを使ってインストールしたOSを起動する</h3>
+
+<hr />
+
+<p>やることは非常に簡単です。</p>
+
+<p>まず、初期化します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$vagrant init</span></code></pre></td></tr></table></div></figure>
+
+
+<p>vagrantの設定ファイルを編集します。</p>
+
+<ul>
+<li>「config.vm.box_url = &#8220;your_boxfile_path&#8221;」に生成したファイルのパスを記述</li>
+<li>「vb.gui = true」 を有効化(コメント削除)</li>
+</ul>
+
+
+<p>最後に起動します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$vagrant up</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うまくいけば、最終ゴールの内容で起動します。</p>
+
+<h3>嵌ったビルドエラー</h3>
+
+<hr />
+
+<p>ビルドを行うと以下のようなビルドエラーに遭遇します。<br/>
+エラーになると、以下のようなエラーになります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>==&gt; virtualbox: Waiting for SSH to become available...
+</span><span class='line'>==&gt; virtualbox: Timeout waiting for SSH.
+</span><span class='line'>==&gt; virtualbox: Unregistering and deleting virtual machine...
+</span><span class='line'>==&gt; virtualbox: Deleting output directory...
+</span><span class='line'>Build 'virtualbox' errored: Build was halted.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>解決方法ですが、「&#8221;ssh_wait_timeout&#8221;」の値を長めに設定する、もしくはjsonに記述しない(デフォルトは20min設定のため)こと<br/>
+少し考えれば理解できた話なんですが、そもそもこのsshはどこで使用するかというとOSインストール完了後、即ちprovisionersで利用します。<br/>
+そのため、インストールしたOSに接続するためsshが必要になるということです。(ゴールの場合だと、updateとgitインストール)<br/>
+こういうことから、OSインストールが終わるまでssh接続できないからsshがタイムアウトしていたということです。</p>
+
+<p>そもそも、公式のドキュメントに「&#8221;ssh_wait_timeout&#8221;:&#8221;30s&#8221;」と記述してあり、sshがどこで使われるのか言及していないことも嵌る原因だと思います。</p>
+
+<h3>感想というか思うところ</h3>
+
+<hr />
+
+<p>ドキュメントもかなり充実してるんで、BOXファイルを作成するまでは割りとすんなりいけるかなぁと思います。<br/>
+一部、嵌まりどころもありますが・・・。</p>
+
+<p>一方で、仕組み上仕方ない部分もありますが、kickstartやその他OS自動インストールの知識がないと使いづらい印象を受けました。<br/>
+尤も、こういうツールに手を出す人は、知識持ちの人かもしれませんが・・・</p>
+
+<p>「packer + Vagrant + Chef」を組み合わせれば、かなりプラットフォーム及び開発環境系の自動化ができるなぁと思いました。</p>
+
+<p>しかし、これがGoで作られているのがすごいよなぁ・・・。<br/>
+Goマジイケてると思います。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1421,72 +1798,6 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/14/push-apk/">端末にインストールしてあるapkファイルを取り出す</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-14T11:48:00+09:00" pubdate data-updated="true">Jul 14<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>訳があって実施することになりました。<br/>
-ビルドに使ったソースコードがなくなってしまっただけなんですけどね。</p>
-
-<h3>前提</h3>
-
-<hr />
-
-<ol>
-<li>adbコマンドが使える環境であること</li>
-<li>端末がデバッグモードONであること</li>
-</ol>
-
-
-<h3>手順</h3>
-
-<hr />
-
-<p>以下の方法で実施します。</p>
-
-<ol>
-<li>adb shell pm list packages -f | grep [取得対象のパッケージ名の一部]</li>
-<li>1を実行すると「package:/data/app/&lt;apkファイル名>=&lt;アクティビティ名>」が表示される</li>
-<li>adb pullコマンドでapkファイルのフルパス(/data/app/&lt;apkファイル名>)を指定する</li>
-</ol>
-
-
-<p>これだけです。</p>
-
-<p>一応ソースコードを紛失したapkのバイナリが取り出せました。<br/>
-別の端末にインストールできる。<br/>
-よかったよかった。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1508,6 +1819,10 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/06/mysqldump/">テーブル単位のmysqldump</a>
       </li>
     
@@ -1523,15 +1838,11 @@ Homebrew使わずにインストールしたほうが手っ取り早いような
         <a href="/blog/2015/03/17/apache-plus-tomcat/">なぜApacheとTomcatを連携させるのか</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/02/18/api-life-cycle/">APIを作る際のAPIバージョンに関するメモ</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 140.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 110.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 135.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 145.0%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 130.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 130.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 105.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 136.9230769230769%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 109.23076923076923%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.61538461538461%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.61538461538461%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 123.07692307692308%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.61538461538461%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 118.46153846153845%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.61538461538461%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.61538461538461%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.61538461538461%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.61538461538461%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 132.30769230769232%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.61538461538461%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 141.53846153846155%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 127.6923076923077%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 127.6923076923077%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.61538461538461%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(13)</a> <a href='/blog/categories/shellscript' style='font-size: 104.61538461538461%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.61538461538461%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 136.9230769230769%'>戯言(8)</a> </span>
 </section
 
 

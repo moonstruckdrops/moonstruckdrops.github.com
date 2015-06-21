@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに JavaScriptを書いてる訳ですが・・・
-久しぶりに書いて、初歩的なことでアレ？ってなったので備忘録的にメモしておきます thisを自由に変更できるproxy関数を使う 大体、以下のような感じで、関数とコンテキスト(thisに設定するオブジェクト)を指定するわけです。 ですが、 &hellip;">
+  <meta name="description" content="はじめに 某モバイルアプリでですね、要求しているビルド用のパッケージが
+今、インストールされているものよりも古いバージョンでした。 そのままだと、ビルド出来ないのでバージョンを古くしようとしたのがキッカケです。。。 # 某モバイルアプリはAndroidで、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,142 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/23/homebrew-package-version/">Homebrewでバージョンを指定してパッケージをインストールする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-23T20:52:00+09:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>某モバイルアプリでですね、要求しているビルド用のパッケージが<br/>
+今、インストールされているものよりも古いバージョンでした。</p>
+
+<p>そのままだと、ビルド出来ないのでバージョンを古くしようとしたのがキッカケです。。。</p>
+
+<p># 某モバイルアプリはAndroidで、ビルドパッケージはGradleなんですけどw</p>
+
+<h3>インストール(される|した)バージョンを確認</h3>
+
+<hr />
+
+<p>バージョンを確認します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew info gradle</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとこんな感じで結果が出ます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gradle: stable 1.10
+</span><span class='line'>http://www.gradle.org/
+</span><span class='line'>/usr/local/Cellar/gradle/1.10 (143 files, 42M) *
+</span><span class='line'>  Built from source
+</span><span class='line'>From: https://github.com/Homebrew/homebrew/commits/master/Library/Formula/gradle.rb</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>インストール可能なバージョンを調べる</h3>
+
+<hr />
+
+<p>古いバージョンと言いつつも、バージョンがあるかどうかも調べないといけません。<br/>
+という訳で、バージョンを調べます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew versions gradle</span></code></pre></td></tr></table></div></figure>
+
+
+<p>すると、こんな感じでズラズラとバージョンと対応するgitのハッシュ値が出てきます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  https://github.com/Homebrew/homebrew-versions
+</span><span class='line'>1.10     git checkout 2b10422 Library/Formula/gradle.rb
+</span><span class='line'>1.9      git checkout 5bab5e9 Library/Formula/gradle.rb
+</span><span class='line'>1.8      git checkout 9214e60 Library/Formula/gradle.rb
+</span><span class='line'>1.7      git checkout f826cc9 Library/Formula/gradle.rb
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、一つ前のバージョンがあることが分かりますね。<br/>
+このタイミングでパッケージは削除しましょう。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew remove gradle</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>古いバージョンをインストールするよ</h3>
+
+<hr />
+
+<p>ハッシュ値がわかったので、そのFormulaだけ前のバージョンに戻せばいいわけです。<br/>
+戻した後にインストールすれば、古いバージョンのパッケージがインストールできるという・・・</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd /usr/local/Library/Formula
+</span><span class='line'>$ git checkout 5bab5e9 gradle.rb</span></code></pre></td></tr></table></div></figure>
+
+
+<p>バージョンを確認してからのインストール</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew info gradle
+</span><span class='line'>gradle: stable 1.9, devel 1.10-rc-1
+</span><span class='line'>http://www.gradle.org/
+</span><span class='line'>Not installed
+</span><span class='line'>From: https://github.com/Homebrew/homebrew/commits/master/Library/Formula/gradle.rb
+</span><span class='line'>
+</span><span class='line'>$brew install gradle</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と、簡単にできましたとさ</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1222,112 +1358,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/31/2013-summary/">2013年の振り返り</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-31T22:09:00+09:00" pubdate data-updated="true">Dec 31<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>年の瀬なので、今年一年を振り返ってみました。<br/>
-思えば、今年一年は色々とあったなーと思いました。</p>
-
-<p>上半期(1~6月)、下半期(7~12月)の２つのセクションで振り返りたいと思います。</p>
-
-<h3>上半期(1~6月)</h3>
-
-<hr />
-
-<p>この頃はあまりモノ作りというものをやってなかったような気がします。</p>
-
-<p># どちらかというとR&amp;Dライクな何かでしょうかね・・・。</p>
-
-<p>とはいえ、元々自分が何がしたかったのかを思い出せた出来事がありました。</p>
-
-<p># 出来事についての詳細は割愛します。</p>
-
-<p>ここまででは、やりたいことを思い出しただけですね。</p>
-
-<p>そうそう、忘れてはいけないイベントがありましたね。</p>
-
-<h5>GoogleI/Oへの参加</h5>
-
-<p>これが、上半期の中で一番デカイイベントでした。</p>
-
-<p># 初めての海外ということもありますがw</p>
-
-<p>世界のエンジニアと交流することで色々と刺激やツッコミを貰ったりしました。<br/>
-ここで、自分が本当にやりたいことをやるためには行動が必要だということを学びました。</p>
-
-<p># 勿論、技術ネタも学んできましたよ。</p>
-
-<h3>下半期(7~12月)</h3>
-
-<hr />
-
-<p>さて、実際に行動をする訳ですが、まぁ色々と駄目出しをいただくわけでして・・・</p>
-
-<p>結局、転職という道を選びました。</p>
-
-<p># 自宅も引っ越しするという・・・</p>
-
-<p>今は、晴れてRailsをやっています。</p>
-
-<p>やはり、今まで事業的な視点を持っていないことが結構キツイですね。<br/>
-キツイ中でもやり甲斐はあってかなり楽しくやれています。</p>
-
-<p># 技術が楽しいというのもあるし、コードや開発プロセス、標準使用ツールなどが自分に合ってるというのもあるかもしれないです。</p>
-
-<p>転職して「Androidという最新でイケイケなことを捨ててWeb業界に来たの？」よく言われます。</p>
-
-<p>元々、Androidというかmobile系がやりたかったというわけではないということが理由としてデカイです。</p>
-
-<h3>終わりに</h3>
-
-<hr />
-
-<p>お茶を濁してる部分がかなりありますが、其処はアレがあるということで・・・</p>
-
-<p>さて、来年はどうなることですかね。<br/>
-もう少し、事業的なことにも目を向ける必要がありそうですね。</p>
-
-<p>今(2013年)以上に充実した生活を送りたいですね。</p>
-
-<p># そろそろ、婚活的なアレもいるんだろうか・・・</p>
-
-<p>というわけで、振り返りになってない振り返りでしたw</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1349,6 +1379,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/06/mysqldump/">テーブル単位のmysqldump</a>
       </li>
     
@@ -1364,15 +1398,11 @@
         <a href="/blog/2015/03/17/apache-plus-tomcat/">なぜApacheとTomcatを連携させるのか</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/02/18/api-life-cycle/">APIを作る際のAPIバージョンに関するメモ</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 140.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 110.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 135.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 145.0%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 130.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 130.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 105.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 136.9230769230769%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 109.23076923076923%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.61538461538461%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.61538461538461%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 123.07692307692308%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.61538461538461%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 118.46153846153845%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.61538461538461%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.61538461538461%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.61538461538461%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.61538461538461%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 132.30769230769232%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.61538461538461%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 141.53846153846155%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 127.6923076923077%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 127.6923076923077%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.61538461538461%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(13)</a> <a href='/blog/categories/shellscript' style='font-size: 104.61538461538461%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.61538461538461%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 136.9230769230769%'>戯言(8)</a> </span>
 </section
 
 

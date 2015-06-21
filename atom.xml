@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-05-06T23:47:59+09:00</updated>
+  <updated>2015-06-21T14:56:48+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,409 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Railsのモデル周りのマイグレーション]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/06/21/rails-migration-command/"/>
+    <updated>2015-06-21T14:15:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/06/21/rails-migration-command</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>Railsでmigrationするときにいつもアレなんだっけなぁとなることが多いので、<br/>
+備忘録程度にまとめておく</p>
+
+<p>こんなものドキュメント見れば理解できるので、ざっくりレベルのサマリー程度にしておく</p>
+
+<h3>基本</h3>
+
+<hr />
+
+<p>マイグレーションファイル作成コマンド</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails generate migration クラス名</span></code></pre></td></tr></table></div></figure>
+
+
+<p>モデル作成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails generate model モデル名</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>モデル&amp;テーブル作成</h3>
+
+<hr />
+
+<p>フィールド指定で作成する場合、以下の形で行う<br/>
+(大体はフィールド指定を行わずに、実行することが多いかも)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g model モデル名 フィールド:型</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>カラムの型指定</h3>
+
+<hr />
+
+<p>細かい調整をしようと思えばできるけど、一旦これだけ覚えておけば良い</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Ruby側の型 </th>
+<th align="left"> DB側の型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> string </td>
+<td align="left"> 文字列</td>
+</tr>
+<tr>
+<td align="left"> text </td>
+<td align="left"> 長い文字列</td>
+</tr>
+<tr>
+<td align="left"> integer </td>
+<td align="left"> 整数</td>
+</tr>
+<tr>
+<td align="left"> float </td>
+<td align="left"> 浮動小数</td>
+</tr>
+<tr>
+<td align="left"> decimal </td>
+<td align="left"> 精度の高い小数</td>
+</tr>
+<tr>
+<td align="left"> datetime </td>
+<td align="left"> 日時</td>
+</tr>
+<tr>
+<td align="left"> timestamp </td>
+<td align="left"> タイムスタンプ</td>
+</tr>
+<tr>
+<td align="left"> time </td>
+<td align="left"> 時間</td>
+</tr>
+<tr>
+<td align="left"> date </td>
+<td align="left"> 日付</td>
+</tr>
+<tr>
+<td align="left"> binary </td>
+<td align="left"> バイナリデータ</td>
+</tr>
+<tr>
+<td align="left"> boolean </td>
+<td align="left"> Boolean</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>(補足)MySQLで使用する場合の文字列型</h3>
+
+<hr />
+
+<p>MySQLで使用できる文字列型は以下が存在している</p>
+
+<table>
+<thead>
+<tr>
+<th align="left"> DB側の型 </th>
+<th align="left"> 内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> CHAR </td>
+<td align="left"> 255Bまでの固定長文字列</td>
+</tr>
+<tr>
+<td align="left"> VARCHAR </td>
+<td align="left"> 64KBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> TINYTEXT </td>
+<td align="left"> 255Bまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> TEXT </td>
+<td align="left"> 64KBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> MEDIUMTEXT </td>
+<td align="left"> 約1.6MBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> LONGTEXT </td>
+<td align="left"> 約4.3GBまでの可変長文字列</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>上記をそれぞれmigrationで利用する場合<br/>
+以下のようにlimitをつけることで、使用する文字列型を変更することができる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class CreateHoges &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>    create_table :articles do |t|
+</span><span class='line'>      t.text :value, :limit =&gt; 4294967295
+</span><span class='line'>
+</span><span class='line'>      t.timestamps null: false
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行すると以下のようになる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails db
+</span><span class='line'>mysql&gt; show columns from hoges;
+</span><span class='line'>+-------------+--------------+------+-----+---------+----------------+
+</span><span class='line'>| Field       | Type         | Null | Key | Default | Extra          |
+</span><span class='line'>+-------------+--------------+------+-----+---------+----------------+
+</span><span class='line'>| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+</span><span class='line'>| value       | longtext     | YES  |     | NULL    |                |
+</span><span class='line'>| created_at  | datetime     | NO   |     | NULL    |                |
+</span><span class='line'>| updated_at  | datetime     | NO   |     | NULL    |                |
+</span><span class='line'>+-------------+--------------+------+-----+---------+----------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>limitの値は、以下のように対応している</p>
+
+<table>
+<thead>
+<tr>
+<th align="left"> 設定値 </th>
+<th align="left"> DB側の型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> 1 ~ 255 </td>
+<td align="left"> TINYTEXT</td>
+</tr>
+<tr>
+<td align="left"> 256 ~ 65535 </td>
+<td align="left"> TEXT</td>
+</tr>
+<tr>
+<td align="left"> 65536 ~ 16777215 </td>
+<td align="left"> MEDIUMTEXT</td>
+</tr>
+<tr>
+<td align="left"> 16777216 ~ 4294967295 </td>
+<td align="left"> LONGTEXT</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>マイグレーション実行</h3>
+
+<hr />
+
+<p>DB作成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:create</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マイグレーションの実行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:migrate</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マイグレーション結果確認</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:migrate:status</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ロールバック</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:rollback</span></code></pre></td></tr></table></div></figure>
+
+
+<p>DBの削除</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:drop</span></code></pre></td></tr></table></div></figure>
+
+
+<p>シードの投入(マスターデータなどシードで投入することが多い)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:seed</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>既存カラムの変更</h3>
+
+<hr />
+
+<p>カラムを変更したい場合、以下のコマンドでマイグレーションファイルを生成する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g migration ChangeColumnTo&lt;モデル名&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>変更は以下のような形で行う(upとdownを定義することでrollbackにも対応できる)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ChangeColumnToYourModel&lt; ActiveRecord::Migration
+</span><span class='line'>
+</span><span class='line'>  # 変更内容
+</span><span class='line'>  def up
+</span><span class='line'>    change_column :users, :hoge, :string, null: false, default: 0
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  # 変更前の状態
+</span><span class='line'>  def down
+</span><span class='line'>    change_column :users, :hoge, :string, null: true, default: 0
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>気をつけることとして、change_columnは以下のような順で記載すること</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>change_column :&lt;テーブル名&gt;, :&lt;カラム名&gt;, :&lt;型&gt;, &lt;default値やindexといったオプション指定&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>カラムの追加/削除</h3>
+
+<hr />
+
+<p>カラムの追加/削除をしたい場合、以下のコマンドでマイグレーションファイルを生成する<br/>
+追加の場合は、フィールド指定可能</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g migration AddColumnTo&lt;モデル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のような形で記載する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class AddColumnToYourModel &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>
+</span><span class='line'>    # 追加
+</span><span class='line'>    add_column :hoges, :hoge, :string
+</span><span class='line'>
+</span><span class='line'>    # 削除
+</span><span class='line'>    remove_column :hoges, :fuga, :string
+</span><span class='line'>
+</span><span class='line'>    # 追加する場所を指定する場合
+</span><span class='line'>    add_column :hoges, :fugafuga, :string, :after =&gt; :hoge
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>インデックスの追加/削除</h3>
+
+<hr />
+
+<p>カラムの追加/削除と基本は変わらない</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g migration AddIndexTo&lt;モデル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のようにしてindexを設定する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class AddIndexToYourModel &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>
+</span><span class='line'>    # 追加
+</span><span class='line'>    add_index :hoges, :hoge
+</span><span class='line'>
+</span><span class='line'>    # 削除
+</span><span class='line'>    remove_index :hoges, :fuga
+</span><span class='line'>
+</span><span class='line'>    # 複合インデックスの場合
+</span><span class='line'>    add_index :hoges, [:hoge, :fuga]
+</span><span class='line'>
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>参考</h3>
+
+<hr />
+
+<p>ここに書いてる内容は、Railsドキュメント見れば一発で理解できるけどな</p>
+
+<ul>
+<li><a href="http://railsdoc.com/model">モデル(model)</a></li>
+<li><a href="http://railsdoc.com/migration">マイグレーション(migration)</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[テーブル単位のmysqldump]]></title>
@@ -1997,115 +2400,6 @@ Herokuではこのタスクが必要なようです。</p>
 <p>正しく動いていれば、「http://localhost:8983/solr/」で管理画面にアクセスできます</p>
 
 <p>自分でスキーマや設定を作成したい場合、このあたりの設定をコピー&amp;修正して同様の手順で実行してやれば良さそうですね</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Homebrewでバージョンを指定してパッケージをインストールする]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/02/23/homebrew-package-version/"/>
-    <updated>2014-02-23T20:52:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/02/23/homebrew-package-version</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>某モバイルアプリでですね、要求しているビルド用のパッケージが<br/>
-今、インストールされているものよりも古いバージョンでした。</p>
-
-<p>そのままだと、ビルド出来ないのでバージョンを古くしようとしたのがキッカケです。。。</p>
-
-<p># 某モバイルアプリはAndroidで、ビルドパッケージはGradleなんですけどw</p>
-
-<h3>インストール(される|した)バージョンを確認</h3>
-
-<hr />
-
-<p>バージョンを確認します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew info gradle</span></code></pre></td></tr></table></div></figure>
-
-
-<p>するとこんな感じで結果が出ます</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gradle: stable 1.10
-</span><span class='line'>http://www.gradle.org/
-</span><span class='line'>/usr/local/Cellar/gradle/1.10 (143 files, 42M) *
-</span><span class='line'>  Built from source
-</span><span class='line'>From: https://github.com/Homebrew/homebrew/commits/master/Library/Formula/gradle.rb</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>インストール可能なバージョンを調べる</h3>
-
-<hr />
-
-<p>古いバージョンと言いつつも、バージョンがあるかどうかも調べないといけません。<br/>
-という訳で、バージョンを調べます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew versions gradle</span></code></pre></td></tr></table></div></figure>
-
-
-<p>すると、こんな感じでズラズラとバージョンと対応するgitのハッシュ値が出てきます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>  https://github.com/Homebrew/homebrew-versions
-</span><span class='line'>1.10     git checkout 2b10422 Library/Formula/gradle.rb
-</span><span class='line'>1.9      git checkout 5bab5e9 Library/Formula/gradle.rb
-</span><span class='line'>1.8      git checkout 9214e60 Library/Formula/gradle.rb
-</span><span class='line'>1.7      git checkout f826cc9 Library/Formula/gradle.rb
-</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで、一つ前のバージョンがあることが分かりますね。<br/>
-このタイミングでパッケージは削除しましょう。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew remove gradle</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>古いバージョンをインストールするよ</h3>
-
-<hr />
-
-<p>ハッシュ値がわかったので、そのFormulaだけ前のバージョンに戻せばいいわけです。<br/>
-戻した後にインストールすれば、古いバージョンのパッケージがインストールできるという・・・</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd /usr/local/Library/Formula
-</span><span class='line'>$ git checkout 5bab5e9 gradle.rb</span></code></pre></td></tr></table></div></figure>
-
-
-<p>バージョンを確認してからのインストール</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew info gradle
-</span><span class='line'>gradle: stable 1.9, devel 1.10-rc-1
-</span><span class='line'>http://www.gradle.org/
-</span><span class='line'>Not installed
-</span><span class='line'>From: https://github.com/Homebrew/homebrew/commits/master/Library/Formula/gradle.rb
-</span><span class='line'>
-</span><span class='line'>$brew install gradle</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と、簡単にできましたとさ</p>
 ]]></content>
   </entry>
   

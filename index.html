@@ -9,8 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="めちゃくちゃ基礎的な内容なのですが、備忘録を兼ねてメモしておく DBまるごと よくやるmysqldumpコマンド 1
-$mysqldump -u root -p development_db &gt; db_backup.sql テーブル単位 tオプションは、「テーブル作成情報（CREATE &hellip;">
+  <meta name="description" content="はじめに Railsでmigrationするときにいつもアレなんだっけなぁとなることが多いので、
+備忘録程度にまとめておく こんなものドキュメント見れば理解できるので、ざっくりレベルのサマリー程度にしておく 基本 マイグレーションファイル作成コマンド 1
+$rails generate &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +73,436 @@ $mysqldump -u root -p development_db &gt; db_backup.sql テーブル単位 tオ�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-21T14:15:00+09:00" pubdate data-updated="true">Jun 21<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>Railsでmigrationするときにいつもアレなんだっけなぁとなることが多いので、<br/>
+備忘録程度にまとめておく</p>
+
+<p>こんなものドキュメント見れば理解できるので、ざっくりレベルのサマリー程度にしておく</p>
+
+<h3>基本</h3>
+
+<hr />
+
+<p>マイグレーションファイル作成コマンド</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails generate migration クラス名</span></code></pre></td></tr></table></div></figure>
+
+
+<p>モデル作成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails generate model モデル名</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>モデル&amp;テーブル作成</h3>
+
+<hr />
+
+<p>フィールド指定で作成する場合、以下の形で行う<br/>
+(大体はフィールド指定を行わずに、実行することが多いかも)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g model モデル名 フィールド:型</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>カラムの型指定</h3>
+
+<hr />
+
+<p>細かい調整をしようと思えばできるけど、一旦これだけ覚えておけば良い</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Ruby側の型 </th>
+<th align="left"> DB側の型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> string </td>
+<td align="left"> 文字列</td>
+</tr>
+<tr>
+<td align="left"> text </td>
+<td align="left"> 長い文字列</td>
+</tr>
+<tr>
+<td align="left"> integer </td>
+<td align="left"> 整数</td>
+</tr>
+<tr>
+<td align="left"> float </td>
+<td align="left"> 浮動小数</td>
+</tr>
+<tr>
+<td align="left"> decimal </td>
+<td align="left"> 精度の高い小数</td>
+</tr>
+<tr>
+<td align="left"> datetime </td>
+<td align="left"> 日時</td>
+</tr>
+<tr>
+<td align="left"> timestamp </td>
+<td align="left"> タイムスタンプ</td>
+</tr>
+<tr>
+<td align="left"> time </td>
+<td align="left"> 時間</td>
+</tr>
+<tr>
+<td align="left"> date </td>
+<td align="left"> 日付</td>
+</tr>
+<tr>
+<td align="left"> binary </td>
+<td align="left"> バイナリデータ</td>
+</tr>
+<tr>
+<td align="left"> boolean </td>
+<td align="left"> Boolean</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>(補足)MySQLで使用する場合の文字列型</h3>
+
+<hr />
+
+<p>MySQLで使用できる文字列型は以下が存在している</p>
+
+<table>
+<thead>
+<tr>
+<th align="left"> DB側の型 </th>
+<th align="left"> 内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> CHAR </td>
+<td align="left"> 255Bまでの固定長文字列</td>
+</tr>
+<tr>
+<td align="left"> VARCHAR </td>
+<td align="left"> 64KBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> TINYTEXT </td>
+<td align="left"> 255Bまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> TEXT </td>
+<td align="left"> 64KBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> MEDIUMTEXT </td>
+<td align="left"> 約1.6MBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> LONGTEXT </td>
+<td align="left"> 約4.3GBまでの可変長文字列</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>上記をそれぞれmigrationで利用する場合<br/>
+以下のようにlimitをつけることで、使用する文字列型を変更することができる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class CreateHoges &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>    create_table :articles do |t|
+</span><span class='line'>      t.text :value, :limit =&gt; 4294967295
+</span><span class='line'>
+</span><span class='line'>      t.timestamps null: false
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行すると以下のようになる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ rails db
+</span><span class='line'>mysql&gt; show columns from hoges;
+</span><span class='line'>+-------------+--------------+------+-----+---------+----------------+
+</span><span class='line'>| Field       | Type         | Null | Key | Default | Extra          |
+</span><span class='line'>+-------------+--------------+------+-----+---------+----------------+
+</span><span class='line'>| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+</span><span class='line'>| value       | longtext     | YES  |     | NULL    |                |
+</span><span class='line'>| created_at  | datetime     | NO   |     | NULL    |                |
+</span><span class='line'>| updated_at  | datetime     | NO   |     | NULL    |                |
+</span><span class='line'>+-------------+--------------+------+-----+---------+----------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>limitの値は、以下のように対応している</p>
+
+<table>
+<thead>
+<tr>
+<th align="left"> 設定値 </th>
+<th align="left"> DB側の型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> 1 ~ 255 </td>
+<td align="left"> TINYTEXT</td>
+</tr>
+<tr>
+<td align="left"> 256 ~ 65535 </td>
+<td align="left"> TEXT</td>
+</tr>
+<tr>
+<td align="left"> 65536 ~ 16777215 </td>
+<td align="left"> MEDIUMTEXT</td>
+</tr>
+<tr>
+<td align="left"> 16777216 ~ 4294967295 </td>
+<td align="left"> LONGTEXT</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>マイグレーション実行</h3>
+
+<hr />
+
+<p>DB作成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:create</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マイグレーションの実行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:migrate</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マイグレーション結果確認</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:migrate:status</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ロールバック</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:rollback</span></code></pre></td></tr></table></div></figure>
+
+
+<p>DBの削除</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:drop</span></code></pre></td></tr></table></div></figure>
+
+
+<p>シードの投入(マスターデータなどシードで投入することが多い)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rake db:seed</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>既存カラムの変更</h3>
+
+<hr />
+
+<p>カラムを変更したい場合、以下のコマンドでマイグレーションファイルを生成する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g migration ChangeColumnTo&lt;モデル名&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>変更は以下のような形で行う(upとdownを定義することでrollbackにも対応できる)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class ChangeColumnToYourModel&lt; ActiveRecord::Migration
+</span><span class='line'>
+</span><span class='line'>  # 変更内容
+</span><span class='line'>  def up
+</span><span class='line'>    change_column :users, :hoge, :string, null: false, default: 0
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  # 変更前の状態
+</span><span class='line'>  def down
+</span><span class='line'>    change_column :users, :hoge, :string, null: true, default: 0
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>気をつけることとして、change_columnは以下のような順で記載すること</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>change_column :&lt;テーブル名&gt;, :&lt;カラム名&gt;, :&lt;型&gt;, &lt;default値やindexといったオプション指定&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>カラムの追加/削除</h3>
+
+<hr />
+
+<p>カラムの追加/削除をしたい場合、以下のコマンドでマイグレーションファイルを生成する<br/>
+追加の場合は、フィールド指定可能</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g migration AddColumnTo&lt;モデル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のような形で記載する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class AddColumnToYourModel &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>
+</span><span class='line'>    # 追加
+</span><span class='line'>    add_column :hoges, :hoge, :string
+</span><span class='line'>
+</span><span class='line'>    # 削除
+</span><span class='line'>    remove_column :hoges, :fuga, :string
+</span><span class='line'>
+</span><span class='line'>    # 追加する場所を指定する場合
+</span><span class='line'>    add_column :hoges, :fugafuga, :string, :after =&gt; :hoge
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>インデックスの追加/削除</h3>
+
+<hr />
+
+<p>カラムの追加/削除と基本は変わらない</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g migration AddIndexTo&lt;モデル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のようにしてindexを設定する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class AddIndexToYourModel &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>
+</span><span class='line'>    # 追加
+</span><span class='line'>    add_index :hoges, :hoge
+</span><span class='line'>
+</span><span class='line'>    # 削除
+</span><span class='line'>    remove_index :hoges, :fuga
+</span><span class='line'>
+</span><span class='line'>    # 複合インデックスの場合
+</span><span class='line'>    add_index :hoges, [:hoge, :fuga]
+</span><span class='line'>
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>参考</h3>
+
+<hr />
+
+<p>ここに書いてる内容は、Railsドキュメント見れば一発で理解できるけどな</p>
+
+<ul>
+<li><a href="http://railsdoc.com/model">モデル(model)</a></li>
+<li><a href="http://railsdoc.com/migration">マイグレーション(migration)</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1304,78 +1735,6 @@ Herokuではこのタスクが必要なようです。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/08/emacs-version/">Emacsのバージョンで分岐をさせたい</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-01-08T00:51:00+09:00" pubdate data-updated="true">Jan 8<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>発端</h3>
-
-<hr />
-
-<p>Emacsのバージョンを最新にしたことで色々設定が楽に書けることがわかった<br/>
-そのため、最新内容を反映させた</p>
-
-<p>とはいえ、下位互換もある程度保ちたかった<br/>
-(全部、追従すればいいのだがそうもいかない環境もあるので)</p>
-
-<h3>最初に試してみた</h3>
-
-<hr />
-
-<p>普通にバージョンを取得してみた</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(emacs-version)
-</span><span class='line'>"GNU Emacs 24.4.1 (x86_64-apple-darwin14.0.0, NS apple-appkit-1343.16)
-</span><span class='line'> of 2015-01-04 on hoge.local"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>文字列のマッチング処理が多くなりそうで結構めんどくさい・・・</p>
-
-<h3>結果的にこうした</h3>
-
-<hr />
-
-<p>普通のmajor/minor バージョン判定を複合した条件判定するだけの関数を用意</p>
-
-<p>24.3以下の判定</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(defvar is-less-than-or-equal-24-3 (and (&lt;= emacs-major-version 24) (&lt;= emacs-minor-version 3)))</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1395,6 +1754,10 @@ Herokuではこのタスクが必要なようです。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/06/mysqldump/">テーブル単位のmysqldump</a>
       </li>
     
@@ -1410,15 +1773,11 @@ Herokuではこのタスクが必要なようです。</p>
         <a href="/blog/2015/03/17/apache-plus-tomcat/">なぜApacheとTomcatを連携させるのか</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/02/18/api-life-cycle/">APIを作る際のAPIバージョンに関するメモ</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 140.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 110.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 105.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 105.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 125.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 105.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 120.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 105.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 105.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 105.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 105.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 135.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 105.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 145.0%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 130.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 130.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 105.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(12)</a> <a href='/blog/categories/shellscript' style='font-size: 105.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 105.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 140.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 136.9230769230769%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 109.23076923076923%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.61538461538461%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.61538461538461%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 123.07692307692308%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.61538461538461%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 118.46153846153845%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.61538461538461%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.61538461538461%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.61538461538461%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.61538461538461%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 132.30769230769232%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.61538461538461%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 141.53846153846155%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 127.6923076923077%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 127.6923076923077%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.61538461538461%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(13)</a> <a href='/blog/categories/shellscript' style='font-size: 104.61538461538461%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.61538461538461%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 136.9230769230769%'>戯言(8)</a> </span>
 </section
 
 

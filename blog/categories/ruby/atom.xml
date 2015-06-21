@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-05-06T23:47:59+09:00</updated>
+  <updated>2015-06-21T14:58:00+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,368 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Railsのモデル周りのマイグレーション]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/06/21/rails-migration-command/"/>
+    <updated>2015-06-21T14:15:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/06/21/rails-migration-command</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>Railsでmigrationするときにいつもアレなんだっけなぁとなることが多いので、<br/>
+備忘録程度にまとめておく</p>
+
+<p>こんなものドキュメント見れば理解できるので、ざっくりレベルのサマリー程度にしておく</p>
+
+<h3>基本</h3>
+
+<hr />
+
+<p>マイグレーションファイル作成コマンド</p>
+
+<p><code>
+$rails generate migration クラス名
+</code></p>
+
+<p>モデル作成</p>
+
+<p><code>
+$rails generate model モデル名
+</code></p>
+
+<h3>モデル&amp;テーブル作成</h3>
+
+<hr />
+
+<p>フィールド指定で作成する場合、以下の形で行う<br/>
+(大体はフィールド指定を行わずに、実行することが多いかも)</p>
+
+<p><code>
+$rails g model モデル名 フィールド:型
+</code></p>
+
+<h3>カラムの型指定</h3>
+
+<hr />
+
+<p>細かい調整をしようと思えばできるけど、一旦これだけ覚えておけば良い</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Ruby側の型 </th>
+<th align="left"> DB側の型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> string </td>
+<td align="left"> 文字列</td>
+</tr>
+<tr>
+<td align="left"> text </td>
+<td align="left"> 長い文字列</td>
+</tr>
+<tr>
+<td align="left"> integer </td>
+<td align="left"> 整数</td>
+</tr>
+<tr>
+<td align="left"> float </td>
+<td align="left"> 浮動小数</td>
+</tr>
+<tr>
+<td align="left"> decimal </td>
+<td align="left"> 精度の高い小数</td>
+</tr>
+<tr>
+<td align="left"> datetime </td>
+<td align="left"> 日時</td>
+</tr>
+<tr>
+<td align="left"> timestamp </td>
+<td align="left"> タイムスタンプ</td>
+</tr>
+<tr>
+<td align="left"> time </td>
+<td align="left"> 時間</td>
+</tr>
+<tr>
+<td align="left"> date </td>
+<td align="left"> 日付</td>
+</tr>
+<tr>
+<td align="left"> binary </td>
+<td align="left"> バイナリデータ</td>
+</tr>
+<tr>
+<td align="left"> boolean </td>
+<td align="left"> Boolean</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>(補足)MySQLで使用する場合の文字列型</h3>
+
+<hr />
+
+<p>MySQLで使用できる文字列型は以下が存在している</p>
+
+<table>
+<thead>
+<tr>
+<th align="left"> DB側の型 </th>
+<th align="left"> 内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> CHAR </td>
+<td align="left"> 255Bまでの固定長文字列</td>
+</tr>
+<tr>
+<td align="left"> VARCHAR </td>
+<td align="left"> 64KBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> TINYTEXT </td>
+<td align="left"> 255Bまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> TEXT </td>
+<td align="left"> 64KBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> MEDIUMTEXT </td>
+<td align="left"> 約1.6MBまでの可変長文字列</td>
+</tr>
+<tr>
+<td align="left"> LONGTEXT </td>
+<td align="left"> 約4.3GBまでの可変長文字列</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>上記をそれぞれmigrationで利用する場合<br/>
+以下のようにlimitをつけることで、使用する文字列型を変更することができる</p>
+
+<p>```
+class CreateHoges &lt; ActiveRecord::Migration
+  def change</p>
+
+<pre><code>create_table :articles do |t|
+  t.text :value, :limit =&gt; 4294967295
+
+  t.timestamps null: false
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>実行すると以下のようになる</p>
+
+<p><code>
+$ rails db
+mysql&gt; show columns from hoges;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+| value       | longtext     | YES  |     | NULL    |                |
+| created_at  | datetime     | NO   |     | NULL    |                |
+| updated_at  | datetime     | NO   |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+</code></p>
+
+<p>limitの値は、以下のように対応している</p>
+
+<table>
+<thead>
+<tr>
+<th align="left"> 設定値 </th>
+<th align="left"> DB側の型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"> 1 ~ 255 </td>
+<td align="left"> TINYTEXT</td>
+</tr>
+<tr>
+<td align="left"> 256 ~ 65535 </td>
+<td align="left"> TEXT</td>
+</tr>
+<tr>
+<td align="left"> 65536 ~ 16777215 </td>
+<td align="left"> MEDIUMTEXT</td>
+</tr>
+<tr>
+<td align="left"> 16777216 ~ 4294967295 </td>
+<td align="left"> LONGTEXT</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>マイグレーション実行</h3>
+
+<hr />
+
+<p>DB作成</p>
+
+<p><code>
+$rake db:create
+</code></p>
+
+<p>マイグレーションの実行</p>
+
+<p><code>
+$rake db:migrate
+</code></p>
+
+<p>マイグレーション結果確認</p>
+
+<p><code>
+$rake db:migrate:status
+</code></p>
+
+<p>ロールバック</p>
+
+<p><code>
+$rake db:rollback
+</code></p>
+
+<p>DBの削除</p>
+
+<p><code>
+$rake db:drop
+</code></p>
+
+<p>シードの投入(マスターデータなどシードで投入することが多い)</p>
+
+<p><code>
+$rake db:seed
+</code></p>
+
+<h3>既存カラムの変更</h3>
+
+<hr />
+
+<p>カラムを変更したい場合、以下のコマンドでマイグレーションファイルを生成する</p>
+
+<p><code>
+$rails g migration ChangeColumnTo&lt;モデル名&gt;
+</code></p>
+
+<p>変更は以下のような形で行う(upとdownを定義することでrollbackにも対応できる)</p>
+
+<p>```
+class ChangeColumnToYourModel&lt; ActiveRecord::Migration</p>
+
+<p>  # 変更内容
+  def up</p>
+
+<pre><code>change_column :users, :hoge, :string, null: false, default: 0
+</code></pre>
+
+<p>  end</p>
+
+<p>  # 変更前の状態
+  def down</p>
+
+<pre><code>change_column :users, :hoge, :string, null: true, default: 0
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>気をつけることとして、change_columnは以下のような順で記載すること</p>
+
+<p><code>
+change_column :&lt;テーブル名&gt;, :&lt;カラム名&gt;, :&lt;型&gt;, &lt;default値やindexといったオプション指定&gt;
+</code></p>
+
+<h3>カラムの追加/削除</h3>
+
+<hr />
+
+<p>カラムの追加/削除をしたい場合、以下のコマンドでマイグレーションファイルを生成する<br/>
+追加の場合は、フィールド指定可能</p>
+
+<p><code>
+$rails g migration AddColumnTo&lt;モデル&gt;
+</code></p>
+
+<p>以下のような形で記載する</p>
+
+<p>```
+class AddColumnToYourModel &lt; ActiveRecord::Migration
+  def change</p>
+
+<pre><code># 追加
+add_column :hoges, :hoge, :string
+
+# 削除
+remove_column :hoges, :fuga, :string
+
+# 追加する場所を指定する場合
+add_column :hoges, :fugafuga, :string, :after =&gt; :hoge
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<h3>インデックスの追加/削除</h3>
+
+<hr />
+
+<p>カラムの追加/削除と基本は変わらない</p>
+
+<p><code>
+$rails g migration AddIndexTo&lt;モデル&gt;
+</code></p>
+
+<p>以下のようにしてindexを設定する</p>
+
+<p>```
+class AddIndexToYourModel &lt; ActiveRecord::Migration
+  def change</p>
+
+<pre><code># 追加
+add_index :hoges, :hoge
+
+# 削除
+remove_index :hoges, :fuga
+
+# 複合インデックスの場合
+add_index :hoges, [:hoge, :fuga]
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<h3>参考</h3>
+
+<hr />
+
+<p>ここに書いてる内容は、Railsドキュメント見れば一発で理解できるけどな</p>
+
+<ul>
+<li><a href="http://railsdoc.com/model">モデル(model)</a></li>
+<li><a href="http://railsdoc.com/migration">マイグレーション(migration)</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[jQueryが見つからないよエラーの解消法]]></title>
@@ -432,229 +794,6 @@ Hoge.import hoge_list, :on_duplicate_key_update =&gt; columns, :timestamps =&gt;
 
 <p>コードベースで、バルクインサートやバルクアップデートができるところがいいですね。<br/>
 データをまとめて引っ張って→データ処理→まとめて更新なんかの使い方では便利かもｗ</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ActiveRecordメモ その2]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/11/19/ar-memo-2/"/>
-    <updated>2013-11-19T00:13:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/11/19/ar-memo-2</id>
-    <content type="html"><![CDATA[<p>前回書いたので、メモをまたまた残しておく</p>
-
-<p>今回は、以下の３つを書き起こす。</p>
-
-<ul>
-<li>既存行の更新処理</li>
-<li>データ保存系メソッドの違い</li>
-<li>既存行の削除処理</li>
-<li>コールバック</li>
-</ul>
-
-
-<h3>既存行の更新</h3>
-
-<hr />
-
-<p>1.更新する行を特定してから更新するやり方</p>
-
-<p>```
-table = Tables.find(12)
-table.name = "column name"
-table.save</p>
-
-<p>```</p>
-
-<p>2.属性の値を変更してからモデルオブジェクトを取得するやり方</p>
-
-<p><code>
-table = Tables.find(12)
-table.update_attribute(:name, "column_name")
-</code></p>
-
-<p>上はシンボルを使って、特定の１カラムのみの更新の場合</p>
-
-<p>まとめて行を更新する場合、ハッシュを使いますね。</p>
-
-<p><code>
-table = Tables.find(12)
-table.update_attributes(name: "column_name", text: "ActiveRecord")
-</code></p>
-
-<p>因みに、Railsだとこんな感じで使ってますね。</p>
-
-<p>```
-def update
-  table = Tables.find(params[:id])
-  if table.update_attributes(params[:table])</p>
-
-<pre><code>redirect_to action: :index
-</code></pre>
-
-<p>  else</p>
-
-<pre><code>redirect_to action: :edit
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>3.行の読み込みと更新を一度に行う方法</p>
-
-<p>これは特に言うこともないですね。<br/>
-指定した行を更新し、結果をDBに反映、そのままオブジェクトを取得します</p>
-
-<p><code>
-table = Tables.update(12, name: "column_name", text: "ActiveRecord")
-</code></p>
-
-<p>因みに、update_allメソッドを使えばまとめて更新することができます。<br/>
-第1引数にupdate文、第2引数にwhere句を指定という形でやります。</p>
-
-<p><code>
-table = Tbales.update_all("name = column_name, text = ActiveRecord", "id = 12")
-</code></p>
-
-<p>戻り値は、データベースのアダプターによって異なるようです。<br/>
-大体、更新行数が返るようですが、Oracleだけ何故か違うみたいです。。。</p>
-
-<h3>データ保存系メソッドの違い</h3>
-
-<hr />
-
-<table>
-<thead>
-<tr>
-<th align="left">メソッド </th>
-<th align="left"> 違い </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">save    </td>
-<td align="left">レコードが保存された場合、trueを返し、そうでなければnilを返す</td>
-</tr>
-<tr>
-<td align="left">save!   </td>
-<td align="left">保存が成功した、trueを返し、そうでなければ例外を発生</td>
-</tr>
-<tr>
-<td align="left">create  </td>
-<td align="left">保存に成功したかどうかは関係なく、ActiveRecordオブジェクトを返す。データが保存されたかどうかの確認は検証チェックが必要</td>
-</tr>
-<tr>
-<td align="left">create! </td>
-<td align="left">成功時は、ActiveRecordオブジェクトを返し、そうでなければ例外を発生</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>なので、使い分けはこんな感じに行う</p>
-
-<p><code>
-if table.save
-  検証と保存に成功
-else
-  検証エラー
-end
-</code></p>
-
-<p><code>
-begin
-  table.save!
-rescue ActiveRecord::RecordInvalid =&gt; error
-  検証エラー
-rescue ActiveRecord::RecordNotSaved =&gt; error
-  保存に失敗(コールバックで保存が出来なかった)
-end
-</code></p>
-
-<h3>既存行の削除処理</h3>
-
-<hr />
-
-<p>これは２種類の方法があります。<br/>
-１つ目、データベースを直接操作する感じのやり方</p>
-
-<p>こんな感じで、id指定で削除できます。<br/>
-idを格納した配列を指定することで、まとめて削除もできます。</p>
-
-<p><code>
-Tables.delete(12)
-</code></p>
-
-<p>SQLのwhereを使ってまとめて削除する方法</p>
-
-<p><code>
-Tables.delete_all(["id = 12"])
-</code></p>
-
-<p>これもupdate_allメソッドと同じで削除した行数が返ってきます。</p>
-
-<p>もう一つのやり方は、destroyメソッドを使う方法です。<br/>
-こいつは、削除というよりもデータの凍結ですね。</p>
-
-<p>特定の行のみ凍結</p>
-
-<p><code>
-Tables.destroy(12)
-</code></p>
-
-<p>まとめて凍結する方法</p>
-
-<p><code>
-Tables.destroy_all("name = ?", "column_name")
-</code></p>
-
-<p>因みにdeleteメソッドを使った場合、<br/>
-ActiveRecordの検証メソッドが実行されないことに注意かも。</p>
-
-<h3>コールバック順序</h3>
-
-<hr />
-
-<p>コールバックで独自に処理を入れたい場合ってあると思うので、ついでにメモしておく</p>
-
-<p>新規レコードでmodel.saveを実行した場合、以下の順序でコールバックされる</p>
-
-<ol>
-<li>before_validation</li>
-<li>検証処理</li>
-<li>after_validation</li>
-<li>before_save</li>
-<li>before_create</li>
-<li>挿入処理</li>
-<li>after_create</li>
-<li>after_save</li>
-</ol>
-
-
-<p>更新の場合だと以下になる</p>
-
-<ol>
-<li>before_validation</li>
-<li>検証処理</li>
-<li>after_validation</li>
-<li>before_save</li>
-<li>before_update</li>
-<li>更新処理</li>
-<li>after_update</li>
-<li>after_save</li>
-</ol>
-
-
-<p>削除(model.destroy)だと、以下になる</p>
-
-<ol>
-<li>before_destroy</li>
-<li>destroy処理</li>
-<li>after_destory</li>
-</ol>
-
-
-<p>ここまでそれなりに書いたので、もうちょい参照系も書いておきたいなw</p>
 ]]></content>
   </entry>
   
