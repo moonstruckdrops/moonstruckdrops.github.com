@@ -9,9 +9,11 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに Railsでmigrationするときにいつもアレなんだっけなぁとなることが多いので、
-備忘録程度にまとめておく こんなものドキュメント見れば理解できるので、ざっくりレベルのサマリー程度にしておく 基本 マイグレーションファイル作成コマンド 1
-$rails generate &hellip;">
+  <meta name="description" content="はじめに ここ数日、自分用のアプリを作っているわけなのですが
+その時に起きたエラーを記載しておきます (STIの予約語のこと忘れてたというオチｗ) 事象 ActiveRecordで「type」というカラムをもつテーブルに接続し、取得系のメソッドを呼ぶと以下の様なエラーが出た 1
+2
+3
+[1] &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +75,150 @@ $rails generate &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/27/rails-sti/">RailsでSTI（単一テーブル継承）の予約語でハマった話対処</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-27T11:38:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>ここ数日、自分用のアプリを作っているわけなのですが<br/>
+その時に起きたエラーを記載しておきます</p>
+
+<p>(STIの予約語のこと忘れてたというオチｗ)</p>
+
+<h3>事象</h3>
+
+<hr />
+
+<p>ActiveRecordで「type」というカラムをもつテーブルに接続し、取得系のメソッドを呼ぶと以下の様なエラーが出た</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[1] pry(main)&gt; Hoge.find(1)
+</span><span class='line'>  Hoge Load (0.4ms)  SELECT `hoges`.* FROM `hoges` WHERE `hoges`.`id` = 1 LIMIT 1
+</span><span class='line'>ActiveRecord::SubclassNotFound: The single-table inheritance mechanism failed to locate the subclass: 'fuga'. This error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this column if you didn't intend it to be used for storing the inheritance class or overwrite Hoge.inheritance_column to use another column for that information.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーメッセージから分かるように「type」というカラムをrenameしろと出ています<br/>
+こんなの場合によっては出来無いわけで・・・</p>
+
+<h3>これは何？</h3>
+
+<hr />
+
+<p>STI（単一テーブル継承）と呼ばれる機能のことを指しています<br/>
+つまり、1つのテーブルを複数のModelで利用する仕組みのことを言います。</p>
+
+<p>で、その仕掛けように予約語として、&#8221;type&#8221;という名前をActiveRecordが利用しているようです。</p>
+
+<p>クラスで言うとこんなところでしょうか。<br/>
+Humanクラスを継承した、Manクラス、Womanクラスがあったとした場合、以下のような形になります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Human &lt; ActiveRecord::Base
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class Man &lt; Human
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class Woman &lt; Human
+</span><span class='line'>
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、例えばManオブジェクトをsaveすると、Humanテーブルにtype:Manとして保存されます。<br/>
+Womanならtype:Womanになるようです</p>
+
+<p>それぞれのモデルからデータへの操作を行った場合、適合するTypeのデータのみを操作対象となります<br/>
+ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場合は、Humanモデルから操作すればOKです</p>
+
+<p>当然ひとつのテーブルを使っていますので、片方にしか無い項目(カラム)もテーブルに含まなければならないです。<br/>
+例えばManとHumanの持つ項目があまりにも違う場合、カラム数が爆発的に増えます。<br/>
+(ここは注意するところですね)</p>
+
+<h3>対処</h3>
+
+<hr />
+
+<p>もうざっくりというと、以下の2つの対応ができます</p>
+
+<ol>
+<li>カラム名に「type」という名前をつけず、別名に変更する</li>
+<li>エラーメッセージにあるようにSTIのカラム名を変更する</li>
+</ol>
+
+
+<p>というわけなので、自分は1の対応を行いました。</p>
+
+<p>では、2の場合はどうするかというと・・・
+エラーメッセージにありますが、以下ように設定すればよいようです</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Hoge &lt; ActiveRecord::Base
+</span><span class='line'>  self.inheritance_column = :_type_disabled
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>どういう場合に起きそう</h3>
+
+<hr />
+
+<p>ざっと思いつくのはこんなところかな</p>
+
+<ul>
+<li>既存のアプリケーション(PHPなりJavaなり)をRailsにのせかえるとき</li>
+<li>設計上どうしても止むえずつけたいとき(これはビジネスドメインの場合が当てはまる)</li>
+<li>(あんまりないと思うが)STIの機能を使ってリファクタリングするとき</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1613,128 +1759,6 @@ Herokuではこのタスクが必要なようです。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/17/pull-to-refresh/">AndroidのPull to Refreshをちょっとだけ調べた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-01-17T23:58:00+09:00" pubdate data-updated="true">Jan 17<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>ここの内容は完全に備忘録です。<br/>
-何故かというと、自分がちょっと実現したい機能があったけどできるのだろうかと調べてみたメモだからです。</p>
-
-<h3>普通のPull To Refresh</h3>
-
-<hr />
-
-<p>所謂、下向きに引っ張るとListViewが更新されるやつですね。</p>
-
-<p>これはAPI Level19のSupport V4 Libraryにて機能提供されているので、簡単に実現できます。<br/>
-(ちょっと癖はあるかもしれませんが・・・)</p>
-
-<p>以下にデモとReferenceを記載</p>
-
-<ul>
-<li><a href="https://developer.android.com/samples/SwipeRefreshLayoutBasic/index.html">SwipeRefreshLayoutBasic</a></li>
-<li><a href="https://developer.android.com/reference/android/support/v4/widget/SwipeRefreshLayout.html">SwipeRefreshLayout</a></li>
-</ul>
-
-
-<p># デモを見ればわかりますが、扱うだけなら非常に楽に使えるような感じになっています(カスタムは面倒臭さそう)<br/>
-# ぐぐれば、いっぱい記事は見つかるので詳細はそちらに譲ります</p>
-
-<h3>やりたかったこと</h3>
-
-<hr />
-
-<p>下から上にListViewを引っ張ると、ListViewが更新されること<br/>
-俗に言う、bottomup to refreshってやつです</p>
-
-<h3>調べてみた</h3>
-
-<hr />
-
-<h4>ライブラリは？</h4>
-
-<p><a href="https://github.com/chrisbanes/Android-PullToRefresh">Android-PullToRefresh</a>が、対応している
-但し、作者がdeprecated宣言</p>
-
-<h4>カスタム実装は？</h4>
-
-<p>少し試してみた感じだと、標準機能を駆使して実現(Classの継承など)は、まず無理かも</p>
-
-<p># そもそも、そんな感じで簡単にrefreshする機能を上下を入れ替え作られているような感じにはなってなかった</p>
-
-<h4>ソースコードを見れば？</h4>
-
-<p>結論から言うと、onTouchEventでアニメーションの実施の有無など詳細な条件判定とかやっているので今のところ難しそう</p>
-
-<p><a href="https://android.googlesource.com/platform/frameworks/support/+/refs/heads/master/v4/java/android/support/v4/widget/SwipeRefreshLayout.java">SwipeRefreshLayout.java</a></p>
-
-<p># 追いかけた結果を書くのは割愛します</p>
-
-<h5>他の人はどうなの？</h5>
-
-<p>同じことを考える方はいらっしゃるようですね。</p>
-
-<p><a href="http://stackoverflow.com/questions/24867204/swiperefreshlayout-pull-from-bottom">SwipeRefreshLayout - Pull From Bottom</a></p>
-
-<p>ざっくり書くと、こんな感じ</p>
-
-<ul>
-<li>今のAPIだと簡単には無理</li>
-<li>OSSのコードをコピーして、自前で<a href="https://bitbucket.org/andreyice/swiperefreshlayoutbottom">実装</a>した</li>
-<li><a href="http://www.oodlestechnologies.com/blogs/Implementing-Pull-to-refresh-(like-in-Facebook-mobile-app)-for-ANDROID-using-Titanium">ここ</a>を参考に実装すればもしかしたらできるかも</li>
-</ul>
-
-
-<p># ソースコード見た感触とあまり変わらない(´・ω・｀)</p>
-
-<h3>ちょっと調べてとりあえず分かったこと</h3>
-
-<hr />
-
-<p>API叩いて直ぐ実現可能というわけではないようですね(´・ω・｀)</p>
-
-<ul>
-<li>クラスを継承した独自のLayoutにすればなんとかできそうかもしれない</li>
-<li>但し、onTouchEventを自前で実装するのと処理中のアニメーションを挟むため、一筋縄ではいかない</li>
-<li>実現方法の参考実装はあるので、うまくできそうかやってみればいいかもしれない</li>
-<li>deprecated宣言しているが、ライブラリを使えば楽にはできる(その後のメンテナンスコストは払う必要は出そうだが・・・)</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1754,6 +1778,10 @@ Herokuではこのタスクが必要なようです。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/27/rails-sti/">RailsでSTI（単一テーブル継承）の予約語でハマった話対処</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a>
       </li>
     
@@ -1769,15 +1797,11 @@ Herokuではこのタスクが必要なようです。</p>
         <a href="/blog/2015/03/17/jersey-on-heroku/">Heroku上でJersey + Jetty + Gradleを動かす</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/03/17/apache-plus-tomcat/">なぜApacheとTomcatを連携させるのか</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 136.9230769230769%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 109.23076923076923%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.61538461538461%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.61538461538461%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 123.07692307692308%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.61538461538461%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 118.46153846153845%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.61538461538461%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.61538461538461%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.61538461538461%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.61538461538461%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 132.30769230769232%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.61538461538461%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 141.53846153846155%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 127.6923076923077%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 127.6923076923077%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.61538461538461%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(13)</a> <a href='/blog/categories/shellscript' style='font-size: 104.61538461538461%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.61538461538461%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 136.9230769230769%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 134.28571428571428%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.57142857142857%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.28571428571429%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.28571428571429%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 121.42857142857143%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.28571428571429%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 117.14285714285714%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.28571428571429%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.28571428571429%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.28571428571429%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.28571428571429%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.28571428571429%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 138.57142857142856%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 125.71428571428572%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 125.71428571428572%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.28571428571429%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(14)</a> <a href='/blog/categories/shellscript' style='font-size: 104.28571428571429%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.28571428571429%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 134.28571428571428%'>戯言(8)</a> </span>
 </section
 
 

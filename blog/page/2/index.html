@@ -9,12 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="発端 Emacsのバージョンを最新にしたことで色々設定が楽に書けることがわかった
-そのため、最新内容を反映させた とはいえ、下位互換もある程度保ちたかった
-(全部、追従すればいいのだがそうもいかない環境もあるので) 最初に試してみた 普通にバージョンを取得してみた 1
-2
-3
-(emacs- &hellip;">
+  <meta name="description" content="はじめに ここの内容は完全に備忘録です。
+何故かというと、自分がちょっと実現したい機能があったけどできるのだろうかと調べてみたメモだからです。 普通のPull To Refresh 所謂、下向きに引っ張るとListViewが更新されるやつですね。 これはAPI Level19のSupport V4 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +72,128 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/17/pull-to-refresh/">AndroidのPull to Refreshをちょっとだけ調べた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-17T23:58:00+09:00" pubdate data-updated="true">Jan 17<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>ここの内容は完全に備忘録です。<br/>
+何故かというと、自分がちょっと実現したい機能があったけどできるのだろうかと調べてみたメモだからです。</p>
+
+<h3>普通のPull To Refresh</h3>
+
+<hr />
+
+<p>所謂、下向きに引っ張るとListViewが更新されるやつですね。</p>
+
+<p>これはAPI Level19のSupport V4 Libraryにて機能提供されているので、簡単に実現できます。<br/>
+(ちょっと癖はあるかもしれませんが・・・)</p>
+
+<p>以下にデモとReferenceを記載</p>
+
+<ul>
+<li><a href="https://developer.android.com/samples/SwipeRefreshLayoutBasic/index.html">SwipeRefreshLayoutBasic</a></li>
+<li><a href="https://developer.android.com/reference/android/support/v4/widget/SwipeRefreshLayout.html">SwipeRefreshLayout</a></li>
+</ul>
+
+
+<p># デモを見ればわかりますが、扱うだけなら非常に楽に使えるような感じになっています(カスタムは面倒臭さそう)<br/>
+# ぐぐれば、いっぱい記事は見つかるので詳細はそちらに譲ります</p>
+
+<h3>やりたかったこと</h3>
+
+<hr />
+
+<p>下から上にListViewを引っ張ると、ListViewが更新されること<br/>
+俗に言う、bottomup to refreshってやつです</p>
+
+<h3>調べてみた</h3>
+
+<hr />
+
+<h4>ライブラリは？</h4>
+
+<p><a href="https://github.com/chrisbanes/Android-PullToRefresh">Android-PullToRefresh</a>が、対応している
+但し、作者がdeprecated宣言</p>
+
+<h4>カスタム実装は？</h4>
+
+<p>少し試してみた感じだと、標準機能を駆使して実現(Classの継承など)は、まず無理かも</p>
+
+<p># そもそも、そんな感じで簡単にrefreshする機能を上下を入れ替え作られているような感じにはなってなかった</p>
+
+<h4>ソースコードを見れば？</h4>
+
+<p>結論から言うと、onTouchEventでアニメーションの実施の有無など詳細な条件判定とかやっているので今のところ難しそう</p>
+
+<p><a href="https://android.googlesource.com/platform/frameworks/support/+/refs/heads/master/v4/java/android/support/v4/widget/SwipeRefreshLayout.java">SwipeRefreshLayout.java</a></p>
+
+<p># 追いかけた結果を書くのは割愛します</p>
+
+<h5>他の人はどうなの？</h5>
+
+<p>同じことを考える方はいらっしゃるようですね。</p>
+
+<p><a href="http://stackoverflow.com/questions/24867204/swiperefreshlayout-pull-from-bottom">SwipeRefreshLayout - Pull From Bottom</a></p>
+
+<p>ざっくり書くと、こんな感じ</p>
+
+<ul>
+<li>今のAPIだと簡単には無理</li>
+<li>OSSのコードをコピーして、自前で<a href="https://bitbucket.org/andreyice/swiperefreshlayoutbottom">実装</a>した</li>
+<li><a href="http://www.oodlestechnologies.com/blogs/Implementing-Pull-to-refresh-(like-in-Facebook-mobile-app)-for-ANDROID-using-Titanium">ここ</a>を参考に実装すればもしかしたらできるかも</li>
+</ul>
+
+
+<p># ソースコード見た感触とあまり変わらない(´・ω・｀)</p>
+
+<h3>ちょっと調べてとりあえず分かったこと</h3>
+
+<hr />
+
+<p>API叩いて直ぐ実現可能というわけではないようですね(´・ω・｀)</p>
+
+<ul>
+<li>クラスを継承した独自のLayoutにすればなんとかできそうかもしれない</li>
+<li>但し、onTouchEventを自前で実装するのと処理中のアニメーションを挟むため、一筋縄ではいかない</li>
+<li>実現方法の参考実装はあるので、うまくできそうかやってみればいいかもしれない</li>
+<li>deprecated宣言しているが、ライブラリを使えば楽にはできる(その後のメンテナンスコストは払う必要は出そうだが・・・)</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1258,94 +1376,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/01/install-solr-for-mac/">MacにSolrをインストールして動かしてみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-01T20:18:00+09:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>Solrといえば、全文検索システムですね。</p>
-
-<p>で、これをMacにインストールしてみようということやってみます。</p>
-
-<p>とはいえ、普通にtarballダウンロードして解凍→java -jarだと面白くないですね。</p>
-
-<p>折角、Homebrewを使ってるのでパッケージ管理の上で実施してみます。</p>
-
-<h3>インストール</h3>
-
-<hr />
-
-<p>Homebrew使いであれば、お馴染みのコマンドでスンナリインストールされます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install solr</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Solrの起動</h3>
-
-<hr />
-
-<p>ぶっちゃけ、こいつが若干の癖ものだったりします。</p>
-
-<p># 記事書くキッカケw</p>
-
-<h5>一言で言うと、solrの設定(solr.xml)があるパスをフルパスで渡して上げる</h5>
-
-<p>実はこれだけです、インストールしたSolrはサンプルが同梱してあるので起動してみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-DIH/solr/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>スキーマレスのサンプルなら</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-schemaless/solr/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>マルチコアのサンプルなら</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/multicore/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>正しく動いていれば、「http://localhost:8983/solr/」で管理画面にアクセスできます</p>
-
-<p>自分でスキーマや設定を作成したい場合、このあたりの設定をコピー&amp;修正して同様の手順で実行してやれば良さそうですね</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1367,6 +1397,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/27/rails-sti/">RailsでSTI（単一テーブル継承）の予約語でハマった話対処</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a>
       </li>
     
@@ -1382,15 +1416,11 @@
         <a href="/blog/2015/03/17/jersey-on-heroku/">Heroku上でJersey + Jetty + Gradleを動かす</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/03/17/apache-plus-tomcat/">なぜApacheとTomcatを連携させるのか</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 136.9230769230769%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 109.23076923076923%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.61538461538461%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.61538461538461%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 123.07692307692308%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.61538461538461%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 118.46153846153845%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.61538461538461%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.61538461538461%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.61538461538461%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.61538461538461%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 132.30769230769232%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.61538461538461%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 141.53846153846155%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 127.6923076923077%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 127.6923076923077%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.61538461538461%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(13)</a> <a href='/blog/categories/shellscript' style='font-size: 104.61538461538461%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.61538461538461%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 136.9230769230769%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 134.28571428571428%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.57142857142857%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.28571428571429%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.28571428571429%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 121.42857142857143%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.28571428571429%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 117.14285714285714%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.28571428571429%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.28571428571429%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.28571428571429%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.28571428571429%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.28571428571429%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 138.57142857142856%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 125.71428571428572%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 125.71428571428572%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.28571428571429%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(14)</a> <a href='/blog/categories/shellscript' style='font-size: 104.28571428571429%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.28571428571429%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 134.28571428571428%'>戯言(8)</a> </span>
 </section
 
 

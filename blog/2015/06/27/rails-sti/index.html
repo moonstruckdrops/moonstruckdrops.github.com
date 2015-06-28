@@ -5,11 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>RubyのStructクラスが便利 - kurobaraのブログ</title>
+  <title>RailsでSTI（単一テーブル継承）の予約語でハマった話対処 - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも Structクラス Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・) 平たく言うと、Classクラスに似ているものです。 じゃー違いは何なの？ってなります。 newしたとき、 &hellip;">
+  <meta name="description" content="はじめに ここ数日、自分用のアプリを作っているわけなのですが
+その時に起きたエラーを記載しておきます (STIの予約語のこと忘れてたというオチｗ) 事象 ActiveRecordで「type」というカラムをもつテーブルに接続し、取得系のメソッドを呼ぶと以下の様なエラーが出た 1
+2
+3
+[1] &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/07/02/ruby-struct/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -74,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">RubyのStructクラスが便利</h1>
+      <h1 class="entry-title">RailsでSTI（単一テーブル継承）の予約語でハマった話対処</h1>
     
     
       <p class="meta">
@@ -90,175 +94,122 @@
   
 
 
-<time datetime="2013-07-02T01:15:00+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+<time datetime="2015-06-27T11:38:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも</p>
-
-<h3>Structクラス</h3>
+<div class="entry-content"><h3>はじめに</h3>
 
 <hr />
 
-<p>Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・)</p>
+<p>ここ数日、自分用のアプリを作っているわけなのですが<br/>
+その時に起きたエラーを記載しておきます</p>
 
-<p>平たく言うと、Classクラスに似ているものです。</p>
+<p>(STIの予約語のこと忘れてたというオチｗ)</p>
 
-<p>じゃー違いは何なの？ってなります。</p>
+<h3>事象</h3>
+
+<hr />
+
+<p>ActiveRecordで「type」というカラムをもつテーブルに接続し、取得系のメソッドを呼ぶと以下の様なエラーが出た</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[1] pry(main)&gt; Hoge.find(1)
+</span><span class='line'>  Hoge Load (0.4ms)  SELECT `hoges`.* FROM `hoges` WHERE `hoges`.`id` = 1 LIMIT 1
+</span><span class='line'>ActiveRecord::SubclassNotFound: The single-table inheritance mechanism failed to locate the subclass: 'fuga'. This error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this column if you didn't intend it to be used for storing the inheritance class or overwrite Hoge.inheritance_column to use another column for that information.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーメッセージから分かるように「type」というカラムをrenameしろと出ています<br/>
+こんなの場合によっては出来無いわけで・・・</p>
+
+<h3>これは何？</h3>
+
+<hr />
+
+<p>STI（単一テーブル継承）と呼ばれる機能のことを指しています<br/>
+つまり、1つのテーブルを複数のModelで利用する仕組みのことを言います。</p>
+
+<p>で、その仕掛けように予約語として、&#8221;type&#8221;という名前をActiveRecordが利用しているようです。</p>
+
+<p>クラスで言うとこんなところでしょうか。<br/>
+Humanクラスを継承した、Manクラス、Womanクラスがあったとした場合、以下のような形になります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Human &lt; ActiveRecord::Base
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class Man &lt; Human
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class Woman &lt; Human
+</span><span class='line'>
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、例えばManオブジェクトをsaveすると、Humanテーブルにtype:Manとして保存されます。<br/>
+Womanならtype:Womanになるようです</p>
+
+<p>それぞれのモデルからデータへの操作を行った場合、適合するTypeのデータのみを操作対象となります<br/>
+ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場合は、Humanモデルから操作すればOKです</p>
+
+<p>当然ひとつのテーブルを使っていますので、片方にしか無い項目(カラム)もテーブルに含まなければならないです。<br/>
+例えばManとHumanの持つ項目があまりにも違う場合、カラム数が爆発的に増えます。<br/>
+(ここは注意するところですね)</p>
+
+<h3>対処</h3>
+
+<hr />
+
+<p>もうざっくりというと、以下の2つの対応ができます</p>
 
 <ol>
-<li>newしたとき、引数で指定したアクnセッサをもつクラスを生成する</li>
-<li>第一引数の文字列がクラス名となるが、指定がない場合は無名のクラスになる</li>
+<li>カラム名に「type」という名前をつけず、別名に変更する</li>
+<li>エラーメッセージにあるようにSTIのカラム名を変更する</li>
 </ol>
 
 
-<p>これだけ。</p>
+<p>というわけなので、自分は1の対応を行いました。</p>
+
+<p>では、2の場合はどうするかというと・・・
+エラーメッセージにありますが、以下ように設定すればよいようです</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new("Point", :x, :y)
-</span><span class='line'>item = Point.new(100,200)
-</span><span class='line'>p item =&gt; #&lt;struct Struct::Point x=100, y=200&gt;
-</span><span class='line'>p item.x =&gt; 100</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Hoge &lt; ActiveRecord::Base
+</span><span class='line'>  self.inheritance_column = :_type_disabled
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>無名クラスだと、こんな感じ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Point2 = Struct.new(:z)
-</span><span class='line'>Point2.class =&gt; Class
-</span><span class='line'>item2 = Point2.new(300)
-</span><span class='line'>p item2 =&gt; #&lt;struct Point2 z=300&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>ドキュメントに無い機能</h3>
+<h3>どういう場合に起きそう</h3>
 
 <hr />
 
-<p>ブロックを使うことができることです。<br/>
-ブロック内では、独自のメソッドを定義することができます。</p>
-
-<p>こんな感じです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new(:x, :y) do
-</span><span class='line'>  def sum
-</span><span class='line'>        x + y
-</span><span class='line'>  end
-</span><span class='line'>
-</span><span class='line'>  def minus
-</span><span class='line'>        x - y 
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>p Point.new(600, 700).sum =&gt; 1300
-</span><span class='line'>p Point.new(800,900).minus =&gt; -100</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他にも、superを使うことで、上位のコンストラクタを実行することができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
-</span><span class='line'>  def initialize(x, y)
-</span><span class='line'>    z = x + y
-</span><span class='line'>    super(z, y)
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>item = Point.new(400, 500)
-</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>使いどころ</h3>
-
-<hr />
-
-<p>正直、あんまり無いような気がしなくもないですが、自分だと以下で使います。</p>
+<p>ざっと思いつくのはこんなところかな</p>
 
 <ul>
-<li>csvファイルとか読み込むとき、ちょっとしたデータ構造を定義するとき</li>
-<li>ちょっとしたデータのソート</li>
-<li>ちょっとしたアルゴリズムの追加</li>
-<li>ハッシュの代わりとか(既にデータ構造が分かってる場合など)</li>
+<li>既存のアプリケーション(PHPなりJavaなり)をRailsにのせかえるとき</li>
+<li>設計上どうしても止むえずつけたいとき(これはビジネスドメインの場合が当てはまる)</li>
+<li>(あんまりないと思うが)STIの機能を使ってリファクタリングするとき</li>
 </ul>
 
-
-<p>データソートする場合の例</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
-</span><span class='line'>  def initialize(x, y)
-</span><span class='line'>    z = x + y
-</span><span class='line'>    super(z, y)
-</span><span class='line'>  end
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>item = Point.new(400, 500)
-</span><span class='line'>item2 = Point.new(200,300)
-</span><span class='line'>
-</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;
-</span><span class='line'>p item2 =&gt; #&lt;struct Point x=500, y=300&gt;
-</span><span class='line'>
-</span><span class='line'>array = []
-</span><span class='line'>array &lt;&lt; item
-</span><span class='line'>array &lt;&lt; item2
-</span><span class='line'>
-</span><span class='line'>p array =&gt; [#&lt;struct Point x=900, y=500&gt;, #&lt;struct Point x=500, y=300&gt;]
-</span><span class='line'>
-</span><span class='line'>result = array.sort{ |item1,item2|
-</span><span class='line'>                    item1.x &lt;=&gt; item2.x
-</span><span class='line'>               }
-</span><span class='line'>p result =&gt; [#&lt;struct Point x=500, y=300&gt;, #&lt;struct Point x=900, y=500&gt;]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>書き捨てみたいなRubyコードを書くときにはちょうどいいのかもしれないですね。</p>
 </div>
 
 
@@ -281,7 +232,7 @@
   
 
 
-<time datetime="2013-07-02T01:15:00+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+<time datetime="2015-06-27T11:38:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2015</time>
       
 
 <span class="categories">
@@ -295,7 +246,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/07/02/ruby-struct/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/07/02/ruby-struct/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -308,10 +259,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/06/27/dependency-injection/" title="Previous Post: Dependency Injectionについて">&laquo; Dependency Injectionについて</a>
+        <a class="basic-alignment left" href="/blog/2015/06/21/rails-migration-command/" title="Previous Post: Railsのモデル周りのマイグレーション">&laquo; Railsのモデル周りのマイグレーション</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/07/13/recover-dropbox-data/" title="Next Post: 削除してしまったDropboxのデータを復元する">削除してしまったDropboxのデータを復元する &raquo;</a>
       
     </p>
   </footer>

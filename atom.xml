@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-06-21T14:56:48+09:00</updated>
+  <updated>2015-06-28T22:11:58+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,123 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RailsでSTI（単一テーブル継承）の予約語でハマった話対処]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti/"/>
+    <updated>2015-06-27T11:38:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>ここ数日、自分用のアプリを作っているわけなのですが<br/>
+その時に起きたエラーを記載しておきます</p>
+
+<p>(STIの予約語のこと忘れてたというオチｗ)</p>
+
+<h3>事象</h3>
+
+<hr />
+
+<p>ActiveRecordで「type」というカラムをもつテーブルに接続し、取得系のメソッドを呼ぶと以下の様なエラーが出た</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[1] pry(main)&gt; Hoge.find(1)
+</span><span class='line'>  Hoge Load (0.4ms)  SELECT `hoges`.* FROM `hoges` WHERE `hoges`.`id` = 1 LIMIT 1
+</span><span class='line'>ActiveRecord::SubclassNotFound: The single-table inheritance mechanism failed to locate the subclass: 'fuga'. This error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this column if you didn't intend it to be used for storing the inheritance class or overwrite Hoge.inheritance_column to use another column for that information.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>エラーメッセージから分かるように「type」というカラムをrenameしろと出ています<br/>
+こんなの場合によっては出来無いわけで・・・</p>
+
+<h3>これは何？</h3>
+
+<hr />
+
+<p>STI（単一テーブル継承）と呼ばれる機能のことを指しています<br/>
+つまり、1つのテーブルを複数のModelで利用する仕組みのことを言います。</p>
+
+<p>で、その仕掛けように予約語として、&#8221;type&#8221;という名前をActiveRecordが利用しているようです。</p>
+
+<p>クラスで言うとこんなところでしょうか。<br/>
+Humanクラスを継承した、Manクラス、Womanクラスがあったとした場合、以下のような形になります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Human &lt; ActiveRecord::Base
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class Man &lt; Human
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>class Woman &lt; Human
+</span><span class='line'>
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>で、例えばManオブジェクトをsaveすると、Humanテーブルにtype:Manとして保存されます。<br/>
+Womanならtype:Womanになるようです</p>
+
+<p>それぞれのモデルからデータへの操作を行った場合、適合するTypeのデータのみを操作対象となります<br/>
+ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場合は、Humanモデルから操作すればOKです</p>
+
+<p>当然ひとつのテーブルを使っていますので、片方にしか無い項目(カラム)もテーブルに含まなければならないです。<br/>
+例えばManとHumanの持つ項目があまりにも違う場合、カラム数が爆発的に増えます。<br/>
+(ここは注意するところですね)</p>
+
+<h3>対処</h3>
+
+<hr />
+
+<p>もうざっくりというと、以下の2つの対応ができます</p>
+
+<ol>
+<li>カラム名に「type」という名前をつけず、別名に変更する</li>
+<li>エラーメッセージにあるようにSTIのカラム名を変更する</li>
+</ol>
+
+
+<p>というわけなので、自分は1の対応を行いました。</p>
+
+<p>では、2の場合はどうするかというと・・・
+エラーメッセージにありますが、以下ように設定すればよいようです</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Hoge &lt; ActiveRecord::Base
+</span><span class='line'>  self.inheritance_column = :_type_disabled
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>どういう場合に起きそう</h3>
+
+<hr />
+
+<p>ざっと思いつくのはこんなところかな</p>
+
+<ul>
+<li>既存のアプリケーション(PHPなりJavaなり)をRailsにのせかえるとき</li>
+<li>設計上どうしても止むえずつけたいとき(これはビジネスドメインの場合が当てはまる)</li>
+<li>(あんまりないと思うが)STIの機能を使ってリファクタリングするとき</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Railsのモデル周りのマイグレーション]]></title>
@@ -2339,67 +2456,6 @@ Herokuではこのタスクが必要なようです。</p>
 その中で、上記の処理を使えば対応可能です。</p>
 
 <p>まぁ、根本解決ではないなと思いますが・・・</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[MacにSolrをインストールして動かしてみる]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac/"/>
-    <updated>2014-03-01T20:18:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/03/01/install-solr-for-mac</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>Solrといえば、全文検索システムですね。</p>
-
-<p>で、これをMacにインストールしてみようということやってみます。</p>
-
-<p>とはいえ、普通にtarballダウンロードして解凍→java -jarだと面白くないですね。</p>
-
-<p>折角、Homebrewを使ってるのでパッケージ管理の上で実施してみます。</p>
-
-<h3>インストール</h3>
-
-<hr />
-
-<p>Homebrew使いであれば、お馴染みのコマンドでスンナリインストールされます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install solr</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Solrの起動</h3>
-
-<hr />
-
-<p>ぶっちゃけ、こいつが若干の癖ものだったりします。</p>
-
-<p># 記事書くキッカケw</p>
-
-<h5>一言で言うと、solrの設定(solr.xml)があるパスをフルパスで渡して上げる</h5>
-
-<p>実はこれだけです、インストールしたSolrはサンプルが同梱してあるので起動してみます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-DIH/solr/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>スキーマレスのサンプルなら</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/example-schemaless/solr/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>マルチコアのサンプルなら</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$solr /usr/local/Cellar/solr/4.7.0/libexec/example/multicore/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>正しく動いていれば、「http://localhost:8983/solr/」で管理画面にアクセスできます</p>
-
-<p>自分でスキーマや設定を作成したい場合、このあたりの設定をコピー&amp;修正して同様の手順で実行してやれば良さそうですね</p>
 ]]></content>
   </entry>
   

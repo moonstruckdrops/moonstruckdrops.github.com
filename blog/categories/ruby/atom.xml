@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-06-21T14:58:00+09:00</updated>
+  <updated>2015-06-28T22:12:14+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,109 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RailsでSTI（単一テーブル継承）の予約語でハマった話対処]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti/"/>
+    <updated>2015-06-27T11:38:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>ここ数日、自分用のアプリを作っているわけなのですが<br/>
+その時に起きたエラーを記載しておきます</p>
+
+<p>(STIの予約語のこと忘れてたというオチｗ)</p>
+
+<h3>事象</h3>
+
+<hr />
+
+<p>ActiveRecordで「type」というカラムをもつテーブルに接続し、取得系のメソッドを呼ぶと以下の様なエラーが出た</p>
+
+<p><code>
+[1] pry(main)&gt; Hoge.find(1)
+  Hoge Load (0.4ms)  SELECT `hoges`.* FROM `hoges` WHERE `hoges`.`id` = 1 LIMIT 1
+ActiveRecord::SubclassNotFound: The single-table inheritance mechanism failed to locate the subclass: 'fuga'. This error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this column if you didn't intend it to be used for storing the inheritance class or overwrite Hoge.inheritance_column to use another column for that information.
+</code></p>
+
+<p>エラーメッセージから分かるように「type」というカラムをrenameしろと出ています<br/>
+こんなの場合によっては出来無いわけで・・・</p>
+
+<h3>これは何？</h3>
+
+<hr />
+
+<p>STI（単一テーブル継承）と呼ばれる機能のことを指しています<br/>
+つまり、1つのテーブルを複数のModelで利用する仕組みのことを言います。</p>
+
+<p>で、その仕掛けように予約語として、"type"という名前をActiveRecordが利用しているようです。</p>
+
+<p>クラスで言うとこんなところでしょうか。<br/>
+Humanクラスを継承した、Manクラス、Womanクラスがあったとした場合、以下のような形になります</p>
+
+<p>```
+class Human &lt; ActiveRecord::Base</p>
+
+<p>end</p>
+
+<p>class Man &lt; Human</p>
+
+<p>end</p>
+
+<p>class Woman &lt; Human</p>
+
+<p>end
+```</p>
+
+<p>で、例えばManオブジェクトをsaveすると、Humanテーブルにtype:Manとして保存されます。<br/>
+Womanならtype:Womanになるようです</p>
+
+<p>それぞれのモデルからデータへの操作を行った場合、適合するTypeのデータのみを操作対象となります<br/>
+ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場合は、Humanモデルから操作すればOKです</p>
+
+<p>当然ひとつのテーブルを使っていますので、片方にしか無い項目(カラム)もテーブルに含まなければならないです。<br/>
+例えばManとHumanの持つ項目があまりにも違う場合、カラム数が爆発的に増えます。<br/>
+(ここは注意するところですね)</p>
+
+<h3>対処</h3>
+
+<hr />
+
+<p>もうざっくりというと、以下の2つの対応ができます</p>
+
+<ol>
+<li>カラム名に「type」という名前をつけず、別名に変更する</li>
+<li>エラーメッセージにあるようにSTIのカラム名を変更する</li>
+</ol>
+
+
+<p>というわけなので、自分は1の対応を行いました。</p>
+
+<p>では、2の場合はどうするかというと・・・
+エラーメッセージにありますが、以下ように設定すればよいようです</p>
+
+<p><code>
+class Hoge &lt; ActiveRecord::Base
+  self.inheritance_column = :_type_disabled
+end
+</code></p>
+
+<h3>どういう場合に起きそう</h3>
+
+<hr />
+
+<p>ざっと思いつくのはこんなところかな</p>
+
+<ul>
+<li>既存のアプリケーション(PHPなりJavaなり)をRailsにのせかえるとき</li>
+<li>設計上どうしても止むえずつけたいとき(これはビジネスドメインの場合が当てはまる)</li>
+<li>(あんまりないと思うが)STIの機能を使ってリファクタリングするとき</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Railsのモデル周りのマイグレーション]]></title>
@@ -677,123 +780,6 @@ Settings[:hoge][:fuga]
 その中で、上記の処理を使えば対応可能です。</p>
 
 <p>まぁ、根本解決ではないなと思いますが・・・</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails(ActiveRecord)でBULK INSERTする方法]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/11/25/ar-bulk-insert/"/>
-    <updated>2013-11-25T00:12:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/11/25/ar-bulk-insert</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>RailsでRake Taskなんか作ったときは、バッチ処理するようなことを書くと思います。<br/>
-多分ですが・・・</p>
-
-<p>この前、バルクインサートをすることがあったのでやり方を残しておきます。</p>
-
-<p>因みに、普通にrubyスクリプトの中でも使うこともできると思います(これも多分w)</p>
-
-<h3>やり方</h3>
-
-<hr />
-
-<p><a href="https://github.com/zdennis/activerecord-import/wiki">activerecord-import</a>というGemを使用します。</p>
-
-<p>Gemfileに以下を追加すれば、Rake Taskで使用することができます。<br/>
-ぶっちゃけRake Taskだけではなく、普通に使うこともできますが・・・</p>
-
-<p><code>
-gem 'activerecord-import'
-</code></p>
-
-<p>利用できるデータベースは以下のものです。</p>
-
-<ul>
-<li>mysql(アダプターはmysql, mysql2の両方で使用可能)</li>
-<li>postgresql</li>
-<li>sqlite3</li>
-</ul>
-
-
-<h3>前提</h3>
-
-<hr />
-
-<p>かなり簡単です。</p>
-
-<p>以下のようなモデルを用意したとします。</p>
-
-<ul>
-<li>モデル名:Hoge</li>
-<li>カラム(主キー): id</li>
-<li>カラム(名前): name</li>
-<li>カラム(テキスト): text</li>
-</ul>
-
-
-<p>このモデルを10個まとめてバルクインサートしたいとします。</p>
-
-<h3>やり方</h3>
-
-<hr />
-
-<p>かなり簡単です。。。</p>
-
-<ol>
-<li>バルクインサートしたい数だけモデルオブジェクトを格納したリストを用意する</li>
-<li>該当のモデルのimportメソッドに1で作成したリストを渡す</li>
-</ol>
-
-
-<p>コードに起こすとこんな感じです。。。</p>
-
-<p>```
-hoge_list = []
-10.times do |i|
-  hoge_list &lt;&lt; Hoge.new(id: i, name: "hoge #{i}", text: "fugafuga")
-end</p>
-
-<p>Hoge.import hoge_list
-```</p>
-
-<p>実行するとこんな感じのSQLが一気に発行されます。。。</p>
-
-<p><code>
-INSERT INTO `hoge` (`id`,`name`,`text`,`created_at`,`updated_at`) VALUES (1,'hoge 1','fugafuga','2013-11-25 00:30:30','2013-11-25 00:30:30') ON DUPLICATE KEY UPDATE `messages`.`updated_at`=VALUES(`updated_at`)
-INSERT INTO `hoge` (`id`,`name`,`text`,`created_at`,`updated_at`) VALUES (2,'hoge 2','fugafuga','2013-11-25 00:30:30','2013-11-25 00:30:30') ON DUPLICATE KEY UPDATE `messages`.`updated_at`=VALUES(`updated_at`)
-</code></p>
-
-<p>因みに、以下のようなオプションがあります。
-利用する場合、importメソッドの引数にハッシュで指定するだけです。</p>
-
-<ul>
-<li>「:on_duplicate_key_update」: ユニークキーが重複したカラムを更新したい場合に設定</li>
-<li>「:timestamps」: falseを設定すると、自分でcreated_at,created_on,update_at,update_onを設定</li>
-<li>「:validate」: falseを設定すると、モデル検証をスキップする(デフォルトはtrue)</li>
-</ul>
-
-
-<p>こんな感じで設定します。。。</p>
-
-<p><code>
-columns = [:id, :name, :text]
-Hoge.import hoge_list, :on_duplicate_key_update =&gt; columns, :timestamps =&gt; false, :validate =&gt; false
-</code></p>
-
-<h3>使用感</h3>
-
-<hr />
-
-<p>結構、問題ない感じで使えました。。。</p>
-
-<p>自分が使用した感じだと10万件の更新に1分程度かかったので、<br/>
-データが増えていくようなモデル(テーブル)に対して、多用するのは危険かなと思いました。</p>
-
-<p>コードベースで、バルクインサートやバルクアップデートができるところがいいですね。<br/>
-データをまとめて引っ張って→データ処理→まとめて更新なんかの使い方では便利かもｗ</p>
 ]]></content>
   </entry>
   
