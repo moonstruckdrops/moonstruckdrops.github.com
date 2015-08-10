@@ -9,9 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="いつも忘れるのでいい加減にメモを残しておきます。 インストール環境 以下がインストールされているマシンであること XQuartz
-Homebrew XCodeが古かったりするとインストールできない可能性があります。
-少なくともwarningは出ます。 インストール方法 &hellip;">
+  <meta name="description" content="このまえ、友人とデザインパターンの話をしてたような気がするので書いてみた。 SingletonはGOFのデザインパターンの一つです。
+使い所は、システム内で絶対に一つにしておかないといけないもの仕組みのものに使います。
+例えば、アプリの設定とか見た目(Look&amp;Feel) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,315 @@ Homebrew XCodeが古かったりするとインストールできない可能性
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/25/ruby-singleton/">RubyでSingletonパターンを実装する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-25T18:33:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>このまえ、友人とデザインパターンの話をしてたような気がするので書いてみた。</p>
+
+<p>SingletonはGOFのデザインパターンの一つです。<br/>
+使い所は、システム内で絶対に一つにしておかないといけないもの仕組みのものに使います。<br/>
+例えば、アプリの設定とか見た目(Look&amp;Feel)とかシステムの何かを管理するだとかに使ったりします。</p>
+
+<p>Singletonは以下の条件を満たす必要があります。</p>
+
+<ul>
+<li>作成したクラスのインスタンスは一つだけであることが保証されている</li>
+<li>コード上のどこからでも、生成した1つだけのインスタンスにアクセスできる</li>
+</ul>
+
+
+<p>Javaで上の条件を満たすものはこんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>final class Singleton {
+</span><span class='line'>    private static Singleton instance;
+</span><span class='line'>    private Singleton(){};
+</span><span class='line'>
+</span><span class='line'>    public static synchronized Singleton getInstance(){
+</span><span class='line'>        if(instance == null){
+</span><span class='line'>            instance = new Singleton();
+</span><span class='line'>        }
+</span><span class='line'>        return instance;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これと同じ実装をRubyでやるとこんな感じになります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Singleton
+</span><span class='line'>  @@singleton_obj = nil
+</span><span class='line'>  @@count = 0
+</span><span class='line'>
+</span><span class='line'>  # 以下の行をコメントアウトすると
+</span><span class='line'>  # オブジェクトが再生成されるので
+</span><span class='line'>  # シングルトンにならない
+</span><span class='line'>  private_class_method:new
+</span><span class='line'>
+</span><span class='line'>  def initialize
+</span><span class='line'>    @@count = 1
+</span><span class='line'>  end
+</span><span class='line'>  
+</span><span class='line'>  def self.get_instance
+</span><span class='line'>    if @@singleton_obj == nil
+</span><span class='line'>      @@singleton_obj = new
+</span><span class='line'>    end
+</span><span class='line'>    @@singleton_obj
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def self.count_up
+</span><span class='line'>    @@count+=1
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def self.print_count
+</span><span class='line'>    p @@count
+</span><span class='line'>  end
+</span><span class='line'>  
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p '初回インスタンス取得'
+</span><span class='line'>p Singleton.get_instance
+</span><span class='line'>Singleton.print_count
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p '２回目のインスタンス取得でオブジェクトに変更がない'
+</span><span class='line'>p Singleton.get_instance
+</span><span class='line'>Singleton.count_up
+</span><span class='line'>Singleton.print_count
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p 'newするとエラーが飛ぶ'
+</span><span class='line'>begin
+</span><span class='line'>  Singleton.new
+</span><span class='line'>rescue
+</span><span class='line'>  p 'newでエラーが飛んだ'
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>結構長いですねw</p>
+
+<p>上記のコードの実行結果は、以下になります。<br/>
+オブジェクトに変化が無いことがわかりますね。<br/>
+つまり、オブジェクトが１つであることが、保証されています。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>"-----------------------"
+</span><span class='line'>"初回インスタンス取得"
+</span><span class='line'>#&lt;Singleton:0x007f91519026f0&gt;
+</span><span class='line'>1
+</span><span class='line'>"-----------------------"
+</span><span class='line'>"２回目のインスタンス取得でオブジェクトに変更がない"
+</span><span class='line'>#&lt;Singleton:0x007f91519026f0&gt;
+</span><span class='line'>2
+</span><span class='line'>"-----------------------"
+</span><span class='line'>"newするとエラーが飛ぶ"
+</span><span class='line'>"newでエラーが飛んだ"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>自力でSingletonを実装すると上記のようなコードなのですが、<br/>
+実は、Rubyにはsingletonをやってくれる便利なモジュールがあります。<br/>
+これを使うと、Mix-inしたクラスのインスタンスは常に同じものを返してくれます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require 'singleton'
+</span><span class='line'>
+</span><span class='line'>class MySingleton
+</span><span class='line'>
+</span><span class='line'>  include Singleton
+</span><span class='line'>
+</span><span class='line'>  @@count = 0
+</span><span class='line'>
+</span><span class='line'>  def initialize
+</span><span class='line'>    @@count = 1
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def self.count_up
+</span><span class='line'>    @@count+=1
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def self.print_count
+</span><span class='line'>    p @@count
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p '初回インスタンス取得'
+</span><span class='line'>p MySingleton.instance
+</span><span class='line'>MySingleton.print_count
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p '２回目のインスタンス取得でオブジェクトに変更がない'
+</span><span class='line'>p MySingleton.instance
+</span><span class='line'>MySingleton.count_up
+</span><span class='line'>MySingleton.print_count
+</span><span class='line'>p '-----------------------'
+</span><span class='line'>p 'newするとエラーが飛ぶ'
+</span><span class='line'>begin
+</span><span class='line'>  MySingleton.new
+</span><span class='line'>rescue
+</span><span class='line'>  p 'newでエラーが飛んだ'
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行結果は、こんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>"-----------------------"
+</span><span class='line'>"初回インスタンス取得"
+</span><span class='line'>#&lt;MySingleton:0x007fd2fa8c9658&gt;
+</span><span class='line'>1
+</span><span class='line'>"-----------------------"
+</span><span class='line'>"２回目のインスタンス取得でオブジェクトに変更がない"
+</span><span class='line'>#&lt;MySingleton:0x007fd2fa8c9658&gt;
+</span><span class='line'>2
+</span><span class='line'>"-----------------------"
+</span><span class='line'>"newするとエラーが飛ぶ"
+</span><span class='line'>"newでエラーが飛んだ"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>モジュールを使うと、スッキリとしたコードになりますね。<br/>
+当たり前ですが、newしようとするとエラーになります。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1498,78 +1807,6 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/07/vi-on-emacs/">Vi(Vim) on Emacsを思いつきでやってみた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-07T11:57:00+09:00" pubdate data-updated="true">Jun 7<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ただのネタカテゴリですwww</p>
-
-<p>昨夜、盛大に悪酔いしましてその時思いつきました。</p>
-
-<p>手順とか見れば、誰でも思いつくでしょう。</p>
-
-<p>という訳で以下に起動手順と感想を書いてみました。</p>
-
-<h3>Vi(Vim) on Emacsの手順</h3>
-
-<hr />
-
-<ol>
-<li>ターミナルを起動します。</li>
-<li>おもむろにemacsとタイプしてEnterを押します。</li>
-<li>M-x shellを実行し、shellモードを起動します。</li>
-<li>shellモードで入力受付状態になりますので、おもむろに「vi」もしくは「vim」とタイプしてEnterを押します。</li>
-</ol>
-
-
-<p>あら不思議、Emacs上でVi(もしくはVim)が起動しましたよっと。</p>
-
-<h3>Vi(Vim) on Emacs使った感想</h3>
-
-<hr />
-
-<p>やめておけの一言!!
-ざっと、使用してみた感覚だとこんな感じ。</p>
-
-<ul>
-<li>Escを押したのか押してないのか判断がつけられない</li>
-<li>モード切り替えの挙動が怪しい</li>
-<li>環境かもしれないけど、Macだとスクリーン表示がおかしい</li>
-</ul>
-
-
-<p>ネタとしてはありですが、実用にはとても耐えられるものではないのでやめましょう。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -1591,6 +1828,10 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/08/10/devise-email/">deviseでemailを空白でもよいようにする</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/06/27/rails-sti/">RailsでSTI（単一テーブル継承）の予約語でハマった話対処</a>
       </li>
     
@@ -1606,15 +1847,11 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
         <a href="/blog/2015/03/17/android-build-config/">BuildConfigを使用して、環境ごとに値を取得仕分けてみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/03/17/jersey-on-heroku/">Heroku上でJersey + Jetty + Gradleを動かす</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 134.28571428571428%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.57142857142857%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.28571428571429%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.28571428571429%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 121.42857142857143%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.28571428571429%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 117.14285714285714%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.28571428571429%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.28571428571429%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.28571428571429%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.28571428571429%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 130.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.28571428571429%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 138.57142857142856%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 125.71428571428572%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 125.71428571428572%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.28571428571429%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(14)</a> <a href='/blog/categories/shellscript' style='font-size: 104.28571428571429%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.28571428571429%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 134.28571428571428%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 116.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 128.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 136.0%'>Linux(9)</a> <a href='/blog/categories/mac' style='font-size: 124.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 124.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(15)</a> <a href='/blog/categories/shellscript' style='font-size: 104.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 132.0%'>戯言(8)</a> </span>
 </section
 
 

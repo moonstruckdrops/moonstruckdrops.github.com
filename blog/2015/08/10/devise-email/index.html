@@ -5,13 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Octpress始めました - kurobaraのブログ</title>
+  <title>deviseでemailを空白でもよいようにする - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="旧ブログから移行しますよっと。 正直なところ、旧ブログは記事を書くのが大変でした。
-マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。
-旧ブログの記事はおいおい引っ越すことにします。 という訳で、Octpressの使い方メモを書いておきます。( &hellip;">
+  <meta name="description" content="やりたいこと 以下の２つを実現したい ユーザー登録した場合はemailの入力は不要
+ユーザー情報編集時、emailが空文字でも、uniqueバリデーションに引っかからないよう
+ただし、uniqueは別なもので担保 対応方法 indexの削除
+別のものでuniqueを担保 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/08/10/devise-email/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,7 +77,7 @@
   
   <header>
     
-      <h1 class="entry-title">Octpress始めました</h1>
+      <h1 class="entry-title">Deviseでemailを空白でもよいようにする</h1>
     
     
       <p class="meta">
@@ -92,137 +93,123 @@
   
 
 
-<time datetime="2013-03-21T23:36:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+<time datetime="2015-08-10T10:22:00+09:00" pubdate data-updated="true">Aug 10<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://moonstruckdrops.blogspot.jp/">旧ブログ</a>から移行しますよっと。</p>
-
-<p>正直なところ、旧ブログは記事を書くのが大変でした。<br/>
-マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。<br/>
-旧ブログの記事はおいおい引っ越すことにします。</p>
-
-<p>という訳で、Octpressの使い方メモを書いておきます。(主に自分用ですがw)</p>
-
-<h4>インストール</h4>
+<div class="entry-content"><h3>やりたいこと</h3>
 
 <hr />
 
-<p><a href="http://octopress.org/docs/setup/">公式サイト</a>を見ながら実行します。<br/>
-特に難しいことはないです。<br/>
-強いて挙げるとすると、rubyのバージョンを1.9.3にしておくことでしょうか。<br/>
-が、それもrbenv使用していれば問題無いでしょう。</p>
+<p>以下の２つを実現したい</p>
 
-<h4>テーマの変更</h4>
+<ul>
+<li>ユーザー登録した場合はemailの入力は不要</li>
+<li>ユーザー情報編集時、emailが空文字でも、uniqueバリデーションに引っかからないよう</li>
+<li>ただし、uniqueは別なもので担保</li>
+</ul>
+
+
+<h3>対応方法</h3>
 
 <hr />
-
-<p>これは、結構めんどかったような記憶がしています。<br/>
-といってもコマンド打つだけですがw</p>
 
 <ol>
-<li><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">ここから</a>テーマの選択を行います。自分は、justin-kellyを選択しました。</li>
-<li>以下のコマンドを実行します。</li>
+<li>indexの削除</li>
+<li>別のものでuniqueを担保</li>
+<li>email判定のロジック箇所をオーバライド</li>
 </ol>
 
+
+<h3>indexの削除</h3>
+
+<hr />
+
+<p>以下のコマンドでマイグレーション用ファイルを作成する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g migration remove_index_email_from_users</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下のように実装し、migrationを実行する</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone git@github.com:wallace/justin-kelly-theme.git .themes/justin-kelly
-</span><span class='line'>$ rake install['justin-kelly']
-</span><span class='line'>$ rake generate</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class RemoveIndexEmailFromUsers &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>    remove_index :users, column: :email, unique: true
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>あ、ちなみにテーマ変更したら何か初期化されてしまって面倒なことになった覚えがあるので気を付けましょう。</p>
-
-<h4>ブログの設定変更</h4>
-
-<hr />
-
-<p>_config.ymlで行います。<br/>
-<a href="http://octopress.org/docs/configuring/">公式</a>に設定方法が書いてありますので、問題は無いでしょう。(多分)</p>
-
-<h4>記事の作成</h4>
+<h3>別のものでuniqueを担保</h3>
 
 <hr />
 
-<p>投稿用のテンプレートを作成します。<br/>
-指定する文字列はURLに使われるので、英数だけで指定します。</p>
+<p>こちらは普通にunique制約と<code>validates_uniqueness_of</code>を付与するのみ</p>
+
+<p>とりあえずunique制約のみ</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake new_post['post title']</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g migration add_index_item_from_users</span></code></pre></td></tr></table></div></figure>
 
 
-<p>コマンドを実行すると、以下のような感じでテンプレートができます。</p>
-
-<ul>
-<li>source/_posts/yyyy-MM-dd-post-title.markdown</li>
-</ul>
-
-
-<p>テンプレートができるので、好きなエディタで編集します。<br/>
-おすすめのエディタは、以下のものです。</p>
-
-<ul>
-<li>Mou(リアルタイムでプレビューできます)</li>
-<li>Emacs+markdown-mode(コマンドを実行すればプレビューできます)</li>
-</ul>
-
-
-<p>※Emacsのmarkdown-modeはそのうち記事を書くつもりです。</p>
-
-<h4>記事の生成</h4>
-
-<hr />
-
-<p>以下のコマンドを実行して、htmlファイルを生成します。</p>
+<p>以下のような形でunique制約をつける</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake generate</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class AddIndexItemFromUsers &lt; ActiveRecord::Migration
+</span><span class='line'>  def change
+</span><span class='line'>    add_index :users, :item, unique: true
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>記事のプレビュー</h4>
-
-<p>以下のコマンドを実行して<a href="http;//localhost:4000">localhost:4000</a>にアクセスします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake preview</span></code></pre></td></tr></table></div></figure>
-
-
-<p>エディタのプレビューで書きながら確認しつつ、記事投稿前の最終確認で使用するとよいと思います。<br/>
-プレビュー状態だと、投稿してないですからね。</p>
-
-<h4>記事を投稿</h4>
-
-<hr />
-
-<p>以下のコマンドを実行して投稿(デプロイ)します。</p>
+<p>こんな感じにしておく</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake deploy</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class User &lt; ActiveRecord::Base
+</span><span class='line'>  validates_uniqueness_of :item
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>投稿の削除</h4>
-
-<hr />
-
-<p>削除したい「source/_posts/yyyy-MM-dd-post-title.markdown」を削除します。<br/>
-削除後、記事の生成を行なってから再度deployを実施します。<br/>
-これで、表示するブログからは消えます。。。<br/>
-ですが、githubにdeployしているのでgithub上では残ってしまいます。<br/>
-なので、完全に削除したい場合は、デプロイしたコミットログも削除しましょう。<br/>
-(そこまでひどいものを書くほうが問題だと思いますが)</p>
-
-<h4>まとめ</h4>
+<h3>email判定のロジック箇所をオーバライド</h3>
 
 <hr />
 
-<p>意外と簡単に導入できるので、おすすめです。<br/>
-マークダウン記法が使えて楽に書けるところもいいですね。(bloggerが書きにくすぎるのが問題だと思うのですけど)</p>
+<p>emailカラムには<a href="https://github.com/plataformatec/devise/blob/c179cef365f7188c91cbbc3db924a9f1f9563c3c/lib/devise/models/validatable.rb#L29">バリデーションが設定されている</a>ので、<br/>
+これをオーバライドすることでバリデーション周りの挙動を変更できる</p>
+
+<p><a href="https://github.com/plataformatec/devise/blob/c179cef365f7188c91cbbc3db924a9f1f9563c3c/lib/devise/models/validatable.rb#L58">判定箇所を追いかける</a>と、デフォルトで有効になっているのでここをfalseに変更する</p>
+
+<p>こんな感じにしておく</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class User &lt; ActiveRecord::Base
+</span><span class='line'>  def email_required?
+</span><span class='line'>    false
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>勿論、状況によって<code>email_required?</code>が必要なこともあるのでここは要仕様検討というところでしょうか。</p>
+
+<p>当たり前ですが、デカイライブラリなので、ちょっとしたことをやるだけでも結構ややこし目の実装だったりソースを読むことが必須になりますね。</p>
 </div>
 
 
@@ -245,12 +232,12 @@
   
 
 
-<time datetime="2013-03-21T23:36:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+<time datetime="2015-08-10T10:22:00+09:00" pubdate data-updated="true">Aug 10<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/markdown/'>markdown</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -259,7 +246,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/08/10/devise-email/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/08/10/devise-email/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -272,10 +259,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/17/octopress-sidebar/" title="Previous Post: octopressのサイドバーにタグクラウドを表示する">&laquo; octopressのサイドバーにタグクラウドを表示する</a>
+        <a class="basic-alignment left" href="/blog/2015/06/27/rails-sti/" title="Previous Post: RailsでSTI（単一テーブル継承）の予約語でハマった話対処">&laquo; RailsでSTI（単一テーブル継承）の予約語でハマった話対処</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/24/markdown-mode/" title="Next Post: Emacsでmarkdown-modeを使用する">Emacsでmarkdown-modeを使用する &raquo;</a>
       
     </p>
   </footer>
