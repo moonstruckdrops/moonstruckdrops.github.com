@@ -5,15 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Linuxのログイン履歴確認 - kurobaraのブログ</title>
+  <title>unixtimestampをDatetimeに変更する - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 毎度なんだっけ？ってなって思い出すのが面倒なので、備忘録的にログイン履歴確認方法を記録 最近ログインしたアカウント一覧 以下のコマンドで確認できる 1
-$last 実行結果(上に行くほど最新) 1
-2
-3
-root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
+  <meta name="description" content="はじめに とあるログファイルを解析する必要があったわけなのですが
+以下の状況のようなファイルでした 中途半端にDateTimeが出力されている
+但し、unixtimpstampであれば確実に出力されている なので、正確に発生日時を調べる必要が出てきました 変換コマンド Linuxの場合であれば、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +20,7 @@ root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/02/18/linux-login-check/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/10/04/unixtime-to-datetime/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -78,7 +76,7 @@ root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Linuxのログイン履歴確認</h1>
+      <h1 class="entry-title">unixtimestampをDatetimeに変更する</h1>
     
     
       <p class="meta">
@@ -94,7 +92,7 @@ root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
   
 
 
-<time datetime="2015-02-18T01:20:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2015</time>
+<time datetime="2015-10-04T12:54:00+09:00" pubdate data-updated="true">Oct 4<span>th</span>, 2015</time>
         
       </p>
     
@@ -105,81 +103,39 @@ root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
 
 <hr />
 
-<p>毎度なんだっけ？ってなって思い出すのが面倒なので、備忘録的にログイン履歴確認方法を記録</p>
+<p>とあるログファイルを解析する必要があったわけなのですが<br/>
+以下の状況のようなファイルでした</p>
 
-<h3>最近ログインしたアカウント一覧</h3>
-
-<hr />
-
-<p>以下のコマンドで確認できる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$last</span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>中途半端にDateTimeが出力されている</li>
+<li>但し、unixtimpstampであれば確実に出力されている</li>
+</ul>
 
 
-<p>実行結果(上に行くほど最新)</p>
+<p>なので、正確に発生日時を調べる必要が出てきました</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root     tty1                          Tue May  6 18:59 - crash  (00:16)
-</span><span class='line'>root     tty1                          Tue May  6 18:58 - 18:59  (00:00)
-</span><span class='line'>reboot   system boot  2.6.32-431.11.2. Tue May  6 17:16 - 21:21  (04:04)</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>ログファイルから確認する</h3>
+<h3>変換コマンド</h3>
 
 <hr />
 
-<p>もう少し細かく見る場合はログファイルを確認する<br/>
-バイナリなので中を見たいときはwhoコマンドを使用する</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$who /var/log/wtmp</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果(ログファイルなので、ファイル末尾が新しい)</p>
+<p>Linuxの場合であれば、以下を実行するだけなのでそんなに難しくない</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root     tty1         2014-05-06 18:58
-</span><span class='line'>root     tty1         2014-05-06 18:59
-</span><span class='line'>root     tty1         2014-05-06 19:19</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ date --date '@1443883848'
+</span><span class='line'>2015年 10月  3日 土曜日 23:50:48 JST</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>各アカウントの最終ログインの一覧</h3>
-
-<hr />
-
-<p>普段利用していないアカウントでログインされていないか確認できる<br/>
-以下のコマンドで確認できる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$lastlog</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果(各アカウントの最終ログインが表示)</p>
+<p>Macの場合であれば、Homebrewで<code>coreutils</code>をインストールしてあれば以下を実行するだけ
+(以下のような形でフォーマットの設定が必要ですが・・・)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ユーザ名         ポート   場所             最近のログイン
-</span><span class='line'>root             tty1                      **一度もログインしていません**
-</span><span class='line'>bin                                        **一度もログインしていません**
-</span><span class='line'>daemon                                     **一度もログインしていません**
-</span><span class='line'>adm                                        **一度もログインしていません**
-</span><span class='line'>lp                                         **一度もログインしていません**
-</span><span class='line'>sync                                       **一度もログインしていません**
-</span><span class='line'>shutdown                                   **一度もログインしていません**</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ gdate --date '@1443883848' +'%Y/%m/%d %H:%M'
+</span><span class='line'>2015/10/03 23:50</span></code></pre></td></tr></table></div></figure>
 
 
-
+<p>ログ解析用のバッチにこのコマンドを仕掛ければ簡単に使えそうですね</p>
 </div>
 
 
@@ -202,7 +158,7 @@ root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
   
 
 
-<time datetime="2015-02-18T01:20:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2015</time>
+<time datetime="2015-10-04T12:54:00+09:00" pubdate data-updated="true">Oct 4<span>th</span>, 2015</time>
       
 
 <span class="categories">
@@ -216,7 +172,7 @@ root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/02/18/linux-login-check/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/02/18/linux-login-check/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/10/04/unixtime-to-datetime/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/10/04/unixtime-to-datetime/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -229,10 +185,8 @@ root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2015/01/28/octopress-picture/" title="Previous Post: Octopressでの画像の表示">&laquo; Octopressでの画像の表示</a>
+        <a class="basic-alignment left" href="/blog/2015/08/10/devise-email/" title="Previous Post: deviseでemailを空白でもよいようにする">&laquo; deviseでemailを空白でもよいようにする</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/02/18/api-life-cycle/" title="Next Post: APIを作る際のAPIバージョンに関するメモ">APIを作る際のAPIバージョンに関するメモ &raquo;</a>
       
     </p>
   </footer>
