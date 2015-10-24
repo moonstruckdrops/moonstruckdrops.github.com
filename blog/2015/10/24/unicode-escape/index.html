@@ -5,19 +5,22 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Rubyで画像ファイルをダウンロードする - kurobaraのブログ</title>
+  <title>Pythonで文字変換 - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="少しばかり、やることがあったのでやってみた。
-煩悩丸出しですいませんw HTTP Responseのbodyを利用する 直感的ではないけど、素直なやりかた 書き込みモードでファイルを開く
-urlで接続したbodyデータをファイルに書き込む 1
+  <meta name="description" content="はじめに AWSのLamdaを使ったのですが、どうも日本語が文字化けする形の模様
+これをライトに解決したい
+数が多いと使えないですが、少量の文字であれば直接Unicode Escapeする形にする やり方 Pythonの対話側インターフェースでライトに行う 1
 2
 3
 4
 5
 6
-def save_file(url &hellip;">
+7
+8
+9
+10 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -26,7 +29,7 @@ def save_file(url &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/10/24/unicode-escape/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -82,7 +85,7 @@ def save_file(url &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Rubyで画像ファイルをダウンロードする</h1>
+      <h1 class="entry-title">Pythonで文字変換</h1>
     
     
       <p class="meta">
@@ -98,53 +101,26 @@ def save_file(url &hellip;">
   
 
 
-<time datetime="2013-03-28T23:34:00+09:00" pubdate data-updated="true">Mar 28<span>th</span>, 2013</time>
+<time datetime="2015-10-24T13:23:00+09:00" pubdate data-updated="true">Oct 24<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>少しばかり、やることがあったのでやってみた。<br/>
-煩悩丸出しですいませんw</p>
-
-<h3>HTTP Responseのbodyを利用する</h3>
+<div class="entry-content"><h3>はじめに</h3>
 
 <hr />
 
-<p>直感的ではないけど、素直なやりかた</p>
+<p>AWSのLamdaを使ったのですが、どうも日本語が文字化けする形の模様<br/>
+これをライトに解決したい<br/>
+数が多いと使えないですが、少量の文字であれば直接Unicode Escapeする形にする</p>
 
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>urlで接続したbodyデータをファイルに書き込む</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
-</span><span class='line'>   filename = File.basename(url)
-</span><span class='line'>   open(filename, "wb") do  |file|
-</span><span class='line'>          file.puts Net::HTTP.get_response(URI.parse(url)).body
-</span><span class='line'>   end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>open-uriを使用する方法</h3>
+<h3>やり方</h3>
 
 <hr />
 
-<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
-</ol>
-
+<p>Pythonの対話側インターフェースでライトに行う</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -154,17 +130,27 @@ def save_file(url &hellip;">
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
-</span><span class='line'>    filename = File.basename(url)
-</span><span class='line'>    open(filename, 'wb') do |file|
-</span><span class='line'>        open(url) do |data|
-</span><span class='line'>            file.write(data.read)
-</span><span class='line'>      end
-</span><span class='line'>    end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$python
+</span><span class='line'>Python 2.7.10 (default, Jul 14 2015, 19:46:27)
+</span><span class='line'>[GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.39)] on darwin
+</span><span class='line'>Type "help", "copyright", "credits" or "license" for more information.
+</span><span class='line'>&gt;&gt;&gt; s =  u'2015年春'
+</span><span class='line'>&gt;&gt;&gt; s.encode('unicode_escape')
+</span><span class='line'>'2015\\u5e74\\u6625'
+</span><span class='line'>&gt;&gt;&gt; unicode('2015年春', 'UTF-8')
+</span><span class='line'>u'2015\u5e74\u6625'
+</span><span class='line'>&gt;&gt;&gt; exit
+</span><span class='line'>Use exit() or Ctrl-D (i.e. EOF) to exit</span></code></pre></td></tr></table></div></figure>
 
 
-<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
+<p>こんな感じ、別にAWS絡みではなくてもライトに使える</p>
+
+<p>逆にデコードする場合、<code>s.decode('unicode-escape')</code>でできる</p>
+
+<p>簡単ですね。</p>
 </div>
 
 
@@ -187,12 +173,12 @@ def save_file(url &hellip;">
   
 
 
-<time datetime="2013-03-28T23:34:00+09:00" pubdate data-updated="true">Mar 28<span>th</span>, 2013</time>
+<time datetime="2015-10-24T13:23:00+09:00" pubdate data-updated="true">Oct 24<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+    <a class='category' href='/blog/categories/python/'>Python</a>
   
 </span>
 
@@ -201,7 +187,7 @@ def save_file(url &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/28/ruby-web-file/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/10/24/unicode-escape/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/10/24/unicode-escape/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -214,10 +200,8 @@ def save_file(url &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/25/java-map-iterator/" title="Previous Post: JavaのHashmapを使ったiteratorの実装">&laquo; JavaのHashmapを使ったiteratorの実装</a>
+        <a class="basic-alignment left" href="/blog/2015/10/16/reverse-geocoding/" title="Previous Post: GoogleMapで逆Geocodingをしたい">&laquo; GoogleMapで逆Geocodingをしたい</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/30/octpress-image-tag/" title="Next Post: Octpressで画像ファイルを扱う">Octpressで画像ファイルを扱う &raquo;</a>
       
     </p>
   </footer>

@@ -9,10 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Emacsでmarkdown-modeを使用してみます。
-markdownの編集で使えるモードで結構便利なので紹介してみます。 インストール Emacsのパッケージインストーラからインストールをします。
-以下を実行します。 1
-M-x package-list-packages markdown- &hellip;">
+  <meta name="description" content="色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。
+とりあえず、aospのmasterで構築してみます。 環境 Ubuntu12.04 x86_64
+GNU Global 6.2.8
+Apache2 GNU Globalのバージョンは、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,203 @@ M-x package-list-packages markdown- &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/25/gnu-global/">Androidのソースコード検索サービスを構築してみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-25T12:17:00+09:00" pubdate data-updated="true">Mar 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>色々経緯(長いような長くないようなもの)があるわけでして、構築してみることにしました。<br/>
+とりあえず、aospのmasterで構築してみます。</p>
+
+<h4>環境</h4>
+
+<hr />
+
+<ul>
+<li>Ubuntu12.04 x86_64</li>
+<li><a href="http://www.gnu.org/software/global/">GNU Global 6.2.8</a></li>
+<li>Apache2</li>
+</ul>
+
+
+<p>GNU Globalのバージョンは、なるべく新しいものを入れるようにします。。。<br/>
+Ubuntuのapt-getでインストールもできますが、ソースコードを解析した結果が正しくgenerateされません。<br/>
+6.2.8だと正しく解析できました。(公式もdebianで配布しているパッケージは古いと記載があったので、Ubuntuも同じ感じでしょう)</p>
+
+<h4>事前準備</h4>
+
+<hr />
+
+<p>事前準備として、以下を実施します。</p>
+
+<ul>
+<li>GNU Globalのインストール</li>
+<li>Apache2のインストール</li>
+<li>Androidのソースコードをダウンロード</li>
+</ul>
+
+
+<h6>GNU Globalのインストール</h6>
+
+<hr />
+
+<p>前述のように、UbuntuのリポジトリにあるGNU Globalは古いのでソースコードの解析が正しく行われません。<br/>
+そのため、ビルドしてインストールします。</p>
+
+<ol>
+<li>ソースコードの取得(<a href="http://www.gnu.org/software/global/">ここ</a>からダウンロード)</li>
+<li>ビルド(ここではデフォルト設定で行います)</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$./configure --prefix=/usr/local/global
+</span><span class='line'>$make</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>インストール</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo make install</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ビルドの際に付与するオプションはご自身で設定してください。</p>
+
+<h6>Apache2のインストール</h6>
+
+<hr />
+
+<p>普通にインストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$sudo apt-get install apache2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>UbuntuっていうかDebian系使いづらいなぁ・・・。</p>
+
+<h6>Androidのソースコード取得</h6>
+
+<hr />
+
+<p>(公式)[]にしたがって実施します。<br/>
+今回は「/var/aosp」のディレクトリ配下に保存することとします。</p>
+
+<h4>コード解析(タグ作成)の実施</h4>
+
+<hr />
+
+<p>以下のコマンドで実行します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/aosp
+</span><span class='line'>$gtags -v</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>タグのHtml化</h4>
+
+<hr />
+
+<p>以下のコマンドで実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/aosp
+</span><span class='line'>$htags -afsnDvo --title Android --item-order=s --show-position --fixed-guid --auto-completion
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>非常に長いオプションですが、ソースコード検索フォームのhtmlが生成されます。<br/>
+検索に加えて、検索フォームの上で入力補完をできるようにしていますので、CGIの実行が必要です。</p>
+
+<h4>Apache2の設定</h4>
+
+<hr />
+
+<p>以下のコマンドでブラウザから参照可能なディレクトリを作成します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mkdir -p /var/www/aosp</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンテンツの配備を実施します。<br/>
+特に意図はないですが、コピーだとめんどいのでシンボリックリンクにします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd /var/www/aosp
+</span><span class='line'>$ln -s ../aosp/HTML HTML</span></code></pre></td></tr></table></div></figure>
+
+
+<p>/etc/apache2/sites-enable/defaultsを編集します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ScriptAlias /cgi-bin/ /var/www/aosp/HTML
+</span><span class='line'>&lt;Directory "&lt;/var/www/aosp/HTML/cgi-bin"&gt;
+</span><span class='line'>    AllowOverride None
+</span><span class='line'>    Options +ExecCGI
+</span><span class='line'>    AddHandler cgi-script .cgi .pl
+</span><span class='line'>    Order allow,deny
+</span><span class='line'>    Allow from all
+</span><span class='line'>&lt;/Directory&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>編集完了後、apache2を再起動します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$/etc/init.d/apache2 restart</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ブラウザ上で<a href="http://localhost/aosp">http://localhost/aosp</a>にアクセスして、画面が表示されることを確認します。</p>
+
+<h4>感想</h4>
+
+<hr />
+
+<p><a href="https://sites.google.com/site/devcollaboration/codesearch">こういうサービス</a>が、既に世の中にある訳で・・・</p>
+
+<p>自分がやる必要ってあんまりないんじゃないかなーとか。。。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -877,6 +1074,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
       </li>
     
@@ -892,15 +1093,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2015/06/27/rails-sti/">RailsでSTI（単一テーブル継承）の予約語でハマった話対処</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 116.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 104.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 128.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 124.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 124.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(15)</a> <a href='/blog/categories/shellscript' style='font-size: 104.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 132.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 116.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 104.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 128.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 124.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 124.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 104.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(15)</a> <a href='/blog/categories/shellscript' style='font-size: 104.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 132.0%'>戯言(8)</a> </span>
 </section
 
 

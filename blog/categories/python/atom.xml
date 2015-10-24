@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Python | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2015-10-24T13:39:34+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Pythonで文字変換]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/10/24/unicode-escape/"/>
+    <updated>2015-10-24T13:23:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/10/24/unicode-escape</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>AWSのLamdaを使ったのですが、どうも日本語が文字化けする形の模様<br/>
+これをライトに解決したい<br/>
+数が多いと使えないですが、少量の文字であれば直接Unicode Escapeする形にする</p>
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>Pythonの対話側インターフェースでライトに行う</p>
+
+<p>```
+$python
+Python 2.7.10 (default, Jul 14 2015, 19:46:27)
+[GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.39)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.</p>
+
+<blockquote><blockquote><blockquote><p>s =  u'2015年春'
+s.encode('unicode_escape')
+'2015\u5e74\u6625'
+unicode('2015年春', 'UTF-8')
+u'2015\u5e74\u6625'
+exit
+Use exit() or Ctrl-D (i.e. EOF) to exit
+```</p></blockquote></blockquote></blockquote>
+
+<p>こんな感じ、別にAWS絡みではなくてもライトに使える</p>
+
+<p>逆にデコードする場合、<code>s.decode('unicode-escape')</code>でできる</p>
+
+<p>簡単ですね。</p>
+]]></content>
+  </entry>
+  
+</feed>

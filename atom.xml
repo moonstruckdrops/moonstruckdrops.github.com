@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-10-16T11:26:28+09:00</updated>
+  <updated>2015-10-24T13:39:34+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,57 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pythonで文字変換]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/10/24/unicode-escape/"/>
+    <updated>2015-10-24T13:23:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/10/24/unicode-escape</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>AWSのLamdaを使ったのですが、どうも日本語が文字化けする形の模様<br/>
+これをライトに解決したい<br/>
+数が多いと使えないですが、少量の文字であれば直接Unicode Escapeする形にする</p>
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>Pythonの対話側インターフェースでライトに行う</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$python
+</span><span class='line'>Python 2.7.10 (default, Jul 14 2015, 19:46:27)
+</span><span class='line'>[GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.39)] on darwin
+</span><span class='line'>Type "help", "copyright", "credits" or "license" for more information.
+</span><span class='line'>&gt;&gt;&gt; s =  u'2015年春'
+</span><span class='line'>&gt;&gt;&gt; s.encode('unicode_escape')
+</span><span class='line'>'2015\\u5e74\\u6625'
+</span><span class='line'>&gt;&gt;&gt; unicode('2015年春', 'UTF-8')
+</span><span class='line'>u'2015\u5e74\u6625'
+</span><span class='line'>&gt;&gt;&gt; exit
+</span><span class='line'>Use exit() or Ctrl-D (i.e. EOF) to exit</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ、別にAWS絡みではなくてもライトに使える</p>
+
+<p>逆にデコードする場合、<code>s.decode('unicode-escape')</code>でできる</p>
+
+<p>簡単ですね。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[GoogleMapで逆Geocodingをしたい]]></title>
@@ -2050,58 +2101,6 @@ Herokuではこのタスクが必要なようです。</p>
     <updated>2014-05-31T13:49:00+09:00</updated>
     <id>http://moonstruckdrops.github.com/blog/2014/05/31/gocon-spring</id>
     <content type="html"><![CDATA[
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[jQueryが見つからないよエラーの解消法]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile/"/>
-    <updated>2014-03-26T23:32:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>今更ながら、Rails3.2のアプリをRails4までアップデートしました。<br/>
-そのとき出たエラーと解消方法を残します。</p>
-
-<h3>当該のエラー</h3>
-
-<hr />
-
-<p>それがこれ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>couldn't find file 'jquery'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>正直、なんで？という感じ</p>
-
-<h3>解消方法</h3>
-
-<hr />
-
-<p>Gemfileの記述が変わってたことが原因でした<br/>
-(asset compile周りの仕様変更)</p>
-
-<p>Rails3.x系は、Gemfileに以下がありました</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>group :assets do
-</span><span class='line'>
-</span><span class='line'>ここにasset compileで使用するgemがある
-</span><span class='line'>
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ところが、Rails4系になるとasset groupは無くなる仕様に変わったみたいです。<br/>
-代わりの設定は、<code>config/application.rb</code>になるようです。</p>
-
-<p>メジャーアップデートの前に、<a href="http://railscasts.com/episodes/415-upgrading-to-rails-4?language=ja&amp;view=asciicast">移行ガイド</a>に目を通せってことですねw</p>
 ]]></content>
   </entry>
   
