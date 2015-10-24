@@ -9,8 +9,14 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="使ってるけど、意外と知らなかったのでメモ 抽出方法は全部同じ whereの条件指定の方法ですね。 以下の３つは、全て同じSQLを発行します 1.Hashで条件設定する方法(AR独自チックな感じで大体使う方法) 1
-Hoge.where(:title =&gt; "title", :id =&gt &hellip;">
+  <meta name="description" content="前回書いたので、メモをまたまた残しておく 今回は、以下の３つを書き起こす。 既存行の更新処理
+データ保存系メソッドの違い
+既存行の削除処理
+コールバック 既存行の更新 1.更新する行を特定してから更新するやり方 1
+2
+3
+table = Tables.find(12)
+table.name &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +78,273 @@ Hoge.where(:title =&gt; "title", :id =&gt &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/19/ar-memo-2/">ActiveRecordメモ その2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-19T00:13:00+09:00" pubdate data-updated="true">Nov 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>前回書いたので、メモをまたまた残しておく</p>
+
+<p>今回は、以下の３つを書き起こす。</p>
+
+<ul>
+<li>既存行の更新処理</li>
+<li>データ保存系メソッドの違い</li>
+<li>既存行の削除処理</li>
+<li>コールバック</li>
+</ul>
+
+
+<h3>既存行の更新</h3>
+
+<hr />
+
+<p>1.更新する行を特定してから更新するやり方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
+</span><span class='line'>table.name = "column name"
+</span><span class='line'>table.save
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2.属性の値を変更してからモデルオブジェクトを取得するやり方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
+</span><span class='line'>table.update_attribute(:name, "column_name")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上はシンボルを使って、特定の１カラムのみの更新の場合</p>
+
+<p>まとめて行を更新する場合、ハッシュを使いますね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.find(12)
+</span><span class='line'>table.update_attributes(name: "column_name", text: "ActiveRecord")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに、Railsだとこんな感じで使ってますね。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def update
+</span><span class='line'>  table = Tables.find(params[:id])
+</span><span class='line'>  if table.update_attributes(params[:table])
+</span><span class='line'>    redirect_to action: :index
+</span><span class='line'>  else
+</span><span class='line'>    redirect_to action: :edit
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.行の読み込みと更新を一度に行う方法</p>
+
+<p>これは特に言うこともないですね。<br/>
+指定した行を更新し、結果をDBに反映、そのままオブジェクトを取得します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tables.update(12, name: "column_name", text: "ActiveRecord")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに、update_allメソッドを使えばまとめて更新することができます。<br/>
+第1引数にupdate文、第2引数にwhere句を指定という形でやります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>table = Tbales.update_all("name = column_name, text = ActiveRecord", "id = 12")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>戻り値は、データベースのアダプターによって異なるようです。<br/>
+大体、更新行数が返るようですが、Oracleだけ何故か違うみたいです。。。</p>
+
+<h3>データ保存系メソッドの違い</h3>
+
+<hr />
+
+<table>
+<thead>
+<tr>
+<th align="left">メソッド </th>
+<th align="left"> 違い </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">save    </td>
+<td align="left">レコードが保存された場合、trueを返し、そうでなければnilを返す</td>
+</tr>
+<tr>
+<td align="left">save!   </td>
+<td align="left">保存が成功した、trueを返し、そうでなければ例外を発生</td>
+</tr>
+<tr>
+<td align="left">create  </td>
+<td align="left">保存に成功したかどうかは関係なく、ActiveRecordオブジェクトを返す。データが保存されたかどうかの確認は検証チェックが必要</td>
+</tr>
+<tr>
+<td align="left">create! </td>
+<td align="left">成功時は、ActiveRecordオブジェクトを返し、そうでなければ例外を発生</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>なので、使い分けはこんな感じに行う</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>if table.save
+</span><span class='line'>  検証と保存に成功
+</span><span class='line'>else
+</span><span class='line'>  検証エラー
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>begin
+</span><span class='line'>  table.save!
+</span><span class='line'>rescue ActiveRecord::RecordInvalid =&gt; error
+</span><span class='line'>  検証エラー
+</span><span class='line'>rescue ActiveRecord::RecordNotSaved =&gt; error
+</span><span class='line'>  保存に失敗(コールバックで保存が出来なかった)
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>既存行の削除処理</h3>
+
+<hr />
+
+<p>これは２種類の方法があります。<br/>
+１つ目、データベースを直接操作する感じのやり方</p>
+
+<p>こんな感じで、id指定で削除できます。<br/>
+idを格納した配列を指定することで、まとめて削除もできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.delete(12)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>SQLのwhereを使ってまとめて削除する方法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.delete_all(["id = 12"])</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これもupdate_allメソッドと同じで削除した行数が返ってきます。</p>
+
+<p>もう一つのやり方は、destroyメソッドを使う方法です。<br/>
+こいつは、削除というよりもデータの凍結ですね。</p>
+
+<p>特定の行のみ凍結</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.destroy(12)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まとめて凍結する方法</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Tables.destroy_all("name = ?", "column_name")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みにdeleteメソッドを使った場合、<br/>
+ActiveRecordの検証メソッドが実行されないことに注意かも。</p>
+
+<h3>コールバック順序</h3>
+
+<hr />
+
+<p>コールバックで独自に処理を入れたい場合ってあると思うので、ついでにメモしておく</p>
+
+<p>新規レコードでmodel.saveを実行した場合、以下の順序でコールバックされる</p>
+
+<ol>
+<li>before_validation</li>
+<li>検証処理</li>
+<li>after_validation</li>
+<li>before_save</li>
+<li>before_create</li>
+<li>挿入処理</li>
+<li>after_create</li>
+<li>after_save</li>
+</ol>
+
+
+<p>更新の場合だと以下になる</p>
+
+<ol>
+<li>before_validation</li>
+<li>検証処理</li>
+<li>after_validation</li>
+<li>before_save</li>
+<li>before_update</li>
+<li>更新処理</li>
+<li>after_update</li>
+<li>after_save</li>
+</ol>
+
+
+<p>削除(model.destroy)だと、以下になる</p>
+
+<ol>
+<li>before_destroy</li>
+<li>destroy処理</li>
+<li>after_destory</li>
+</ol>
+
+
+<p>ここまでそれなりに書いたので、もうちょい参照系も書いておきたいなw</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1669,191 +1942,6 @@ RubyやGoとかが好きです。<br/>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/11/make-disk-backup/">DDコマンドで物理ディスクをバックアップする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-11T21:22:00+09:00" pubdate data-updated="true">Aug 11<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>どうも、どうも。久しぶりの更新です。<br/>
-ゴタゴタが続いてたり、続いていなかったりでして。<br/>
-更新するような感じのことができていません(勉強しろ)<br/>
-まぁそんなどうでもいいことは置いておきまして、本題に入ります。</p>
-
-<h3>発端</h3>
-
-<hr />
-
-<p>最近、とある目的のためにWindowsPCを買いました。<br/>
-中古で安く買ったのはいいのですが、ライセンス的なもので復旧用のディスクを頂けませんでした。<br/>
-頂けない上にちょっとアレな感じなところもありまして・・・</p>
-
-<p>とりあえず、以下でゴニョゴニョやってみました。</p>
-
-<ol>
-<li>Windows7に標準で搭載されているバックアップツール</li>
-<li>出処不明のリカバリーディスク</li>
-</ol>
-
-
-<p>結果として、どちらも失敗でした。<br/>
-1はリカバーしたら古い情報も残ります。<br/>
-残るだけならまだしも、色々ファイルも消えます。<br/>
-2なんかは、インストールでドライバー用意しろと言われました。<br/>
-なんか、ディスク起動もやたら遅いので怪しい感じ。。。</p>
-
-<p>仕方ないので、ディスク換装した上に<br/>
-元のドライブのデータを全て換装後のディスクにコピーして保存するようにしました。</p>
-
-<h3>バックアップ方法</h3>
-
-<hr />
-
-<p>ディスクのバックアップ方法ですが、「dd」コマンドを使用します。<br/>
-このコマンドですが、「ハードディスク・パーティションを0/1の信号のママ丸ごとコピー」するものです。<br/>
-注意点とすれば、以下のことでしょうか。</p>
-
-<ul>
-<li>ハードディスクの容量がコピー元以上であること</li>
-<li>コマンドで指定するディスクを間違えて指定した場合、データが消滅すること</li>
-</ul>
-
-
-<h3>バックアップ例</h3>
-
-<hr />
-
-<p>以下のような条件とします。</p>
-
-<ul>
-<li>ディスクサイズは、「コピー先HDD ≧コピー元HDD」の大きさとすること</li>
-<li>パーティションは、mountしないこと</li>
-<li>コピー元HDDのパス、「/dev/sdb」</li>
-<li>コピー先HDDのパス、/dev/sdc」</li>
-</ul>
-
-
-<p>以下のコマンドで、上記のデータをコピーすることができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/sdb of=/dev/sdc bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで、コピーができます。
-但し、完了までに数時間かかります。</p>
-
-<p>さて、これでディスクからディスクにコピーすることができました。
-それだけでなくバックアップ用のディスクイメージをつくることが出来ます</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/sdb of=./backup-disk-image.img bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>故障ディスクのコピー</h3>
-
-<hr />
-
-<p>上記のコマンドを使えば、故障している(ある程度読める必要がありますが)ものまでコピーできます。<br/>
-まぁ強引に読んでる(読めないところは、スキップしています)だけです。</p>
-
-<p>上記のコマンドに設定しているオプションは、以下の表の意味です。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">オプション </th>
-<th align="left"> 内容 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">noerror</td>
-<td align="left">エラー読み飛ばし</td>
-</tr>
-<tr>
-<td align="left">sync</td>
-<td align="left">エラー箇所をNUL(ゼロ）で埋める</td>
-</tr>
-<tr>
-<td align="left">bs</td>
-<td align="left">byte size 読込書き出すバイトサイズ</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>因みに、byte size値が大きいとコピー速度が速くなります。<br/>
-但し、壊れている部分があると道連れになる部分が大きくなります。<br/>
-なので、byte size値を小さくするとエラー範囲は最小になります(コピー速度が遅くなります)</p>
-
-<h3>転送状況の表示</h3>
-
-<hr />
-
-<p>ddコマンドには、転送状況を表示してくれるようなオプションはありません。<br/>
-以下のように、killallコマンドのUSRオプションで途中経過を表示できます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$killall -USR1 dd </span></code></pre></td></tr></table></div></figure>
-
-
-<p>これで、どれくらいかかるか時間計算ができますね。</p>
-
-<h3>ディスクイメージからの復元方法</h3>
-
-<hr />
-
-<p>ディスクイメージのバックアップは取れましたが、ディスクイメージからの復元が必要ですね。<br/>
-といっても、ここまでで大まかに理解できそうな感じがしますが・・・</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=./backup-disk-image.img of=/dev/sdb bs=512 conv=noerror,sync</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コピー元とコピー先を入れ替えるだけですね。</p>
-
-<h3>ディスクの消去</h3>
-
-<hr />
-
-<p>復元と同じ要領で、zero埋めすれば完全フォーマットができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$dd if=/dev/zero of=/dev/sdc</span></code></pre></td></tr></table></div></figure>
-
-
-<p>このコマンド本当に便利。<br/>
-LinuxとかMacのディスクだけでなくって、Windowsなディスクまで丸ごとコピーできるところが素敵。<br/>
-ファイル指定はできないけどw</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1875,6 +1963,10 @@ LinuxとかMacのディスクだけでなくって、Windowsなディスクま�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
       </li>
     
@@ -1890,15 +1982,11 @@ LinuxとかMacのディスクだけでなくって、Windowsなディスクま�
         <a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/05/06/mysqldump/">テーブル単位のmysqldump</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 116.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 128.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 124.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 124.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(15)</a> <a href='/blog/categories/shellscript' style='font-size: 104.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 132.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 116.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 104.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 128.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 124.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 124.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(15)</a> <a href='/blog/categories/shellscript' style='font-size: 104.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 132.0%'>戯言(8)</a> </span>
 </section
 
 

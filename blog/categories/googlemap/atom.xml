@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: GoogleMap | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/googlemap/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2015-10-16T11:26:28+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[GoogleMapで逆Geocodingをしたい]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/10/16/reverse-geocoding/"/>
+    <updated>2015-10-16T11:08:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/10/16/reverse-geocoding</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>緯度と経度はわかるものの、住所がわからなくて困りまったことがありました。<br/>
+特にGoogleMapのI/Fからは住所が導き出せなったので、ほとほと困り果てました。<br/>
+ふと、その時ドキュメントを覗いたときに逆Geocodingができる記述があったのでやってみました。</p>
+
+<h3>リクエストパラメータ</h3>
+
+<hr />
+
+<p>以下の表のように設定する</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">パラメータ </th>
+<th align="left"> 説明 </th>
+<th align="left"> 指定方法 </th>
+<th align="left"> 必須</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">address</td>
+<td align="left">取得対象の住所</td>
+<td align="left">テキスト</td>
+<td align="left">latlngかどちらかを指定</td>
+</tr>
+<tr>
+<td align="left">latlng</td>
+<td align="left">取得対象の緯度軽度</td>
+<td align="left">テキスト</td>
+<td align="left">addressかどちらかを指定</td>
+</tr>
+<tr>
+<td align="left">sensor</td>
+<td align="left">位置センサーからのリクエストか</td>
+<td align="left">boolean</td>
+<td align="left">必ず指定する</td>
+</tr>
+<tr>
+<td align="left">bounds</td>
+<td align="left">ビューポートの境界ボックス(境界ボックスの南西と北東の角の緯度・経度で指定)</td>
+<td align="left">テキスト</td>
+<td align="left">  </td>
+</tr>
+<tr>
+<td align="left">region</td>
+<td align="left">地域コード(ccTLDの２文字)</td>
+<td align="left">テキスト</td>
+<td align="left">  </td>
+</tr>
+<tr>
+<td align="left">language</td>
+<td align="left">結果取得時の言語</td>
+<td align="left">言語コード</td>
+<td align="left">  </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>boundsは以下のような形で指定する(緯度、経度がそれぞれどっちに向いてるのかを指定すると思えばよい)</p>
+
+<p><code>
+36.798805,-120.498805|136.733332,-130.498805
+</code></p>
+
+<h3>実行する</h3>
+
+<p>以下のようにすることでjsonが返却される</p>
+
+<p><code>
+$ curl -v http://maps.google.com/maps/api/geocode/json?latlng=36.798805,%20136.733332&amp;sensor=false |jq .
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

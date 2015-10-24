@@ -9,7 +9,7 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに Railsで定数を作るとき、いつもどうしてたっけ？っていう個人まとめをつくってみました。 決定版みたいなものが無い感じというのもあったりするので参照用という感じです。 グローバルな定数定義 以下のような感じの内容で、「config/initializers」 &hellip;">
+  <meta name="description" content="はじめに もう殆ど、Androidをやっていない身ですが情報追っかけ程度に参加してきました。 因みに、当日は寝坊してやべぇって言ってたのは内緒w 興味が湧いたセッションは2つぐらいだったので、それさえ聴ければいいかなーぐらいの感覚で行ってきました。 というわけで、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,371 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/23/abc-2014-spring/">Android Bazaar and Conference 2014 Springに行ってきた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-23T22:12:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>もう殆ど、Androidをやっていない身ですが情報追っかけ程度に参加してきました。</p>
+
+<p>因みに、当日は寝坊してやべぇって言ってたのは内緒w</p>
+
+<p>興味が湧いたセッションは2つぐらいだったので、それさえ聴ければいいかなーぐらいの感覚で行ってきました。</p>
+
+<p>というわけで、当日のメモに加筆修正したものを残します。</p>
+
+<h3>UI/UXデザイントレンド 2014</h3>
+
+<hr />
+
+<h4>デザイントレンド</h4>
+
+<ul>
+<li>質感がわかるようなデザインに変わりつつ</li>
+<li>スキュモーフィズムからフラットデザインへ
+
+<ul>
+<li>装飾を外してシンプルに</li>
+<li>flatvsrealism.com</li>
+</ul>
+</li>
+<li>フラットのほうが意図が伝わりやすい
+
+<ul>
+<li>Androidのデザインガイドラインもフラットなものに変わっている</li>
+<li>Googleも力を入れていることがわかる</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Androido UI</h4>
+
+<h5>2011年のTrend</h5>
+
+<ul>
+<li>派手</li>
+<li>白いテキスト</li>
+<li>リアルで立体的なアイコン</li>
+<li>この当時はiPhoneが流行っていたので、似たようなデザインになるような感じ</li>
+</ul>
+
+
+<h5>2012年のTrend</h5>
+
+<ul>
+<li>黒やダークな背景</li>
+<li>ダークやマットな色</li>
+<li>水色や白のテキスト</li>
+<li>レイアウトがグリッドスタイル</li>
+<li>ON/OFFボタンなど、ルールが破綻してるところもあった</li>
+<li>ボーダレスUI(ひと目でボタンなのかわからないようなものを指す)</li>
+</ul>
+
+
+<h5>2013年のTrend</h5>
+
+<ul>
+<li>白や明るい背景</li>
+<li>カードスタイル(Googleの殆どのアプリが対応)</li>
+<li>影を入れたりして立体感を出している
+
+<ul>
+<li>(GooglePlayでの)評価が上がりやすい</li>
+<li>platformとの統一感が重要</li>
+</ul>
+</li>
+<li>ボーダレスUIは健在・・・</li>
+<li>シンプルなアイコンやイラスト</li>
+</ul>
+
+
+<h4>2014年(1Q)のTrend</h4>
+
+<ul>
+<li>Yahoo weatheアプリのような感じになりつつある
+
+<ul>
+<li>カードスタイルから変わる</li>
+</ul>
+</li>
+<li>端末のスペックが上がってきたから対応できるようになってきた
+
+<ul>
+<li>写真やグラデーション</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>Android wear</h4>
+
+<ul>
+<li>サークルUI
+
+<ul>
+<li>アイコンが丸くなっているものが増えてきた</li>
+<li>フラットで押したりする領域が分からないという問題への回答かも</li>
+</ul>
+</li>
+<li>より大きな書体</li>
+<li>写真やビジュアルリッチに</li>
+</ul>
+
+
+<h4>webサイトデザインとの違い</h4>
+
+<ul>
+<li>スケーラブル、モニターによっての情報量が違う
+
+<ul>
+<li>スマホ向けは、シンプル・単機能・担当直入な処理デザインに</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>QAメモ</h4>
+
+<ul>
+<li>アプリのUIデザインはどうするの？
+
+<ul>
+<li>ゲームUIとアプリUIとは全く違うので、機能を入れ過ぎないようにする</li>
+</ul>
+</li>
+<li>インタラクションにもデザイナーが関わってやっていくほうがよい
+
+<ul>
+<li>ダサいものになりづらい</li>
+<li>エンジニアも積極的にデザイナーと一緒にやっていく</li>
+</ul>
+</li>
+<li>流行を追っかけるためのデザインサイト
+
+<ul>
+<li>Android niceties</li>
+</ul>
+</li>
+<li>デザインにも事業戦略が必要
+
+<ul>
+<li>古い端末もサポートするのか？など
+
+<ul>
+<li>2.x系はもう切ってもいいかも</li>
+<li>１つで全部の対応は難しいので避けたほうがよい</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>トレンドの変遷(最近のAndroidアプリのトレンドについて)</h3>
+
+<hr />
+
+<h4>はじめに</h4>
+
+<ul>
+<li>セッションはAndroid Pattern Cookbookの解説&amp;補足</li>
+<li><a href="https://play.google.com/store/apps/details?id=yanzm.products.patterncookbook">AndroidPatternCoockbookのデモアプリ</a>あるので確認しながらだと理解進むかも</li>
+<li>最近の開発は、タブレット対応も必須</li>
+</ul>
+
+
+<h4>ダッシュボードデザイン</h4>
+
+<ul>
+<li>メインコンテンツが複数ある場合、機能が視認しやすいので優位</li>
+<li>1回操作挟むのは、ダメじゃね？</li>
+</ul>
+
+
+<h4>タブ</h4>
+
+<ul>
+<li>スワイプでタブ間の行き来ができるように</li>
+<li>各コンテンツのスワイプはできない・・・</li>
+</ul>
+
+
+<h4>NvigationDrawer</h4>
+
+<ul>
+<li>ガイドライン化</li>
+<li>メジャーなものは大体NvigationDrawerを使ってる</li>
+<li>アイコン左、カウンターは右</li>
+</ul>
+
+
+<h4>アプリの世界観も重要</h4>
+
+<ul>
+<li>FeedlyやEvernoteが筆頭
+
+<ul>
+<li>出しすぎなところもあるけど・・・</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>上部にユーザー情報を表示が多い</h4>
+
+<ul>
+<li>アカウント切り替えが難しいタイプも・・・</li>
+</ul>
+
+
+<h4>オリジナリティを出す</h4>
+
+<ul>
+<li>黒はデザインが難しい</li>
+</ul>
+
+
+<h4>アクションバー</h4>
+
+<ul>
+<li>アクションバーとコンテンツの配色は雰囲気になる
+
+<ul>
+<li>白だと明るい、清潔感が出やすい</li>
+<li>白+黒だと引き締まる</li>
+</ul>
+</li>
+<li>アクションバーの背景
+
+<ul>
+<li>下に影をつけるものも多い</li>
+</ul>
+</li>
+<li>フレームワークのアクションバーを使ったほうがよい
+
+<ul>
+<li>アプリの世界観次第で独自路線があるならいいけど。</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>フォント</h4>
+
+<ul>
+<li>ライセンス問題になりやすいので、フォントはアプリに内蔵しないほうがいい</li>
+<li>fontFamilyを使うと改善できる可能性がある
+
+<ul>
+<li>font同士を組み合わせて使うほうといい</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>ヘルプポップアップ</h4>
+
+<ul>
+<li>注目させたい場合、アニメーションを使うと注目させやすい</li>
+</ul>
+
+
+<h4>インストラクション</h4>
+
+<ul>
+<li>「ここを押す」などの表示を入れやすい</li>
+</ul>
+
+
+<h4>チュートリアル</h4>
+
+<ul>
+<li>読む？テキスト量は減らしたほうがいい</li>
+<li>画像で伝え、1行ぐらいがいい</li>
+<li>無くてもいいかの検討も重要</li>
+</ul>
+
+
+<h4>viewpager</h4>
+
+<ul>
+<li>スクロールできるタブ</li>
+<li>タイトルストリップ</li>
+<li>インジケータ
+
+<ul>
+<li>ページの移動でアイコンが変わるもの</li>
+</ul>
+</li>
+<li>ページ切り替えでエフェクト</li>
+</ul>
+
+
+<h4>タブレット対応</h4>
+
+<ul>
+<li>スケールアップは微妙な対応
+
+<ul>
+<li>データ量が無ければ、それでもいいかも</li>
+<li>画像入れるなりで、余白を減らす</li>
+</ul>
+</li>
+<li>macroreflow
+
+<ul>
+<li>グリッドの並び替え
+
+<ul>
+<li>数も重要になる</li>
+</ul>
+</li>
+<li>スマホはリストで対応してやるといい</li>
+</ul>
+</li>
+<li>master/detailパターン
+
+<ul>
+<li>gmailアプリとかgoogle playアプリ</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1210,118 +1575,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/14/surfacepro/">Surface Pro2を買いました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-14T22:43:00+09:00" pubdate data-updated="true">Jan 14<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>表題にもあるようにSurface Pro2を買いました。</p>
-
-<p>元々、WindowsOSはあんまりーな人なのですが、気になるのでつい買ってしまいました。</p>
-
-<p>というわけで、経緯と感想を残します。</p>
-
-<h3>経緯</h3>
-
-<hr />
-
-<p>元々、WindowsOSはPCゲームか動画鑑賞の用途で使っていました。</p>
-
-<p>とはいえ中古品でちょっとなーとなってました(バッテリー的な意味で)</p>
-
-<p>加えて、身内が捨てるぐらいなら使うので欲しいと言ってきたので、これ幸いという感じでした。</p>
-
-<p>また、SUrfacePro2のスペックもノートPCと遜色ないじゃんということで購入に至りました。</p>
-
-<p>買うまでに結構苦労したことは内緒ですw</p>
-
-<h3>使用感</h3>
-
-<hr />
-
-<p>セットアップに関して</p>
-
-<ul>
-<li>PCのアカウントとMSアカウントを区別してセットアップする方法が解りにくすぎる</li>
-</ul>
-
-
-<p>ソフトウェアキーボードに関して</p>
-
-<ul>
-<li>タブレット型としては後発の癖に、最低な使い勝手</li>
-<li>iOSやAndroidだと入力位置に合わせて自動で位置調整してくれますが、全くしてくれません</li>
-<li>ソフトウェアキーボードに隠れて入力した内容がみえないことも</li>
-<li>これは、タイプカバー必須というところでしょうか</li>
-</ul>
-
-
-<p>全体に関して</p>
-
-<ul>
-<li>稀に固まってしまって動かないことがある(強制再起動必須)</li>
-<li>わかりやすくしようとした結果なのかもしれないけど、設定したい内容がコントロールパネルの何処にあるのか不明(分かってる人に使いづらい仕様)</li>
-<li>ホームネットワーク？wifiの細かい設定とか何処？色々なところに飛びすぎて分からん・・・</li>
-<li>UI面(タイル？メトロUI？)は、程よく後発なだけあって直感的で使いやすい！！</li>
-<li>右スライドで時間表示、PCやアカウント設定、検索(中身は兎も角)としてをすぐにできるのはGood</li>
-<li>左スライドで起動中のアプリにすぐ戻れるところや画面分割ができるところは使いやすいかも</li>
-</ul>
-
-
-<p>要するに、今までのMS製品の中ではUI面は非常に凝ったものではないのかと思いました。
-個人的には、この使いやすいさとXPのPCとして使い勝手の良さ(慣れてる人にも使いやすいという意味で)が合わさってくれるといいのかなと思いました。</p>
-
-<h3>wifiプロファイルの削除方法</h3>
-
-<hr />
-
-<p>これが一番悩みました。hoge(1), hoge(2)みたいなプロファイルを勝手に作らてしまい削除に困り果てました。</p>
-
-<p>どうやら仕様変更っぽくって公式回答(MSのモデレーター)でも以下を実行しろとありました。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$netsh wlan show profiles
-</span><span class='line'>$netsh wlan delete profile name="消したいwifiプロファイル"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ちょっとここはいけてない感じがします、ともすればデグレードって取られかねない仕様ですね。</p>
-
-<p>個人的には設定周りはまとまってて欲しいと思うけどなぁ。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1343,6 +1596,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
       </li>
     
@@ -1358,15 +1615,11 @@
         <a href="/blog/2015/06/21/rails-migration-command/">Railsのモデル周りのマイグレーション</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/05/06/mysqldump/">テーブル単位のmysqldump</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 116.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.0%'>Go(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 128.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 124.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 124.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(15)</a> <a href='/blog/categories/shellscript' style='font-size: 104.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 132.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 116.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 104.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 128.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 124.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 124.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.0%'>MySQL(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(15)</a> <a href='/blog/categories/shellscript' style='font-size: 104.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 132.0%'>戯言(8)</a> </span>
 </section
 
 

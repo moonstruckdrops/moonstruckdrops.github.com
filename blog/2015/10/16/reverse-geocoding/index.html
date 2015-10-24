@@ -5,13 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Web API The Good Parts2章 - kurobaraのブログ</title>
+  <title>GoogleMapで逆Geocodingをしたい - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="前置き 近況 ざっくりと書くと、お前エンジニアなのに勉強しなくていいの？という状態 免許が取れたので単車を乗り回している(運転が楽しくて毎日、運転しているような)
-昨年よりも比較的、仲がいい友人(男女問わず)と遊ぶ機会が多くなったかも&#8230;
-気の合う仲間と組んで、(Swiftで) &hellip;">
+  <meta name="description" content="はじめに 緯度と経度はわかるものの、住所がわからなくて困りまったことがありました。
+特にGoogleMapのI/Fからは住所が導き出せなったので、ほとほと困り果てました。
+ふと、その時ドキュメントを覗いたときに逆Geocodingができる記述があったのでやってみました。 リクエストパラメータ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/12/22/web-api-good-parts-2/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/10/16/reverse-geocoding/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,7 +76,7 @@
   
   <header>
     
-      <h1 class="entry-title">Web API the Good Parts2章</h1>
+      <h1 class="entry-title">GoogleMapで逆Geocodingをしたい</h1>
     
     
       <p class="meta">
@@ -92,166 +92,91 @@
   
 
 
-<time datetime="2014-12-22T23:18:00+09:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2014</time>
+<time datetime="2015-10-16T11:08:00+09:00" pubdate data-updated="true">Oct 16<span>th</span>, 2015</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h2>前置き</h2>
-
-<h4>近況</h4>
+<div class="entry-content"><h3>はじめに</h3>
 
 <hr />
 
-<p>ざっくりと書くと、お前エンジニアなのに勉強しなくていいの？という状態</p>
+<p>緯度と経度はわかるものの、住所がわからなくて困りまったことがありました。<br/>
+特にGoogleMapのI/Fからは住所が導き出せなったので、ほとほと困り果てました。<br/>
+ふと、その時ドキュメントを覗いたときに逆Geocodingができる記述があったのでやってみました。</p>
 
-<ol>
-<li>免許が取れたので単車を乗り回している(運転が楽しくて毎日、運転しているような)</li>
-<li>昨年よりも比較的、仲がいい友人(男女問わず)と遊ぶ機会が多くなったかも&#8230;</li>
-<li>気の合う仲間と組んで、(Swiftで)アプリ作っている</li>
-<li>その気の合う仲間への技術指導していたり&#8230;</li>
-</ol>
-
-
-<p>なんだか、教えることが多くなって自分が学習している時間が比較的減ってきているそんな感じががが</p>
-
-<h4>そういう訳なので</h4>
+<h3>リクエストパラメータ</h3>
 
 <hr />
 
-<p>本屋でざっくりと見かけてツボに嵌った本を読んでいこうかと</p>
+<p>以下の表のように設定する</p>
 
-<p>「Web API The Good Parts」</p>
-
-<p>なのですが、上記3,4が結構あるので中々進まないという(ぉぃ</p>
-
-<p>ということなので、なるたけ気になるところ(覚えておくべきところ)だけまとめていこうかなと</p>
-
-<p>斜め読みした感じでは、結構ツボに嵌る内容なので自分のバイブルに入選してもいいかなと思ってたり。</p>
-
-<h2>エンドポイント設計</h2>
-
-<ol>
-<li>公開する機能を先に設計する</li>
-<li>覚えやすく、どんな機能を持つURIかひと目で分かるようにする</li>
-<li>HTTPメソッドの活用</li>
-<li>設計の注意点</li>
-<li>クエリパラメータ</li>
-<li>ログインや認証</li>
-<li>ホスト名とエンドポイント</li>
-</ol>
-
-
-<h4>1に関して</h4>
-
-<hr />
-
-<p>どんなAPIが必要かどうかを先に洗い出しておく</p>
-
-<h4>2に関して</h4>
-
-<hr />
-
-<ul>
-<li>短く入力しやすいURI</li>
-<li>人間が読んで理解できるURI</li>
-<li>大文字、小文字が混在しないURI</li>
-<li>改造しやすいURI</li>
-<li>サーバ側アーキテクチャが反映されていないURI</li>
-<li>ルールが統一されたURI</li>
-</ul>
-
-
-<h4>3に関して</h4>
-
-<hr />
-
-<p>HTTPメソッドを有効活用</p>
-
-<ul>
-<li>Restfulな形で活用すれば、一般的な形</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th align="left">パラメータ </th>
+<th align="left"> 説明 </th>
+<th align="left"> 指定方法 </th>
+<th align="left"> 必須</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">address</td>
+<td align="left">取得対象の住所</td>
+<td align="left">テキスト</td>
+<td align="left">latlngかどちらかを指定</td>
+</tr>
+<tr>
+<td align="left">latlng</td>
+<td align="left">取得対象の緯度軽度</td>
+<td align="left">テキスト</td>
+<td align="left">addressかどちらかを指定</td>
+</tr>
+<tr>
+<td align="left">sensor</td>
+<td align="left">位置センサーからのリクエストか</td>
+<td align="left">boolean</td>
+<td align="left">必ず指定する</td>
+</tr>
+<tr>
+<td align="left">bounds</td>
+<td align="left">ビューポートの境界ボックス(境界ボックスの南西と北東の角の緯度・経度で指定)</td>
+<td align="left">テキスト</td>
+<td align="left">  </td>
+</tr>
+<tr>
+<td align="left">region</td>
+<td align="left">地域コード(ccTLDの２文字)</td>
+<td align="left">テキスト</td>
+<td align="left">  </td>
+</tr>
+<tr>
+<td align="left">language</td>
+<td align="left">結果取得時の言語</td>
+<td align="left">言語コード</td>
+<td align="left">  </td>
+</tr>
+</tbody>
+</table>
 
 
-<h4>4に関して</h4>
-
-<hr />
-
-<ul>
-<li>複数形の名詞を利用する</li>
-<li>利用する単語に気をつける((ProgramableWeb)[http://www.programmableweb.com/]等、他のサービスを参考に)</li>
-<li>スペースやエンコードが必要な文字は避ける</li>
-<li>単語をつなげる場合はハイフンにする(SEO的に有利なことも)</li>
-</ul>
-
-
-<h4>5に関して</h4>
-
-<hr />
-
-<ul>
-<li>相対位置を使用する場合、データ数が多くなると取得件数が減ること、更新頻度が高いものは不整合が起きやすくなることに注意</li>
-<li>絶対位置を使用する場合、クエリパラメータが「x以降」,「この日付よりも古いもの」という形でクエリパラメータをもたせたほうがよい</li>
-<li>日付の形式は、RFC3339に規定されている「1970-01-01T00:00:00Z」の形にする</li>
-<li>絞り込みのパラメータは、「q」のような形は曖昧検索に取られやすいので完全一致の場合は適切なパラメータにすること</li>
-<li>一意なリソースを表すのに必要な情報: パス</li>
-<li>省略可能: クエリパラメータ</li>
-</ul>
-
-
-<h4>6に関して</h4>
-
-<hr />
-
-<ul>
-<li>OAuthを使用して、標準的な形にする</li>
-</ul>
-
-
-<p>標準的なOAuthに則るとエラーメッセージ(RFC6749, RFC6750)は、以下のような形式となる
-(当然ながらhttpステータスは401)</p>
+<p>boundsは以下のような形で指定する(緯度、経度がそれぞれどっちに向いてるのかを指定すると思えばよい)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{
-</span><span class='line'>  "error": "invalid_token"
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>36.798805,-120.498805|136.733332,-130.498805</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>7に関して</h4>
+<h3>実行する</h3>
 
-<hr />
+<p>以下のようにすることでjsonが返却される</p>
 
-<ul>
-<li>ホスト名にapiを入れるのが主流</li>
-<li>企業で複数のサービスをホストする場合、例外的なホスト名</li>
-<li>サービスとしてのapiの場合はホスト名にapiをいれたほうがよい(外部から使われるため)</li>
-<li>プラットフォームの場合、service等をホスト名にいれる</li>
-</ul>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -v http://maps.google.com/maps/api/geocode/json?latlng=36.798805,%20136.733332&sensor=false |jq .</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>まとめ</h2>
-
-<hr />
-
-<ul>
-<li>一般的なURI設計がそのまま適用できる</li>
-<li>APIならではのルール、デファクトスタンダードがある</li>
-<li>URIはリソースを表すものなので、URIとHTTPメソッドの組み合わせで処理の対象と内容を設計をする</li>
-</ul>
-
-
-<h4>Good</h4>
-
-<ul>
-<li>覚えやすく、どんな機能を持つかが一目で分かるようにエンドポイントにする</li>
-<li>適切なHTTPメソッドを利用する</li>
-<li>適切な英単語を利用し、単数形、複数形にも注意する</li>
-<li>認証はOAuth2.0を使う</li>
-</ul>
 
 </div>
 
@@ -275,12 +200,12 @@
   
 
 
-<time datetime="2014-12-22T23:18:00+09:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2014</time>
+<time datetime="2015-10-16T11:08:00+09:00" pubdate data-updated="true">Oct 16<span>th</span>, 2015</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/api/'>API</a>
+    <a class='category' href='/blog/categories/googlemap/'>GoogleMap</a>
   
 </span>
 
@@ -289,7 +214,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/12/22/web-api-good-parts-2/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/12/22/web-api-good-parts-2/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/10/16/reverse-geocoding/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/10/16/reverse-geocoding/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -302,10 +227,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/11/15/back-multi-modal/" title="Previous Post: iOSで複数のmodalを同時に閉じる">&laquo; iOSで複数のmodalを同時に閉じる</a>
+        <a class="basic-alignment left" href="/blog/2015/10/04/unixtime-to-datetime/" title="Previous Post: unixtimestampをDatetimeに変更する">&laquo; unixtimestampをDatetimeに変更する</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2015/01/08/emacs-version/" title="Next Post: Emacsのバージョンで分岐をさせたい">Emacsのバージョンで分岐をさせたい &raquo;</a>
       
     </p>
   </footer>
