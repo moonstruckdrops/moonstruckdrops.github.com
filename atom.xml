@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-10-24T13:39:34+09:00</updated>
+  <updated>2015-11-06T00:45:02+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,189 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails5を使ってみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/11/06/edge-rails5/"/>
+    <updated>2015-11-06T00:16:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/11/06/edge-rails5</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>とある要件があり、使用するFramework最近ブログネタに賑わっているRailsでということになった<br/>
+せっかくなので、開発開始&amp;リリースはいつになるのかという噂のRails5を使ってみることにした</p>
+
+<p>開発変更時期にRails5もリリースされているだろうという多少の先を見越す形でもありますがｗ</p>
+
+<h3>準備</h3>
+
+<hr />
+
+<p>どうやら、後方互換とはなんだったのかの勢いで最新っぽいので、以下を準備します。</p>
+
+<ul>
+<li>Ruby2.2.2以降のインストール</li>
+<li>railsのリポジトリをclone</li>
+</ul>
+
+
+<p>なにはともあれ、現時点の最新版だとスッキリした気分ですねw</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git clone https://github.com/rails/rails.git</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>まずはバージョン情報</h3>
+
+<hr />
+
+<p>昔は<code>railties/bin/rails</code>だったのですが、<code>railties/exe/rails</code>変更になったようです<br/>
+ちょっと焦りましたw</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$./rails/railties/exe/rails -v
+</span><span class='line'>/usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require': cannot load such file -- concurrent/map (LoadError)
+</span><span class='line'>  from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+</span><span class='line'>  from /Users/moonstruckdrops/rails/activesupport/lib/active_support/inflector/inflections.rb:1:in `&lt;top (required)&gt;'
+</span><span class='line'>  from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+</span><span class='line'>  from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+</span><span class='line'>  from /Users/moonstruckdrops/rails/activesupport/lib/active_support/inflections.rb:1:in `&lt;top (required)&gt;'
+</span><span class='line'>    (省略)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どうやら、<code>activesupport/activesupport.gemspec</code>を見ると、<br/>
+<code>concurrent-ruby</code>が足りなかったようなので追加します(正式版では無く、alpha版が必要です)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$gem install concurrent-ruby -v 1.0.0.pre5 --no-ri --no-rdoc</span></code></pre></td></tr></table></div></figure>
+
+
+<p>気を取り直してもう一度実行すると動作します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$./rails/railties/exe/rails -v
+</span><span class='line'>Rails 5.0.0.alpha</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>プロジェクト生成</h3>
+
+<hr />
+
+<p>せっかくなのでRails-APIオプションを使います<br/>
+(api以外のオプションはお好みで設定してください)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$./rails/railties/exe/rails new my_app --api -d mysql -T --skip-javascript --skip-test-unit --skip-turbolinks</span></code></pre></td></tr></table></div></figure>
+
+
+<p>が、そのまま実行してもエラーになりますのでGemfileを修正します</p>
+
+<ul>
+<li><code>rails</code>は、cloneしたソースコードになるようにする</li>
+<li><code>rack</code>,<code>arel</code>はgit or cloneしたソースコードになるようにする</li>
+</ul>
+
+
+<p>最終的にGemfileを以下のようにする(コメントのみ削除)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>source 'https://rubygems.org'
+</span><span class='line'>
+</span><span class='line'>gem 'rack', path: '../rack'
+</span><span class='line'>gem 'arel', path: '../arel'
+</span><span class='line'>
+</span><span class='line'>gem 'rails', '5.0.0.alpha', path: '../rails'
+</span><span class='line'>gem 'mysql2', '&gt;= 0.3.18', '&lt; 0.5'
+</span><span class='line'># gem 'bcrypt', '~&gt; 3.1.7'
+</span><span class='line'>
+</span><span class='line'># gem 'unicorn'
+</span><span class='line'>
+</span><span class='line'># gem 'capistrano-rails', group: :development
+</span><span class='line'>
+</span><span class='line'>gem 'active_model_serializers', '~&gt; 0.10.0.rc2'
+</span><span class='line'>
+</span><span class='line'># gem 'rack-cors'
+</span><span class='line'>
+</span><span class='line'>group :development, :test do
+</span><span class='line'>  gem 'byebug'
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>group :development do
+</span><span class='line'>  gem 'spring'
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>起動する</h3>
+
+<hr />
+
+<p>ここは普段どおりにrackで起動します
+rails</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$cd my_app
+</span><span class='line'>$bin/rails s
+</span><span class='line'>=&gt; Booting WEBrick
+</span><span class='line'>=&gt; Rails 5.0.0.alpha application starting in development on http://localhost:3000
+</span><span class='line'>=&gt; Run `rails server -h` for more startup options
+</span><span class='line'>=&gt; Ctrl-C to shutdown server
+</span><span class='line'>[2015-11-06 00:00:05] INFO  WEBrick 1.3.1
+</span><span class='line'>[2015-11-06 00:00:05] INFO  ruby 2.2.2 (2015-04-13) [x86_64-darwin14]
+</span><span class='line'>[2015-11-06 00:00:05] INFO  WEBrick::HTTPServer#start: pid=14583 port=3000</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ポイント</h3>
+
+<hr />
+
+<p>特に挙げることもないですが、
+rails配下にあるgemspecファイルに目を通しておけば、インストールや起動に必須なgemがわかるので問題解決が早くなるということぐらいでしょうか</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Pythonで文字変換]]></title>
@@ -2092,15 +2275,6 @@ Herokuではこのタスクが必要なようです。</p>
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>M-x load-file RET ~/.emacs.d/init.el</span></code></pre></td></tr></table></div></figure>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[gocon-spring]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/05/31/gocon-spring/"/>
-    <updated>2014-05-31T13:49:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/05/31/gocon-spring</id>
-    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   

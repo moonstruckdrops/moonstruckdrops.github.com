@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-10-24T13:39:34+09:00</updated>
+  <updated>2015-11-06T00:45:02+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,152 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails5を使ってみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/11/06/edge-rails5/"/>
+    <updated>2015-11-06T00:16:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/11/06/edge-rails5</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>とある要件があり、使用するFramework最近ブログネタに賑わっているRailsでということになった<br/>
+せっかくなので、開発開始&amp;リリースはいつになるのかという噂のRails5を使ってみることにした</p>
+
+<p>開発変更時期にRails5もリリースされているだろうという多少の先を見越す形でもありますがｗ</p>
+
+<h3>準備</h3>
+
+<hr />
+
+<p>どうやら、後方互換とはなんだったのかの勢いで最新っぽいので、以下を準備します。</p>
+
+<ul>
+<li>Ruby2.2.2以降のインストール</li>
+<li>railsのリポジトリをclone</li>
+</ul>
+
+
+<p>なにはともあれ、現時点の最新版だとスッキリした気分ですねw</p>
+
+<p><code>
+$git clone https://github.com/rails/rails.git
+</code></p>
+
+<h3>まずはバージョン情報</h3>
+
+<hr />
+
+<p>昔は<code>railties/bin/rails</code>だったのですが、<code>railties/exe/rails</code>変更になったようです<br/>
+ちょっと焦りましたw</p>
+
+<p><code>``
+$./rails/railties/exe/rails -v
+/usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in</code>require': cannot load such file -- concurrent/map (LoadError)</p>
+
+<pre><code>from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+from /Users/moonstruckdrops/rails/activesupport/lib/active_support/inflector/inflections.rb:1:in `&lt;top (required)&gt;'
+from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+from /Users/moonstruckdrops/rails/activesupport/lib/active_support/inflections.rb:1:in `&lt;top (required)&gt;'
+(省略)
+</code></pre>
+
+<p>```</p>
+
+<p>どうやら、<code>activesupport/activesupport.gemspec</code>を見ると、<br/>
+<code>concurrent-ruby</code>が足りなかったようなので追加します(正式版では無く、alpha版が必要です)</p>
+
+<p><code>
+$gem install concurrent-ruby -v 1.0.0.pre5 --no-ri --no-rdoc
+</code></p>
+
+<p>気を取り直してもう一度実行すると動作します</p>
+
+<p><code>
+$./rails/railties/exe/rails -v
+Rails 5.0.0.alpha
+</code></p>
+
+<h3>プロジェクト生成</h3>
+
+<hr />
+
+<p>せっかくなのでRails-APIオプションを使います<br/>
+(api以外のオプションはお好みで設定してください)</p>
+
+<p><code>
+$./rails/railties/exe/rails new my_app --api -d mysql -T --skip-javascript --skip-test-unit --skip-turbolinks
+</code></p>
+
+<p>が、そのまま実行してもエラーになりますのでGemfileを修正します</p>
+
+<ul>
+<li><code>rails</code>は、cloneしたソースコードになるようにする</li>
+<li><code>rack</code>,<code>arel</code>はgit or cloneしたソースコードになるようにする</li>
+</ul>
+
+
+<p>最終的にGemfileを以下のようにする(コメントのみ削除)</p>
+
+<p>```
+source 'https://rubygems.org'</p>
+
+<p>gem 'rack', path: '../rack'
+gem 'arel', path: '../arel'</p>
+
+<p>gem 'rails', '5.0.0.alpha', path: '../rails'
+gem 'mysql2', '>= 0.3.18', '&lt; 0.5'</p>
+
+<h1>gem 'bcrypt', '~> 3.1.7'</h1>
+
+<h1>gem 'unicorn'</h1>
+
+<h1>gem 'capistrano-rails', group: :development</h1>
+
+<p>gem 'active_model_serializers', '~> 0.10.0.rc2'</p>
+
+<h1>gem 'rack-cors'</h1>
+
+<p>group :development, :test do
+  gem 'byebug'
+end</p>
+
+<p>group :development do
+  gem 'spring'
+end</p>
+
+<p>gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+```</p>
+
+<h3>起動する</h3>
+
+<hr />
+
+<p>ここは普段どおりにrackで起動します
+rails</p>
+
+<p><code>
+$cd my_app
+$bin/rails s
+=&gt; Booting WEBrick
+=&gt; Rails 5.0.0.alpha application starting in development on http://localhost:3000
+=&gt; Run `rails server -h` for more startup options
+=&gt; Ctrl-C to shutdown server
+[2015-11-06 00:00:05] INFO  WEBrick 1.3.1
+[2015-11-06 00:00:05] INFO  ruby 2.2.2 (2015-04-13) [x86_64-darwin14]
+[2015-11-06 00:00:05] INFO  WEBrick::HTTPServer#start: pid=14583 port=3000
+</code></p>
+
+<h3>ポイント</h3>
+
+<hr />
+
+<p>特に挙げることもないですが、
+rails配下にあるgemspecファイルに目を通しておけば、インストールや起動に必須なgemがわかるので問題解決が早くなるということぐらいでしょうか</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[deviseでemailを空白でもよいようにする]]></title>
@@ -636,138 +782,6 @@ group :assets do</p>
 代わりの設定は、<code>config/application.rb</code>になるようです。</p>
 
 <p>メジャーアップデートの前に、<a href="http://railscasts.com/episodes/415-upgrading-to-rails-4?language=ja&amp;view=asciicast">移行ガイド</a>に目を通せってことですねw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Railsで定数を定義する]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/03/23/rails-consts/"/>
-    <updated>2014-03-23T20:34:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/03/23/rails-consts</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>Railsで定数を作るとき、いつもどうしてたっけ？っていう個人まとめをつくってみました。</p>
-
-<p>決定版みたいなものが無い感じというのもあったりするので参照用という感じです。</p>
-
-<h3>グローバルな定数定義</h3>
-
-<hr />
-
-<p>以下のような感じの内容で、「config/initializers」に適当なRubyファイルを作成して定義します</p>
-
-<p><code>
-HOGE = "HOGE"
-FUGA = "FUGA"
-</code></p>
-
-<p>もしくは、yamlに定数を切り出して、実行タイミング(Rails起動時)にロードという方式でもいいかもしれません。<br/>
-# yamlに切り出すと管理が大変になるかも・・・という欠点は無きにしもあらずですね。</p>
-
-<p>欠点は以下が考えられます。</p>
-
-<ul>
-<li>namespaceの概念が無いので少々使いづらい</li>
-<li>環境ごとに値を変更したい場合、切り替え処理を自前でやる必要がある</li>
-</ul>
-
-
-<p>特に、環境差分とか無ければこれでいいかもしれませんね。<br/>
-# 尤も、namespaceを使わなくて済む程度という前提が付きますが・・・</p>
-
-<h3>コントローラー内で共通な定数定義</h3>
-
-<hr />
-
-<p>以下のような感じで、app/controllers/application_controller.rb 内で定義します</p>
-
-<p><code>
-class ApplicationController &lt; ActionController::Base
-  HOGE = "HOGE"
-  FUGA = "FUGA"
-end
-</code></p>
-
-<p>単にApplicationControllerがすべてのcontrollerのスーパークラスになっているから参照できるというだけの話です。
-# あまりここに定義はしたくないですね。</p>
-
-<h3>rails_configを使って環境ごとに変更する</h3>
-
-<hr />
-
-<p><a href="https://github.com/railsjedi/rails_config">rails_config</a>というgemを使う方法ですね。</p>
-
-<p>以下をGemfileに記述し、インストールします。</p>
-
-<p><code>
-gem 'rails_config'
-</code></p>
-
-<p>rails_configを使うように初期設定をします(ただのインストールですが)
-<code>
-$rails g rails_config:install
-</code></p>
-
-<p>ファイルに関しては以下の通り</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">環境</th>
-<th align="left">ファイルパス</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">全ての環境で共通</td>
-<td align="left">config/settings.yml</td>
-</tr>
-<tr>
-<td align="left">ローカル環境</td>
-<td align="left">config/settings.local.yml</td>
-</tr>
-<tr>
-<td align="left">開発環境</td>
-<td align="left">config/settings/development.yml</td>
-</tr>
-<tr>
-<td align="left">テスト環境</td>
-<td align="left">config/settings/test.yml</td>
-</tr>
-<tr>
-<td align="left">本番環境</td>
-<td align="left">config/settings/production.yml</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>YAMLの記述は以下のような感じで行います</p>
-
-<p><code>
-hoge:
-  fuga: 'fugafuga'
-  test: 'test'
-</code></p>
-
-<p>使用する場合は、以下のようなコードで出来ます。</p>
-
-<p><code>
-Settings.hoge[:fuga]
-Settings.hoge['fuga']
-Settings[:hoge][:fuga]
-</code></p>
-
-<p>他に、同じようなことをする有名なgemに、「settingslogic」があります。<br/>
-以下の感想でsettingslogicはあまりつかわないです。</p>
-
-<ul>
-<li>一つのファイルで全て定義なのでファイルが肥大化しそう</li>
-<li>クラス定義も作る必要があるので若干面倒(シンプルに使えない)</li>
-</ul>
-
 ]]></content>
   </entry>
   

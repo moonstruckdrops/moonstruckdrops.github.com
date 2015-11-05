@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに APIを作るときにどうするか？を開発チーム内で議論したので、備忘録的なメモ 発端となった会話は、こんな感じだったはず 「マイクロアーキテクチャなサービスを作ったときってAPIを作ると思うけど、ライフサイクルって考えてる？」
-「APIを利用するフロントは更新できるけど、 &hellip;">
+  <meta name="description" content="はじめに 同僚とApacheとTomcatって何で連携させるんだっけ？
+という話が出たので備忘録的に記載しておきます ぶっちゃけ、今更感がすごい内容ですが・・・ Apache ざっくり言うと、クライアントのブラウザからアクセスし、サービスを提供するためのWebサーバソフトウェア Tomcat &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/17/apache-plus-tomcat/">なぜApacheとTomcatを連携させるのか</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-03-17T00:12:00+09:00" pubdate data-updated="true">Mar 17<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>同僚とApacheとTomcatって何で連携させるんだっけ？<br/>
+という話が出たので備忘録的に記載しておきます</p>
+
+<p>ぶっちゃけ、今更感がすごい内容ですが・・・</p>
+
+<h3>Apache</h3>
+
+<hr />
+
+<p>ざっくり言うと、クライアントのブラウザからアクセスし、サービスを提供するためのWebサーバソフトウェア</p>
+
+<h3>Tomcat</h3>
+
+<hr />
+
+<p>こちらもざっくり言うと、以下のもの</p>
+
+<ul>
+<li>「サーブレット・コンテナ」(Servlet等を動作させるために必要なWebアプリケーションサーバ)</li>
+<li>Servletのインスタンス管理やセッションの管理</li>
+<li>Webサーバ機能有り(主に開発とデバッグ用)</li>
+</ul>
+
+
+<h3>連携理由</h3>
+
+<hr />
+
+<p>開発、デバッグ用途としてWebサーバ機能があるので、問題はないのですが
+そもそもとして、ApacheなどのWebサーバの性能と同等に捌けるかは疑問があったりするところ</p>
+
+<p>なので、以下の処理分担としたほうが効率よく捌けるため連携をさせることが多い</p>
+
+<ul>
+<li>静的コンテンツ(HTMLや画像ファイルなど)の処理はApacheが担当(何故なら、高速でTomcatに比べて高速に処理できるから)</li>
+<li>動的コンテンツに関しての処理をTomcatが担当</li>
+</ul>
+
+
+<p>所謂、餅は餅屋ということですな</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -985,42 +1064,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/31/gocon-spring/">Gocon-spring</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-31T13:49:00+09:00" pubdate data-updated="true">May 31<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1042,6 +1085,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/06/edge-rails5/">Rails5を使ってみる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a>
       </li>
     
@@ -1057,15 +1104,11 @@
         <a href="/blog/2015/08/10/devise-email/">deviseでemailを空白でもよいようにする</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/06/27/rails-sti/">RailsでSTI（単一テーブル継承）の予約語でハマった話対処</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 132.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 108.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 104.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 104.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 120.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 104.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 116.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 104.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 104.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 104.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 104.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 104.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 128.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 104.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 140.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 124.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 124.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 104.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 104.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(15)</a> <a href='/blog/categories/shellscript' style='font-size: 104.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 104.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 132.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.5%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.75%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.75%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 118.75%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.75%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 115.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.75%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.75%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.75%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.75%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.75%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 126.25%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.75%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 137.5%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 122.5%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 122.5%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.75%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.75%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(16)</a> <a href='/blog/categories/shellscript' style='font-size: 103.75%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.75%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 130.0%'>戯言(8)</a> </span>
 </section
 
 
