@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-11-06T00:45:02+09:00</updated>
+  <updated>2015-12-11T22:42:51+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,269 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyKaigi１日目に行ってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/12/11/2015-ruby-kaigi/"/>
+    <updated>2015-12-11T10:09:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/12/11/2015-ruby-kaigi</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>ここ最近はRubyを書くことが少なくなってきたのですが、<br/>
+RubyKaigiの一日目に行ってきた</p>
+
+<p>ミドルウェアとかインフラとか、設計とかコードから離れた生活を繰り広げております</p>
+
+<p>RubyKaigiの一日目は、これまた時間と仕事の都合上午前中のみしか参加できずorz</p>
+
+<p>なので、一日目は、keynoteだけ聞いてきました</p>
+
+<p>Crystalにも興味はあったので、ちょっと気になるのですがここは涙を飲んで・・・</p>
+
+<p>ところでマネーフォワードさん、すごいですね。</p>
+
+<p>Rubyコミッターのフルタイム採用とか松田さんの技術顧問就任とか。</p>
+
+<p>という訳でメモを残しておく</p>
+
+<h3>keynote</h3>
+
+<hr />
+
+<p>プログラマーの美徳</p>
+
+<ul>
+<li>怠惰(怠けるための努力をしない)</li>
+<li>ガマンしない(PCが活用されていないことに怒る)</li>
+<li>傲慢(ソフトウェアのクォリティ)</li>
+</ul>
+
+
+<p>全て、怒りに通じている<br/>
+(Rubyにケチ付けられていることも・・・)</p>
+
+<p>怒りは伝染るので、親切も伝染る</p>
+
+<p>なので、内心腹たってても親切に対応するといいことがある</p>
+
+<p>親切な対応が多いので、Rubyコミュニティは素晴らしい</p>
+
+<h4>最近のニュース</h4>
+
+<ul>
+<li>Ruby2.3.0リリースが出た(クリスマスにリリースする)</li>
+<li>RubyKaigiに合わせてやった</li>
+<li>もしかして機能をつけた(NameErrorの際にスペル指摘とか)</li>
+<li>Enumerable#grep_vが追加(マッチしないものを提示)</li>
+<li>Hash#fetch_at(指定しないキーがあれば例外)</li>
+<li>Numeric#negative? positive?</li>
+<li>Hashの包含関係をチェックできるようになった</li>
+<li>Hash#to_proc(h= {1: 2,2: 4,4: 6} (1..3)..map(&amp;h))</li>
+<li>Array,Hash#digメソッド追加(data.dig(:user, 0)のようにあればアクセスして値を返す)</li>
+<li>ヒアドキュメントにチルダをつけると、インデントの浅いところに合わせる</li>
+<li>frozen-string-literalをつけると、文字列に追加するとエラー、パフォーマンスがよくなる&amp;エラーがはっきりする</li>
+<li>safe navigation オペレーター「&amp;.」の追加(ぼっちオペレーター・・・) u &amp;&amp; u.first &amp;&amp; u.name が u&amp;.first&amp;.name になる</li>
+<li>年に5%~10%の改善(2.3も同様)</li>
+</ul>
+
+
+<p>よくなる提案を受け入れてもっと良い物をという、Rubyコミュニティの成果</p>
+
+<ul>
+<li>mruby1.2</li>
+<li><p>ビルドプロセスとか、諸々の改善</p></li>
+<li><p>Streem</p></li>
+<li>githubに公開してた</li>
+<li>何もしないのに取り上げられて、色々とバズってしまった</li>
+</ul>
+
+
+<h4>Ruby3</h4>
+
+<ul>
+<li>変化はコスト、苦痛</li>
+<li>言語デザインは難しい</li>
+<li>矛盾する要求がある</li>
+</ul>
+
+
+<p>未来の状況はわからない</p>
+
+<p>スクリプト言語にオブジェクト指向要らない<br/>
+→21世紀になってくると何らかの形でオブジェクト指向を持つものが多くなった<br/>
+→人に合わせてつくることが無かった<br/>
+新しい当たり前になれた<br/>
+Ruby成功の秘訣<br/>
+webappの分野ではトップ近くまでなれた<br/>
+とはいえ、言語して完成しているわけではない</p>
+
+<p>互換性の問題や、移行の問題(5年かかった)<br/>
+# Python3よりはマシ</p>
+
+<p>全部を捨てることはせず、段階的に変化させていく方法を取った<br/>
+１つずつ、テストを書いて確認して実施<br/>
+移行パスの提示</p>
+
+<p>ドラスティックな変更はしないし、ひとつずつの進歩<br/>
+バージョニング問題(1.8 vs 1.9のときは除くの轍は踏まなかった)は他の言語のようなことは起きなかった</p>
+
+<p>変化のうえで学んだこと</p>
+
+<ul>
+<li>何もかもいっぺんに捨てない</li>
+<li>劇的な変化はしない(互換性を理由なく捨ててはいけない)</li>
+<li>変化を続ける</li>
+<li>ユーザーへの利益(簡潔にかけるとか)</li>
+</ul>
+
+
+<p>Ruby3では以下をやりたい</p>
+
+<ul>
+<li>マルチコアへの対応(開発当時はシングルコアでマルチスレッド)</li>
+<li>コードの拡大(主戦場が変った)</li>
+<li>扱うデータ量の増加でのパフォーマンス対応</li>
+</ul>
+
+
+<p>こんな感じ(約束はしていない)</p>
+
+<ul>
+<li>アクターモデル(goroutin+channelも一応こちらに)</li>
+<li>オーナーシップモデル</li>
+<li>STM(software transaction)は難しいし、無理かも</li>
+<li>streamモデル</li>
+<li>pipeラインを使ったイベントループ(２番めのVMを動かすことで実現)</li>
+<li>コンパイルを賢く</li>
+<li>soft typing(flowtyped interfaceでFlow / Crystal言語、ある程度の型チェックDialyzar(Erlang))</li>
+<li>3倍早くをパフォーマンスも目標にする(Ruby2.0よりも３倍)</li>
+<li>2020までにRuby3を出したい・・・</li>
+<li>難しいことに挑戦</li>
+<li>メモリを大量に使うけど、消費量をおさえるようにはしたい</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[月間1000万PV超あるサービスのサーバリプレースのマネージメントをした話]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/12/05/replace-server/"/>
+    <updated>2015-12-05T13:04:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/12/05/replace-server</id>
+    <content type="html"><![CDATA[<p>自分が投稿したQiitaからの転載です</p>
+
+<h3>はじめに</h3>
+
+<hr />
+
+<p>基本的にプレイヤー側ではありません。</p>
+
+<p>主に以下のことをしていました</p>
+
+<ul>
+<li>作業の進捗管理</li>
+<li>作業内で発生する諸技術の調整</li>
+<li>技術サポート</li>
+</ul>
+
+
+<p>リプレース対象の月間1000万PV超サイトの規模感としては、以下のものです</p>
+
+<ul>
+<li>月間1000万PV超</li>
+<li>ユーザー数30万人超</li>
+<li>オンプレミス環境(コストを掛けて物理で殴る感)</li>
+<li>移設前のサーバー台数は6台</li>
+</ul>
+
+
+<h3>背景</h3>
+
+<hr />
+
+<p>リプレース対象のサービスは元々、友人が携わているサービスでした。</p>
+
+<p>自分は全く関わりが無いサービスでしたが、友人から困っているとの相談を受けました、</p>
+
+<p>話を掻い摘んで要約すると以下の模様</p>
+
+<ol>
+<li>「2015年末にデータセンターが統合されるので、年末までの統合先のデータセンターに移設するか、利用停止するかの命令が来た」のでどうにかしたい</li>
+<li>とはいえサーバ運用やOSレベルでそこそこわかる人間がいないので、年末までに完了させるのは難しい</li>
+<li>元々、サーバ構築した人間がいないので、ブラックボックス化しているのでなんとかしたい</li>
+<li>動作環境がかなり複雑化しているので、うまく解体してスピード感ある形にしたい</li>
+<li>元々、データセンターのオンプレミス環境には不満があって、クラウドサーバーへの移設を検討していた</li>
+</ol>
+
+
+<p>1~3の事情があってヤバイけど、4,5も進めていきたいという模様でしょうか</p>
+
+<h3>移設前後の構成</h3>
+
+<hr />
+
+<p>後から、尾を引きたくなるようになることは間違い無かったので<br/>
+サーバを役割ごとに分割しました</p>
+
+<h4>移設前</h4>
+
+<p>全台オンプレミス環境で以下の構成で運用されていました</p>
+
+<ul>
+<li>Webサーバ + その他複数の機能兼用サーバ1台</li>
+<li>Webサーバ2台</li>
+<li>Master/Slave構成のデータベースサーバが各1台ずつ</li>
+<li>Image(画像配信)サーバ1台</li>
+</ul>
+
+
+<h4>移設後</h4>
+
+<p>全台クラウド環境で、以下の構成に変更しました</p>
+
+<ul>
+<li>Webサーバ3台</li>
+<li>Batchサーバ1台</li>
+<li>Master/Slave構成のデータベースサーバが各1台ずつ</li>
+<li>Image(画像配信)サーバ1台</li>
+<li>Mail(メール配信)サーバ1台</li>
+</ul>
+
+
+<p>その他複数機能あったサーバをうまくRoleごとに切り分けることができました</p>
+
+<h3>マネージメントとしてやったこと</h3>
+
+<hr />
+
+<p>基本的に作業は任せる形にして、以下の方向性だけを決めるのに留めました
+(ぶっちゃけ、細かいサービスレベルの話や稼働しているアレコレの内容が不明な為)</p>
+
+<ul>
+<li>移設方針の決定</li>
+<li>マイルストーンの策定</li>
+<li>現行サービス構成の再確認と共有</li>
+<li>作業ルールの策定</li>
+<li>進捗管理と各種作業の調整</li>
+<li>タスク管理</li>
+<li>技術サポート</li>
+</ul>
+
+
+<p>ぐらいですかね。これだけ見ると、殆ど口だけだしてタスク状況を把握しているだけの感じですねｗ</p>
+
+<p>作業に関しては、基本的にと言いましたが、進捗状況で一部を実施する形にはなりました。
+(サービスに影響が全く無いわけでは無いけれども、一般的な手順で解決できるようなこと)</p>
+
+<h3>まとめ</h3>
+
+<hr />
+
+<h4>心がけたこと</h4>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails5を使ってみる]]></title>
@@ -2208,72 +2471,6 @@ Herokuではこのタスクが必要なようです。</p>
 <li>適切な英単語を利用し、単数形、複数形にも注意する</li>
 <li>認証はOAuth2.0を使う</li>
 </ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOSで複数のmodalを同時に閉じる]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/11/15/back-multi-modal/"/>
-    <updated>2014-11-15T17:02:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/11/15/back-multi-modal</id>
-    <content type="html"><![CDATA[<h3>こんな状況</h3>
-
-<hr />
-
-<p>[A→B→C→Dの順で画面を開いた状況で、D->Aへ戻りたいという状況</p>
-
-<h3>やり方</h3>
-
-<hr />
-
-<p>戻りたいところのmodalを指定すると、その前のものは全て閉じることができました</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>self.presentingViewController?.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>画面遷移の状態を覚えてないと辛い感じですね</p>
-
-<h3>元ネタ</h3>
-
-<hr />
-
-<p><a href="dismissViewControllerAnimated:completion:">https://developer.apple.com/library/ios/documentation/uikit/reference/UIViewController_Class/index.html#//apple_ref/occ/instm/UIViewController/dismissViewControllerAnimated:completion:</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Emacsを再起動せずに設定を反映させる]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/11/09/reload-config-emacs/"/>
-    <updated>2014-11-09T12:23:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/11/09/reload-config-emacs</id>
-    <content type="html"><![CDATA[<h3>やりたいこと</h3>
-
-<hr />
-
-<p>Emacsを再起動せず、設定内容を反映させたい</p>
-
-<h3>解決編</h3>
-
-<hr />
-
-<p>追加した部分だけ、評価する</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-region</span></code></pre></td></tr></table></div></figure>
-
-
-<p>今、現在実行している全てのバッファの式を再評価する</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x eval-buffer</span></code></pre></td></tr></table></div></figure>
-
-
-<p>そもそもの設定ファイルを読みなおす</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>M-x load-file RET ~/.emacs.d/init.el</span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
   </entry>

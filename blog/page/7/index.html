@@ -9,8 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。 簡単に言うと、よく言われる「依存性の注入」といいます。 が、なんのことかさっぱりわからないですね。
-少し言い換えてあげると 「 &hellip;">
+  <meta name="description" content="簡単な経緯 このブログ記事を書くキッカケになった内容を以下に記述します。 お馬鹿すぎて笑えますwww Dropboxアプリ起動
+アプリを起動したまま、あるコマンドを実行
+Dropboxと同期したディレクトリが2で実行したコマンドで削除される
+1のDropboxアプリが削除した状態を同期開始 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +74,283 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/13/recover-dropbox-data/">削除してしまったDropboxのデータを復元する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-13T17:06:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>簡単な経緯</h3>
+
+<hr />
+
+<p>このブログ記事を書くキッカケになった内容を以下に記述します。</p>
+
+<p>お馬鹿すぎて笑えますwww</p>
+
+<ol>
+<li>Dropboxアプリ起動</li>
+<li>アプリを起動したまま、あるコマンドを実行</li>
+<li>Dropboxと同期したディレクトリが2で実行したコマンドで削除される</li>
+<li>1のDropboxアプリが削除した状態を同期開始</li>
+<li>削除だけなので、同期が一瞬で終わってしまう</li>
+<li>Dropboxサーバのデータが削除</li>
+</ol>
+
+
+<p>こんな感じでした・・・
+実際は、Dropboxのディレクトリだけでなくもっと影響がでかくて涙を流しています。</p>
+
+<h3>復元の手順</h3>
+
+<hr />
+
+<p>復活の呪文を唱えるにも条件があります。</p>
+
+<h4>削除してからの日数が30日以内であれば、復元可能</h4>
+
+<p>というものです。</p>
+
+<p>幸いなことに削除した次の日に気がついたので、自分はこの条件を満たしていました。</p>
+
+<p>で、肝心の復元の手順ですが、以下で実施します。</p>
+
+<ol>
+<li>Dropboxのウェブサイトにログイン</li>
+<li>画面右上の「削除済みファイル」をクリック</li>
+<li>ファイル名の横に表示されている逆三角を押下し復元をクリック</li>
+</ol>
+
+
+<h4><a href="https://www.dropbox.com/help/296/ja">公式の手順</a></h4>
+
+<p>これで削除したファイルが復元できます。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/02/ruby-struct/">RubyのStructクラスが便利</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-02T01:15:00+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも</p>
+
+<h3>Structクラス</h3>
+
+<hr />
+
+<p>Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・)</p>
+
+<p>平たく言うと、Classクラスに似ているものです。</p>
+
+<p>じゃー違いは何なの？ってなります。</p>
+
+<ol>
+<li>newしたとき、引数で指定したアクnセッサをもつクラスを生成する</li>
+<li>第一引数の文字列がクラス名となるが、指定がない場合は無名のクラスになる</li>
+</ol>
+
+
+<p>これだけ。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new("Point", :x, :y)
+</span><span class='line'>item = Point.new(100,200)
+</span><span class='line'>p item =&gt; #&lt;struct Struct::Point x=100, y=200&gt;
+</span><span class='line'>p item.x =&gt; 100</span></code></pre></td></tr></table></div></figure>
+
+
+<p>無名クラスだと、こんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point2 = Struct.new(:z)
+</span><span class='line'>Point2.class =&gt; Class
+</span><span class='line'>item2 = Point2.new(300)
+</span><span class='line'>p item2 =&gt; #&lt;struct Point2 z=300&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ドキュメントに無い機能</h3>
+
+<hr />
+
+<p>ブロックを使うことができることです。<br/>
+ブロック内では、独自のメソッドを定義することができます。</p>
+
+<p>こんな感じです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new(:x, :y) do
+</span><span class='line'>  def sum
+</span><span class='line'>        x + y
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def minus
+</span><span class='line'>        x - y 
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>p Point.new(600, 700).sum =&gt; 1300
+</span><span class='line'>p Point.new(800,900).minus =&gt; -100</span></code></pre></td></tr></table></div></figure>
+
+
+<p>他にも、superを使うことで、上位のコンストラクタを実行することができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
+</span><span class='line'>  def initialize(x, y)
+</span><span class='line'>    z = x + y
+</span><span class='line'>    super(z, y)
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>item = Point.new(400, 500)
+</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使いどころ</h3>
+
+<hr />
+
+<p>正直、あんまり無いような気がしなくもないですが、自分だと以下で使います。</p>
+
+<ul>
+<li>csvファイルとか読み込むとき、ちょっとしたデータ構造を定義するとき</li>
+<li>ちょっとしたデータのソート</li>
+<li>ちょっとしたアルゴリズムの追加</li>
+<li>ハッシュの代わりとか(既にデータ構造が分かってる場合など)</li>
+</ul>
+
+
+<p>データソートする場合の例</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
+</span><span class='line'>  def initialize(x, y)
+</span><span class='line'>    z = x + y
+</span><span class='line'>    super(z, y)
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>item = Point.new(400, 500)
+</span><span class='line'>item2 = Point.new(200,300)
+</span><span class='line'>
+</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;
+</span><span class='line'>p item2 =&gt; #&lt;struct Point x=500, y=300&gt;
+</span><span class='line'>
+</span><span class='line'>array = []
+</span><span class='line'>array &lt;&lt; item
+</span><span class='line'>array &lt;&lt; item2
+</span><span class='line'>
+</span><span class='line'>p array =&gt; [#&lt;struct Point x=900, y=500&gt;, #&lt;struct Point x=500, y=300&gt;]
+</span><span class='line'>
+</span><span class='line'>result = array.sort{ |item1,item2|
+</span><span class='line'>                    item1.x &lt;=&gt; item2.x
+</span><span class='line'>               }
+</span><span class='line'>p result =&gt; [#&lt;struct Point x=500, y=300&gt;, #&lt;struct Point x=900, y=500&gt;]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>書き捨てみたいなRubyコードを書くときにはちょうどいいのかもしれないですね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1225,161 +1504,6 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/24/linux-user-add/">Linux上にあるユーザーアカウントの追加と削除をする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>すごくド基礎なのですが・・・。<br/>
-ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
-
-<h3>ユーザーアカウントの追加</h3>
-
-<hr />
-
-<p>基本中の基本ですね。<br/>
-以下のコマンドのような感じで追加します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下の表によく使用するオプションを記載します。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">オプション</th>
-<th align="left">意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">c コメント      </td>
-<td align="left">ユーザーのコメントを設定</td>
-</tr>
-<tr>
-<td align="left">d ディレクトリ  </td>
-<td align="left">ユーザーのログインディレクトリを指定</td>
-</tr>
-<tr>
-<td align="left">e mm/dd/yy </td>
-<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
-</tr>
-<tr>
-<td align="left">g グループ   </td>
-<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
-</tr>
-<tr>
-<td align="left">G グループ    </td>
-<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
-</tr>
-<tr>
-<td align="left">u ユーザーID </td>
-<td align="left">ユーザーのユーザーIDを指定</td>
-</tr>
-<tr>
-<td align="left">s シェル </td>
-<td align="left">ユーザーのログインシェルを指定</td>
-</tr>
-<tr>
-<td align="left">m        </td>
-<td align="left">ホームディレクトリの作成を自動で行う</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>ユーザーアカウントの削除</h3>
-
-<hr />
-
-<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
-なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
-但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>常識ですね(ぉぃ</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/22/zip-pass/">コマンドで暗号化Zipファイルを作成する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-22T23:48:00+09:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>暗号化Zipファイル作成</h3>
-
-<hr />
-
-<p>大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。<br/>
-以下のようにzipコマンドのeオプションを使うだけで簡単にできます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>恥ずかしながらあんまりやらないので、いざというときには忘れてしまいます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -1401,6 +1525,14 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/05/replace-server/">月間1000万PV超あるサービスのサーバリプレースのマネージメントをした話</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/11/06/edge-rails5/">Rails5を使ってみる</a>
       </li>
     
@@ -1412,19 +1544,11 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
         <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/10/devise-email/">deviseでemailを空白でもよいようにする</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.5%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.75%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.75%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 118.75%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.75%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 115.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.75%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.75%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.75%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.75%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.75%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 126.25%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.75%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 137.5%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 122.5%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 122.5%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.75%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.75%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(16)</a> <a href='/blog/categories/shellscript' style='font-size: 103.75%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.75%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 130.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 128.23529411764707%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.05882352941177%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.52941176470588%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.52941176470588%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 117.64705882352942%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.52941176470588%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 114.11764705882354%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.52941176470588%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.52941176470588%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.52941176470588%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.52941176470588%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.52941176470588%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 124.70588235294117%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.52941176470588%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 135.29411764705884%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 121.17647058823529%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 121.17647058823529%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.52941176470588%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.52941176470588%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(17)</a> <a href='/blog/categories/shellscript' style='font-size: 103.52941176470588%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.52941176470588%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 128.23529411764707%'>戯言(8)</a> </span>
 </section
 
 

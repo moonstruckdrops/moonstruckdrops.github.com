@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに とある要件があり、使用するFramework最近ブログネタに賑わっているRailsでということになった
-せっかくなので、開発開始&amp;リリースはいつになるのかという噂のRails5を使ってみることにした &hellip;">
+  <meta name="description" content="はじめに ここ最近はRubyを書くことが少なくなってきたのですが、
+RubyKaigiの一日目に行ってきた ミドルウェアとかインフラとか、設計とかコードから離れた生活を繰り広げております RubyKaigiの一日目は、これまた時間と仕事の都合上午前中のみしか参加できずorz なので、一日目は、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,323 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-11T10:09:00+09:00" pubdate data-updated="true">Dec 11<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>ここ最近はRubyを書くことが少なくなってきたのですが、<br/>
+RubyKaigiの一日目に行ってきた</p>
+
+<p>ミドルウェアとかインフラとか、設計とかコードから離れた生活を繰り広げております</p>
+
+<p>RubyKaigiの一日目は、これまた時間と仕事の都合上午前中のみしか参加できずorz</p>
+
+<p>なので、一日目は、keynoteだけ聞いてきました</p>
+
+<p>Crystalにも興味はあったので、ちょっと気になるのですがここは涙を飲んで・・・</p>
+
+<p>ところでマネーフォワードさん、すごいですね。</p>
+
+<p>Rubyコミッターのフルタイム採用とか松田さんの技術顧問就任とか。</p>
+
+<p>という訳でメモを残しておく</p>
+
+<h3>keynote</h3>
+
+<hr />
+
+<p>プログラマーの美徳</p>
+
+<ul>
+<li>怠惰(怠けるための努力をしない)</li>
+<li>ガマンしない(PCが活用されていないことに怒る)</li>
+<li>傲慢(ソフトウェアのクォリティ)</li>
+</ul>
+
+
+<p>全て、怒りに通じている<br/>
+(Rubyにケチ付けられていることも・・・)</p>
+
+<p>怒りは伝染るので、親切も伝染る</p>
+
+<p>なので、内心腹たってても親切に対応するといいことがある</p>
+
+<p>親切な対応が多いので、Rubyコミュニティは素晴らしい</p>
+
+<h4>最近のニュース</h4>
+
+<ul>
+<li>Ruby2.3.0リリースが出た(クリスマスにリリースする)</li>
+<li>RubyKaigiに合わせてやった</li>
+<li>もしかして機能をつけた(NameErrorの際にスペル指摘とか)</li>
+<li>Enumerable#grep_vが追加(マッチしないものを提示)</li>
+<li>Hash#fetch_at(指定しないキーがあれば例外)</li>
+<li>Numeric#negative? positive?</li>
+<li>Hashの包含関係をチェックできるようになった</li>
+<li>Hash#to_proc(h= {1: 2,2: 4,4: 6} (1..3)..map(&amp;h))</li>
+<li>Array,Hash#digメソッド追加(data.dig(:user, 0)のようにあればアクセスして値を返す)</li>
+<li>ヒアドキュメントにチルダをつけると、インデントの浅いところに合わせる</li>
+<li>frozen-string-literalをつけると、文字列に追加するとエラー、パフォーマンスがよくなる&amp;エラーがはっきりする</li>
+<li>safe navigation オペレーター「&amp;.」の追加(ぼっちオペレーター・・・) u &amp;&amp; u.first &amp;&amp; u.name が u&amp;.first&amp;.name になる</li>
+<li>年に5%~10%の改善(2.3も同様)</li>
+</ul>
+
+
+<p>よくなる提案を受け入れてもっと良い物をという、Rubyコミュニティの成果</p>
+
+<ul>
+<li>mruby1.2</li>
+<li><p>ビルドプロセスとか、諸々の改善</p></li>
+<li><p>Streem</p></li>
+<li>githubに公開してた</li>
+<li>何もしないのに取り上げられて、色々とバズってしまった</li>
+</ul>
+
+
+<h4>Ruby3</h4>
+
+<ul>
+<li>変化はコスト、苦痛</li>
+<li>言語デザインは難しい</li>
+<li>矛盾する要求がある</li>
+</ul>
+
+
+<p>未来の状況はわからない</p>
+
+<p>スクリプト言語にオブジェクト指向要らない<br/>
+→21世紀になってくると何らかの形でオブジェクト指向を持つものが多くなった<br/>
+→人に合わせてつくることが無かった<br/>
+新しい当たり前になれた<br/>
+Ruby成功の秘訣<br/>
+webappの分野ではトップ近くまでなれた<br/>
+とはいえ、言語して完成しているわけではない</p>
+
+<p>互換性の問題や、移行の問題(5年かかった)<br/>
+# Python3よりはマシ</p>
+
+<p>全部を捨てることはせず、段階的に変化させていく方法を取った<br/>
+１つずつ、テストを書いて確認して実施<br/>
+移行パスの提示</p>
+
+<p>ドラスティックな変更はしないし、ひとつずつの進歩<br/>
+バージョニング問題(1.8 vs 1.9のときは除くの轍は踏まなかった)は他の言語のようなことは起きなかった</p>
+
+<p>変化のうえで学んだこと</p>
+
+<ul>
+<li>何もかもいっぺんに捨てない</li>
+<li>劇的な変化はしない(互換性を理由なく捨ててはいけない)</li>
+<li>変化を続ける</li>
+<li>ユーザーへの利益(簡潔にかけるとか)</li>
+</ul>
+
+
+<p>Ruby3では以下をやりたい</p>
+
+<ul>
+<li>マルチコアへの対応(開発当時はシングルコアでマルチスレッド)</li>
+<li>コードの拡大(主戦場が変った)</li>
+<li>扱うデータ量の増加でのパフォーマンス対応</li>
+</ul>
+
+
+<p>こんな感じ(約束はしていない)</p>
+
+<ul>
+<li>アクターモデル(goroutin+channelも一応こちらに)</li>
+<li>オーナーシップモデル</li>
+<li>STM(software transaction)は難しいし、無理かも</li>
+<li>streamモデル</li>
+<li>pipeラインを使ったイベントループ(２番めのVMを動かすことで実現)</li>
+<li>コンパイルを賢く</li>
+<li>soft typing(flowtyped interfaceでFlow / Crystal言語、ある程度の型チェックDialyzar(Erlang))</li>
+<li>3倍早くをパフォーマンスも目標にする(Ruby2.0よりも３倍)</li>
+<li>2020までにRuby3を出したい・・・</li>
+<li>難しいことに挑戦</li>
+<li>メモリを大量に使うけど、消費量をおさえるようにはしたい</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/05/replace-server/">月間1000万PV超あるサービスのサーバリプレースのマネージメントをした話</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-05T13:04:00+09:00" pubdate data-updated="true">Dec 5<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>自分が投稿したQiitaからの転載です</p>
+
+<h3>はじめに</h3>
+
+<hr />
+
+<p>基本的にプレイヤー側ではありません。</p>
+
+<p>主に以下のことをしていました</p>
+
+<ul>
+<li>作業の進捗管理</li>
+<li>作業内で発生する諸技術の調整</li>
+<li>技術サポート</li>
+</ul>
+
+
+<p>リプレース対象の月間1000万PV超サイトの規模感としては、以下のものです</p>
+
+<ul>
+<li>月間1000万PV超</li>
+<li>ユーザー数30万人超</li>
+<li>オンプレミス環境(コストを掛けて物理で殴る感)</li>
+<li>移設前のサーバー台数は6台</li>
+</ul>
+
+
+<h3>背景</h3>
+
+<hr />
+
+<p>リプレース対象のサービスは元々、友人が携わているサービスでした。</p>
+
+<p>自分は全く関わりが無いサービスでしたが、友人から困っているとの相談を受けました、</p>
+
+<p>話を掻い摘んで要約すると以下の模様</p>
+
+<ol>
+<li>「2015年末にデータセンターが統合されるので、年末までの統合先のデータセンターに移設するか、利用停止するかの命令が来た」のでどうにかしたい</li>
+<li>とはいえサーバ運用やOSレベルでそこそこわかる人間がいないので、年末までに完了させるのは難しい</li>
+<li>元々、サーバ構築した人間がいないので、ブラックボックス化しているのでなんとかしたい</li>
+<li>動作環境がかなり複雑化しているので、うまく解体してスピード感ある形にしたい</li>
+<li>元々、データセンターのオンプレミス環境には不満があって、クラウドサーバーへの移設を検討していた</li>
+</ol>
+
+
+<p>1~3の事情があってヤバイけど、4,5も進めていきたいという模様でしょうか</p>
+
+<h3>移設前後の構成</h3>
+
+<hr />
+
+<p>後から、尾を引きたくなるようになることは間違い無かったので<br/>
+サーバを役割ごとに分割しました</p>
+
+<h4>移設前</h4>
+
+<p>全台オンプレミス環境で以下の構成で運用されていました</p>
+
+<ul>
+<li>Webサーバ + その他複数の機能兼用サーバ1台</li>
+<li>Webサーバ2台</li>
+<li>Master/Slave構成のデータベースサーバが各1台ずつ</li>
+<li>Image(画像配信)サーバ1台</li>
+</ul>
+
+
+<h4>移設後</h4>
+
+<p>全台クラウド環境で、以下の構成に変更しました</p>
+
+<ul>
+<li>Webサーバ3台</li>
+<li>Batchサーバ1台</li>
+<li>Master/Slave構成のデータベースサーバが各1台ずつ</li>
+<li>Image(画像配信)サーバ1台</li>
+<li>Mail(メール配信)サーバ1台</li>
+</ul>
+
+
+<p>その他複数機能あったサーバをうまくRoleごとに切り分けることができました</p>
+
+<h3>マネージメントとしてやったこと</h3>
+
+<hr />
+
+<p>基本的に作業は任せる形にして、以下の方向性だけを決めるのに留めました
+(ぶっちゃけ、細かいサービスレベルの話や稼働しているアレコレの内容が不明な為)</p>
+
+<ul>
+<li>移設方針の決定</li>
+<li>マイルストーンの策定</li>
+<li>現行サービス構成の再確認と共有</li>
+<li>作業ルールの策定</li>
+<li>進捗管理と各種作業の調整</li>
+<li>タスク管理</li>
+<li>技術サポート</li>
+</ul>
+
+
+<p>ぐらいですかね。これだけ見ると、殆ど口だけだしてタスク状況を把握しているだけの感じですねｗ</p>
+
+<p>作業に関しては、基本的にと言いましたが、進捗状況で一部を実施する形にはなりました。
+(サービスに影響が全く無いわけでは無いけれども、一般的な手順で解決できるようなこと)</p>
+
+<h3>まとめ</h3>
+
+<hr />
+
+<h4>心がけたこと</h4>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1329,564 +1646,6 @@ migrationなどで先にテーブルを作った場合とかに有効活用で�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/17/android-build-config/">BuildConfigを使用して、環境ごとに値を取得仕分けてみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-17T23:57:00+09:00" pubdate data-updated="true">Mar 17<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>WebAPIと連携するようなAndroidアプリを作っているのですが
-開発と本番で接続先を切り替える必要が出てきました。</p>
-
-<p>それのライトな対応方法をメモ</p>
-
-<h3>build.gradleを編集</h3>
-
-<hr />
-
-<p>以下のような形で記載</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>buildTypes {
-</span><span class='line'>  debug {
-</span><span class='line'>    buildConfigField "String", "API_URL", "\"http://api-dev.hoge.co.jp\""
-</span><span class='line'>  }
-</span><span class='line'>  release {
-</span><span class='line'>    buildConfigField "String", "API_URL", "\"http://api.hoge.co.jp\""
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>ソースコード側</h3>
-
-<hr />
-
-<p>以下のように特に気にせずBuildConfigを参照すればよい</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>String url = BuildConfig.API_URL</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ビルド環境に応じた値が取得できる</p>
-
-<h3>できたけど・・・</h3>
-
-<hr />
-
-<p>これぐらいなら、まぁbuild.gradleでいいやという気がするもののパラメータ増えたら収拾つかなくなる予感</p>
-
-<p>真面目にやるならBuild Variantsを使うほうがよいかと思います</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/17/jersey-on-heroku/">Heroku上でJersey + Jetty + Gradleを動かす</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-17T01:14:00+09:00" pubdate data-updated="true">Mar 17<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>JavaでRestfulといえば、JAX-RSが有名ですね。</p>
-
-<p>それを扱いやすくしたFrameworkといえば、<a href="https://jersey.java.net/">Jersey</a>になります。<br/>
-これをHerokuで動かすようにしてみます。</p>
-
-<p>ついでにオワコン臭漂うmavenを辞めて、Gradleでビルドができるようにもしてみます</p>
-
-<h3>目標</h3>
-
-<hr />
-
-<p>以下ができていること</p>
-
-<ul>
-<li>Heroku上でJerseyが動くこと</li>
-<li>HerokuではJettyがサーブレット・コンテナとして動くこと</li>
-<li>ビルドツールには、デフォルトのmavenではなくGradleであること</li>
-</ul>
-
-
-<h3>Jersey</h3>
-
-<hr />
-
-<p>まずはmaven ArchTypeから必要なファイルを準備</p>
-
-<p><a href="https://jersey.java.net/download.html">ここ</a>を参考にすると、ArchTypeは2種類あることが分かります。</p>
-
-<p>今回はJettyで動かすので、サーブレットコンテナ用のものを使います</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>mvn archetype:generate -DarchetypeGroupId=org.glassfish.jersey.archetypes -DarchetypeArtifactId=jersey-quickstart-webapp -DarchetypeVersion=2.17</span></code></pre></td></tr></table></div></figure>
-
-
-<p>必要項目を聞かれますので、以下のような感じで入力していきます</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Define value for property 'groupId': : kurobara
-</span><span class='line'>Define value for property 'artifactId': : kurobara
-</span><span class='line'>Define value for property 'version': 1.0-SNAPSHOT:
-</span><span class='line'>Define value for property 'package': kurobara: kurobara</span></code></pre></td></tr></table></div></figure>
-
-
-<p>成功すれば、以下の構成になります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>├── pom.xml
-</span><span class='line'>├── src
-</span><span class='line'>│   └── main
-</span><span class='line'>│       ├── java
-</span><span class='line'>│       │   └── kurobara
-</span><span class='line'>│       │       └── MyResource.java
-</span><span class='line'>│       ├── resources
-</span><span class='line'>│       └── webapp
-</span><span class='line'>│           ├── WEB-INF
-</span><span class='line'>│           │   └── web.xml
-</span><span class='line'>│           └── index.jsp</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>mavenの削除</h3>
-
-<hr />
-
-<p>普通に考えると、mavenを使わなければpom.xmlを残してもよいかと思います(自分も最初は思いました)
-Herokuではmavenがデフォルトで使われますので、削除してしまいます</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rm pom.xml</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どうやら、mavenとGradleの両方のビルドファイルが存在するとHerokuではmavenのものが最優先で使われるようです</p>
-
-<h3>Gradleの追加</h3>
-
-<hr />
-
-<p>以下の内容を<code>build.gradle</code>に記載します</p>
-
-<p>このファイルのミソは<code>task stage(dependsOn: ['clean', 'installApp'])</code>を記載していることです。
-Herokuではこのタスクが必要なようです。</p>
-
-<p><a href="https://github.com/heroku/devcenter-gradle">公式</a>を参考にしました。</p>
-
-<p>多分、必要無いと思いますが念のためgradlewも用意しました(自分は一応、これもファイルに追加しています)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>apply plugin: "java"
-</span><span class='line'>apply plugin: "war"
-</span><span class='line'>apply plugin: "jetty"
-</span><span class='line'>apply plugin: 'application'
-</span><span class='line'>
-</span><span class='line'>group = "kurobara"
-</span><span class='line'>version = 1.0
-</span><span class='line'>sourceCompatibility = 1.7
-</span><span class='line'>mainClassName = "kurobara"
-</span><span class='line'>applicationName = "kurobara"
-</span><span class='line'>
-</span><span class='line'>def defaultEncoding = 'UTF-8'
-</span><span class='line'>[
-</span><span class='line'>  compileJava,
-</span><span class='line'>  compileTestJava,
-</span><span class='line'>  javadoc
-</span><span class='line'>]*.options*.encoding = defaultEncoding
-</span><span class='line'>
-</span><span class='line'>repositories {
-</span><span class='line'>  mavenLocal()
-</span><span class='line'>  maven { url "http://maven.seasar.org/maven2" }
-</span><span class='line'>  mavenCentral()
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>dependencies {
-</span><span class='line'>  compile 'org.eclipse.jetty:jetty-server:9.2.10.v20150310'
-</span><span class='line'>  compile 'org.eclipse.jetty:jetty-webapp:9.2.10.v20150310'
-</span><span class='line'>  compile 'org.glassfish.jersey.core:jersey-server:2.17'
-</span><span class='line'>  compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.17'
-</span><span class='line'>
-</span><span class='line'>  testCompile 'junit:junit:4.10'
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>task stage(dependsOn: ['clean', 'installApp'])
-</span><span class='line'>
-</span><span class='line'>[jettyRun, jettyRunWar]*.httpPort = 8090
-</span><span class='line'>[jettyRun, jettyRunWar]*.contextPath = 'kurobara'
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>task wrapper(type: Wrapper) {
-</span><span class='line'>  gradleVersion = '1.6'
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Jettyの準備</h3>
-
-<hr />
-
-<p>最低限度の内容でJettyサーバが動くようにします</p>
-
-<p>mainメソッドにサーバの実装を記載します。</p>
-
-<p>Gradleに記載したように、これがmainClassになります(mainClassNameを参照)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>import org.eclipse.jetty.server.Server;
-</span><span class='line'>import org.eclipse.jetty.webapp.WebAppContext;
-</span><span class='line'>
-</span><span class='line'>public class Main {
-</span><span class='line'>
-</span><span class='line'>  public static void main(String[] args) throws Exception {
-</span><span class='line'>      Server server = new Server(Integer.valueOf(System.getenv("PORT")));
-</span><span class='line'>
-</span><span class='line'>      WebAppContext context = new WebAppContext();
-</span><span class='line'>      context.setServer(server);
-</span><span class='line'>      context.setContextPath("/");
-</span><span class='line'>      context.setResourceBase("src/main/webapp");
-</span><span class='line'>      context.setClassLoader(Main.class.getClassLoader());
-</span><span class='line'>      server.setHandler(context);
-</span><span class='line'>
-</span><span class='line'>      server.start();
-</span><span class='line'>      server.join();
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下の構成になるようにMainクラスを配置します</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>├── build.gradle
-</span><span class='line'>├── src
-</span><span class='line'>│   └── main
-</span><span class='line'>│       ├── java
-</span><span class='line'>│       │   └── kurobara
-</span><span class='line'>│       │       ├── Main.java &lt;- これを追加
-</span><span class='line'>│       │       └── MyResource.java
-</span><span class='line'>│       ├── resources
-</span><span class='line'>│       └── webapp
-</span><span class='line'>│           ├── WEB-INF
-</span><span class='line'>│           │   └── web.xml
-</span><span class='line'>│           └── index.jsp</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>動作確認</h3>
-
-<hr />
-
-<p>まずは、テストが動くかどうか確認</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$gradle clean
-</span><span class='line'>$gradle test</span></code></pre></td></tr></table></div></figure>
-
-
-<p>次にアプリをビルドし、サーバを起動</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$gradle clean
-</span><span class='line'>$gradle build
-</span><span class='line'>$gradle jettyRunWar</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下のコマンドで<code>Got it!</code>が返却されるか確認</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>curl -v http://localhost:8090/kurobara/webapi/myresource</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Heroku環境用の準備</h3>
-
-<hr />
-
-<p>Herokuで動かすJavaのバージョンを指定するsystem.propertiesを作成<br/>
-(以下のようにとりあえず確実に動作するバージョンを指定)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>java.runtime.version=1.7</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Procfileに記載するスクリプトファイルの確認</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$gradle stage</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こういう形にビルド結果が出力されているので、アプリケーション起動スクリプトのファイルパスを確認する</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>├── build
-</span><span class='line'>│   ├── classes
-</span><span class='line'>│   │   └── main
-</span><span class='line'>│   │       └── kurobara
-</span><span class='line'>│   │           ├── Main.class
-</span><span class='line'>│   │           └── MyResource.class
-</span><span class='line'>│   ├── dependency-cache
-</span><span class='line'>│   ├── install
-</span><span class='line'>│   │   └── kurobara
-</span><span class='line'>│   │       ├── bin
-</span><span class='line'>│   │       │   ├── kurobara &lt;- これが起動用ファイル
-</span><span class='line'>│   │       │   └── kurobara.bat</span></code></pre></td></tr></table></div></figure>
-
-
-<p>生成したスクリプトファイルパスをProcfileに記載</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>web: ./build/install/kurobara/bin/kurobara</span></code></pre></td></tr></table></div></figure>
-
-
-<p>不要ファイルを無視するように.gitignoreを作成<br/>
-(Herokuへのデプロイはgitのため)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>build/
-</span><span class='line'>.gradle/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最終的に以下の構成になります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>├── .gitignore
-</span><span class='line'>├── Procfile
-</span><span class='line'>├── build.gradle
-</span><span class='line'>├── src
-</span><span class='line'>│   └── main
-</span><span class='line'>│       ├── java
-</span><span class='line'>│       │   └── moonstruckdrops
-</span><span class='line'>│       │       ├── Main.java
-</span><span class='line'>│       │       └── MyResource.java
-</span><span class='line'>│       ├── resources
-</span><span class='line'>│       └── webapp
-</span><span class='line'>│           ├── WEB-INF
-</span><span class='line'>│           │   └── web.xml
-</span><span class='line'>│           └── index.jsp
-</span><span class='line'>└── system.properties</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Herokuへdeploy</h3>
-
-<hr />
-
-<p>herokuへloginする</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ brew install heroku
-</span><span class='line'>$ heroku login</span></code></pre></td></tr></table></div></figure>
-
-
-<p>サーバへデプロイする</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git init
-</span><span class='line'>$ git add .
-</span><span class='line'>$ git commit -m "Ready to deploy"
-</span><span class='line'>$ git remote add heroku your_heroku_path
-</span><span class='line'>$ git push heroku master</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下のコマンドで<code>Got it!</code>が返却されるか動作確認</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$curl -v http://your_app.herokuapp.com/webapi/myresource</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>感想</h3>
-
-<hr />
-
-<p>書くと簡単でしたが、実際にやってみると思った以上に嵌まりどころが多かった</p>
-
-<p>特に以下が盛大な罠でした</p>
-
-<ul>
-<li>Procfileに書くファイルはどれなのか</li>
-<li><code>heroku logs</code>を確認すると<code>app crash</code>と表示されて何がなんだかわからんかったこと</li>
-<li><code>app crash</code>起因ですがweb.xmlはいじらなくてもいいのか？なんて思ったこと</li>
-</ul>
-
-
-<p>一度環境さえ準備できれば開発に専念できるようになるので、非常に楽ですね</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1906,6 +1665,14 @@ Herokuではこのタスクが必要なようです。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/05/replace-server/">月間1000万PV超あるサービスのサーバリプレースのマネージメントをした話</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/11/06/edge-rails5/">Rails5を使ってみる</a>
       </li>
     
@@ -1917,19 +1684,11 @@ Herokuではこのタスクが必要なようです。</p>
         <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/08/10/devise-email/">deviseでemailを空白でもよいようにする</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 130.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.5%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.75%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.75%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 118.75%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.75%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 115.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.75%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.75%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.75%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.75%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.75%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 126.25%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.75%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 137.5%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 122.5%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 122.5%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.75%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.75%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(16)</a> <a href='/blog/categories/shellscript' style='font-size: 103.75%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.75%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 130.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 128.23529411764707%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.05882352941177%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.52941176470588%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.52941176470588%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 117.64705882352942%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.52941176470588%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 114.11764705882354%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.52941176470588%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.52941176470588%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.52941176470588%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.52941176470588%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.52941176470588%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 124.70588235294117%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.52941176470588%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 135.29411764705884%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 121.17647058823529%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 121.17647058823529%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.52941176470588%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.52941176470588%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(17)</a> <a href='/blog/categories/shellscript' style='font-size: 103.52941176470588%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.52941176470588%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 128.23529411764707%'>戯言(8)</a> </span>
 </section
 
 

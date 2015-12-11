@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>RubyKaigi１日目に行ってきた - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
+
+  
+  <meta name="description" content="はじめに ここ最近はRubyを書くことが少なくなってきたのですが、
+RubyKaigiの一日目に行ってきた ミドルウェアとかインフラとか、設計とかコードから離れた生活を繰り広げております RubyKaigiの一日目は、これまた時間と仕事の都合上午前中のみしか参加できずorz なので、一日目は、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/12/11/2015-ruby-kaigi/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <!--
+  <li><a href="/about">About me</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">RubyKaigi１日目に行ってきた</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-11T10:09:00+09:00" pubdate data-updated="true">Dec 11<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>ここ最近はRubyを書くことが少なくなってきたのですが、<br/>
+RubyKaigiの一日目に行ってきた</p>
+
+<p>ミドルウェアとかインフラとか、設計とかコードから離れた生活を繰り広げております</p>
+
+<p>RubyKaigiの一日目は、これまた時間と仕事の都合上午前中のみしか参加できずorz</p>
+
+<p>なので、一日目は、keynoteだけ聞いてきました</p>
+
+<p>Crystalにも興味はあったので、ちょっと気になるのですがここは涙を飲んで・・・</p>
+
+<p>ところでマネーフォワードさん、すごいですね。</p>
+
+<p>Rubyコミッターのフルタイム採用とか松田さんの技術顧問就任とか。</p>
+
+<p>という訳でメモを残しておく</p>
+
+<h3>keynote</h3>
+
+<hr />
+
+<p>プログラマーの美徳</p>
+
+<ul>
+<li>怠惰(怠けるための努力をしない)</li>
+<li>ガマンしない(PCが活用されていないことに怒る)</li>
+<li>傲慢(ソフトウェアのクォリティ)</li>
+</ul>
+
+
+<p>全て、怒りに通じている<br/>
+(Rubyにケチ付けられていることも・・・)</p>
+
+<p>怒りは伝染るので、親切も伝染る</p>
+
+<p>なので、内心腹たってても親切に対応するといいことがある</p>
+
+<p>親切な対応が多いので、Rubyコミュニティは素晴らしい</p>
+
+<h4>最近のニュース</h4>
+
+<ul>
+<li>Ruby2.3.0リリースが出た(クリスマスにリリースする)</li>
+<li>RubyKaigiに合わせてやった</li>
+<li>もしかして機能をつけた(NameErrorの際にスペル指摘とか)</li>
+<li>Enumerable#grep_vが追加(マッチしないものを提示)</li>
+<li>Hash#fetch_at(指定しないキーがあれば例外)</li>
+<li>Numeric#negative? positive?</li>
+<li>Hashの包含関係をチェックできるようになった</li>
+<li>Hash#to_proc(h= {1: 2,2: 4,4: 6} (1..3)..map(&amp;h))</li>
+<li>Array,Hash#digメソッド追加(data.dig(:user, 0)のようにあればアクセスして値を返す)</li>
+<li>ヒアドキュメントにチルダをつけると、インデントの浅いところに合わせる</li>
+<li>frozen-string-literalをつけると、文字列に追加するとエラー、パフォーマンスがよくなる&amp;エラーがはっきりする</li>
+<li>safe navigation オペレーター「&amp;.」の追加(ぼっちオペレーター・・・) u &amp;&amp; u.first &amp;&amp; u.name が u&amp;.first&amp;.name になる</li>
+<li>年に5%~10%の改善(2.3も同様)</li>
+</ul>
+
+
+<p>よくなる提案を受け入れてもっと良い物をという、Rubyコミュニティの成果</p>
+
+<ul>
+<li>mruby1.2</li>
+<li><p>ビルドプロセスとか、諸々の改善</p></li>
+<li><p>Streem</p></li>
+<li>githubに公開してた</li>
+<li>何もしないのに取り上げられて、色々とバズってしまった</li>
+</ul>
+
+
+<h4>Ruby3</h4>
+
+<ul>
+<li>変化はコスト、苦痛</li>
+<li>言語デザインは難しい</li>
+<li>矛盾する要求がある</li>
+</ul>
+
+
+<p>未来の状況はわからない</p>
+
+<p>スクリプト言語にオブジェクト指向要らない<br/>
+→21世紀になってくると何らかの形でオブジェクト指向を持つものが多くなった<br/>
+→人に合わせてつくることが無かった<br/>
+新しい当たり前になれた<br/>
+Ruby成功の秘訣<br/>
+webappの分野ではトップ近くまでなれた<br/>
+とはいえ、言語して完成しているわけではない</p>
+
+<p>互換性の問題や、移行の問題(5年かかった)<br/>
+# Python3よりはマシ</p>
+
+<p>全部を捨てることはせず、段階的に変化させていく方法を取った<br/>
+１つずつ、テストを書いて確認して実施<br/>
+移行パスの提示</p>
+
+<p>ドラスティックな変更はしないし、ひとつずつの進歩<br/>
+バージョニング問題(1.8 vs 1.9のときは除くの轍は踏まなかった)は他の言語のようなことは起きなかった</p>
+
+<p>変化のうえで学んだこと</p>
+
+<ul>
+<li>何もかもいっぺんに捨てない</li>
+<li>劇的な変化はしない(互換性を理由なく捨ててはいけない)</li>
+<li>変化を続ける</li>
+<li>ユーザーへの利益(簡潔にかけるとか)</li>
+</ul>
+
+
+<p>Ruby3では以下をやりたい</p>
+
+<ul>
+<li>マルチコアへの対応(開発当時はシングルコアでマルチスレッド)</li>
+<li>コードの拡大(主戦場が変った)</li>
+<li>扱うデータ量の増加でのパフォーマンス対応</li>
+</ul>
+
+
+<p>こんな感じ(約束はしていない)</p>
+
+<ul>
+<li>アクターモデル(goroutin+channelも一応こちらに)</li>
+<li>オーナーシップモデル</li>
+<li>STM(software transaction)は難しいし、無理かも</li>
+<li>streamモデル</li>
+<li>pipeラインを使ったイベントループ(２番めのVMを動かすことで実現)</li>
+<li>コンパイルを賢く</li>
+<li>soft typing(flowtyped interfaceでFlow / Crystal言語、ある程度の型チェックDialyzar(Erlang))</li>
+<li>3倍早くをパフォーマンスも目標にする(Ruby2.0よりも３倍)</li>
+<li>2020までにRuby3を出したい・・・</li>
+<li>難しいことに挑戦</li>
+<li>メモリを大量に使うけど、消費量をおさえるようにはしたい</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-11T10:09:00+09:00" pubdate data-updated="true">Dec 11<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/12/11/2015-ruby-kaigi/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/12/11/2015-ruby-kaigi/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/12/05/replace-server/" title="Previous Post: 月間1000万PV超あるサービスのサーバリプレースのマネージメントをした話">&laquo; 月間1000万PV超あるサービスのサーバリプレースのマネージメントをした話</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/05/replace-server/">月間1000万PV超あるサービスのサーバリプレースのマネージメントをした話</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/06/edge-rails5/">Rails5を使ってみる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 128.23529411764707%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.05882352941177%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.52941176470588%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.52941176470588%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 117.64705882352942%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.52941176470588%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 114.11764705882354%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.52941176470588%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.52941176470588%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.52941176470588%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.52941176470588%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.52941176470588%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 124.70588235294117%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.52941176470588%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 135.29411764705884%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 121.17647058823529%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 121.17647058823529%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.52941176470588%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.52941176470588%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(17)</a> <a href='/blog/categories/shellscript' style='font-size: 103.52941176470588%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.52941176470588%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 128.23529411764707%'>戯言(8)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

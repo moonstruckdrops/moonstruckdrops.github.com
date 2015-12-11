@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-11-06T00:45:02+09:00</updated>
+  <updated>2015-12-11T22:42:51+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,151 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyKaigi１日目に行ってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/12/11/2015-ruby-kaigi/"/>
+    <updated>2015-12-11T10:09:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/12/11/2015-ruby-kaigi</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>ここ最近はRubyを書くことが少なくなってきたのですが、<br/>
+RubyKaigiの一日目に行ってきた</p>
+
+<p>ミドルウェアとかインフラとか、設計とかコードから離れた生活を繰り広げております</p>
+
+<p>RubyKaigiの一日目は、これまた時間と仕事の都合上午前中のみしか参加できずorz</p>
+
+<p>なので、一日目は、keynoteだけ聞いてきました</p>
+
+<p>Crystalにも興味はあったので、ちょっと気になるのですがここは涙を飲んで・・・</p>
+
+<p>ところでマネーフォワードさん、すごいですね。</p>
+
+<p>Rubyコミッターのフルタイム採用とか松田さんの技術顧問就任とか。</p>
+
+<p>という訳でメモを残しておく</p>
+
+<h3>keynote</h3>
+
+<hr />
+
+<p>プログラマーの美徳</p>
+
+<ul>
+<li>怠惰(怠けるための努力をしない)</li>
+<li>ガマンしない(PCが活用されていないことに怒る)</li>
+<li>傲慢(ソフトウェアのクォリティ)</li>
+</ul>
+
+
+<p>全て、怒りに通じている<br/>
+(Rubyにケチ付けられていることも・・・)</p>
+
+<p>怒りは伝染るので、親切も伝染る</p>
+
+<p>なので、内心腹たってても親切に対応するといいことがある</p>
+
+<p>親切な対応が多いので、Rubyコミュニティは素晴らしい</p>
+
+<h4>最近のニュース</h4>
+
+<ul>
+<li>Ruby2.3.0リリースが出た(クリスマスにリリースする)</li>
+<li>RubyKaigiに合わせてやった</li>
+<li>もしかして機能をつけた(NameErrorの際にスペル指摘とか)</li>
+<li>Enumerable#grep_vが追加(マッチしないものを提示)</li>
+<li>Hash#fetch_at(指定しないキーがあれば例外)</li>
+<li>Numeric#negative? positive?</li>
+<li>Hashの包含関係をチェックできるようになった</li>
+<li>Hash#to_proc(h= {1: 2,2: 4,4: 6} (1..3)..map(&amp;h))</li>
+<li>Array,Hash#digメソッド追加(data.dig(:user, 0)のようにあればアクセスして値を返す)</li>
+<li>ヒアドキュメントにチルダをつけると、インデントの浅いところに合わせる</li>
+<li>frozen-string-literalをつけると、文字列に追加するとエラー、パフォーマンスがよくなる&amp;エラーがはっきりする</li>
+<li>safe navigation オペレーター「&amp;.」の追加(ぼっちオペレーター・・・) u &amp;&amp; u.first &amp;&amp; u.name が u&amp;.first&amp;.name になる</li>
+<li>年に5%~10%の改善(2.3も同様)</li>
+</ul>
+
+
+<p>よくなる提案を受け入れてもっと良い物をという、Rubyコミュニティの成果</p>
+
+<ul>
+<li>mruby1.2</li>
+<li><p>ビルドプロセスとか、諸々の改善</p></li>
+<li><p>Streem</p></li>
+<li>githubに公開してた</li>
+<li>何もしないのに取り上げられて、色々とバズってしまった</li>
+</ul>
+
+
+<h4>Ruby3</h4>
+
+<ul>
+<li>変化はコスト、苦痛</li>
+<li>言語デザインは難しい</li>
+<li>矛盾する要求がある</li>
+</ul>
+
+
+<p>未来の状況はわからない</p>
+
+<p>スクリプト言語にオブジェクト指向要らない<br/>
+→21世紀になってくると何らかの形でオブジェクト指向を持つものが多くなった<br/>
+→人に合わせてつくることが無かった<br/>
+新しい当たり前になれた<br/>
+Ruby成功の秘訣<br/>
+webappの分野ではトップ近くまでなれた<br/>
+とはいえ、言語して完成しているわけではない</p>
+
+<p>互換性の問題や、移行の問題(5年かかった)<br/>
+# Python3よりはマシ</p>
+
+<p>全部を捨てることはせず、段階的に変化させていく方法を取った<br/>
+１つずつ、テストを書いて確認して実施<br/>
+移行パスの提示</p>
+
+<p>ドラスティックな変更はしないし、ひとつずつの進歩<br/>
+バージョニング問題(1.8 vs 1.9のときは除くの轍は踏まなかった)は他の言語のようなことは起きなかった</p>
+
+<p>変化のうえで学んだこと</p>
+
+<ul>
+<li>何もかもいっぺんに捨てない</li>
+<li>劇的な変化はしない(互換性を理由なく捨ててはいけない)</li>
+<li>変化を続ける</li>
+<li>ユーザーへの利益(簡潔にかけるとか)</li>
+</ul>
+
+
+<p>Ruby3では以下をやりたい</p>
+
+<ul>
+<li>マルチコアへの対応(開発当時はシングルコアでマルチスレッド)</li>
+<li>コードの拡大(主戦場が変った)</li>
+<li>扱うデータ量の増加でのパフォーマンス対応</li>
+</ul>
+
+
+<p>こんな感じ(約束はしていない)</p>
+
+<ul>
+<li>アクターモデル(goroutin+channelも一応こちらに)</li>
+<li>オーナーシップモデル</li>
+<li>STM(software transaction)は難しいし、無理かも</li>
+<li>streamモデル</li>
+<li>pipeラインを使ったイベントループ(２番めのVMを動かすことで実現)</li>
+<li>コンパイルを賢く</li>
+<li>soft typing(flowtyped interfaceでFlow / Crystal言語、ある程度の型チェックDialyzar(Erlang))</li>
+<li>3倍早くをパフォーマンスも目標にする(Ruby2.0よりも３倍)</li>
+<li>2020までにRuby3を出したい・・・</li>
+<li>難しいことに挑戦</li>
+<li>メモリを大量に使うけど、消費量をおさえるようにはしたい</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rails5を使ってみる]]></title>
@@ -734,54 +879,6 @@ end
 <li><a href="http://railsdoc.com/migration">マイグレーション(migration)</a></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[jQueryが見つからないよエラーの解消法]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile/"/>
-    <updated>2014-03-26T23:32:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/03/26/update-gemfile</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>今更ながら、Rails3.2のアプリをRails4までアップデートしました。<br/>
-そのとき出たエラーと解消方法を残します。</p>
-
-<h3>当該のエラー</h3>
-
-<hr />
-
-<p>それがこれ</p>
-
-<p><code>
-couldn't find file 'jquery'
-</code></p>
-
-<p>正直、なんで？という感じ</p>
-
-<h3>解消方法</h3>
-
-<hr />
-
-<p>Gemfileの記述が変わってたことが原因でした<br/>
-(asset compile周りの仕様変更)</p>
-
-<p>Rails3.x系は、Gemfileに以下がありました</p>
-
-<p>```
-group :assets do</p>
-
-<p>ここにasset compileで使用するgemがある</p>
-
-<p>end
-```</p>
-
-<p>ところが、Rails4系になるとasset groupは無くなる仕様に変わったみたいです。<br/>
-代わりの設定は、<code>config/application.rb</code>になるようです。</p>
-
-<p>メジャーアップデートの前に、<a href="http://railscasts.com/episodes/415-upgrading-to-rails-4?language=ja&amp;view=asciicast">移行ガイド</a>に目を通せってことですねw</p>
 ]]></content>
   </entry>
   
