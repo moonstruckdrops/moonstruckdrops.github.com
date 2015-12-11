@@ -9,8 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="こんな状況 [A→B→C→Dの順で画面を開いた状況で、D->Aへ戻りたいという状況 やり方 戻りたいところのmodalを指定すると、その前のものは全て閉じることができました 1
-self.presentingViewController?.presentingViewController?. &hellip;">
+  <meta name="description" content="やりたいこと Emacsを再起動せず、設定内容を反映させたい 解決編 追加した部分だけ、評価する 1
+M-x eval-region 今、現在実行している全てのバッファの式を再評価する 1
+M-x eval-buffer そもそもの設定ファイルを読みなおす 1
+M-x load-file RET &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,64 +74,6 @@ self.presentingViewController?.presentingViewController?. &hellip;">
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/15/back-multi-modal/">iOSで複数のmodalを同時に閉じる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-15T17:02:00+09:00" pubdate data-updated="true">Nov 15<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>こんな状況</h3>
-
-<hr />
-
-<p>[A→B→C→Dの順で画面を開いた状況で、D->Aへ戻りたいという状況</p>
-
-<h3>やり方</h3>
-
-<hr />
-
-<p>戻りたいところのmodalを指定すると、その前のものは全て閉じることができました</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>self.presentingViewController?.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>画面遷移の状態を覚えてないと辛い感じですね</p>
-
-<h3>元ネタ</h3>
-
-<hr />
-
-<p><a href="dismissViewControllerAnimated:completion:">https://developer.apple.com/library/ios/documentation/uikit/reference/UIViewController_Class/index.html#//apple_ref/occ/instm/UIViewController/dismissViewControllerAnimated:completion:</a></p>
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -1318,6 +1262,103 @@ self.presentingViewController?.presentingViewController?. &hellip;">
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/18/git-merge-conflict-memo/">マージが起きたらさっさと解消しようという教訓</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-18T02:00:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>Gitを使って開発してるのですが・・・</p>
+
+<p>複数人で1つのプロダクト開発を行ってたらコンフリクトは起こることはよく有ります</p>
+
+<p>俗に言うマージコンフリクトですね</p>
+
+<p>今回はそんなマージコンフリクトで起こった事を備忘録的に残します</p>
+
+<h3>まず結論・・・</h3>
+
+<hr />
+
+<p>気づいた時点(Github,gitlab,stashとか)で、さっさとコンフリクトは解消しましょう</p>
+
+<p>後にまとめて行うのは、無謀もいいとこです</p>
+
+<p>1つ2つのコミット差分ならまだしも<br/>
+10個のコミットが積み上げられ、かつその大半がコンフリクト起こすような状況だと直すのに苦労します</p>
+
+<p># 解消に1時間かかりましたorz</p>
+
+<p>なので、さっさと直してしまいましょう(他人の書いたコードまでは責任取れないよw)</p>
+
+<h3>コンフリクト解消時に起こったこと</h3>
+
+<hr />
+
+<p>上記のことだけなら、反省だけで次回からは行わないようにすればいいだけの話です</p>
+
+<p>ですが、コンフリクト解消時に奇妙なことが起こりました</p>
+
+<p>以下のような状態でmasterのコードをブランチにとりこんだ時(実際はもう少しコンフリクト解消することがありました)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(master) : (起点) - [コンフリクト有(1)] - [コンフリクト有(2)] - [コンフリクト有(3)] - [ファイル移動] - [コンフリクト有(4)] - [コンフリクト無]
+</span><span class='line'>              |  
+</span><span class='line'>(branch) :   [A] - [B] - [C]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンフリクト有(2)のコンフリクトを解消した瞬間に、ブランチの状態(merge/CONFLICT)だけでも、マージの継続をすることが出来なくなりました</p>
+
+<p>このコマンドだけが使えました</p>
+
+<ul>
+<li>continueは受け付け無い</li>
+<li>abortとskipは受け付ける</li>
+</ul>
+
+
+<p>そのため、一度abort→再マージをしたのですが・・・<br/>
+今度は、コンフリクト(3)で同じ現象。。。</p>
+
+<p>諦めてskipをしましたorz<br/>
+そうすると、マージが全てブランチに取り込まれました・・・(ファイル移動は取り込まれてないので別途実施)</p>
+
+<p>こういう恐ろしい事態(マージがうまくいかない)があったので、気をつけようねという自戒と対処結果のメモでしたw</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1343,10 +1384,6 @@ self.presentingViewController?.presentingViewController?. &hellip;">
       </li>
     
       <li class="post">
-        <a href="/blog/2015/12/05/replace-server/">月間1000万PV超あるサービスのサーバリプレースのマネージメントをした話</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2015/11/06/edge-rails5/">Rails5を使ってみる</a>
       </li>
     
@@ -1356,6 +1393,10 @@ self.presentingViewController?.presentingViewController?. &hellip;">
     
       <li class="post">
         <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
       </li>
     
   </ul>
