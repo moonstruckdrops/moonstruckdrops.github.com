@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに ここ最近はRubyを書くことが少なくなってきたのですが、
-RubyKaigiの一日目に行ってきた ミドルウェアとかインフラとか、設計とかコードから離れた生活を繰り広げております RubyKaigiの一日目は、これまた時間と仕事の都合上午前中のみしか参加できずorz なので、一日目は、 &hellip;">
+  <meta name="description" content="はじめに RubyKaigi2日目に参加してきました。 気になるセッションもチラホラあり期待していました ただ、盛大に寝坊しましたorz という訳で、メモ Data Analytics Service Company and Its Ruby Usage ミドルウェア
+* &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,350 @@ RubyKaigiの一日目に行ってきた ミドルウェアとかインフラと�
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-12T13:24:00+09:00" pubdate data-updated="true">Dec 12<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>RubyKaigi2日目に参加してきました。</p>
+
+<p>気になるセッションもチラホラあり期待していました</p>
+
+<p>ただ、盛大に寝坊しましたorz</p>
+
+<p>という訳で、メモ</p>
+
+<h3>Data Analytics Service Company and Its Ruby Usage</h3>
+
+<hr />
+
+<p>ミドルウェア
+* データ処理をする上でスループットが重要
+* 一度書いたものはそのまま運用されるので、固めにつくることが多い</p>
+
+<p>集めてくるところとか、加工整形した結果などは固くつくる必要はない
+(書捨ても多いから)</p>
+
+<p>要素</p>
+
+<ul>
+<li>データを集めて保存</li>
+<li>総うさするコンソr−るapi</li>
+<li>データしゅべつ、型だとかのスキーマ管理</li>
+<li>計算処理(batch,query)-> Java</li>
+<li>キューイングやスケジュール処理</li>
+<li>データを格納&amp;エクスポート</li>
+</ul>
+
+
+<p>キューとワーカーの話</p>
+
+<p>perfedtsched(スケジューラー)
+→SPOFのないcrontabと思えばよい
+→1回も実行されないよりも２回実行されたほうがよい(別途担保が必要だが・・・)</p>
+
+<p>リトライ可能かは、状況やエラー内容による
+実行時間
+jobの実行内容が重いものやら軽いものまで</p>
+
+<p>perfectqueue(キュー)</p>
+
+<ul>
+<li>優先どの高いキューは高いものは素早く処理</li>
+<li>graceful restart(字工事のjobは分離して実行)</li>
+<li>RDBMSのようなinsertで実現</li>
+<li>RDS(MySQL)を使ってる</li>
+</ul>
+
+
+<p>パフォーマンスコントロールとかでジョブ実行を制御している
+安全側に倒している(顧客情報のisolationとか)</p>
+
+<p>何故Rubyを使っているか</p>
+
+<ul>
+<li>ワーカーのコードが複雑だけど重要</li>
+<li>テストが一番重要なので、書きやすいのでrspecを採用</li>
+<li>テストコードの書きやすさが重要だった(可読性とか、オーバーライドとか)</li>
+<li>新しい機能とか新しいライブラリは使っていく</li>
+</ul>
+
+
+<p>スケジューラーとキュー気になる</p>
+
+<h3>Ruby for one day game programming camp for beginners</h3>
+
+<hr />
+
+<p>京大マイコンクラブで事例</p>
+
+<p>Windowsの環境が殆どなので以下を実行するようにした</p>
+
+<ul>
+<li>Ruby1.8.4(starter kit)</li>
+<li>MyGame and Ruby/SDL(ゲーム用)</li>
+<li>sakura editor</li>
+</ul>
+
+
+<p>インストールして終わりぐらいの単純なものがよい</p>
+
+<ul>
+<li>講義みたいなことはしない</li>
+<li>1対1のペアプロ</li>
+<li>楽しいRubyが教本</li>
+</ul>
+
+
+<p>プログラム未経験の参加者の8割が大体できる
+→やる気に繋がる
+→自信によって自分が勉強する</p>
+
+<p>考察してみる</p>
+
+<ul>
+<li>教えかたが勉強できる</li>
+<li>つくるものが決まっている</li>
+<li>締め切り</li>
+<li>教えるものが少ない(基本的な制御構造)</li>
+</ul>
+
+
+<h3>Ruby and PostgreSQL, a love story</h3>
+
+<hr />
+
+<p>plmruby
+zombodb</p>
+
+<ul>
+<li>producael language handler(他の言語のサポート)</li>
+<li>indexがすぐれてる(通常indexだけなく、elastic searchとかのラッパーにもできる)</li>
+<li>foreginData(他にデータが投げられる, csvなりなんなりにｄけいる)</li>
+</ul>
+
+
+<p>postgresql fdl</p>
+
+<ul>
+<li>callbackルーチンで駆動するライフサイクル(コールバックチェーンかな)</li>
+<li>rubyがサポートする</li>
+</ul>
+
+
+<p>holycorn</p>
+
+<h3>Rhebok, High Performance Rack Handler</h3>
+
+<hr />
+
+<p>Rhebok</p>
+
+<ul>
+<li>rack handler</li>
+<li>unicorn比較で1.5x</li>
+<li>gazelle(perlnのpluck)の置き換え</li>
+</ul>
+
+
+<p>使いドコロ</p>
+
+<ul>
+<li>高いトラフィックのあるところ</li>
+<li>最適化が進んでるところに最適(SNS, gameとか)</li>
+<li>rackがネックになったとき</li>
+</ul>
+
+
+<p>使えないところ</p>
+
+<ul>
+<li>websocket</li>
+<li>streaming</li>
+<li>リバースプロキシかまさないといけない</li>
+</ul>
+
+
+<p>性能</p>
+
+<ul>
+<li>http1.1(keepaliveは未サポート)</li>
+<li>unix socket</li>
+<li>ホットデプロイ可能</li>
+<li>rackアプリの起動でOK</li>
+</ul>
+
+
+<p>Rack</p>
+
+<ul>
+<li>仕様(webserverとF/WをつなぐI/F)</li>
+<li>middleware</li>
+<li>Rack::Handlerの名前空間の下に同時実装をすれば自動認識できる</li>
+</ul>
+
+
+<p>パフォーマンス上げる</p>
+
+<ul>
+<li>マルチプロセス</li>
+<li>マルチスレッド</li>
+<li>IO多重化</li>
+</ul>
+
+
+<p>timeoutの実現</p>
+
+<ul>
+<li>IO.selectを使用する</li>
+<li>pollを使うことで実現</li>
+</ul>
+
+
+<p>parser</p>
+
+<ul>
+<li>pico_http_parserに渡すように変更</li>
+</ul>
+
+
+<p>tcp</p>
+
+<ul>
+<li>tco_nodelayをオフにする</li>
+<li>バッファリング遅延対策</li>
+<li>tcpのやり取りが増えるのでフラグメンテーションいっぱい</li>
+<li>書き込み回数を1回にしておく</li>
+</ul>
+
+
+<h3>Pragmatic Testing of Ruby Core</h3>
+
+<p>テストを実行してみる
+テストが落ちた報告をするといい</p>
+
+<p>Makefleにテストがなく、common.mkにある
+btest-ruby => bootstraptest
+sample/test.rbが通った後に実行(runner.rb経由で実行)
+make test-allなどは、標準ライブラリのテスト</p>
+
+<p>make test-all TESTS=&#8221;-j4&#8221;すると並列で動く</p>
+
+<p>test/ruby : 組み込み
+test/logger : 添付ライブラリ
+test/-ext- : C拡張</p>
+
+<p>envutil.rb &lt;- ヤバイ
+leakchecker.rb</p>
+
+<p>rubyspecは現行の振る舞いだけしか書いてないので、
+言語仕様ではない(by Matz)</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-12T12:50:00+09:00" pubdate data-updated="true">Dec 12<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>DBアクセスがあるような検証用のプログラムを書いたりするときってActiveRecord便利ですよね</p>
+
+<p>このとき、timezoneの設定がうまくいって無くてすごく嵌ったので備忘録代わりにメモしておきます</p>
+
+<h3>設定方法</h3>
+
+<hr />
+
+<p>単純にこれだけです</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class TestModel &lt; ActiveRecord::Base
+</span><span class='line'>  self.default_timezone = :local
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>もしくはこちらでもよいかと</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class TestModel &lt; ActiveRecord::Base
+</span><span class='line'>  def self.default_timezone
+</span><span class='line'>    :local
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>簡単でしたね</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1438,156 +1782,6 @@ ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/06/mysqldump/">テーブル単位のmysqldump</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-05-06T23:39:00+09:00" pubdate data-updated="true">May 6<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>めちゃくちゃ基礎的な内容なのですが、備忘録を兼ねてメモしておく</h2>
-
-<h3>DBまるごと</h3>
-
-<p>よくやるmysqldumpコマンド</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqldump -u root -p development_db  &gt; db_backup.sql</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>テーブル単位</h3>
-
-<p>tオプションは、「テーブル作成情報（CREATE TABLE ステートメント）を書き込まない」という内容を指す<br/>
-migrationなどで先にテーブルを作った場合とかに有効活用できる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqldump -u root -p -t development_db my_table1 my_table2 &gt; table_backup.sql</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上のコマンドのようにテーブル名は複数指定可能(my_table1, my_table2などが該当)</p>
-
-<h3>リストア</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mysql -u root -p development_db &lt; summaries.sql</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/17/android-build-config/">BuildConfigを使用して、環境ごとに値を取得仕分けてみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-03-17T23:57:00+09:00" pubdate data-updated="true">Mar 17<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>WebAPIと連携するようなAndroidアプリを作っているのですが
-開発と本番で接続先を切り替える必要が出てきました。</p>
-
-<p>それのライトな対応方法をメモ</p>
-
-<h3>build.gradleを編集</h3>
-
-<hr />
-
-<p>以下のような形で記載</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>buildTypes {
-</span><span class='line'>  debug {
-</span><span class='line'>    buildConfigField "String", "API_URL", "\"http://api-dev.hoge.co.jp\""
-</span><span class='line'>  }
-</span><span class='line'>  release {
-</span><span class='line'>    buildConfigField "String", "API_URL", "\"http://api.hoge.co.jp\""
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>ソースコード側</h3>
-
-<hr />
-
-<p>以下のように特に気にせずBuildConfigを参照すればよい</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>String url = BuildConfig.API_URL</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ビルド環境に応じた値が取得できる</p>
-
-<h3>できたけど・・・</h3>
-
-<hr />
-
-<p>これぐらいなら、まぁbuild.gradleでいいやという気がするもののパラメータ増えたら収拾つかなくなる予感</p>
-
-<p>真面目にやるならBuild Variantsを使うほうがよいかと思います</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1607,6 +1801,14 @@ migrationなどで先にテーブルを作った場合とかに有効活用で�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
       </li>
     
@@ -1618,19 +1820,11 @@ migrationなどで先にテーブルを作った場合とかに有効活用で�
         <a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 128.23529411764707%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.05882352941177%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.52941176470588%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.52941176470588%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 117.64705882352942%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.52941176470588%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 114.11764705882354%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.52941176470588%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.52941176470588%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.52941176470588%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.52941176470588%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.52941176470588%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 124.70588235294117%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.52941176470588%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 135.29411764705884%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 121.17647058823529%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 121.17647058823529%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.52941176470588%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.52941176470588%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(17)</a> <a href='/blog/categories/shellscript' style='font-size: 103.52941176470588%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.52941176470588%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 128.23529411764707%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.26315789473685%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 106.3157894736842%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.15789473684211%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.15789473684211%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.78947368421052%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.15789473684211%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.63157894736842%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.15789473684211%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.15789473684211%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.15789473684211%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.15789473684211%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.15789473684211%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 122.10526315789474%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.15789473684211%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.57894736842104%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.94736842105263%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.94736842105263%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.15789473684211%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.15789473684211%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(19)</a> <a href='/blog/categories/shellscript' style='font-size: 103.15789473684211%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.15789473684211%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 125.26315789473685%'>戯言(8)</a> </span>
 </section
 
 

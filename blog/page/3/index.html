@@ -9,10 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="やりたいこと Emacsを再起動せず、設定内容を反映させたい 解決編 追加した部分だけ、評価する 1
-M-x eval-region 今、現在実行している全てのバッファの式を再評価する 1
-M-x eval-buffer そもそもの設定ファイルを読みなおす 1
-M-x load-file RET &hellip;">
+  <meta name="description" content="前置き 近況 ざっくりと書くと、お前エンジニアなのに勉強しなくていいの？という状態 免許が取れたので単車を乗り回している(運転が楽しくて毎日、運転しているような)
+昨年よりも比較的、仲がいい友人(男女問わず)と遊ぶ機会が多くなったかも&#8230;
+気の合う仲間と組んで、(Swiftで) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +73,253 @@ M-x load-file RET &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/22/web-api-good-parts-2/">Web API the Good Parts2章</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-22T23:18:00+09:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>前置き</h2>
+
+<h4>近況</h4>
+
+<hr />
+
+<p>ざっくりと書くと、お前エンジニアなのに勉強しなくていいの？という状態</p>
+
+<ol>
+<li>免許が取れたので単車を乗り回している(運転が楽しくて毎日、運転しているような)</li>
+<li>昨年よりも比較的、仲がいい友人(男女問わず)と遊ぶ機会が多くなったかも&#8230;</li>
+<li>気の合う仲間と組んで、(Swiftで)アプリ作っている</li>
+<li>その気の合う仲間への技術指導していたり&#8230;</li>
+</ol>
+
+
+<p>なんだか、教えることが多くなって自分が学習している時間が比較的減ってきているそんな感じががが</p>
+
+<h4>そういう訳なので</h4>
+
+<hr />
+
+<p>本屋でざっくりと見かけてツボに嵌った本を読んでいこうかと</p>
+
+<p>「Web API The Good Parts」</p>
+
+<p>なのですが、上記3,4が結構あるので中々進まないという(ぉぃ</p>
+
+<p>ということなので、なるたけ気になるところ(覚えておくべきところ)だけまとめていこうかなと</p>
+
+<p>斜め読みした感じでは、結構ツボに嵌る内容なので自分のバイブルに入選してもいいかなと思ってたり。</p>
+
+<h2>エンドポイント設計</h2>
+
+<ol>
+<li>公開する機能を先に設計する</li>
+<li>覚えやすく、どんな機能を持つURIかひと目で分かるようにする</li>
+<li>HTTPメソッドの活用</li>
+<li>設計の注意点</li>
+<li>クエリパラメータ</li>
+<li>ログインや認証</li>
+<li>ホスト名とエンドポイント</li>
+</ol>
+
+
+<h4>1に関して</h4>
+
+<hr />
+
+<p>どんなAPIが必要かどうかを先に洗い出しておく</p>
+
+<h4>2に関して</h4>
+
+<hr />
+
+<ul>
+<li>短く入力しやすいURI</li>
+<li>人間が読んで理解できるURI</li>
+<li>大文字、小文字が混在しないURI</li>
+<li>改造しやすいURI</li>
+<li>サーバ側アーキテクチャが反映されていないURI</li>
+<li>ルールが統一されたURI</li>
+</ul>
+
+
+<h4>3に関して</h4>
+
+<hr />
+
+<p>HTTPメソッドを有効活用</p>
+
+<ul>
+<li>Restfulな形で活用すれば、一般的な形</li>
+</ul>
+
+
+<h4>4に関して</h4>
+
+<hr />
+
+<ul>
+<li>複数形の名詞を利用する</li>
+<li>利用する単語に気をつける((ProgramableWeb)[http://www.programmableweb.com/]等、他のサービスを参考に)</li>
+<li>スペースやエンコードが必要な文字は避ける</li>
+<li>単語をつなげる場合はハイフンにする(SEO的に有利なことも)</li>
+</ul>
+
+
+<h4>5に関して</h4>
+
+<hr />
+
+<ul>
+<li>相対位置を使用する場合、データ数が多くなると取得件数が減ること、更新頻度が高いものは不整合が起きやすくなることに注意</li>
+<li>絶対位置を使用する場合、クエリパラメータが「x以降」,「この日付よりも古いもの」という形でクエリパラメータをもたせたほうがよい</li>
+<li>日付の形式は、RFC3339に規定されている「1970-01-01T00:00:00Z」の形にする</li>
+<li>絞り込みのパラメータは、「q」のような形は曖昧検索に取られやすいので完全一致の場合は適切なパラメータにすること</li>
+<li>一意なリソースを表すのに必要な情報: パス</li>
+<li>省略可能: クエリパラメータ</li>
+</ul>
+
+
+<h4>6に関して</h4>
+
+<hr />
+
+<ul>
+<li>OAuthを使用して、標準的な形にする</li>
+</ul>
+
+
+<p>標準的なOAuthに則るとエラーメッセージ(RFC6749, RFC6750)は、以下のような形式となる
+(当然ながらhttpステータスは401)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>{
+</span><span class='line'>  "error": "invalid_token"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>7に関して</h4>
+
+<hr />
+
+<ul>
+<li>ホスト名にapiを入れるのが主流</li>
+<li>企業で複数のサービスをホストする場合、例外的なホスト名</li>
+<li>サービスとしてのapiの場合はホスト名にapiをいれたほうがよい(外部から使われるため)</li>
+<li>プラットフォームの場合、service等をホスト名にいれる</li>
+</ul>
+
+
+<h2>まとめ</h2>
+
+<hr />
+
+<ul>
+<li>一般的なURI設計がそのまま適用できる</li>
+<li>APIならではのルール、デファクトスタンダードがある</li>
+<li>URIはリソースを表すものなので、URIとHTTPメソッドの組み合わせで処理の対象と内容を設計をする</li>
+</ul>
+
+
+<h4>Good</h4>
+
+<ul>
+<li>覚えやすく、どんな機能を持つかが一目で分かるようにエンドポイントにする</li>
+<li>適切なHTTPメソッドを利用する</li>
+<li>適切な英単語を利用し、単数形、複数形にも注意する</li>
+<li>認証はOAuth2.0を使う</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/15/back-multi-modal/">iOSで複数のmodalを同時に閉じる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-15T17:02:00+09:00" pubdate data-updated="true">Nov 15<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>こんな状況</h3>
+
+<hr />
+
+<p>[A→B→C→Dの順で画面を開いた状況で、D->Aへ戻りたいという状況</p>
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>戻りたいところのmodalを指定すると、その前のものは全て閉じることができました</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.presentingViewController?.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>画面遷移の状態を覚えてないと辛い感じですね</p>
+
+<h3>元ネタ</h3>
+
+<hr />
+
+<p><a href="dismissViewControllerAnimated:completion:">https://developer.apple.com/library/ios/documentation/uikit/reference/UIViewController_Class/index.html#//apple_ref/occ/instm/UIViewController/dismissViewControllerAnimated:completion:</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1161,204 +1407,6 @@ M-x load-file RET &hellip;">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/21/forget-js/">JavaScriptのproxyでハマったこと</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-21T00:26:00+09:00" pubdate data-updated="true">Feb 21<span>st</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>JavaScriptを書いてる訳ですが・・・<br/>
-久しぶりに書いて、初歩的なことでアレ？ってなったので備忘録的にメモしておきます</p>
-
-<h3>thisを自由に変更できるproxy関数を使う</h3>
-
-<hr />
-
-<p>大体、以下のような感じで、関数とコンテキスト(thisに設定するオブジェクト)を指定するわけです。</p>
-
-<p>ですが、以下２つのコードで嵌まりました。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var obj = {
-</span><span class='line'>    doSomething : function() {
-</span><span class='line'>        alert('test');
-</span><span class='line'>    }
-</span><span class='line'>};
-</span><span class='line'>$('button#hoge').click($.proxy(obj.doSomething(), obj)); </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>var obj = {
-</span><span class='line'>    doSomething : function() {
-</span><span class='line'>        alert('test');
-</span><span class='line'>    }
-</span><span class='line'>};
-</span><span class='line'>$('button#hoge').click($.proxy(obj.doSomething, obj)); </span></code></pre></td></tr></table></div></figure>
-
-
-<p>一見、違いがなさそうなのですが・・・<br/>
-実は、実行タイミングに違いがあります 。<br/>
-一番、上の例だとイベント登録時に実行してしまいますが、<br/>
-下のものはイベント実行時に正しく実行してくれます。</p>
-
-<p>こんな、しょうもないことで詰まりましたw</p>
-
-<h3>即時関数</h3>
-
-<hr />
-
-<p>グローバルに変数割り当てなくてお得な感じ<br/>
-あと、アレですね使い捨てできる(ぉぃ</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(function() {
-</span><span class='line'>  alert('test');
-</span><span class='line'>})();</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/18/git-merge-conflict-memo/">マージが起きたらさっさと解消しようという教訓</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-18T02:00:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>Gitを使って開発してるのですが・・・</p>
-
-<p>複数人で1つのプロダクト開発を行ってたらコンフリクトは起こることはよく有ります</p>
-
-<p>俗に言うマージコンフリクトですね</p>
-
-<p>今回はそんなマージコンフリクトで起こった事を備忘録的に残します</p>
-
-<h3>まず結論・・・</h3>
-
-<hr />
-
-<p>気づいた時点(Github,gitlab,stashとか)で、さっさとコンフリクトは解消しましょう</p>
-
-<p>後にまとめて行うのは、無謀もいいとこです</p>
-
-<p>1つ2つのコミット差分ならまだしも<br/>
-10個のコミットが積み上げられ、かつその大半がコンフリクト起こすような状況だと直すのに苦労します</p>
-
-<p># 解消に1時間かかりましたorz</p>
-
-<p>なので、さっさと直してしまいましょう(他人の書いたコードまでは責任取れないよw)</p>
-
-<h3>コンフリクト解消時に起こったこと</h3>
-
-<hr />
-
-<p>上記のことだけなら、反省だけで次回からは行わないようにすればいいだけの話です</p>
-
-<p>ですが、コンフリクト解消時に奇妙なことが起こりました</p>
-
-<p>以下のような状態でmasterのコードをブランチにとりこんだ時(実際はもう少しコンフリクト解消することがありました)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(master) : (起点) - [コンフリクト有(1)] - [コンフリクト有(2)] - [コンフリクト有(3)] - [ファイル移動] - [コンフリクト有(4)] - [コンフリクト無]
-</span><span class='line'>              |  
-</span><span class='line'>(branch) :   [A] - [B] - [C]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コンフリクト有(2)のコンフリクトを解消した瞬間に、ブランチの状態(merge/CONFLICT)だけでも、マージの継続をすることが出来なくなりました</p>
-
-<p>このコマンドだけが使えました</p>
-
-<ul>
-<li>continueは受け付け無い</li>
-<li>abortとskipは受け付ける</li>
-</ul>
-
-
-<p>そのため、一度abort→再マージをしたのですが・・・<br/>
-今度は、コンフリクト(3)で同じ現象。。。</p>
-
-<p>諦めてskipをしましたorz<br/>
-そうすると、マージが全てブランチに取り込まれました・・・(ファイル移動は取り込まれてないので別途実施)</p>
-
-<p>こういう恐ろしい事態(マージがうまくいかない)があったので、気をつけようねという自戒と対処結果のメモでしたw</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1380,6 +1428,14 @@ M-x load-file RET &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
       </li>
     
@@ -1391,19 +1447,11 @@ M-x load-file RET &hellip;">
         <a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 128.23529411764707%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.05882352941177%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.52941176470588%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.52941176470588%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 117.64705882352942%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.52941176470588%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 114.11764705882354%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.52941176470588%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.52941176470588%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.52941176470588%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.52941176470588%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.52941176470588%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 124.70588235294117%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.52941176470588%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 135.29411764705884%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 121.17647058823529%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 121.17647058823529%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.52941176470588%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.52941176470588%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(17)</a> <a href='/blog/categories/shellscript' style='font-size: 103.52941176470588%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.52941176470588%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 128.23529411764707%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.26315789473685%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 106.3157894736842%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.15789473684211%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.15789473684211%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.78947368421052%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.15789473684211%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.63157894736842%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.15789473684211%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.15789473684211%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.15789473684211%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.15789473684211%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.15789473684211%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 122.10526315789474%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.15789473684211%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.57894736842104%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.94736842105263%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.94736842105263%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.15789473684211%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.15789473684211%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(19)</a> <a href='/blog/categories/shellscript' style='font-size: 103.15789473684211%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.15789473684211%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 125.26315789473685%'>戯言(8)</a> </span>
 </section
 
 

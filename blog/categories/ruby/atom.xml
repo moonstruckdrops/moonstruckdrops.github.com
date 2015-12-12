@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-12-12T02:52:07+09:00</updated>
+  <updated>2015-12-13T01:58:48+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,293 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyKaigi2日目に行ってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/12/12/ruby-kaigi/"/>
+    <updated>2015-12-12T13:24:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/12/12/ruby-kaigi</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>RubyKaigi2日目に参加してきました。</p>
+
+<p>気になるセッションもチラホラあり期待していました</p>
+
+<p>ただ、盛大に寝坊しましたorz</p>
+
+<p>という訳で、メモ</p>
+
+<h3>Data Analytics Service Company and Its Ruby Usage</h3>
+
+<hr />
+
+<p>ミドルウェア
+* データ処理をする上でスループットが重要
+* 一度書いたものはそのまま運用されるので、固めにつくることが多い</p>
+
+<p>集めてくるところとか、加工整形した結果などは固くつくる必要はない
+(書捨ても多いから)</p>
+
+<p>要素</p>
+
+<ul>
+<li>データを集めて保存</li>
+<li>総うさするコンソr−るapi</li>
+<li>データしゅべつ、型だとかのスキーマ管理</li>
+<li>計算処理(batch,query)-> Java</li>
+<li>キューイングやスケジュール処理</li>
+<li>データを格納&amp;エクスポート</li>
+</ul>
+
+
+<p>キューとワーカーの話</p>
+
+<p>perfedtsched(スケジューラー)
+→SPOFのないcrontabと思えばよい
+→1回も実行されないよりも２回実行されたほうがよい(別途担保が必要だが・・・)</p>
+
+<p>リトライ可能かは、状況やエラー内容による
+実行時間
+jobの実行内容が重いものやら軽いものまで</p>
+
+<p>perfectqueue(キュー)</p>
+
+<ul>
+<li>優先どの高いキューは高いものは素早く処理</li>
+<li>graceful restart(字工事のjobは分離して実行)</li>
+<li>RDBMSのようなinsertで実現</li>
+<li>RDS(MySQL)を使ってる</li>
+</ul>
+
+
+<p>パフォーマンスコントロールとかでジョブ実行を制御している
+安全側に倒している(顧客情報のisolationとか)</p>
+
+<p>何故Rubyを使っているか</p>
+
+<ul>
+<li>ワーカーのコードが複雑だけど重要</li>
+<li>テストが一番重要なので、書きやすいのでrspecを採用</li>
+<li>テストコードの書きやすさが重要だった(可読性とか、オーバーライドとか)</li>
+<li>新しい機能とか新しいライブラリは使っていく</li>
+</ul>
+
+
+<p>スケジューラーとキュー気になる</p>
+
+<h3>Ruby for one day game programming camp for beginners</h3>
+
+<hr />
+
+<p>京大マイコンクラブで事例</p>
+
+<p>Windowsの環境が殆どなので以下を実行するようにした</p>
+
+<ul>
+<li>Ruby1.8.4(starter kit)</li>
+<li>MyGame and Ruby/SDL(ゲーム用)</li>
+<li>sakura editor</li>
+</ul>
+
+
+<p>インストールして終わりぐらいの単純なものがよい</p>
+
+<ul>
+<li>講義みたいなことはしない</li>
+<li>1対1のペアプロ</li>
+<li>楽しいRubyが教本</li>
+</ul>
+
+
+<p>プログラム未経験の参加者の8割が大体できる
+→やる気に繋がる
+→自信によって自分が勉強する</p>
+
+<p>考察してみる</p>
+
+<ul>
+<li>教えかたが勉強できる</li>
+<li>つくるものが決まっている</li>
+<li>締め切り</li>
+<li>教えるものが少ない(基本的な制御構造)</li>
+</ul>
+
+
+<h3>Ruby and PostgreSQL, a love story</h3>
+
+<hr />
+
+<p>plmruby
+zombodb</p>
+
+<ul>
+<li>producael language handler(他の言語のサポート)</li>
+<li>indexがすぐれてる(通常indexだけなく、elastic searchとかのラッパーにもできる)</li>
+<li>foreginData(他にデータが投げられる, csvなりなんなりにｄけいる)</li>
+</ul>
+
+
+<p>postgresql fdl</p>
+
+<ul>
+<li>callbackルーチンで駆動するライフサイクル(コールバックチェーンかな)</li>
+<li>rubyがサポートする</li>
+</ul>
+
+
+<p>holycorn</p>
+
+<h3>Rhebok, High Performance Rack Handler</h3>
+
+<hr />
+
+<p>Rhebok</p>
+
+<ul>
+<li>rack handler</li>
+<li>unicorn比較で1.5x</li>
+<li>gazelle(perlnのpluck)の置き換え</li>
+</ul>
+
+
+<p>使いドコロ</p>
+
+<ul>
+<li>高いトラフィックのあるところ</li>
+<li>最適化が進んでるところに最適(SNS, gameとか)</li>
+<li>rackがネックになったとき</li>
+</ul>
+
+
+<p>使えないところ</p>
+
+<ul>
+<li>websocket</li>
+<li>streaming</li>
+<li>リバースプロキシかまさないといけない</li>
+</ul>
+
+
+<p>性能</p>
+
+<ul>
+<li>http1.1(keepaliveは未サポート)</li>
+<li>unix socket</li>
+<li>ホットデプロイ可能</li>
+<li>rackアプリの起動でOK</li>
+</ul>
+
+
+<p>Rack</p>
+
+<ul>
+<li>仕様(webserverとF/WをつなぐI/F)</li>
+<li>middleware</li>
+<li>Rack::Handlerの名前空間の下に同時実装をすれば自動認識できる</li>
+</ul>
+
+
+<p>パフォーマンス上げる</p>
+
+<ul>
+<li>マルチプロセス</li>
+<li>マルチスレッド</li>
+<li>IO多重化</li>
+</ul>
+
+
+<p>timeoutの実現</p>
+
+<ul>
+<li>IO.selectを使用する</li>
+<li>pollを使うことで実現</li>
+</ul>
+
+
+<p>parser</p>
+
+<ul>
+<li>pico_http_parserに渡すように変更</li>
+</ul>
+
+
+<p>tcp</p>
+
+<ul>
+<li>tco_nodelayをオフにする</li>
+<li>バッファリング遅延対策</li>
+<li>tcpのやり取りが増えるのでフラグメンテーションいっぱい</li>
+<li>書き込み回数を1回にしておく</li>
+</ul>
+
+
+<h3>Pragmatic Testing of Ruby Core</h3>
+
+<p>テストを実行してみる
+テストが落ちた報告をするといい</p>
+
+<p>Makefleにテストがなく、common.mkにある
+btest-ruby => bootstraptest
+sample/test.rbが通った後に実行(runner.rb経由で実行)
+make test-allなどは、標準ライブラリのテスト</p>
+
+<p>make test-all TESTS="-j4"すると並列で動く</p>
+
+<p>test/ruby : 組み込み
+test/logger : 添付ライブラリ
+test/-ext- : C拡張</p>
+
+<p>envutil.rb &lt;- ヤバイ
+leakchecker.rb</p>
+
+<p>rubyspecは現行の振る舞いだけしか書いてないので、
+言語仕様ではない(by Matz)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/12/12/ar-default-timezone/"/>
+    <updated>2015-12-12T12:50:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/12/12/ar-default-timezone</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>DBアクセスがあるような検証用のプログラムを書いたりするときってActiveRecord便利ですよね</p>
+
+<p>このとき、timezoneの設定がうまくいって無くてすごく嵌ったので備忘録代わりにメモしておきます</p>
+
+<h3>設定方法</h3>
+
+<hr />
+
+<p>単純にこれだけです</p>
+
+<p><code>
+class TestModel &lt; ActiveRecord::Base
+  self.default_timezone = :local
+end
+</code></p>
+
+<p>もしくはこちらでもよいかと</p>
+
+<p>```
+class TestModel &lt; ActiveRecord::Base
+  def self.default_timezone</p>
+
+<pre><code>:local
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>簡単でしたね</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyKaigi１日目に行ってきた]]></title>
@@ -414,471 +701,6 @@ end
 <p>勿論、状況によって<code>email_required?</code>が必要なこともあるのでここは要仕様検討というところでしょうか。</p>
 
 <p>当たり前ですが、デカイライブラリなので、ちょっとしたことをやるだけでも結構ややこし目の実装だったりソースを読むことが必須になりますね。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RailsでSTI（単一テーブル継承）の予約語でハマった話対処]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti/"/>
-    <updated>2015-06-27T11:38:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/06/27/rails-sti</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>ここ数日、自分用のアプリを作っているわけなのですが<br/>
-その時に起きたエラーを記載しておきます</p>
-
-<p>(STIの予約語のこと忘れてたというオチｗ)</p>
-
-<h3>事象</h3>
-
-<hr />
-
-<p>ActiveRecordで「type」というカラムをもつテーブルに接続し、取得系のメソッドを呼ぶと以下の様なエラーが出た</p>
-
-<p><code>
-[1] pry(main)&gt; Hoge.find(1)
-  Hoge Load (0.4ms)  SELECT `hoges`.* FROM `hoges` WHERE `hoges`.`id` = 1 LIMIT 1
-ActiveRecord::SubclassNotFound: The single-table inheritance mechanism failed to locate the subclass: 'fuga'. This error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this column if you didn't intend it to be used for storing the inheritance class or overwrite Hoge.inheritance_column to use another column for that information.
-</code></p>
-
-<p>エラーメッセージから分かるように「type」というカラムをrenameしろと出ています<br/>
-こんなの場合によっては出来無いわけで・・・</p>
-
-<h3>これは何？</h3>
-
-<hr />
-
-<p>STI（単一テーブル継承）と呼ばれる機能のことを指しています<br/>
-つまり、1つのテーブルを複数のModelで利用する仕組みのことを言います。</p>
-
-<p>で、その仕掛けように予約語として、"type"という名前をActiveRecordが利用しているようです。</p>
-
-<p>クラスで言うとこんなところでしょうか。<br/>
-Humanクラスを継承した、Manクラス、Womanクラスがあったとした場合、以下のような形になります</p>
-
-<p>```
-class Human &lt; ActiveRecord::Base</p>
-
-<p>end</p>
-
-<p>class Man &lt; Human</p>
-
-<p>end</p>
-
-<p>class Woman &lt; Human</p>
-
-<p>end
-```</p>
-
-<p>で、例えばManオブジェクトをsaveすると、Humanテーブルにtype:Manとして保存されます。<br/>
-Womanならtype:Womanになるようです</p>
-
-<p>それぞれのモデルからデータへの操作を行った場合、適合するTypeのデータのみを操作対象となります<br/>
-ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場合は、Humanモデルから操作すればOKです</p>
-
-<p>当然ひとつのテーブルを使っていますので、片方にしか無い項目(カラム)もテーブルに含まなければならないです。<br/>
-例えばManとHumanの持つ項目があまりにも違う場合、カラム数が爆発的に増えます。<br/>
-(ここは注意するところですね)</p>
-
-<h3>対処</h3>
-
-<hr />
-
-<p>もうざっくりというと、以下の2つの対応ができます</p>
-
-<ol>
-<li>カラム名に「type」という名前をつけず、別名に変更する</li>
-<li>エラーメッセージにあるようにSTIのカラム名を変更する</li>
-</ol>
-
-
-<p>というわけなので、自分は1の対応を行いました。</p>
-
-<p>では、2の場合はどうするかというと・・・
-エラーメッセージにありますが、以下ように設定すればよいようです</p>
-
-<p><code>
-class Hoge &lt; ActiveRecord::Base
-  self.inheritance_column = :_type_disabled
-end
-</code></p>
-
-<h3>どういう場合に起きそう</h3>
-
-<hr />
-
-<p>ざっと思いつくのはこんなところかな</p>
-
-<ul>
-<li>既存のアプリケーション(PHPなりJavaなり)をRailsにのせかえるとき</li>
-<li>設計上どうしても止むえずつけたいとき(これはビジネスドメインの場合が当てはまる)</li>
-<li>(あんまりないと思うが)STIの機能を使ってリファクタリングするとき</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Railsのモデル周りのマイグレーション]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/06/21/rails-migration-command/"/>
-    <updated>2015-06-21T14:15:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/06/21/rails-migration-command</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>Railsでmigrationするときにいつもアレなんだっけなぁとなることが多いので、<br/>
-備忘録程度にまとめておく</p>
-
-<p>こんなものドキュメント見れば理解できるので、ざっくりレベルのサマリー程度にしておく</p>
-
-<h3>基本</h3>
-
-<hr />
-
-<p>マイグレーションファイル作成コマンド</p>
-
-<p><code>
-$rails generate migration クラス名
-</code></p>
-
-<p>モデル作成</p>
-
-<p><code>
-$rails generate model モデル名
-</code></p>
-
-<h3>モデル&amp;テーブル作成</h3>
-
-<hr />
-
-<p>フィールド指定で作成する場合、以下の形で行う<br/>
-(大体はフィールド指定を行わずに、実行することが多いかも)</p>
-
-<p><code>
-$rails g model モデル名 フィールド:型
-</code></p>
-
-<h3>カラムの型指定</h3>
-
-<hr />
-
-<p>細かい調整をしようと思えばできるけど、一旦これだけ覚えておけば良い</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">Ruby側の型 </th>
-<th align="left"> DB側の型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> string </td>
-<td align="left"> 文字列</td>
-</tr>
-<tr>
-<td align="left"> text </td>
-<td align="left"> 長い文字列</td>
-</tr>
-<tr>
-<td align="left"> integer </td>
-<td align="left"> 整数</td>
-</tr>
-<tr>
-<td align="left"> float </td>
-<td align="left"> 浮動小数</td>
-</tr>
-<tr>
-<td align="left"> decimal </td>
-<td align="left"> 精度の高い小数</td>
-</tr>
-<tr>
-<td align="left"> datetime </td>
-<td align="left"> 日時</td>
-</tr>
-<tr>
-<td align="left"> timestamp </td>
-<td align="left"> タイムスタンプ</td>
-</tr>
-<tr>
-<td align="left"> time </td>
-<td align="left"> 時間</td>
-</tr>
-<tr>
-<td align="left"> date </td>
-<td align="left"> 日付</td>
-</tr>
-<tr>
-<td align="left"> binary </td>
-<td align="left"> バイナリデータ</td>
-</tr>
-<tr>
-<td align="left"> boolean </td>
-<td align="left"> Boolean</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>(補足)MySQLで使用する場合の文字列型</h3>
-
-<hr />
-
-<p>MySQLで使用できる文字列型は以下が存在している</p>
-
-<table>
-<thead>
-<tr>
-<th align="left"> DB側の型 </th>
-<th align="left"> 内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> CHAR </td>
-<td align="left"> 255Bまでの固定長文字列</td>
-</tr>
-<tr>
-<td align="left"> VARCHAR </td>
-<td align="left"> 64KBまでの可変長文字列</td>
-</tr>
-<tr>
-<td align="left"> TINYTEXT </td>
-<td align="left"> 255Bまでの可変長文字列</td>
-</tr>
-<tr>
-<td align="left"> TEXT </td>
-<td align="left"> 64KBまでの可変長文字列</td>
-</tr>
-<tr>
-<td align="left"> MEDIUMTEXT </td>
-<td align="left"> 約1.6MBまでの可変長文字列</td>
-</tr>
-<tr>
-<td align="left"> LONGTEXT </td>
-<td align="left"> 約4.3GBまでの可変長文字列</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>上記をそれぞれmigrationで利用する場合<br/>
-以下のようにlimitをつけることで、使用する文字列型を変更することができる</p>
-
-<p>```
-class CreateHoges &lt; ActiveRecord::Migration
-  def change</p>
-
-<pre><code>create_table :articles do |t|
-  t.text :value, :limit =&gt; 4294967295
-
-  t.timestamps null: false
-end
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>実行すると以下のようになる</p>
-
-<p><code>
-$ rails db
-mysql&gt; show columns from hoges;
-+-------------+--------------+------+-----+---------+----------------+
-| Field       | Type         | Null | Key | Default | Extra          |
-+-------------+--------------+------+-----+---------+----------------+
-| id          | int(11)      | NO   | PRI | NULL    | auto_increment |
-| value       | longtext     | YES  |     | NULL    |                |
-| created_at  | datetime     | NO   |     | NULL    |                |
-| updated_at  | datetime     | NO   |     | NULL    |                |
-+-------------+--------------+------+-----+---------+----------------+
-</code></p>
-
-<p>limitの値は、以下のように対応している</p>
-
-<table>
-<thead>
-<tr>
-<th align="left"> 設定値 </th>
-<th align="left"> DB側の型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> 1 ~ 255 </td>
-<td align="left"> TINYTEXT</td>
-</tr>
-<tr>
-<td align="left"> 256 ~ 65535 </td>
-<td align="left"> TEXT</td>
-</tr>
-<tr>
-<td align="left"> 65536 ~ 16777215 </td>
-<td align="left"> MEDIUMTEXT</td>
-</tr>
-<tr>
-<td align="left"> 16777216 ~ 4294967295 </td>
-<td align="left"> LONGTEXT</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>マイグレーション実行</h3>
-
-<hr />
-
-<p>DB作成</p>
-
-<p><code>
-$rake db:create
-</code></p>
-
-<p>マイグレーションの実行</p>
-
-<p><code>
-$rake db:migrate
-</code></p>
-
-<p>マイグレーション結果確認</p>
-
-<p><code>
-$rake db:migrate:status
-</code></p>
-
-<p>ロールバック</p>
-
-<p><code>
-$rake db:rollback
-</code></p>
-
-<p>DBの削除</p>
-
-<p><code>
-$rake db:drop
-</code></p>
-
-<p>シードの投入(マスターデータなどシードで投入することが多い)</p>
-
-<p><code>
-$rake db:seed
-</code></p>
-
-<h3>既存カラムの変更</h3>
-
-<hr />
-
-<p>カラムを変更したい場合、以下のコマンドでマイグレーションファイルを生成する</p>
-
-<p><code>
-$rails g migration ChangeColumnTo&lt;モデル名&gt;
-</code></p>
-
-<p>変更は以下のような形で行う(upとdownを定義することでrollbackにも対応できる)</p>
-
-<p>```
-class ChangeColumnToYourModel&lt; ActiveRecord::Migration</p>
-
-<p>  # 変更内容
-  def up</p>
-
-<pre><code>change_column :users, :hoge, :string, null: false, default: 0
-</code></pre>
-
-<p>  end</p>
-
-<p>  # 変更前の状態
-  def down</p>
-
-<pre><code>change_column :users, :hoge, :string, null: true, default: 0
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<p>気をつけることとして、change_columnは以下のような順で記載すること</p>
-
-<p><code>
-change_column :&lt;テーブル名&gt;, :&lt;カラム名&gt;, :&lt;型&gt;, &lt;default値やindexといったオプション指定&gt;
-</code></p>
-
-<h3>カラムの追加/削除</h3>
-
-<hr />
-
-<p>カラムの追加/削除をしたい場合、以下のコマンドでマイグレーションファイルを生成する<br/>
-追加の場合は、フィールド指定可能</p>
-
-<p><code>
-$rails g migration AddColumnTo&lt;モデル&gt;
-</code></p>
-
-<p>以下のような形で記載する</p>
-
-<p>```
-class AddColumnToYourModel &lt; ActiveRecord::Migration
-  def change</p>
-
-<pre><code># 追加
-add_column :hoges, :hoge, :string
-
-# 削除
-remove_column :hoges, :fuga, :string
-
-# 追加する場所を指定する場合
-add_column :hoges, :fugafuga, :string, :after =&gt; :hoge
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<h3>インデックスの追加/削除</h3>
-
-<hr />
-
-<p>カラムの追加/削除と基本は変わらない</p>
-
-<p><code>
-$rails g migration AddIndexTo&lt;モデル&gt;
-</code></p>
-
-<p>以下のようにしてindexを設定する</p>
-
-<p>```
-class AddIndexToYourModel &lt; ActiveRecord::Migration
-  def change</p>
-
-<pre><code># 追加
-add_index :hoges, :hoge
-
-# 削除
-remove_index :hoges, :fuga
-
-# 複合インデックスの場合
-add_index :hoges, [:hoge, :fuga]
-</code></pre>
-
-<p>  end
-end
-```</p>
-
-<h3>参考</h3>
-
-<hr />
-
-<p>ここに書いてる内容は、Railsドキュメント見れば一発で理解できるけどな</p>
-
-<ul>
-<li><a href="http://railsdoc.com/model">モデル(model)</a></li>
-<li><a href="http://railsdoc.com/migration">マイグレーション(migration)</a></li>
-</ul>
-
 ]]></content>
   </entry>
   

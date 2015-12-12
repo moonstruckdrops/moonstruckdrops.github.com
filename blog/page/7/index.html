@@ -9,7 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも Structクラス Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・) 平たく言うと、Classクラスに似ているものです。 じゃー違いは何なの？ってなります。 newしたとき、 &hellip;">
+  <meta name="description" content="GDG京都さんとKyotoGASさんが主催する勉強会に行って来ました。
+正直なところ今更感、漂う感じの記事ですが気にしないでください。
+実は、用事があって関西に行っていたのです。 以下にメモを記載します。。。 GASとは 大雑把に言うとMSOfficeのVBAみたいなもの JS 1.8Base( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +73,503 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/13/kyoto-gas-study/">GoogleAppsScript勉強会に行って来ました</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-13T17:54:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>GDG京都さんとKyotoGASさんが主催する勉強会に行って来ました。<br/>
+正直なところ今更感、漂う感じの記事ですが気にしないでください。<br/>
+実は、用事があって関西に行っていたのです。</p>
+
+<p>以下にメモを記載します。。。</p>
+
+<h3>GASとは</h3>
+
+<hr />
+
+<p>大雑把に言うとMSOfficeのVBAみたいなもの</p>
+
+<ul>
+<li>JS 1.8Base(既存のJS資産が使える)</li>
+<li>サーバサイド実行</li>
+<li>Googleのサービスと連携できるAPIがいっぱいある</li>
+<li>GoogleAppsの拡張</li>
+<li>Advanced Google Serviceが利用(API Keyが必要)</li>
+<li>Charts(グラフ)</li>
+<li>JDBCでクラウドSQL利用可</li>
+<li>ウェブアプリケーションの作成が可能</li>
+<li>スクリプトトリガーで、任意or一定間隔でスクリプト実行できる</li>
+</ul>
+
+
+<h5>制限</h5>
+
+<hr />
+
+<p>主にあげられる制限</p>
+
+<ul>
+<li>メールの本数など(GoogleAppsのユーザーや一般ユーザーの違いなど)</li>
+</ul>
+
+
+<h5>その他</h5>
+
+<hr />
+
+<ul>
+<li>GAEよりもお手軽にできる</li>
+<li>ソースの共有(ソースの共有を設定していれば)</li>
+<li>GAEよりも制限がゆるい</li>
+</ul>
+
+
+<h3>AppsScriptとクラウドBPM</h3>
+
+<hr />
+
+<ul>
+<li>GASの学習コストは低い</li>
+<li>GAS自身に足りないところはSpreadSheetで補う(最適な方法)</li>
+<li>サーバ処理、クライアント処理の連携がよい</li>
+</ul>
+
+
+<h4>連携例</h4>
+
+<h5>1.Sheetでマスタ管理</h5>
+
+<hr />
+
+<h6>(連携例)  サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>JSONPでデータを返してやればサイト側でJS処理をするだけでよい</p>
+
+<p>問題</p>
+
+<ul>
+<li>JSとGASお通信でクロスドメイン問題</li>
+<li>ブラウザの設定だけでやると戻すデータがカラになってしまう</li>
+</ul>
+
+
+<h5>2.リアルタイム集計</h5>
+
+<hr />
+
+<h6>(連携例) サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>データ送信してSheetで集計</p>
+
+<h5>3.帳票出力</h5>
+
+<hr />
+
+<h6>(連携例) サイト<->GAS(処理を実施)<->SpreadSheat</h6>
+
+<p>SpreadSheetを利用して、帳票を出す</p>
+
+<h5>4.一括処理</h5>
+
+<hr />
+
+<h6>(連携例) SpreadSheetからGASに投げ、GASからサイトのAPIを実行する</h6>
+
+<p>定期実行をするようにしてやる</p>
+
+<h5>5.Googleカレンダー連携</h5>
+
+<hr />
+
+<ul>
+<li>キーワードをGASで取得してやる</li>
+</ul>
+
+
+<h5>考慮点</h5>
+
+<hr />
+
+<ul>
+<li>セキュリティ(サーバからアクセスするので、GoogleApps認証ができない、Keyというパラメータをもたせる)</li>
+<li>運用監視(ログをspreadSheetへ)</li>
+<li>エラーの発生を極力回避するようにする</li>
+</ul>
+
+
+<h5>GASを使用していて困るところ</h5>
+
+<hr />
+
+<ul>
+<li>ソースコードの構成管理</li>
+<li>httpリクエストのデバッグ(実際に手動で実行してみてリクエストを送信するしかない)</li>
+<li>IP制限がない</li>
+<li>予期せぬエラーが出た場合の対処</li>
+</ul>
+
+
+<h3>GoogleAppsScriptを積極活用</h3>
+
+<hr />
+
+<p>GAS+SpreadSheetがすごいという事例紹介
+特に以下がやりやすい</p>
+
+<ul>
+<li>GASで勤怠管理</li>
+<li>集客ツール</li>
+</ul>
+
+
+<h5>勤怠管理</h5>
+
+<hr />
+
+<ul>
+<li>SpreadSheetをDBのように扱う</li>
+<li>SpreadSheetの変更管理が大変(ユーザーが大変)</li>
+<li>受託ではやらないほうがいいかもしれない。(予期せぬ問題が起きたときの解析などが大変)</li>
+<li>プログラムが得意ではない人でもGASは使いやすい(Excelユーザ向け)</li>
+<li>各種GoogleServiceとの連携に向いている</li>
+</ul>
+
+
+<h3>GoogleAppsScriptの新機能</h3>
+
+<hr />
+
+<p>GoogleAppSAPIは以下の使用方法がある</p>
+
+<ul>
+<li>DATA API</li>
+<li>AppsScript</li>
+</ul>
+
+
+<p>GAE vs GAS</p>
+
+<ul>
+<li>速さGAE</li>
+<li>柔軟GAE(なんでもできる)</li>
+<li>お仕事GAE(GASは不安定)</li>
+<li>お手軽GAS(GAEよりも圧倒的に楽にアプリが組める)</li>
+</ul>
+
+
+<p>GAS</p>
+
+<ul>
+<li>Forms + GAS</li>
+<li>Documents + GAS</li>
+<li>new UI Component(Dialog,sidebar)</li>
+<li>GoogleDriveIntegration</li>
+</ul>
+
+
+<p>新しくFormsにToolsというメニュー項目が追加</p>
+
+<h5>GASからフォーム作る</h5>
+
+<hr />
+
+<p>ソースから新しくFormを作成するソースコード</p>
+
+<ul>
+<li>フォームの作成</li>
+<li>メールの送信</li>
+<li>ログ出力</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function myFunction{
+</span><span class='line'>    // 空のフォーム
+</span><span class='line'>    var form = FormApp.create("アンケートひな形").setDescription("アンケート用のフォームです");    
+</span><span class='line'>    //入力フォーム
+</span><span class='line'>    form.addtextItem().setTitle("Email")
+</span><span class='line'>    // 1-5までのラジオボタンを作る
+</span><span class='line'>    form.addScaleItem().setTitle("評価").setBound(1,5).setHelpText("1..5");
+</span><span class='line'>    //  自由入力欄
+</span><span class='line'>    form.setParagrapheTextItem.setTitle("")
+</span><span class='line'>    // メールの送信
+</span><span class='line'>    MailApps.sendEmail("宛先","本文")
+</span><span class='line'>    // 公開用のアドレス
+</span><span class='line'>    Loger.log(form.getPublishedUrl())
+</span><span class='line'>    // 編集用のアドレス
+</span><span class='line'>    Loger.log(form.getEditUrl())
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Document + GAS</h5>
+
+<hr />
+
+<ul>
+<li>文章の構造化(DOM構造みたいにItemとか)を制御できるようになった</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function myFunction{
+</span><span class='line'>    //ドキュメント本体
+</span><span class='line'>    var body = DocumentApps.getActiveDocument().getBody();
+</span><span class='line'>    // インデックス
+</span><span class='line'>    body numChild = body.getNumChild();
+</span><span class='line'>
+</span><span class='line'>    var i = 0,chld,type,hending,html="&lt;div&gt;";
+</span><span class='line'>    for(;i&lt;numChild;i++){
+</span><span class='line'>        //  子要素
+</span><span class='line'>        child = body.getChild(i)
+</span><span class='line'>        type = child.getType()
+</span><span class='line'>
+</span><span class='line'>        if(type == DocumentApps.ElementType.PARAGRAPH){
+</span><span class='line'>            heading = child.getHeading()
+</span><span class='line'>            // 不要なHeadingが付いている。これは、文章自身もパラグラフと認識されてるためだったっけ(?)
+</span><span class='line'>            if(heading != DocumentApps.ParagraphHeding.Normal && child.getNumChild() &gt; 0){
+</span><span class='line'>                Logger.log(heading +" "+child.getChild(0).getText() )
+</span><span class='line'>                html + ="&lt;p&gt;" +heading +" "+child.getChild(0).getText()+"&lt;/p&gt;" 
+</span><span class='line'>            }
+</span><span class='line'>        }
+</span><span class='line'>    html +="&lt;/div&gt;"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ダイアログ表示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function showDialog(){
+</span><span class='line'>    var ui = HtmlService.createHtmlOutput(myFunction()).setWidth(400).setHeight(300)
+</span><span class='line'>    DocumnetApps.getUi().showoDialog(ui)
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>サイドバー表示</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function showSideBar(){
+</span><span class='line'>    var ui = HtmlService.createHtmlOutput(myFunction()).setWidth(300)
+</span><span class='line'>    DocumnetApps.getUi().showSideBar(ui)
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>DriveSDKを使う</h5>
+
+<hr />
+
+<p>以下のようなコードでGoogleDriveを操作できる</p>
+
+<ul>
+<li>ファイル名取得</li>
+<li>ファイルをゴミ箱へ送る</li>
+<li>ファイルへアクセス権を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function drive(){
+</span><span class='line'>    // ファイル検索
+</span><span class='line'>    // 結果はイテレータで帰ってくる
+</span><span class='line'>    var fails = DriveApp.searchFiles("title contains","検索ファイル")
+</span><span class='line'>    var file
+</span><span class='line'>    while(fails.hasNext()){
+</span><span class='line'>        file  = fails.next();
+</span><span class='line'>        // ファイル名を取得する
+</span><span class='line'>        file.getName()
+</span><span class='line'>        try{
+</span><span class='line'>            // ファイルをゴミ箱へおくる
+</span><span class='line'>            // 権限がないとエラーが出るかも
+</span><span class='line'>            file.setTrash(true)
+</span><span class='line'>            // 権限を追加(Owner権を追加)
+</span><span class='line'>            file.setOwner("追加するユーザー")
+</span><span class='line'>        }catch(e){
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>質問</h5>
+
+<hr />
+
+<ul>
+<li>補完は出ないときは、一回保存して開き直すとかで対処(リファレンス読み直せばいい)</li>
+<li>GASでプレゼンテーションは操作できない(予定もない)</li>
+<li>GASで作ったファイルはドライブに保存される</li>
+<li>FormはSpreadSheetにプログラムでひもづけることもできる</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/13/recover-dropbox-data/">削除してしまったDropboxのデータを復元する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-13T17:06:00+09:00" pubdate data-updated="true">Jul 13<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>簡単な経緯</h3>
+
+<hr />
+
+<p>このブログ記事を書くキッカケになった内容を以下に記述します。</p>
+
+<p>お馬鹿すぎて笑えますwww</p>
+
+<ol>
+<li>Dropboxアプリ起動</li>
+<li>アプリを起動したまま、あるコマンドを実行</li>
+<li>Dropboxと同期したディレクトリが2で実行したコマンドで削除される</li>
+<li>1のDropboxアプリが削除した状態を同期開始</li>
+<li>削除だけなので、同期が一瞬で終わってしまう</li>
+<li>Dropboxサーバのデータが削除</li>
+</ol>
+
+
+<p>こんな感じでした・・・
+実際は、Dropboxのディレクトリだけでなくもっと影響がでかくて涙を流しています。</p>
+
+<h3>復元の手順</h3>
+
+<hr />
+
+<p>復活の呪文を唱えるにも条件があります。</p>
+
+<h4>削除してからの日数が30日以内であれば、復元可能</h4>
+
+<p>というものです。</p>
+
+<p>幸いなことに削除した次の日に気がついたので、自分はこの条件を満たしていました。</p>
+
+<p>で、肝心の復元の手順ですが、以下で実施します。</p>
+
+<ol>
+<li>Dropboxのウェブサイトにログイン</li>
+<li>画面右上の「削除済みファイル」をクリック</li>
+<li>ファイル名の横に表示されている逆三角を押下し復元をクリック</li>
+</ol>
+
+
+<h4><a href="https://www.dropbox.com/help/296/ja">公式の手順</a></h4>
+
+<p>これで削除したファイルが復元できます。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1321,214 +1820,6 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/28/git-talk/">Gitを教えたときの話</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-28T20:33:00+09:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>前置き</h3>
-
-<hr />
-
-<p>事の発端はある人と作業してたことから始まりました。。。<br/>
-というのも、自分が海外に行ってるいる間、作業をお願いしていました。</p>
-
-<p>作業をお願いしていたのはいいのですが<br/>
-彼は普段使っていないGitを使ってみたかったようです。</p>
-
-<p>今回は、そのとき伝えたことをネタにします。<br/>
-もっとネタにするものはありますが(ぉぃ</p>
-
-<h3>基本操作以外に覚えて欲しいと伝えたこと</h3>
-
-<hr />
-
-<ul>
-<li>GitのGUIツールを捨てろ(言い過ぎだと思うし、賛否両論あると思っている)</li>
-<li>状態は常に確認するようにしよう</li>
-<li>ファイルを編集前状態に戻すやり方</li>
-<li>マージやリベースで、ファイル競合状態になったときの対処(エラーログとか読んでみる)</li>
-<li>ヘッド位置の意識</li>
-<li>ヘッドの操作方法やヘッドの位置がどこにあるのか</li>
-<li>落ち着いてブランチを切って、Git操作を試してみる(カジュアルに作れるので、作ったブランチで操作を試してみる)</li>
-<li>masterでのファイル編集をやめる</li>
-</ul>
-
-
-<p>コミットの取り消しや歴史の改変とかも覚えてて貰いたいけどな</p>
-
-<p>教えたはいいけど、自分もまだまだ使いこなせてないのでは？と思ったりしてます。</p>
-
-<h3>伝えた元に戻す系のコマンド類</h3>
-
-<hr />
-
-<p>元に戻し方とかそんな感じのことを以下にメモレベルで記載</p>
-
-<p>ファイルをインデックス(元々のヘッド状態)の状態に戻す</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git checkout -- &lt;元に戻したいファイル&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ワークツリーとインデックスをコミットIDに指定した状態に戻す</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git reset --hard &lt;コミットID&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>現在のコミットからブランチを作成する<br/>
-作業はここでしちゃいましょう。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git checkout -b &lt;ブランチ名&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>リベースでおかしなこと(ファイルの競合とか)が起きた時に元に戻す</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git rebase --abort</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ここに書いた以外のやり方なんていくらでもあるので、参考程度で。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/24/linux-user-add/">Linux上にあるユーザーアカウントの追加と削除をする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>すごくド基礎なのですが・・・。<br/>
-ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
-
-<h3>ユーザーアカウントの追加</h3>
-
-<hr />
-
-<p>基本中の基本ですね。<br/>
-以下のコマンドのような感じで追加します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
-
-
-<p>以下の表によく使用するオプションを記載します。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">オプション</th>
-<th align="left">意味</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">c コメント      </td>
-<td align="left">ユーザーのコメントを設定</td>
-</tr>
-<tr>
-<td align="left">d ディレクトリ  </td>
-<td align="left">ユーザーのログインディレクトリを指定</td>
-</tr>
-<tr>
-<td align="left">e mm/dd/yy </td>
-<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
-</tr>
-<tr>
-<td align="left">g グループ   </td>
-<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
-</tr>
-<tr>
-<td align="left">G グループ    </td>
-<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
-</tr>
-<tr>
-<td align="left">u ユーザーID </td>
-<td align="left">ユーザーのユーザーIDを指定</td>
-</tr>
-<tr>
-<td align="left">s シェル </td>
-<td align="left">ユーザーのログインシェルを指定</td>
-</tr>
-<tr>
-<td align="left">m        </td>
-<td align="left">ホームディレクトリの作成を自動で行う</td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>ユーザーアカウントの削除</h3>
-
-<hr />
-
-<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
-なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
-但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>常識ですね(ぉぃ</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -1550,6 +1841,14 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
       </li>
     
@@ -1561,19 +1860,11 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
         <a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 128.23529411764707%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.05882352941177%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.52941176470588%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.52941176470588%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 117.64705882352942%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.52941176470588%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 114.11764705882354%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.52941176470588%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.52941176470588%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.52941176470588%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.52941176470588%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.52941176470588%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 124.70588235294117%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.52941176470588%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 135.29411764705884%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 121.17647058823529%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 121.17647058823529%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.52941176470588%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.52941176470588%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(17)</a> <a href='/blog/categories/shellscript' style='font-size: 103.52941176470588%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.52941176470588%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 128.23529411764707%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.26315789473685%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 106.3157894736842%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.15789473684211%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.15789473684211%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.78947368421052%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.15789473684211%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.63157894736842%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.15789473684211%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.15789473684211%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.15789473684211%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.15789473684211%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.15789473684211%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 122.10526315789474%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.15789473684211%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.57894736842104%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.94736842105263%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.94736842105263%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.15789473684211%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.15789473684211%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(19)</a> <a href='/blog/categories/shellscript' style='font-size: 103.15789473684211%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.15789473684211%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 125.26315789473685%'>戯言(8)</a> </span>
 </section
 
 

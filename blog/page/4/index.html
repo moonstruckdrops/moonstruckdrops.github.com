@@ -9,8 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに といっても大したことではなく、「同僚にできないの？」って質問されたことが発端です。 やったこと無かったけど、気になったので調べてみることにしました。 業務要件的にも、以下のことはありそうな感じかなーとは思いましたがｗ あるログはデフォルトの出力先に
-致命的なエラーは、 &hellip;">
+  <meta name="description" content="はじめに JavaScriptを書いてる訳ですが・・・
+久しぶりに書いて、初歩的なことでアレ？ってなったので備忘録的にメモしておきます thisを自由に変更できるproxy関数を使う 大体、以下のような感じで、関数とコンテキスト(thisに設定するオブジェクト)を指定するわけです。 ですが、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,204 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/21/forget-js/">JavaScriptのproxyでハマったこと</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-21T00:26:00+09:00" pubdate data-updated="true">Feb 21<span>st</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>JavaScriptを書いてる訳ですが・・・<br/>
+久しぶりに書いて、初歩的なことでアレ？ってなったので備忘録的にメモしておきます</p>
+
+<h3>thisを自由に変更できるproxy関数を使う</h3>
+
+<hr />
+
+<p>大体、以下のような感じで、関数とコンテキスト(thisに設定するオブジェクト)を指定するわけです。</p>
+
+<p>ですが、以下２つのコードで嵌まりました。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var obj = {
+</span><span class='line'>    doSomething : function() {
+</span><span class='line'>        alert('test');
+</span><span class='line'>    }
+</span><span class='line'>};
+</span><span class='line'>$('button#hoge').click($.proxy(obj.doSomething(), obj)); </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var obj = {
+</span><span class='line'>    doSomething : function() {
+</span><span class='line'>        alert('test');
+</span><span class='line'>    }
+</span><span class='line'>};
+</span><span class='line'>$('button#hoge').click($.proxy(obj.doSomething, obj)); </span></code></pre></td></tr></table></div></figure>
+
+
+<p>一見、違いがなさそうなのですが・・・<br/>
+実は、実行タイミングに違いがあります 。<br/>
+一番、上の例だとイベント登録時に実行してしまいますが、<br/>
+下のものはイベント実行時に正しく実行してくれます。</p>
+
+<p>こんな、しょうもないことで詰まりましたw</p>
+
+<h3>即時関数</h3>
+
+<hr />
+
+<p>グローバルに変数割り当てなくてお得な感じ<br/>
+あと、アレですね使い捨てできる(ぉぃ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(function() {
+</span><span class='line'>  alert('test');
+</span><span class='line'>})();</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/18/git-merge-conflict-memo/">マージが起きたらさっさと解消しようという教訓</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-18T02:00:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>Gitを使って開発してるのですが・・・</p>
+
+<p>複数人で1つのプロダクト開発を行ってたらコンフリクトは起こることはよく有ります</p>
+
+<p>俗に言うマージコンフリクトですね</p>
+
+<p>今回はそんなマージコンフリクトで起こった事を備忘録的に残します</p>
+
+<h3>まず結論・・・</h3>
+
+<hr />
+
+<p>気づいた時点(Github,gitlab,stashとか)で、さっさとコンフリクトは解消しましょう</p>
+
+<p>後にまとめて行うのは、無謀もいいとこです</p>
+
+<p>1つ2つのコミット差分ならまだしも<br/>
+10個のコミットが積み上げられ、かつその大半がコンフリクト起こすような状況だと直すのに苦労します</p>
+
+<p># 解消に1時間かかりましたorz</p>
+
+<p>なので、さっさと直してしまいましょう(他人の書いたコードまでは責任取れないよw)</p>
+
+<h3>コンフリクト解消時に起こったこと</h3>
+
+<hr />
+
+<p>上記のことだけなら、反省だけで次回からは行わないようにすればいいだけの話です</p>
+
+<p>ですが、コンフリクト解消時に奇妙なことが起こりました</p>
+
+<p>以下のような状態でmasterのコードをブランチにとりこんだ時(実際はもう少しコンフリクト解消することがありました)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(master) : (起点) - [コンフリクト有(1)] - [コンフリクト有(2)] - [コンフリクト有(3)] - [ファイル移動] - [コンフリクト有(4)] - [コンフリクト無]
+</span><span class='line'>              |  
+</span><span class='line'>(branch) :   [A] - [B] - [C]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コンフリクト有(2)のコンフリクトを解消した瞬間に、ブランチの状態(merge/CONFLICT)だけでも、マージの継続をすることが出来なくなりました</p>
+
+<p>このコマンドだけが使えました</p>
+
+<ul>
+<li>continueは受け付け無い</li>
+<li>abortとskipは受け付ける</li>
+</ul>
+
+
+<p>そのため、一度abort→再マージをしたのですが・・・<br/>
+今度は、コンフリクト(3)で同じ現象。。。</p>
+
+<p>諦めてskipをしましたorz<br/>
+そうすると、マージが全てブランチに取り込まれました・・・(ファイル移動は取り込まれてないので別途実施)</p>
+
+<p>こういう恐ろしい事態(マージがうまくいかない)があったので、気をつけようねという自戒と対処結果のメモでしたw</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1130,492 +1328,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/23/java-logging/">Log4j 2を使った。おまけで他のloggingも用意した。</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-23T03:27:00+09:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>今はRails使いですが、数年前まではJava使いでした。<br/>
-何やらlog4jがメジャーバージョンアップ始めたという噂を聞いたので試してみました。<br/>
-因みに、自分が最後に使っていたのは「slf4j + logback」です。</p>
-
-<h3>コード類</h3>
-
-<hr />
-
-<p>コードは<a href="https://github.com/moonstruckdrops/java-logging-sample/tree/master/Log4j2Sample">github</a>に置きました。<br/>
-どれも必要最低限のライブラリしか使っていませんので、動作の参考になるかと思います。</p>
-
-<p>特にivy, maven, gradleを使うと必要以上のライブラリまで取ってくるので、解決に困っている方がいれば役立つかも・・・</p>
-
-<p># 自分が偶に忘れるなんてことは言えない・・・</p>
-
-<h3>log4j 2.x</h3>
-
-<hr />
-
-<p><a href="http://logging.apache.org/log4j/2.x/index.html">本家</a>曰く、何やらこんなことが増えたらしい。</p>
-
-<ul>
-<li>APIの分離</li>
-<li>パフォーマンス(性能)改良</li>
-<li>multiple API(commons-logging, slf4j)のサポート</li>
-<li>設定の自動リロード</li>
-<li>logbackライクなFilter設定</li>
-<li>plugin機構の追加</li>
-</ul>
-
-
-<p>後は、地味に細かい改良があったりします。。。</p>
-
-<h3>セットアップ</h3>
-
-<hr />
-
-<p>ライブラリ(2013/12/22時点)は、以下のものがあればよいようです。</p>
-
-<ul>
-<li>log4j-api-2.0-beta9.jar</li>
-<li>log4j-core-2.0-beta9.jar</li>
-</ul>
-
-
-<p>slf4jと連携させたいときは、以下を追加します。</p>
-
-<ul>
-<li>log4j-slf4j-impl-2.0-beta9.jar</li>
-<li>slf4j-api.1.7.5.jar</li>
-</ul>
-
-
-<p>Gradleだとこんな感じですね。(transitiveをつけるのは余計なライブラリをダウンロードさせないため)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>dependencies {
-</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-core:2.0-beta9') {transitive = false}
-</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-api:2.0-beta9') {transitive = false}
-</span><span class='line'>    compile ('org.apache.logging.log4j:log4j-slf4j-impl:2.0-beta9') {transitive = false}
-</span><span class='line'>    compile ('org.slf4j:slf4j-api:1.7.5') {transitive = false}
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>このあたりを参考にするといいかも</p>
-
-<ul>
-<li><a href="http://logging.apache.org/log4j/2.x/maven-artifacts.html">maven連携</a></li>
-<li><a href="http://logging.apache.org/log4j/2.x/log4j-slf4j-impl/">slf4j連携の注意点</a></li>
-</ul>
-
-
-<p>設定ファイルの置き場ですが、こちらは「クラスパス」が通ったところに置けばよいでしょう。<br/>
-# eclipseとかだとsrcの直下の置けばよいです。</p>
-
-<p>因みに、この設定ファイルですが以下に変更となったようです。</p>
-
-<ul>
-<li>log4j2.xmlもしくはlog4j2.jsonのどちらかを設定ファイルとする</li>
-<li>propertiesファイルでは記載できなくなった</li>
-<li>ファイル名の規則が「log4j2」になった</li>
-</ul>
-
-
-<p># Javaの特徴という感じだったのでプロパティファイル結構好きだったんだけどなぁ(日本語書くとアレなのは置いておいて)<br/>
-# 複雑なことは書けないという致命傷もあったので、設定が複雑なことには向かなかったというのも分かる<br/>
-# jsonのサポートは今風かも。</p>
-
-<p>ログの設定にjsonを使う場合は、以下のライブラリを追加する必要があるようです。</p>
-
-<ul>
-<li>jackson-core-2.2.2.jar</li>
-<li>jackson-databind-2.2.2.jar</li>
-</ul>
-
-
-<h3>設定</h3>
-
-<hr />
-
-<p>ログって基本、一度設定してしまうと何か特別な理由が無い限り設定変更ってしませんよね。<br/>
-# ログ分析が必要になったとか、ログレベルの変更をする必要が出たとか</p>
-
-<ul>
-<li><a href="http://logging.apache.org/log4j/2.x/manual/architecture.html">デフォルト</a>はERRORとFATALのみ表示(ログレベルは、FATAL > ERROR> WARN > INFO > DEBUG > TRACE)</li>
-<li><a href="http://logging.apache.org/log4j/2.x/manual/layouts.html">指定できる出力フォーマット</a></li>
-<li><a href="http://logging.apache.org/log4j/2.x/manual/appenders.html">appender</a>は、コンソールやファイルの出力するフォーマット定義</li>
-<li>loggersは、どのappendersを使うかを指定することでログの出力方式を決定できます</li>
-<li>最低限、appenderとloggersを設定すれば動きます。</li>
-</ul>
-
-
-<p>以下のような感じでlog4j2.xmlを設定します。</p>
-
-<ul>
-<li>Consoleとログファイルの両方にログを出力するようにしています</li>
-<li>ログファイルの出力は、JSONを設定しています</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-</span><span class='line'>&lt;configuration status="OFF"&gt;
-</span><span class='line'>  &lt;appenders&gt;
-</span><span class='line'>    &lt;Console name="Console" target="SYSTEM_OUT"&gt;
-</span><span class='line'>      &lt;PatternLayout&gt;
-</span><span class='line'>        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
-</span><span class='line'>      &lt;/PatternLayout&gt;
-</span><span class='line'>    &lt;/Console&gt;
-</span><span class='line'>
-</span><span class='line'>    &lt;RollingFile name="RollingFile" fileName="log4j2_sample_log.log" filePattern="log4j2_sample_log_%d{yyyy-MM-dd}.log.gz"&gt;
-</span><span class='line'>      &lt;JSONLayout complete="true" charset="UTF-8" /&gt;
-</span><span class='line'>      &lt;Policies&gt;
-</span><span class='line'>        &lt;TimeBasedTriggeringPolicy /&gt;
-</span><span class='line'>      &lt;/Policies&gt;
-</span><span class='line'>    &lt;/RollingFile&gt;
-</span><span class='line'>  &lt;/appenders&gt;
-</span><span class='line'>
-</span><span class='line'>  &lt;loggers&gt;
-</span><span class='line'>    &lt;root level="trace"&gt;
-</span><span class='line'>      &lt;appender-ref ref="Console" /&gt;
-</span><span class='line'>      &lt;appender-ref ref="RollingFile" /&gt;
-</span><span class='line'>    &lt;/root&gt;
-</span><span class='line'>  &lt;/loggers&gt;
-</span><span class='line'>    
-</span><span class='line'>&lt;/configuration&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他にも出来そうなこと</p>
-
-<ul>
-<li><code>「&lt;property name="LOG_PATH" value="" /&gt;」</code>のように定義することもできるような感じなので柔軟に出来そうですね。</li>
-<li>appenderを追加すれば、状況に応じたログ出力が出来そう(普通のログとJSONのログ等)</li>
-<li>JSONでログ出力すれば、ログの分析がしやすそう(分析基盤(Fluentdとか)を使ったり作ればですが)</li>
-</ul>
-
-
-<h3>おまけ(その1)</h3>
-
-<hr />
-
-<p>いつもSLF4jを使用するときの組み合わせを忘れるので、ここにメモします。
-SLF4jはFacadeパターンを採っていまして、以下のメリットがあるようです。</p>
-
-<ul>
-<li>柔軟な切り替え</li>
-<li>効率化</li>
-</ul>
-
-
-<p>これのお陰で、移行とかがスムーズにできるというわけです。
-以下の表に組み合わせをメモしておきます。</p>
-
-<table>
-<thead>
-<tr>
-<th> </th>
-<th>Log4j</th>
-<th>Log4j2</th>
-<th>Logback</th>
-<th>Logging</th>
-<th>Simple</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SLF4J/コア</td>
-<td>slf4j-api.jar</td>
-<td>slf4j-api.jar</td>
-<td>slf4j-api.jar</td>
-<td>slf4j-api.jar</td>
-<td>slf4j-api.jar</td>
-</tr>
-<tr>
-<td>SLF4J/アダブタ</td>
-<td>slf4j-log4j12.jar</td>
-<td>log4j-slf4j-impl</td>
-<td>logback-classic.jar, logback-core.jar</td>
-<td>slf4j-jdk14.jar</td>
-<td>slf4j-simple.jar</td>
-</tr>
-<tr>
-<td>ロギング・ライブラリ</td>
-<td>log4j-1.2.x.jar</td>
-<td>log4j-core, log4j-api</td>
-<td>logback-classic.jar, logback-core.jar</td>
-<td>java.util.logging</td>
-<td>slf4j-simple.jar</td>
-</tr>
-</tbody>
-</table>
-
-
-<p># どちらかと言うとこちらのほうが必要だったかもw</p>
-
-<h3>おまけ(その2)</h3>
-
-<hr />
-
-<p>ついでといってはなんですが、他にJavaでよく使いそうなloggingも用意しました。<br/>
-どれも必要最低限のライブラリしか使っていませんので、動作の参考になるかと思います。</p>
-
-<ul>
-<li>Commons Logging + SimpleLog</li>
-<li>SLF4j + Log4j</li>
-<li>SLF4j + Logback</li>
-<li>SLF4j + Log4j2</li>
-</ul>
-
-
-<p><a href="https://github.com/moonstruckdrops/java-logging-sample">ここ</a>に置きました。</p>
-
-<p>Gradleがあれば使えるようにしてあります。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/21/work-site/">現場で感じた理想と現実</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-21T11:26:00+09:00" pubdate data-updated="true">Dec 21<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>この投稿は DevLOVE Advent Calendar 2013 12月21日の記事です。<br/>
-前日は nnasakiさんでした。</p>
-
-<h3>自己紹介</h3>
-
-<hr />
-
-<p>kurobaraと言います。</p>
-
-<p>こんな感じのことをやったり、考えたりしてます</p>
-
-<ul>
-<li>C/Java/AndroidをSIerとしてやってきて、現在はPHP/Rubyを使うwebエンジニア</li>
-<li>趣味で、Java系の何かとか,Googleのプロダクト扱ったり、Goをやったりと幅広で技術的なこと</li>
-<li>プロダクトと技術指向な感じで何か色々とやってる感じ</li>
-<li>今後は事業領域やデータ分析的なこともやりたいような予感</li>
-</ul>
-
-
-<p>経歴というほどの経歴ではないですが、経歴を知りたい方は過去のブログ記事を参照してください。。。</p>
-
-<p>今回の記事は、同僚にぜひにと誘われましたので、良い機会だと思ったので書いています。</p>
-
-<h3>前置き</h3>
-
-<hr />
-
-<p>正直なところ、これまで「現場」という感覚で捉えたことが無かったので考えるきっかけになりました。<br/>
-恐らく、仕事をしてる中では、いかによくやるかとは考えて行動しているはずです。。。</p>
-
-<p>某映画に有名にセリフがあります。</p>
-
-<p>「事件は会議室で起きてるんじゃない。現場で起きてるんだ。」</p>
-
-<p>これは、その通りかなと思っています。<br/>
-このセリフが出る映画の上映当時、自分はガキだったので「( ´_ゝ｀)ﾌｰﾝ」って感じでした。</p>
-
-<p>今では、その言葉の意味とか言ってしまいたい気持ちもわかります。</p>
-
-<h3>自分にとっての現場とは</h3>
-
-<hr />
-
-<p>思わず前置きを書いてしまいましたが、気を取り直して本題に移ります。</p>
-
-<p>自分は、IT業界での仕事現場しか分からないので、他の業界での現場というものはわかりません。<br/>
-ただ、敢えて自分の感じる現場というものを一言で表すと「理想と現実の狭間で戦うところ」かなと思います。</p>
-
-<p>ここでいう理想とは、「技術者が技術的にもやれることにも満足している」ような状態。<br/>
-現実は、「ビジネス的要因があって、技術的なことにチャレンジもできない」状態。<br/>
-(出来ないは言い過ぎですが、要するにビジネスが先行し、技術者が思う理想ができないような感じのことです)</p>
-
-<h4>理想を感じた要因は？</h4>
-
-<p>これは難しいですね。<br/>
-経験というものしかないかと思います。</p>
-
-<p>そもそもとして、以下が出来れば自分の満足度があがるかと思います。</p>
-
-<ul>
-<li>プロダクトが価値を提供出来る</li>
-<li>悩んでいる人に課題を解決出来る</li>
-<li>プロダクトで喜んでくれる人がいる</li>
-</ul>
-
-
-<p># 褒められると嬉しいというやつですね。(自分もよくあります。)</p>
-
-<p>そのため、に技術者が出来ることは、以下の内容かな？と自分は考えます。<br/>
-そして、これが理想的に出来れば理想に近いかなと思います。</p>
-
-<ul>
-<li>プロダクトの開発サイクルを上げ、価値を出来うる最速で提供できること</li>
-<li>プロダクトに対して、きっちりTDD/BDDが回せて品質まで担保できること</li>
-<li>プロダクトに対する技術的な負債を限りなく0まで減らしていけること</li>
-<li>プロダクトの開発サイクルや開発機能そのものの改善が出来ていること</li>
-<li>プロダクトに対して、技術的なチャレンジが出来、成長できること</li>
-<li>技術者が今思う、トレンドに触れていられること</li>
-</ul>
-
-
-<p>どれも、当たり前の発想だし当たり前に出来ていることが理想型だと私自身は感じています。</p>
-
-<h4>理想はまぁなんとなく理解したが、現実は？</h4>
-
-<p>これはもう、大体分かることかなーと思います。<br/>
-数値が出れば出るほど特に出来なくなりつつあるという感じですね。</p>
-
-<p>わかりやすいところでいうとこんな感じかも</p>
-
-<ol>
-<li>実装はできるが、時間に余裕が無い</li>
-<li>機能の割にテストを書いてる余裕がなくなる</li>
-<li>技術負債が出来上がる</li>
-<li>追加要件が出てくるが、技術負債のお陰ですすまない</li>
-<li>技術負債のお陰で余裕があってもテスト書いてられない</li>
-<li>開発サイクルが下がってくる・・・</li>
-<li>(ry</li>
-</ol>
-
-
-<p>上に挙げた技術者としての理想が出来なくなってくるという状況</p>
-
-<p>これを改善するには・・・<br/>
-ということになるとビジネスサイドに人間に対して0から説明する必要が出てきます。</p>
-
-<p>説明が面倒とは言いません。<br/>
-寧ろやるべきだと思います。(最終判断は、ビジネス要件も絡みますので落とし所は着くかと思います。)<br/>
-技術的な負債などを抱えるとモチベーションが下がり、価値の提供に繋がらなくなってきつつあるのかなと思います。</p>
-
-<p>最後は現状に対する悪態しか出てこないとかに陥ったりするかもしれないですね。<br/>
-(こうなると、技術だけでなくプロダクトそのものを貶すことになるので)</p>
-
-<p>他に挙げるとすると、技術的に満足度が高い状況でやっていてもビジネスサイド側の要求で出来なくなるというのもあるかもしれないです。<br/>
-(現場からすると謎な社内パワー等)</p>
-
-<p># これは元々の自分の経験なので・・・</p>
-
-<h3>まとめ</h3>
-
-<hr />
-
-<p>色々と長くなりましたが、自分の思うところをツラツラと書いてしまいました。</p>
-
-<p>何が言いたいかというと</p>
-
-<h5>「現実は往々にしてあるので、如何に理想に近づけていけるか」</h5>
-
-<p>これが、自分の思う現場かな？と思います。(最近はよく思います)</p>
-
-<p>そのために、技術者側も以下をやっておく必要があるのではないか、そう思います。</p>
-
-<ul>
-<li>事業のことについて多少なりとも知っておく</li>
-<li>事業サイド側にコミットメントをする</li>
-<li>数値分析や事業サイド側の数値を知る</li>
-<li>事業の目的や目標、到達する先を知る</li>
-</ul>
-
-
-<h3>明日は・・・</h3>
-
-<hr />
-
-<p>明日は、storywriterさんです。<br/>
-storywriterさん、よろしくお願いします。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/5/">&larr; Older</a>
@@ -1637,6 +1349,14 @@ storywriterさん、よろしくお願いします。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
       </li>
     
@@ -1648,19 +1368,11 @@ storywriterさん、よろしくお願いします。</p>
         <a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 128.23529411764707%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.05882352941177%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.52941176470588%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.52941176470588%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 117.64705882352942%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.52941176470588%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 114.11764705882354%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.52941176470588%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.52941176470588%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.52941176470588%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.52941176470588%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.52941176470588%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 124.70588235294117%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.52941176470588%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 135.29411764705884%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 121.17647058823529%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 121.17647058823529%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.52941176470588%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.52941176470588%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(17)</a> <a href='/blog/categories/shellscript' style='font-size: 103.52941176470588%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.52941176470588%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 128.23529411764707%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.26315789473685%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 106.3157894736842%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.15789473684211%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.15789473684211%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.78947368421052%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.15789473684211%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.63157894736842%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.15789473684211%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.15789473684211%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.15789473684211%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.15789473684211%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.15789473684211%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 122.10526315789474%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.15789473684211%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.57894736842104%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.94736842105263%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.94736842105263%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.15789473684211%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.15789473684211%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(19)</a> <a href='/blog/categories/shellscript' style='font-size: 103.15789473684211%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.15789473684211%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 125.26315789473685%'>戯言(8)</a> </span>
 </section
 
 

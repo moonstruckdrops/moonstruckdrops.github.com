@@ -9,9 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="暗号化Zipファイル作成 大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。
-以下のようにzipコマンドのeオプションを使うだけで簡単にできます。 1
-$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt; &hellip;">
+  <meta name="description" content="前置き 事の発端はある人と作業してたことから始まりました。。。
+というのも、自分が海外に行ってるいる間、作業をお願いしていました。 作業をお願いしていたのはいいのですが
+彼は普段使っていないGitを使ってみたかったようです。 今回は、そのとき伝えたことをネタにします。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,214 @@ $zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt; &hellip;"
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/28/git-talk/">Gitを教えたときの話</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-28T20:33:00+09:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>前置き</h3>
+
+<hr />
+
+<p>事の発端はある人と作業してたことから始まりました。。。<br/>
+というのも、自分が海外に行ってるいる間、作業をお願いしていました。</p>
+
+<p>作業をお願いしていたのはいいのですが<br/>
+彼は普段使っていないGitを使ってみたかったようです。</p>
+
+<p>今回は、そのとき伝えたことをネタにします。<br/>
+もっとネタにするものはありますが(ぉぃ</p>
+
+<h3>基本操作以外に覚えて欲しいと伝えたこと</h3>
+
+<hr />
+
+<ul>
+<li>GitのGUIツールを捨てろ(言い過ぎだと思うし、賛否両論あると思っている)</li>
+<li>状態は常に確認するようにしよう</li>
+<li>ファイルを編集前状態に戻すやり方</li>
+<li>マージやリベースで、ファイル競合状態になったときの対処(エラーログとか読んでみる)</li>
+<li>ヘッド位置の意識</li>
+<li>ヘッドの操作方法やヘッドの位置がどこにあるのか</li>
+<li>落ち着いてブランチを切って、Git操作を試してみる(カジュアルに作れるので、作ったブランチで操作を試してみる)</li>
+<li>masterでのファイル編集をやめる</li>
+</ul>
+
+
+<p>コミットの取り消しや歴史の改変とかも覚えてて貰いたいけどな</p>
+
+<p>教えたはいいけど、自分もまだまだ使いこなせてないのでは？と思ったりしてます。</p>
+
+<h3>伝えた元に戻す系のコマンド類</h3>
+
+<hr />
+
+<p>元に戻し方とかそんな感じのことを以下にメモレベルで記載</p>
+
+<p>ファイルをインデックス(元々のヘッド状態)の状態に戻す</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git checkout -- &lt;元に戻したいファイル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ワークツリーとインデックスをコミットIDに指定した状態に戻す</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git reset --hard &lt;コミットID&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>現在のコミットからブランチを作成する<br/>
+作業はここでしちゃいましょう。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git checkout -b &lt;ブランチ名&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>リベースでおかしなこと(ファイルの競合とか)が起きた時に元に戻す</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git rebase --abort</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここに書いた以外のやり方なんていくらでもあるので、参考程度で。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/24/linux-user-add/">Linux上にあるユーザーアカウントの追加と削除をする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>すごくド基礎なのですが・・・。<br/>
+ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
+
+<h3>ユーザーアカウントの追加</h3>
+
+<hr />
+
+<p>基本中の基本ですね。<br/>
+以下のコマンドのような感じで追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下の表によく使用するオプションを記載します。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">オプション</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">c コメント      </td>
+<td align="left">ユーザーのコメントを設定</td>
+</tr>
+<tr>
+<td align="left">d ディレクトリ  </td>
+<td align="left">ユーザーのログインディレクトリを指定</td>
+</tr>
+<tr>
+<td align="left">e mm/dd/yy </td>
+<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
+</tr>
+<tr>
+<td align="left">g グループ   </td>
+<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
+</tr>
+<tr>
+<td align="left">G グループ    </td>
+<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
+</tr>
+<tr>
+<td align="left">u ユーザーID </td>
+<td align="left">ユーザーのユーザーIDを指定</td>
+</tr>
+<tr>
+<td align="left">s シェル </td>
+<td align="left">ユーザーのログインシェルを指定</td>
+</tr>
+<tr>
+<td align="left">m        </td>
+<td align="left">ホームディレクトリの作成を自動で行う</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>ユーザーアカウントの削除</h3>
+
+<hr />
+
+<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
+なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
+但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>常識ですね(ぉぃ</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1101,240 +1309,6 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/31/find-command/">Findコマンドのメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-31T00:04:00+09:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>普段から常用しているコマンドなのですが、今更という感じです。</p>
-
-<p>滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。<br/>
-※今回、使ったのは日時オプションです</p>
-
-<table>
-<thead>
-<tr>
-<th align="left"> コマンドオプション    </th>
-<th align="center"> 機能          </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> -name [filename]    </td>
-<td align="center"> 指定した文字でファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -user [username]    </td>
-<td align="center"> 指定したユーザーが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -group [groupname]  </td>
-<td align="center"> 指定したグループが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -type [type]        </td>
-<td align="center"> ファイルの種類を指定して検索(b：ブロック型特殊ファイル　c：キャラクタ型特殊ファイル　d：ディレクトリ　l：シンボリックリンク　f：通常ファイル)</td>
-</tr>
-<tr>
-<td align="left"> -atime (+/-)n       </td>
-<td align="center"> 最後にアクセスしたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -ctime (+/-)n       </td>
-<td align="center"> 最後にステータスが変更されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mtime (+/-)n       </td>
-<td align="center"> 最後にデータが修正されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mmin (+/-)n        </td>
-<td align="center"> 最後にデータが修正されたのがn分前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -newer [filename]   </td>
-<td align="center"> 指定したファイルよりも後に更新されているものを検索対象にする</td>
-</tr>
-<tr>
-<td align="left"> -size n[c/k/b]      </td>
-<td align="center"> nのサイズのファイルを検索(c:バイト、k:キロバイト、b:ブロック)</td>
-</tr>
-<tr>
-<td align="left"> -ls                 </td>
-<td align="center"> 検索結果のファイル、ディレクトリの詳細を表示する(lsコマンドと同じ)</td>
-</tr>
-<tr>
-<td align="left"> -print              </td>
-<td align="center"> 検索結果を標準出力に出す(元々結果表示されるんで不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -fprint [filename]  </td>
-<td align="center"> 検索結果をファイルに出力する(>でファイル出力できるので不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -exec [command] {}\;</td>
-<td align="center"> 検索結果を指定コマンドにの引数に設定して実行する</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>(例)カレントディレクトリ配下のファイルに「hogehoge」という文字が含まれているかどうか調べる</p>
-
-<p>以下のコマンドで調べることができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f -exec grep hogehoge {}\;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こちらでも同じ結果を得られます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f |xargs grep "hogehoge"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どちらでもいいと思いますが、自分はよく後者を利用しますね。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/30/octpress-image-tag/">Octpressで画像ファイルを扱う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-30T01:47:00+09:00" pubdate data-updated="true">Mar 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。</p>
-
-<h3>画像の格納ディレクトリ</h3>
-
-<hr />
-
-<p>画像の格納場所は、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>~source/images</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に格納すればよい</p>
-
-<p>imagesディレクトリの配下にも、blogというディレクトリがあるのでブログ用の画像はそちらに格納すればよいっぽい。</p>
-
-<h3>Octpress公式の手順</h3>
-
-<hr />
-
-<p><a href="http://octopress.org/docs/plugins/image-tag/">公式の手順</a></p>
-
-<p>以下の書式に従って記載すれば、いいらしい。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img [class names] /path/to/image [width] [height] [title text [alt text]] \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>そのため、画像サイズを640x480で表示させたい場合、以下のように書くことができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img left /images/picture.png 640 480 \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コード上の「\」は不要です。(何故か、エスケープが正しく動作しなかった)</p>
-
-<h3>markdownを使用した方法</h3>
-
-<hr />
-
-<p>これは、前にも書いたように以下のようにすればよいでしょう。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[テスト画像](/images/picture.png "title")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但し、画像サイズは指定できないという欠点があります。<br/>
-画像は、加工するしかないようですね。</p>
-
-<h3>htmlを直接記載する方法</h3>
-
-<hr />
-
-<p>以下のような感じで、htmlを使用した書き方もできるようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;img src="/images/picture.png" alt="alt" title="title" width="640" height="480"&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意する点があるとすれば、必ず前後に<p>タグが挿入されてしまうことです。<br/>
-インラインで使用することは、できないっぽいです。</p>
-
-<h3>まとめ</h3>
-
-<hr />
-
-<p>個人的な見解は以下のような感じ</p>
-
-<ul>
-<li>基本はmarkdown記法で記載</li>
-<li>画像サイズを変更したい場合、Octpressの記法に従う</li>
-<li>汎用的にしたい場合、htmlで記載する</li>
-<li>ブログ記事用の画像の場合、「souce/images/blog」の下に格納する</li>
-<li>ブログ記事以外の画像の場合、「source/images」の下に格納する</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -1356,6 +1330,14 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
       </li>
     
@@ -1367,19 +1349,11 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
         <a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 128.23529411764707%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 107.05882352941177%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.52941176470588%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.52941176470588%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 117.64705882352942%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.52941176470588%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 114.11764705882354%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.52941176470588%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.52941176470588%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.52941176470588%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.52941176470588%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.52941176470588%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 124.70588235294117%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.52941176470588%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 135.29411764705884%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 121.17647058823529%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 121.17647058823529%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.52941176470588%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.52941176470588%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(17)</a> <a href='/blog/categories/shellscript' style='font-size: 103.52941176470588%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.52941176470588%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 128.23529411764707%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.26315789473685%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 106.3157894736842%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.15789473684211%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.15789473684211%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.78947368421052%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.15789473684211%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.63157894736842%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.15789473684211%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.15789473684211%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.15789473684211%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.15789473684211%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.15789473684211%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 122.10526315789474%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.15789473684211%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.57894736842104%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.94736842105263%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.94736842105263%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.15789473684211%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.15789473684211%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(19)</a> <a href='/blog/categories/shellscript' style='font-size: 103.15789473684211%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.15789473684211%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 125.26315789473685%'>戯言(8)</a> </span>
 </section
 
 
