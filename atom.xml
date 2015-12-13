@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-12-13T01:58:30+09:00</updated>
+  <updated>2015-12-14T00:08:38+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,130 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RubyKaigi3日目に行ってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/12/13/ruby-kaigi/"/>
+    <updated>2015-12-13T11:24:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/12/13/ruby-kaigi</id>
+    <content type="html"><![CDATA[<h3>The OMR GC Talk</h3>
+
+<hr />
+
+<p>OMRというランタイム</p>
+
+<ul>
+<li>多くの言語に対応している</li>
+<li>(plugin機構で実現？)</li>
+</ul>
+
+
+<p>調査はこれを使っていた模様
+https://www.ibm.com/developerworks/jp/java/library/j-ibmtools5/</p>
+
+<p>allocationを早くした</p>
+
+<ul>
+<li>スレッドローカルヒープ</li>
+<li>ロック無しでallocate</li>
+</ul>
+
+
+<p>可変長のバッファを作る
+OMRのランタイム上で動作するGCがMRIに比べてよかった</p>
+
+<p>GCのmark速度は早い(MRI)</p>
+
+<p>OMR GCを確認するのはこれ
+https://github.com/rubyomr-preview/rubyomr-preview</p>
+
+<h3>Refinements - the Worst Feature You Ever Loved</h3>
+
+<hr />
+
+<p>method aliasとかモンキーパッチだと元の動きの振る舞いが全体に影響するからよくない</p>
+
+<p>assertとかの振る舞いもかわってしまう</p>
+
+<p>refinementsなら影響範囲を制御できる</p>
+
+<p>スコープは働くので継承とかcalss_evalでも有効</p>
+
+<p>文字列で与えたもので使えるeval &#8216;using SomeClass; hoge.fuga&#8217;みたいな感じなの</p>
+
+<h3>Discussion on Thread between version 1.8.6 and 2.2.3</h3>
+
+<hr />
+
+<p>Thread#status
+スレッドの状態が取れないような状況が起きた
+→mission crtalなシステムでも使えるThreadの使い方</p>
+
+<ul>
+<li>子スレッドでforを同期的に上がった場合</li>
+<li>同期的にraiseが上がった場合</li>
+</ul>
+
+
+<p>Ruby2.2.3でも早くなったけど、CPU負荷も上がった
+実行回数は変わらなかった</p>
+
+<p>raiseのインスタンスは重い
+メモリ消費は少ない
+selectで対応することができる</p>
+
+<p>早くなったけど、リソース消費も多いのでスレッドとかはメモリ消費量を意識したほうがよい</p>
+
+<h3>Plugin-based software design with Ruby and RubyGems</h3>
+
+<hr />
+
+<ul>
+<li>多くの機能</li>
+<li>コアコードがシンプル</li>
+<li>testが簡単</li>
+<li>developerコミュニティが活発</li>
+</ul>
+
+
+<p>デザインパターン</p>
+
+<ol>
+<li>ホストアプリを拡張する(拡張ポイントを用意している、コールバックで実行)</li>
+<li>DIでプラグインを追加(I/Fとか決めてDIコンテナを置き換え、ホストからアプリを実行)</li>
+<li>動的にプラグインをロードする方法</li>
+<li>1と2を組み合わせる方法</li>
+</ol>
+
+
+<p>プラグインのバージョンコントロール(依存ライブラリのコンフリクト解消)</p>
+
+<p>fluentdは動的にpluguin
+emblukは組み合わせ</p>
+
+<h3>Actor, Thread and me</h3>
+
+<hr />
+
+<p>アクター</p>
+
+<ul>
+<li>メッセージを適当なタイミングで送る</li>
+<li>レシーブ</li>
+<li>仕事をする</li>
+</ul>
+
+
+<p>破綻の予兆</p>
+
+<ul>
+<li>複数のイベントを待つ</li>
+<li>DBへの問い合わせとか</li>
+<li>資源の協調</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyKaigi2日目に行ってきた]]></title>
@@ -2436,51 +2560,6 @@ Herokuではこのタスクが必要なようです。</p>
 <li>実現方法の参考実装はあるので、うまくできそうかやってみればいいかもしれない</li>
 <li>deprecated宣言しているが、ライブラリを使えば楽にはできる(その後のメンテナンスコストは払う必要は出そうだが・・・)</li>
 </ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Emacsのバージョンで分岐をさせたい]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/01/08/emacs-version/"/>
-    <updated>2015-01-08T00:51:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/01/08/emacs-version</id>
-    <content type="html"><![CDATA[<h3>発端</h3>
-
-<hr />
-
-<p>Emacsのバージョンを最新にしたことで色々設定が楽に書けることがわかった<br/>
-そのため、最新内容を反映させた</p>
-
-<p>とはいえ、下位互換もある程度保ちたかった<br/>
-(全部、追従すればいいのだがそうもいかない環境もあるので)</p>
-
-<h3>最初に試してみた</h3>
-
-<hr />
-
-<p>普通にバージョンを取得してみた</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(emacs-version)
-</span><span class='line'>"GNU Emacs 24.4.1 (x86_64-apple-darwin14.0.0, NS apple-appkit-1343.16)
-</span><span class='line'> of 2015-01-04 on hoge.local"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>文字列のマッチング処理が多くなりそうで結構めんどくさい・・・</p>
-
-<h3>結果的にこうした</h3>
-
-<hr />
-
-<p>普通のmajor/minor バージョン判定を複合した条件判定するだけの関数を用意</p>
-
-<p>24.3以下の判定</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(defvar is-less-than-or-equal-24-3 (and (&lt;= emacs-major-version 24) (&lt;= emacs-minor-version 3)))</span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
   </entry>
