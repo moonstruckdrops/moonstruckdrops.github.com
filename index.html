@@ -9,9 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="The OMR GC Talk OMRというランタイム 多くの言語に対応している
-(plugin機構で実現？) 調査はこれを使っていた模様
-https://www.ibm.com/developerworks/jp/java/library/j-ibmtools5/ allocationを早くした &hellip;">
+  <meta name="description" content="はじめに 現在常用のスマホとしてAndroid端末を使っています。
+(つい半年前まではiPhoneを使っていました) 端末機としては海外版、XperiaZ3 Compactです。
+(昨今の大型化している流れの中軽量かつ音楽プレイヤーとしても優れている機種として選定しました。) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,435 @@ https://www.ibm.com/developerworks/jp/java/library/j-ibmtools5/ allocationを早
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/20/android-groovy/">AndroidでGroovyを使ってみる</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-20T23:38:00+09:00" pubdate data-updated="true">Dec 20<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>現在常用のスマホとしてAndroid端末を使っています。<br/>
+(つい半年前まではiPhoneを使っていました)</p>
+
+<p>端末機としては海外版、XperiaZ3 Compactです。<br/>
+(昨今の大型化している流れの中軽量かつ音楽プレイヤーとしても優れている機種として選定しました。)</p>
+
+<p>元々iPhoneユーザーかつ環境が全てApple製品で統一されているので、音楽管理もiTunesで行っています。</p>
+
+<p>そういう状況下であったので、iSyncrというアプリでiTunesのプレイリストと端末を同期させて利用していました</p>
+
+<p>どうもXperiaZ3 Compact側のイヤホンジャック(ヘッドホンジャック)が壊れたようで、<br/>
+音楽プレイヤーとしてはまともには利用できなくなりました</p>
+
+<p>とはいえ、Youtubeを見て修理するのはリスクが高いのと、パーツが個人輸入になるので調達までのハードルが高いので修理方向は諦めました</p>
+
+<p>が、どうも最近のwalkmanでは、microSDを使えプレイリストを少し調整すれば認識できるようなことを聞きつけました<br/>
+(店頭モックでも、プレイリストを認識し再生可能であることを確認しました)<br/>
+なので、microSDとの同期はiSyncrに任せ、同期したプレイリストの変更を独自のアプリでやればいいのではないかと思い今回やってみました</p>
+
+<h3>やりたいこと</h3>
+
+<hr />
+
+<p>まずはiSyncrで作ったプレイリストがウォークマンから認識できるかどうかを確認しました。<br/>
+結論的に言うとそのままでは不可能で、一旦編集が必要のようです。</p>
+
+<p>どうやらiSyncrを使ってiTunesの曲を転送したときは、iSyncrの作ったm3uプレイリストを正しく認識出来ないようです<br/>
+これは、ウォークマン側のプレイリスト内のパスの解釈の問題のようです。<br/>
+対処方法としては、パスの先頭の「/」を削除することで認識させることできます<br/>
+(ウォークマン内部では、パスが補完されているのかもしれませんがその辺りは不明です)</p>
+
+<p>こんな感じになるようにします</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/hoge/fuga.mp3     -&gt; hoge/fuga.mp3
+</span><span class='line'>/hoge/fugafuga.mp3 -&gt; hoge/fugafuga.mp3</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ということで実装としてやりたいことは至ってシンプルです</p>
+
+<ul>
+<li>編集後のプレイリストファイルを作成する</li>
+<li>iSyncrで作成したプレイリストの内容を、ほぼそのまま編集後のプレイリストに書き込む</li>
+<li>この時、行の最初の文字が「/」の場合、上記のように先頭の「/」を空文字に置換する</li>
+</ul>
+
+
+<h3>何故Groovy</h3>
+
+<hr />
+
+<p>Javaで書くと、以下の内容が面倒だったりするわけなのです</p>
+
+<ul>
+<li>StreamだとかWriterやらReaderやらでコード自体が肥大化、冗長化すること</li>
+<li>ファイルの中身の操作や置換とか結構大変で面倒</li>
+</ul>
+
+
+<p>なので、今回その辺もサクッと実装できるGroovyで書いてみました</p>
+
+<p>他にあるとすれば・・・</p>
+
+<ul>
+<li>GroovyがAndroidでも動くということ</li>
+<li>置換検証用のコードをサクッと移植したかったこと</li>
+<li>個人的にGroovyでコード書くというリハビリ(書かなくなって久しいので)</li>
+</ul>
+
+
+<h3>当該Groovyコード</h3>
+
+<hr />
+
+<p>やりたいことを実施するファイルの置換用コードは以下のようになります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def files = new File('Your Path').listFiles()
+</span><span class='line'>playList = files.findAll { it.getName() =~ /.*\.m3u$/ }
+</span><span class='line'>
+</span><span class='line'>playList.each { file -&gt;
+</span><span class='line'>  def playListName = file.canonicalPath
+</span><span class='line'>
+</span><span class='line'>  // 変更版プレイリスト
+</span><span class='line'>  def newPlayListName = "${file.canonicalPath}.new"
+</span><span class='line'>  def newPlayListFile = new File(newPlayListName)
+</span><span class='line'>
+</span><span class='line'>  // 変更版プレイリストに現行プレイリストの修正内容を出力
+</span><span class='line'>  newPlayListFile.withWriter('UTF-8') { writer -&gt;
+</span><span class='line'>    file.newReader().transformLine(writer) { line -&gt;
+</span><span class='line'>      if (line.startsWith("/")){
+</span><span class='line'>        // 行の最初の文字の場合、「/」を置換する
+</span><span class='line'>        line.replaceFirst(/\//,"")
+</span><span class='line'>      } else {
+</span><span class='line'>        // それ以外の場合はそのまま出力
+</span><span class='line'>        line
+</span><span class='line'>      }
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  // ファイル名を変更する
+</span><span class='line'>  file.renameTo("${file.canonicalPath}.old")
+</span><span class='line'>  newPlayListFile.renameTo("${playListName}")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>本当であれば上書き保存という形にしたいところですが、<br/>
+元のファイルが無くなってしまうと今度は同期が取れなくなる可能性があるので別ファイルとしました</p>
+
+<h3>GroovyをAndroidに導入</h3>
+
+<hr />
+
+<p>まずはGroovyのインストールをします。<br/>
+以下のような形で<a href="http://sdkman.io/">sdkman</a>を使いましょう</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -s http://get.sdkman.io | bash
+</span><span class='line'>$ sdk ls groovy
+</span><span class='line'>$ sdk install groovy 2.4.5
+</span><span class='line'>$ sdk use groovy 2.4.5</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次にAndroidStudioでAndoridプロジェクトを用意します<br/>
+Androidプロジェクトに対して、<a href="https://github.com/groovy/groovy-android-gradle-plugin">groovy-android-gradle-plugin</a>を導入します</p>
+
+<p>プロジェクトROOTにあるbuild.gradleを以下のようにします<br/>
+(プラグインを導入するのみです)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>buildscript {
+</span><span class='line'>    repositories {
+</span><span class='line'>        jcenter()
+</span><span class='line'>    }
+</span><span class='line'>    dependencies {
+</span><span class='line'>        classpath 'com.android.tools.build:gradle:1.3.0'
+</span><span class='line'>        classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.6'
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>allprojects {
+</span><span class='line'>    repositories {
+</span><span class='line'>        jcenter()
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>task clean(type: Delete) {
+</span><span class='line'>    delete rootProject.buildDir
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次にアプリ側のbuild.gradleを変更します<br/>
+(プラグインの適用と、コンパイルライブラリの追加、プラグインの設定追加)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>apply plugin: 'com.android.application'
+</span><span class='line'>apply plugin: 'groovyx.grooid.groovy-android'
+</span><span class='line'>
+</span><span class='line'>android {
+</span><span class='line'>    中略
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>dependencies {
+</span><span class='line'>    compile fileTree(dir: 'libs', include: ['*.jar'])
+</span><span class='line'>    testCompile 'junit:junit:4.12'
+</span><span class='line'>    compile 'com.android.support:appcompat-v7:23.1.1'
+</span><span class='line'>    compile 'com.android.support:design:23.1.1'
+</span><span class='line'>    compile 'org.codehaus.groovy:groovy:2.4.3:grooid'
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>project.androidGroovy {
+</span><span class='line'>    options {
+</span><span class='line'>        configure(groovyOptions) {
+</span><span class='line'>            encoding = 'UTF-8'
+</span><span class='line'>            forkOptions.jvmArgs = ['-noverify'] // maybe necessary if you use Google Play Services
+</span><span class='line'>        }
+</span><span class='line'>        sourceCompatibility = '1.7'
+</span><span class='line'>        targetCompatibility = '1.7'
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ソースの配置を<code>「src/main/java/MainActivity.java」</code>から<code>「src/main/groovy/MainActivity.groovy」</code>変更します</p>
+
+<p>最後にソースを以下のようにしてGroovyライクに実装します</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>@CompileStatic
+</span><span class='line'>public class MainActivity extends AppCompatActivity {
+</span><span class='line'>
+</span><span class='line'>    @Override
+</span><span class='line'>    protected void onCreate(Bundle savedInstanceState) {
+</span><span class='line'>        super.onCreate(savedInstanceState);
+</span><span class='line'>        setContentView(R.layout.activity_main);
+</span><span class='line'>
+</span><span class='line'>        def hello = { lang -&gt;
+</span><span class='line'>            def toast = Toast.makeText(this, "Hello ${lang}!", Toast.LENGTH_LONG)
+</span><span class='line'>            toast.setGravity(Gravity.CENTER, 0, 0)
+</span><span class='line'>            toast.show()
+</span><span class='line'>        }
+</span><span class='line'>        hello("Hello Groovy on Android!")
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一応いっておきますが、@CompileStaticアノテーションで静的コンパイルしなくても動作はします<br/>
+が、動的コードはパフォーマンス的にきびしいので@CompileStatic推奨されているようです</p>
+
+<h3>ビルド時の注意点</h3>
+
+<hr />
+
+<p>Android Studioでビルドを実行したとき、エラーがあった場合以下のような形でEventLogに出力されてビルドが停止します。<br/>
+メッセージを見ても、何が悪いか分かりません。正直、自分は困惑しました</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>0:52:06 Platform and Plugin Updates: The following components are ready to update: Google Play services, Google Repository, Android SDK Platform-tools
+</span><span class='line'>1:14:33 Gradle sync started
+</span><span class='line'>1:14:57 Gradle sync completed
+</span><span class='line'>1:14:57 Executing tasks: [:app:generateDebugSources, :app:generateDebugAndroidTestSources]
+</span><span class='line'>1:15:01 Gradle build finished in 4s 168ms
+</span><span class='line'>1:15:41 Executing tasks: [:app:generateDebugSources, :app:generateDebugAndroidTestSources, :app:compileDebugSources, :app:compileDebugAndroidTestSources]
+</span><span class='line'>1:15:47 ExternalSystemException: String index out of range: -105</span></code></pre></td></tr></table></div></figure>
+
+
+<p>そのときはGradle Consoleを確認しましょう<br/>
+以下のような形でエラーメッセージが表示されています<br/>
+(この場合、Syntaxエラーですね)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:app:compileDebugJavaWithJavac UP-TO-DATE
+</span><span class='line'>:app:compileDebugGroovyWithGroovyc
+</span><span class='line'>startup failed:
+</span><span class='line'>MainActivity.groovy: 53: expecting ')', found '}' @ line 53, column 13.
+</span><span class='line'>               }
+</span><span class='line'>               ^
+</span><span class='line'>
+</span><span class='line'>1 error
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'> FAILED
+</span><span class='line'>
+</span><span class='line'>FAILURE: Build failed with an exception.
+</span><span class='line'>
+</span><span class='line'>* What went wrong:
+</span><span class='line'>Execution failed for task ':app:compileDebugGroovyWithGroovyc'.
+</span><span class='line'>&gt; Compilation failed; see the compiler error output for details.
+</span><span class='line'>
+</span><span class='line'>* Try:
+</span><span class='line'>Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+</span><span class='line'>
+</span><span class='line'>BUILD FAILED
+</span><span class='line'>
+</span><span class='line'>Total time: 5.687 secs</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因みに上記のような形になった場合、何故かそのままではビルドの再開が出来ませんでした。<br/>
+対応としては一度「Clean Project」を実行する必要があります</p>
+
+<h3>結果的に・・・</h3>
+
+<hr />
+
+<p>ここまで読めば、分かる方はわかりますが実現はサクッとは出来ませんでした。</p>
+
+<p>何故かと言うとAndroid4.4あたりから導入された<a href="https://developer.android.com/intl/ja/guide/topics/providers/document-provider.html">Storage Access Framework</a>のことをスッカリ忘れていたのでやりたいことは出来ませんでしたorz</p>
+
+<p>当初の運用自体は、iSyncrの同期先をSDカードにしてSDカードに対して同期<br/>
+その後同期されたSDカードをPC側にマウントして、上記コードを通してやればよいので無理にAndroid経由させなくていいかなぁと思った次第です</p>
+
+<p>とはいえGroovyでAndroidアプリを書いてみることはまぁできたのでよしとします。<br/>
+GroovyでGroovy GDKの便利なAPIやクロージャの恩恵を最大限に受けてて、簡潔に書くことが出来て素晴らしいなと思いました</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1360,150 +1789,6 @@ rails配下にあるgemspecファイルに目を通しておけば、インス�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/06/27/rails-sti/">RailsでSTI（単一テーブル継承）の予約語でハマった話対処</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-06-27T11:38:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>ここ数日、自分用のアプリを作っているわけなのですが<br/>
-その時に起きたエラーを記載しておきます</p>
-
-<p>(STIの予約語のこと忘れてたというオチｗ)</p>
-
-<h3>事象</h3>
-
-<hr />
-
-<p>ActiveRecordで「type」というカラムをもつテーブルに接続し、取得系のメソッドを呼ぶと以下の様なエラーが出た</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[1] pry(main)&gt; Hoge.find(1)
-</span><span class='line'>  Hoge Load (0.4ms)  SELECT `hoges`.* FROM `hoges` WHERE `hoges`.`id` = 1 LIMIT 1
-</span><span class='line'>ActiveRecord::SubclassNotFound: The single-table inheritance mechanism failed to locate the subclass: 'fuga'. This error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this column if you didn't intend it to be used for storing the inheritance class or overwrite Hoge.inheritance_column to use another column for that information.</span></code></pre></td></tr></table></div></figure>
-
-
-<p>エラーメッセージから分かるように「type」というカラムをrenameしろと出ています<br/>
-こんなの場合によっては出来無いわけで・・・</p>
-
-<h3>これは何？</h3>
-
-<hr />
-
-<p>STI（単一テーブル継承）と呼ばれる機能のことを指しています<br/>
-つまり、1つのテーブルを複数のModelで利用する仕組みのことを言います。</p>
-
-<p>で、その仕掛けように予約語として、&#8221;type&#8221;という名前をActiveRecordが利用しているようです。</p>
-
-<p>クラスで言うとこんなところでしょうか。<br/>
-Humanクラスを継承した、Manクラス、Womanクラスがあったとした場合、以下のような形になります</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Human &lt; ActiveRecord::Base
-</span><span class='line'>
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>class Man &lt; Human
-</span><span class='line'>
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>class Woman &lt; Human
-</span><span class='line'>
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>で、例えばManオブジェクトをsaveすると、Humanテーブルにtype:Manとして保存されます。<br/>
-Womanならtype:Womanになるようです</p>
-
-<p>それぞれのモデルからデータへの操作を行った場合、適合するTypeのデータのみを操作対象となります<br/>
-ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場合は、Humanモデルから操作すればOKです</p>
-
-<p>当然ひとつのテーブルを使っていますので、片方にしか無い項目(カラム)もテーブルに含まなければならないです。<br/>
-例えばManとHumanの持つ項目があまりにも違う場合、カラム数が爆発的に増えます。<br/>
-(ここは注意するところですね)</p>
-
-<h3>対処</h3>
-
-<hr />
-
-<p>もうざっくりというと、以下の2つの対応ができます</p>
-
-<ol>
-<li>カラム名に「type」という名前をつけず、別名に変更する</li>
-<li>エラーメッセージにあるようにSTIのカラム名を変更する</li>
-</ol>
-
-
-<p>というわけなので、自分は1の対応を行いました。</p>
-
-<p>では、2の場合はどうするかというと・・・
-エラーメッセージにありますが、以下ように設定すればよいようです</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class Hoge &lt; ActiveRecord::Base
-</span><span class='line'>  self.inheritance_column = :_type_disabled
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>どういう場合に起きそう</h3>
-
-<hr />
-
-<p>ざっと思いつくのはこんなところかな</p>
-
-<ul>
-<li>既存のアプリケーション(PHPなりJavaなり)をRailsにのせかえるとき</li>
-<li>設計上どうしても止むえずつけたいとき(これはビジネスドメインの場合が当てはまる)</li>
-<li>(あんまりないと思うが)STIの機能を使ってリファクタリングするとき</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1523,6 +1808,10 @@ ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/20/android-groovy/">AndroidでGroovyを使ってみる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/13/ruby-kaigi/">RubyKaigi3日目に行ってきた</a>
       </li>
     
@@ -1538,15 +1827,11 @@ ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場�
         <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/11/06/edge-rails5/">Rails5を使ってみる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 124.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
 </section
 
 

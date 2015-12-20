@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-12-14T00:08:56+09:00</updated>
+  <updated>2015-12-21T01:26:58+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,318 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[AndroidでGroovyを使ってみる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/12/20/android-groovy/"/>
+    <updated>2015-12-20T23:38:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/12/20/android-groovy</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>現在常用のスマホとしてAndroid端末を使っています。<br/>
+(つい半年前まではiPhoneを使っていました)</p>
+
+<p>端末機としては海外版、XperiaZ3 Compactです。<br/>
+(昨今の大型化している流れの中軽量かつ音楽プレイヤーとしても優れている機種として選定しました。)</p>
+
+<p>元々iPhoneユーザーかつ環境が全てApple製品で統一されているので、音楽管理もiTunesで行っています。</p>
+
+<p>そういう状況下であったので、iSyncrというアプリでiTunesのプレイリストと端末を同期させて利用していました</p>
+
+<p>どうもXperiaZ3 Compact側のイヤホンジャック(ヘッドホンジャック)が壊れたようで、<br/>
+音楽プレイヤーとしてはまともには利用できなくなりました</p>
+
+<p>とはいえ、Youtubeを見て修理するのはリスクが高いのと、パーツが個人輸入になるので調達までのハードルが高いので修理方向は諦めました</p>
+
+<p>が、どうも最近のwalkmanでは、microSDを使えプレイリストを少し調整すれば認識できるようなことを聞きつけました<br/>
+(店頭モックでも、プレイリストを認識し再生可能であることを確認しました)<br/>
+なので、microSDとの同期はiSyncrに任せ、同期したプレイリストの変更を独自のアプリでやればいいのではないかと思い今回やってみました</p>
+
+<h3>やりたいこと</h3>
+
+<hr />
+
+<p>まずはiSyncrで作ったプレイリストがウォークマンから認識できるかどうかを確認しました。<br/>
+結論的に言うとそのままでは不可能で、一旦編集が必要のようです。</p>
+
+<p>どうやらiSyncrを使ってiTunesの曲を転送したときは、iSyncrの作ったm3uプレイリストを正しく認識出来ないようです<br/>
+これは、ウォークマン側のプレイリスト内のパスの解釈の問題のようです。<br/>
+対処方法としては、パスの先頭の「/」を削除することで認識させることできます<br/>
+(ウォークマン内部では、パスが補完されているのかもしれませんがその辺りは不明です)</p>
+
+<p>こんな感じになるようにします</p>
+
+<p><code>
+/hoge/fuga.mp3     -&gt; hoge/fuga.mp3
+/hoge/fugafuga.mp3 -&gt; hoge/fugafuga.mp3
+</code></p>
+
+<p>ということで実装としてやりたいことは至ってシンプルです</p>
+
+<ul>
+<li>編集後のプレイリストファイルを作成する</li>
+<li>iSyncrで作成したプレイリストの内容を、ほぼそのまま編集後のプレイリストに書き込む</li>
+<li>この時、行の最初の文字が「/」の場合、上記のように先頭の「/」を空文字に置換する</li>
+</ul>
+
+
+<h3>何故Groovy</h3>
+
+<hr />
+
+<p>Javaで書くと、以下の内容が面倒だったりするわけなのです</p>
+
+<ul>
+<li>StreamだとかWriterやらReaderやらでコード自体が肥大化、冗長化すること</li>
+<li>ファイルの中身の操作や置換とか結構大変で面倒</li>
+</ul>
+
+
+<p>なので、今回その辺もサクッと実装できるGroovyで書いてみました</p>
+
+<p>他にあるとすれば・・・</p>
+
+<ul>
+<li>GroovyがAndroidでも動くということ</li>
+<li>置換検証用のコードをサクッと移植したかったこと</li>
+<li>個人的にGroovyでコード書くというリハビリ(書かなくなって久しいので)</li>
+</ul>
+
+
+<h3>当該Groovyコード</h3>
+
+<hr />
+
+<p>やりたいことを実施するファイルの置換用コードは以下のようになります</p>
+
+<p>```
+def files = new File('Your Path').listFiles()
+playList = files.findAll { it.getName() =~ /.*.m3u$/ }</p>
+
+<p>playList.each { file ->
+  def playListName = file.canonicalPath</p>
+
+<p>  // 変更版プレイリスト
+  def newPlayListName = "${file.canonicalPath}.new"
+  def newPlayListFile = new File(newPlayListName)</p>
+
+<p>  // 変更版プレイリストに現行プレイリストの修正内容を出力
+  newPlayListFile.withWriter('UTF-8') { writer -></p>
+
+<pre><code>file.newReader().transformLine(writer) { line -&gt;
+  if (line.startsWith("/")){
+    // 行の最初の文字の場合、「/」を置換する
+    line.replaceFirst(/\//,"")
+  } else {
+    // それ以外の場合はそのまま出力
+    line
+  }
+}
+</code></pre>
+
+<p>  }</p>
+
+<p>  // ファイル名を変更する
+  file.renameTo("${file.canonicalPath}.old")
+  newPlayListFile.renameTo("${playListName}")
+}
+```</p>
+
+<p>本当であれば上書き保存という形にしたいところですが、<br/>
+元のファイルが無くなってしまうと今度は同期が取れなくなる可能性があるので別ファイルとしました</p>
+
+<h3>GroovyをAndroidに導入</h3>
+
+<hr />
+
+<p>まずはGroovyのインストールをします。<br/>
+以下のような形で<a href="http://sdkman.io/">sdkman</a>を使いましょう</p>
+
+<p><code>
+$ curl -s http://get.sdkman.io | bash
+$ sdk ls groovy
+$ sdk install groovy 2.4.5
+$ sdk use groovy 2.4.5
+</code></p>
+
+<p>次にAndroidStudioでAndoridプロジェクトを用意します<br/>
+Androidプロジェクトに対して、<a href="https://github.com/groovy/groovy-android-gradle-plugin">groovy-android-gradle-plugin</a>を導入します</p>
+
+<p>プロジェクトROOTにあるbuild.gradleを以下のようにします<br/>
+(プラグインを導入するのみです)</p>
+
+<p>```
+buildscript {</p>
+
+<pre><code>repositories {
+    jcenter()
+}
+dependencies {
+    classpath 'com.android.tools.build:gradle:1.3.0'
+    classpath 'org.codehaus.groovy:gradle-groovy-android-plugin:0.3.6'
+}
+</code></pre>
+
+<p>}</p>
+
+<p>allprojects {</p>
+
+<pre><code>repositories {
+    jcenter()
+}
+</code></pre>
+
+<p>}</p>
+
+<p>task clean(type: Delete) {</p>
+
+<pre><code>delete rootProject.buildDir
+</code></pre>
+
+<p>}
+```</p>
+
+<p>次にアプリ側のbuild.gradleを変更します<br/>
+(プラグインの適用と、コンパイルライブラリの追加、プラグインの設定追加)</p>
+
+<p>```
+apply plugin: 'com.android.application'
+apply plugin: 'groovyx.grooid.groovy-android'</p>
+
+<p>android {</p>
+
+<pre><code>中略
+</code></pre>
+
+<p>}</p>
+
+<p>dependencies {</p>
+
+<pre><code>compile fileTree(dir: 'libs', include: ['*.jar'])
+testCompile 'junit:junit:4.12'
+compile 'com.android.support:appcompat-v7:23.1.1'
+compile 'com.android.support:design:23.1.1'
+compile 'org.codehaus.groovy:groovy:2.4.3:grooid'
+</code></pre>
+
+<p>}</p>
+
+<p>project.androidGroovy {</p>
+
+<pre><code>options {
+    configure(groovyOptions) {
+        encoding = 'UTF-8'
+        forkOptions.jvmArgs = ['-noverify'] // maybe necessary if you use Google Play Services
+    }
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>ソースの配置を<code>「src/main/java/MainActivity.java」</code>から<code>「src/main/groovy/MainActivity.groovy」</code>変更します</p>
+
+<p>最後にソースを以下のようにしてGroovyライクに実装します</p>
+
+<p>```</p>
+
+<p>@CompileStatic
+public class MainActivity extends AppCompatActivity {</p>
+
+<pre><code>@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    def hello = { lang -&gt;
+        def toast = Toast.makeText(this, "Hello ${lang}!", Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.show()
+    }
+    hello("Hello Groovy on Android!")
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>一応いっておきますが、@CompileStaticアノテーションで静的コンパイルしなくても動作はします<br/>
+が、動的コードはパフォーマンス的にきびしいので@CompileStatic推奨されているようです</p>
+
+<h3>ビルド時の注意点</h3>
+
+<hr />
+
+<p>Android Studioでビルドを実行したとき、エラーがあった場合以下のような形でEventLogに出力されてビルドが停止します。<br/>
+メッセージを見ても、何が悪いか分かりません。正直、自分は困惑しました</p>
+
+<p><code>
+0:52:06 Platform and Plugin Updates: The following components are ready to update: Google Play services, Google Repository, Android SDK Platform-tools
+1:14:33 Gradle sync started
+1:14:57 Gradle sync completed
+1:14:57 Executing tasks: [:app:generateDebugSources, :app:generateDebugAndroidTestSources]
+1:15:01 Gradle build finished in 4s 168ms
+1:15:41 Executing tasks: [:app:generateDebugSources, :app:generateDebugAndroidTestSources, :app:compileDebugSources, :app:compileDebugAndroidTestSources]
+1:15:47 ExternalSystemException: String index out of range: -105
+</code></p>
+
+<p>そのときはGradle Consoleを確認しましょう<br/>
+以下のような形でエラーメッセージが表示されています<br/>
+(この場合、Syntaxエラーですね)</p>
+
+<p>```
+:app:compileDebugJavaWithJavac UP-TO-DATE
+:app:compileDebugGroovyWithGroovyc
+startup failed:
+MainActivity.groovy: 53: expecting ')', found '}' @ line 53, column 13.</p>
+
+<pre><code>           }
+           ^
+</code></pre>
+
+<p>1 error</p>
+
+<p> FAILED</p>
+
+<p>FAILURE: Build failed with an exception.</p>
+
+<ul>
+<li><p>What went wrong:
+Execution failed for task ':app:compileDebugGroovyWithGroovyc'.</p>
+
+<blockquote><p>Compilation failed; see the compiler error output for details.</p></blockquote></li>
+<li><p>Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.</p></li>
+</ul>
+
+
+<p>BUILD FAILED</p>
+
+<p>Total time: 5.687 secs
+```</p>
+
+<p>因みに上記のような形になった場合、何故かそのままではビルドの再開が出来ませんでした。<br/>
+対応としては一度「Clean Project」を実行する必要があります</p>
+
+<h3>結果的に・・・</h3>
+
+<hr />
+
+<p>ここまで読めば、分かる方はわかりますが実現はサクッとは出来ませんでした。</p>
+
+<p>何故かと言うとAndroid4.4あたりから導入された<a href="https://developer.android.com/intl/ja/guide/topics/providers/document-provider.html">Storage Access Framework</a>のことをスッカリ忘れていたのでやりたいことは出来ませんでしたorz</p>
+
+<p>当初の運用自体は、iSyncrの同期先をSDカードにしてSDカードに対して同期<br/>
+その後同期されたSDカードをPC側にマウントして、上記コードを通してやればよいので無理にAndroid経由させなくていいかなぁと思った次第です</p>
+
+<p>とはいえGroovyでAndroidアプリを書いてみることはまぁできたのでよしとします。<br/>
+GroovyでGroovy GDKの便利なAPIやクロージャの恩恵を最大限に受けてて、簡潔に書くことが出来て素晴らしいなと思いました</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[BuildConfigを使用して、環境ごとに値を取得仕分けてみる]]></title>
@@ -582,120 +894,6 @@ submodule化したものを更新する場合は、以下のコマンドです<b
 <code>
 $git submodule update
 </code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Android端末のROM焼きをやってみる]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom/"/>
-    <updated>2014-01-02T20:42:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/01/02/write-android-rom</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>Android端末ではNexus5を使用しています。</p>
-
-<p>ついこの前(?)、4.4→4.4.2にアップデートしてみました。</p>
-
-<p>アップデートしてみたところ、全体的な機能改善がされていました。</p>
-
-<p>ところが、端末スピーカーを使って音声再生したところ音が割れるようになりました。</p>
-
-<p>暫く、我慢して使って音声再生していたのですが、最早限界に達しましてダウングレードをすることにしました。</p>
-
-<p># 大体、Android界隈でこういうROM焼きをする場合ってカスタムROMを焼くことが多いですが・・・ ^<sup>;;</sup></p>
-
-<p># カスタムROMにしてしまうとAPIとか動作含めて検証機として微妙かなという印象もあるので純正にします。</p>
-
-<h3>注意事項</h3>
-
-<hr />
-
-<p>本作業によって、メーカーの補償は一切きかなくなります。<br/>
-本作業でデータが消えたり、Nexus5が起動しなくなってしまったとしてもこちらは一切責任を負いません。<br/>
-全て自己責任でお願い致します。</p>
-
-<h3>対象機器</h3>
-
-<hr />
-
-<p>Nexus5</p>
-
-<h3>手順</h3>
-
-<hr />
-
-<p>どの端末で大体やることは同じのようです。</p>
-
-<ol>
-<li>Bootloderの解除</li>
-<li>ROMの入手</li>
-<li>ROMを焼く</li>
-</ol>
-
-
-<h3>Bootloderの解除</h3>
-
-<hr />
-
-<p>実はこれが一番ハードルが高いです。 <br/>
-機種によって解除するための作業が微妙に異なるためです。(解除するための鍵を入手したり等)</p>
-
-<p>幸いなことにNexus5はハードルが高くありません。</p>
-
-<p># 流石、天下のGoogle様ですねw</p>
-
-<p>以下の手順で行います。</p>
-
-<ol>
-<li><code>adb reboot bootloader</code>を入力する(電源ボタンとボリュームダウンボタンを同時押しで電源を入れるでも可)</li>
-<li>画面に倒れたドロイド君が表示されていればOK</li>
-<li><code>fastboot oem unlock</code>を入力する</li>
-<li>Nexus5に、「Unlock bootloader?」と尋ねる画面が表示される</li>
-<li>ボリュームボタンを操作し「Yes」を選び電源ボタンを押す</li>
-</ol>
-
-
-<p>上記作業が成功すれば、Nexus5のブートローダー画面のLOCK STATEが「unlocked」に変化しています。</p>
-
-<p>ロックしたい場合は、<code>fastboot oem lock</code>と入力すれば、LOCK STATEが「locked」に変化します。</p>
-
-<h3>ROMの入手</h3>
-
-<hr />
-
-<p>ここは簡単です。</p>
-
-<p>純正のROMは、<a href="https://developers.google.com/android/nexus/images?hl=ja">Factory Images for Nexus Devices</a>から入手できます。</p>
-
-<p># カスタムROMは専用のサイトとか行けばよいと思います。</p>
-
-<h3>ROM焼き</h3>
-
-<hr />
-
-<p>これも簡単です。</p>
-
-<p>純正のROMの場合は、shellとバッチが用意されていますのでそれを実行するだけです。<br/>
-実行タイミングは、ブートローダー画面で行います。</p>
-
-<p>こんな感じでログが出たあとに端末が再起動すれば成功かと思います。</p>
-
-<p>```
-sending 'bootloader' (2506 KB)...
-OKAY [  0.288s]</p>
-
-<p>中略</p>
-
-<p>writing 'cache'...
-OKAY [  1.904s]
-rebooting...</p>
-
-<p>finished. total time: 99.240s
-```</p>
-
-<p>以上！！自分の作業備忘録でした！！</p>
 ]]></content>
   </entry>
   

@@ -9,8 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="大したことはないし、そこらへんに構築メモは転がってるので要らないと思うけど・・・ という訳で、一から最低限の機能のみを構築しますという体で進めます。
-日本語の文字化け対策にエンコーディングを入れてーみたいなことはしません。 動かすことのみに注力します。 環境 ・CentOS6.3 x86_64 &hellip;">
+  <meta name="description" content="iPhone/iPad購入後、１度しかやらないのでよく忘れます。
+そのため、端末を新しくするとやり方を忘れるのでキモだけメモ。 設定アプリ メール/連絡先/カレンダーの設定項目で、Gmailアカウントを登録する
+作ったアカウントの設定項目で、カレンダーを「オン」にする
+その他の項目は、「オフ」 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +74,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/05/iphone-google-calendar/">iPhoneのカレンダーアプリとGoogleCalendarを同期する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-05T08:13:00+09:00" pubdate data-updated="true">Apr 5<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>iPhone/iPad購入後、１度しかやらないのでよく忘れます。<br/>
+そのため、端末を新しくするとやり方を忘れるのでキモだけメモ。</p>
+
+<h3>設定アプリ</h3>
+
+<hr />
+
+<ul>
+<li>メール/連絡先/カレンダーの設定項目で、Gmailアカウントを登録する</li>
+<li>作ったアカウントの設定項目で、カレンダーを「オン」にする</li>
+<li>その他の項目は、「オフ」でもよい</li>
+</ul>
+
+
+<h3>カレンダーアプリ</h3>
+
+<hr />
+
+<ul>
+<li>カレンダーの設定項目で、左下にある同期を押下する</li>
+<li>Gmail項目が出るので、同期したいものをチェックする</li>
+</ul>
+
+
+<h3>参考</h3>
+
+<hr />
+
+<ul>
+<li><a href="http://support.google.com/calendar/answer/151674?hl=ja&amp;ref_topic=13950">Google公式</a></li>
+<li><a href="http://oshiete.appbank.net/archives/1585">画像入りの設定方法</a></li>
+</ul>
+
+
+<p>偶にしかやらないと忘れてしまいますね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1222,377 +1294,9 @@ default_asides: [custom/asides/about.html, asides/recent_posts.html, custom/asid
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/11/octpress/">Markdown記法のメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-11T23:42:00+09:00" pubdate data-updated="true">Mar 11<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今までBloggerでブログを書いていました。<br/>
-どうにも書きづらいところも出てきたので移行しようかどうしようか検討しています。<br/>
-移行の検討材料として、以下があります。</p>
-
-<ul>
-<li>コードが貼り付けやすい</li>
-<li>記事のストックができる</li>
-<li>記事が書きやすい</li>
-<li>バージョン管理までとは行かなくても手元に記事を残せる(もしくは復元も容易)</li>
-</ul>
-
-
-<p>今回は、移行するにあたって記法の基礎から書いてみます。</p>
-
-<h4>改行</h4>
-
-<hr />
-
-<p>改行したい文字の後ろに空文字(空白)を２つ挿入</p>
-
-<h4>強調</h4>
-
-<hr />
-
-<p><strong>こんな感じで強調できます。</strong></p>
-
-<p>**こんな感じで書けば強調できます。**</p>
-
-<h4>見出し</h4>
-
-<hr />
-
-<p>今まで表示しているような見出しは以下のような感じで表示します。</p>
-
-<ul>
-<li># h1タグの見出し</li>
-<li>#### h4タグの見出し</li>
-<li>###### h6タグの見出し</li>
-</ul>
-
-
-<h4>リスト</h4>
-
-<hr />
-
-<p>リストを表現する際の注意事項は、「リストの上下に空行をいれる」です。<br/>
-上下に空行を入れない場合、リストとして認識されません。(期待している表示にならず残念な表示になります)<br/>
-wikiのような感じでレベルの表現もできないことも注意すること。</p>
-
-<h6>順序付きのリスト</h6>
-
-<hr />
-
-<p>以下のような数字付きのリストを表示したい場合、「数字.」を先頭につければ表示できます。</p>
-
-<ol>
-<li>これは「1.」を先頭につけてます</li>
-<li>これは「2.」を先頭につけてます</li>
-</ol>
-
-
-<h6>順序なしのリスト</h6>
-
-<hr />
-
-<p>要点を書く際の順序なしリストを表示したい場合、「+」「*」「-」を先頭につければ表示できます。</p>
-
-<ul>
-<li>これは「+」を先頭につけてます</li>
-<li>これは「*」を先頭につけてます</li>
-<li>これは「-」を先頭につけてます</li>
-</ul>
-
-
-<h4>段落</h4>
-
-<hr />
-
-<p>段落は、行と行の間に空行を入れれば自動的に段落が分けられる。</p>
-
-<h4>水平線</h4>
-
-<hr />
-
-<p>水平線は以下のいずれかで表示できます。<br/>
-* * <em><br/>
-*<strong><br/>
-*</strong></em>*<br/>
-- - -<br/>
-&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</p>
-
-<h4>引用</h4>
-
-<hr />
-
-<p>引用は「>」をつけると、引用表示できます。<br/>
-引用は以下のように組み合わせて使用することもできます。</p>
-
-<blockquote><ul>
-<li>引用とリストの組み合わせて表示してます</li>
-</ul>
-</blockquote>
-
-<h4>リンク</h4>
-
-<hr />
-
-<p>以下の形式で表現します。</p>
-
-<ul>
-<li>[リンクのテキスト](リンクのアドレス &#8220;リンクのタイトル&#8221;)</li>
-<li>[リンクのテキスト](リンクのアドレス)</li>
-</ul>
-
-
-<h4>コード</h4>
-
-<hr />
-
-<p>コードは以下のような感じで表現します。<br/>
-(グレイブアクセントを使用する)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>p 'Hello!!'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記は以下のように記載しています。</p>
-
-<blockquote><p>&#8220;`<br/>
-p &#8216;Hello!!&#8217;<br/>
-&#8220;`</p></blockquote>
-
-<h4>画像</h4>
-
-<hr />
-
-<p>[画像の代替テキスト](画像のアドレス) という感じで記載します。<br/>
-リンクと同じ方法ですね。</p>
-
-<h4>その他</h4>
-
-<hr />
-
-<h6>エスケープ</h6>
-
-<hr />
-
-<p>markdownの先頭に「\」(バックスラッシュ)を追加すれば、エスケープできます。</p>
-
-<h5>インラインHTML</h5>
-
-<p>以下のようにしてインラインHTMLを書くこともできます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;table&gt;
-</span><span class='line'> &lt;tr&gt;
-</span><span class='line'>  &lt;td&gt;表&lt;/td&gt;
-</span><span class='line'> &lt;/tr&gt;
-</span><span class='line'>&lt;/table&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h6>テーブル</h6>
-
-<hr />
-
-<p>残念ながらマークダウン記法では使用できません。<br/>
-ですが、octpressでは使用することができます。<br/>
-<a href="http://www.mk-mode.com/octopress/2013/01/10/octopress-table-tag/">こちらのサイト</a>を参考にさせて頂きました。</p>
-
-<ul>
-<li>以下のようなCSSファイルを作成します。(値は適宜調整してください)</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>* + table {
-</span><span class='line'>    border-style:solid;
-</span><span class='line'>    border-width:1px;
-</span><span class='line'>    border-color:#e7e3e7;
-</span><span class='line'>    margin: 10px 0 30px 0;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>* + table th, * + table td {
-</span><span class='line'>    border-style:dashed;
-</span><span class='line'>    border-width:1px;
-</span><span class='line'>    border-color:#8888AA;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>* + table th {
-</span><span class='line'>    border-top:    1px #666688 solid;
-</span><span class='line'>    border-bottom: 2px #666688 solid;
-</span><span class='line'>    font-weight:bold;
-</span><span class='line'>    background-color: #C0C0C0;
-</span><span class='line'>    padding: 2px 9px;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>* + table td {
-</span><span class='line'>    border-bottom: 1px #666688 solid;
-</span><span class='line'>    background-color: #F0F0F0;
-</span><span class='line'>    padding: 0 10px;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>* + table th[align="left"], * + table td[align="left"] {
-</span><span class='line'>    text-align:left;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>* + table th[align="right"], * + table td[align="right"] {
-</span><span class='line'>    text-align:right;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>* + table th[align="center"], * + table td[align="center"] {
-</span><span class='line'>    text-align:center;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>CSSを読み込むように「source/_includes/head.html」を編集します。</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;link href="/stylesheets/table.css" rel="stylesheet" type="text/css"&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>記述方法は以下のようにします</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>| Left align | Right align | Center align |
-</span><span class='line'>|:-----------|------------:|:------------:|
-</span><span class='line'>| This       |        This |     This     |
-</span><span class='line'>| column     |      column |    column    |
-</span><span class='line'>| will       |        will |     will     |
-</span><span class='line'>| be         |          be |      be      |
-</span><span class='line'>| left       |       right |    center    |
-</span><span class='line'>| aligned    |     aligned |   aligned    |</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じで表示されます。
-リスト同じく上下に空行は必須です。</p>
-
-<table>
-<thead>
-<tr>
-<th align="left"> Left align </th>
-<th align="right"> Right align </th>
-<th align="center"> Center align </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> This       </td>
-<td align="right">        This </td>
-<td align="center">     This     </td>
-</tr>
-<tr>
-<td align="left"> column     </td>
-<td align="right">      column </td>
-<td align="center">    column    </td>
-</tr>
-<tr>
-<td align="left"> will       </td>
-<td align="right">        will </td>
-<td align="center">     will     </td>
-</tr>
-<tr>
-<td align="left"> be         </td>
-<td align="right">          be </td>
-<td align="center">      be      </td>
-</tr>
-<tr>
-<td align="left"> left       </td>
-<td align="right">       right </td>
-<td align="center">    center    </td>
-</tr>
-<tr>
-<td align="left"> aligned    </td>
-<td align="right">     aligned </td>
-<td align="center">   aligned    </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>とまぁ、こんなにあるけど覚えることが少ないので慣れればこちらのほうがいいかもしれないですね。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/10/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1611,6 +1315,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/20/android-groovy/">AndroidでGroovyを使ってみる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/13/ruby-kaigi/">RubyKaigi3日目に行ってきた</a>
       </li>
     
@@ -1626,15 +1334,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2015/12/11/2015-ruby-kaigi/">RubyKaigi１日目に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/11/06/edge-rails5/">Rails5を使ってみる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 124.0%'>Android(8)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
 </section
 
 
