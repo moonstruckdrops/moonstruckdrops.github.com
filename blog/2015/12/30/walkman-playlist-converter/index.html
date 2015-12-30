@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>GroovyでWALKMAN用のプレイリストコンバーターを作成した - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
+
+  
+  <meta name="description" content="はじめに 自分の楽曲管理なのですが、以下で行っていました Macを使っている&amp;元iPhoneユーザーのためiTunes
+現状はAndroidユーザーでXperiaZ3Compactを活用
+iTunesとの連携にはiSyncrアプリでAndroidアプリを連携 ここ最近、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2015/12/30/walkman-playlist-converter/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <!--
+  <li><a href="/about">About me</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">GroovyでWALKMAN用のプレイリストコンバーターを作成した</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-30T14:20:00+09:00" pubdate data-updated="true">Dec 30<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>自分の楽曲管理なのですが、以下で行っていました</p>
+
+<ul>
+<li>Macを使っている&amp;元iPhoneユーザーのためiTunes</li>
+<li>現状はAndroidユーザーでXperiaZ3Compactを活用</li>
+<li>iTunesとの連携にはiSyncrアプリでAndroidアプリを連携</li>
+</ul>
+
+
+<p>ここ最近、残念なことにXperiaZ3Compactのイヤホンジャックが故障してしまいました<br/>
+海外版SIMFree版のため、国内で修理することもできません。</p>
+
+<p>部品を調達してきて、別途修理するか悩みましたがリスクが高い<br/>
+(ネットで調べる限りだいたい、何かしらミスしたという話が多かったです)</p>
+
+<p>仕方ないのでWALKMANを調達するとして、以下の条件で機種が無いかをしらべました</p>
+
+<ul>
+<li>WALKMANであること</li>
+<li>iSyncrアプリの恩恵を預かれること</li>
+<li>microSDは活用してもいい</li>
+<li>ある程度の運用は許容するので、何かしらのコンバーター(アプリorスクリプト)は実装してもよい</li>
+</ul>
+
+
+<p>条件に合致するものであれば・・・</p>
+
+<ul>
+<li>高額機種のWALKMAN</li>
+<li>Android WALKMAN(3~4年前)で売り出していたFシリーズ</li>
+<li>microSDが使用しているNW-A20シリーズ</li>
+</ul>
+
+
+<p>というわけで、機能面でも最新であることたお値段も含めて一番条件に合致するWALKMAN(NW-A25)を新たに新調することとしました<br/>
+(Fシリーズは別途問題があったようなので却下にしました)</p>
+
+<h3>何故コンバーターが必要になったか</h3>
+
+<hr />
+
+<p>iSyncrで作成したプレイリストは、Android向けに最適化されたもののようなので、そのままではNW-A25では活用することができませんでした<br/>
+(店頭に通って挙動を確認しました)</p>
+
+<p>症状としては以下のような形です</p>
+
+<ul>
+<li>プレイリストは認識するが曲が存在しない扱いとなる</li>
+<li>プレイリストを通さない、ミュージック一覧では楽曲の認識と再生可能</li>
+</ul>
+
+
+<p>何故こういう状態が起こるかというと、WALKMANはOSがAndroidではない為、ファイルパスの扱いが異なるようです<br/>
+なので、改善として以下のようにしてあげれば、プレイリストから楽曲再生ができるようになりました<br/>
+(こちらも店頭で確認)</p>
+
+<p><strong>変更前</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#EXTM3U
+</span><span class='line'>/hoge/fuga.mp3
+</span><span class='line'>/hoge/fugafuga.mp3</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>変更後</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#EXTM3U
+</span><span class='line'>hoge/fuga.mp3
+</span><span class='line'>hoge/fugafuga.mp3</span></code></pre></td></tr></table></div></figure>
+
+
+<p>つまり、うまく認識させるためには相互変換できるようなものがあればよいということになります</p>
+
+<h3>何故Groovy?</h3>
+
+<hr />
+
+<p>以下の打算があったので、Groovyでやってみました</p>
+
+<ul>
+<li>iSyncrはAndroidアプリなので、コンバーターもAndroidアプリでやれば運用が楽になるのではないか</li>
+<li>AndroidはJavaで動作し、JVM言語であるGroovyが動作することも確認取れている</li>
+<li>GroovyはJavaよりもライトに(Clojureを活用してですが)ファイル変更処理を実装することができる</li>
+<li>ライトにできるので実装モック作成も割りと早めにできるのではないか</li>
+</ul>
+
+
+<p>が、結局Android上での外部ストレージ周りのファイル操作の挙動が変わってる(DocumentFileを通したファイル作成、変更がスクリプトと相性悪い為)ので<br/>
+後述のスクリプト処理が活用しづらいのでアプリ内での変換処理は諦めました</p>
+
+<p>なのでコマンドラインツールとして実装&amp;運用する方向としました<br/>
+(運用できなくなるのが困るので、多少の労力(SDの抜き差し回数が増える)ぐらいなら労力を割いてもいい方向にしました)</p>
+
+<h3>iSyncr向けのプレイリストからWALKMAN向けのプレイリストに変換</h3>
+
+<hr />
+
+<p>少し手間ですが、以下のような形をとりました</p>
+
+<ol>
+<li>WALKMAN向けのプレイリストファイルを作成する(この時点では一時ファイルとして)</li>
+<li>iSyncr向けのプレイリストファイルを開く</li>
+<li>iSyncr向けのプレイリストファイルの内容をWALKMAN向けのプレイリストファイルに書き込む</li>
+<li>このとき行の先頭文字が<code>/</code>で始まっている場合、空文字に置換</li>
+<li>ファイル名を正しいもの変更する</li>
+<li>iSyncr向けプレイリストは、識別可能なファイル名に変更</li>
+<li>一時ファイルのWALKMAN向けのプレイリストファイルは、正しいプレイリストファイル名になるよう変更</li>
+</ol>
+
+
+<p>これらを実装したものが以下になります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def isyncrToWalkman() {
+</span><span class='line'>  def sdCardDirPath = "/Volumes/WALKMAN/syncr"
+</span><span class='line'>  def files = new File(sdCardDirPath).listFiles()
+</span><span class='line'>
+</span><span class='line'>  playList = files.findAll { it.getName() =~ /.*\.m3u$/ }
+</span><span class='line'>  if (playList.empty) {
+</span><span class='line'>    println "PlayList not found!"
+</span><span class='line'>    return
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  playList.each { file -&gt;
+</span><span class='line'>    def playListName = file.canonicalPath
+</span><span class='line'>
+</span><span class='line'>    def newPlayListName = "${file.canonicalPath}.new"
+</span><span class='line'>    def newPlayListFile = new File(newPlayListName)
+</span><span class='line'>
+</span><span class='line'>    newPlayListFile.withWriter('UTF-8') { writer -&gt;
+</span><span class='line'>      file.newReader().transformLine(writer) { line -&gt;
+</span><span class='line'>        if (line.startsWith("/")){
+</span><span class='line'>          line.replaceFirst(/\//,"")
+</span><span class='line'>        } else {
+</span><span class='line'>          line
+</span><span class='line'>        }
+</span><span class='line'>      }
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    file.renameTo("${file.canonicalPath}.isyncr")
+</span><span class='line'>    newPlayListFile.renameTo("${playListName}")
+</span><span class='line'>  }
+</span><span class='line'>  println "Convert iSyncr To WALKMAN Complete!!"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>WALKMAN向けのプレイリストからiSyncr向けのプレイリストに変換</h3>
+
+<hr />
+
+<p>こちらは以下を実装するだけでよいので簡単です</p>
+
+<ol>
+<li>WALKMAN向けのプレイリストを削除</li>
+<li>iSyncr用のプレイリストの名前を変更</li>
+</ol>
+
+
+<p>上記を実装したものが以下になります</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def walkmanToIsyncr() {
+</span><span class='line'>  def sdCardDirPath = "/Volumes/WALKMAN/syncr"
+</span><span class='line'>  def files = new File(sdCardDirPath).listFiles()
+</span><span class='line'>
+</span><span class='line'>  def isyncrPlayList = files.findAll { it.getName() =~ /.*\.m3u.isyncr$/ }
+</span><span class='line'>  if (isyncrPlayList.empty) {
+</span><span class='line'>    println "PlayList not found!"
+</span><span class='line'>    return
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  def walkmanPlayList = files.findAll { it.getName() =~ /.*\.m3u$/ }
+</span><span class='line'>  walkmanPlayList.each { file -&gt; file.delete() }
+</span><span class='line'>
+</span><span class='line'>  isyncrPlayList.each { file -&gt;
+</span><span class='line'>    def name = file.canonicalPath.replaceFirst(/\.isyncr$/, "")
+</span><span class='line'>    file.renameTo(name)
+</span><span class='line'>  }
+</span><span class='line'>  println "Convert WALKMAN TO iSyncr Complete!!"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>コマンドライン部分</h3>
+
+<hr />
+
+<p>こちらはGroovyのBuilderを実装している<code>CliBuilder</code>を活用しました
+これは、コマンドラインから実行する際、どちらの変換を実行するかを選択させるようにしたかった為です。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def cli = new CliBuilder(usage:"PlayList Converter")
+</span><span class='line'>cli.w("Playlist : iSyncr TO WALKMAN")
+</span><span class='line'>cli.i("Playlist : WALKMAN TO iSyncr")
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>def opt = cli.parse(args)
+</span><span class='line'>if (opt.w) {
+</span><span class='line'>  isyncrToWalkman()
+</span><span class='line'>  return
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>if (opt.i) {
+</span><span class='line'>  walkmanToIsyncr()
+</span><span class='line'>  return
+</span><span class='line'>}
+</span><span class='line'>cli.usage()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>コードみれば非常に簡単なのですが・・・</p>
+
+<p>オプションに<code>w</code>を付けて実行すると、前述のiSyncrのプレイリストからWALKMAN向けのプレイリストに変換する処理を実施<br/>
+オプションに<code>i</code>を付けて実行すると、前述のWALKMAN向けのプレイリストからiSyncrのプレイリストに変換する処理を実施<br/>
+何もつけなければ、実行方法を表示するようになっています</p>
+
+<h3>運用</h3>
+
+<hr />
+
+<p><strong>前提</strong></p>
+
+<ol>
+<li>PCが認識するSDカードのパスが<code>/Volume/WALKMAN</code>になるように設定</li>
+<li>前述のコードをまとめたGroovyファイルを<code>playlist_converter.groovy</code>とする</li>
+<li>sdkmanを使って、Groovyをインストール</li>
+</ol>
+
+
+<p><strong>運用手順</strong></p>
+
+<ol>
+<li>iSyncrでAndroid上のSDカードとプレイリストを同期</li>
+<li>同期完了後、AndroidのSDカードを取外しPCにSDを接続</li>
+<li>WALKMAN向けプレイリストになるように以下のコマンドで変換</li>
+<li><code>$ groovy playlist_converter.groovy -w</code></li>
+<li>WALKMANにSDカードをさして、ミュージックを楽しむ</li>
+<li>WALKMANからSDを取り外し、PCにSDを接続</li>
+<li>WALKMAN向けプレイリストになるように以下のコマンドで変換</li>
+<li><code>$ groovy playlist_converter.groovy -i</code></li>
+<li>AndroidにSDをさして、更にプレイリストの同期を実施</li>
+</ol>
+
+
+<p>少し煩雑な感じもしますが、手作業でプレイリストを修正するよりも多少マシかなぁと思ってます<br/>
+(実際に自分は運用できてます)</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-30T14:20:00+09:00" pubdate data-updated="true">Dec 30<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/groovy/'>Groovy</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2015/12/30/walkman-playlist-converter/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2015/12/30/walkman-playlist-converter/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/12/20/android-groovy/" title="Previous Post: AndroidでGroovyを使ってみる">&laquo; AndroidでGroovyを使ってみる</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/walkman-playlist-converter/">GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/20/android-groovy/">AndroidでGroovyを使ってみる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/13/ruby-kaigi/">RubyKaigi3日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

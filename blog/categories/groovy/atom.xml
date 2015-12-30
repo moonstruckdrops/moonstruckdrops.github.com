@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Groovy | kurobaraのブログ]]></title>
+  <link href="http://moonstruckdrops.github.com/blog/categories/groovy/atom.xml" rel="self"/>
+  <link href="http://moonstruckdrops.github.com/"/>
+  <updated>2015-12-30T15:21:20+09:00</updated>
+  <id>http://moonstruckdrops.github.com/</id>
+  <author>
+    <name><![CDATA[kurobara]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[GroovyでWALKMAN用のプレイリストコンバーターを作成した]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2015/12/30/walkman-playlist-converter/"/>
+    <updated>2015-12-30T14:20:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2015/12/30/walkman-playlist-converter</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>自分の楽曲管理なのですが、以下で行っていました</p>
+
+<ul>
+<li>Macを使っている&amp;元iPhoneユーザーのためiTunes</li>
+<li>現状はAndroidユーザーでXperiaZ3Compactを活用</li>
+<li>iTunesとの連携にはiSyncrアプリでAndroidアプリを連携</li>
+</ul>
+
+
+<p>ここ最近、残念なことにXperiaZ3Compactのイヤホンジャックが故障してしまいました<br/>
+海外版SIMFree版のため、国内で修理することもできません。</p>
+
+<p>部品を調達してきて、別途修理するか悩みましたがリスクが高い<br/>
+(ネットで調べる限りだいたい、何かしらミスしたという話が多かったです)</p>
+
+<p>仕方ないのでWALKMANを調達するとして、以下の条件で機種が無いかをしらべました</p>
+
+<ul>
+<li>WALKMANであること</li>
+<li>iSyncrアプリの恩恵を預かれること</li>
+<li>microSDは活用してもいい</li>
+<li>ある程度の運用は許容するので、何かしらのコンバーター(アプリorスクリプト)は実装してもよい</li>
+</ul>
+
+
+<p>条件に合致するものであれば・・・</p>
+
+<ul>
+<li>高額機種のWALKMAN</li>
+<li>Android WALKMAN(3~4年前)で売り出していたFシリーズ</li>
+<li>microSDが使用しているNW-A20シリーズ</li>
+</ul>
+
+
+<p>というわけで、機能面でも最新であることたお値段も含めて一番条件に合致するWALKMAN(NW-A25)を新たに新調することとしました<br/>
+(Fシリーズは別途問題があったようなので却下にしました)</p>
+
+<h3>何故コンバーターが必要になったか</h3>
+
+<hr />
+
+<p>iSyncrで作成したプレイリストは、Android向けに最適化されたもののようなので、そのままではNW-A25では活用することができませんでした<br/>
+(店頭に通って挙動を確認しました)</p>
+
+<p>症状としては以下のような形です</p>
+
+<ul>
+<li>プレイリストは認識するが曲が存在しない扱いとなる</li>
+<li>プレイリストを通さない、ミュージック一覧では楽曲の認識と再生可能</li>
+</ul>
+
+
+<p>何故こういう状態が起こるかというと、WALKMANはOSがAndroidではない為、ファイルパスの扱いが異なるようです<br/>
+なので、改善として以下のようにしてあげれば、プレイリストから楽曲再生ができるようになりました<br/>
+(こちらも店頭で確認)</p>
+
+<p><strong>変更前</strong></p>
+
+<p>```</p>
+
+<h1>EXTM3U</h1>
+
+<p>/hoge/fuga.mp3
+/hoge/fugafuga.mp3
+```</p>
+
+<p><strong>変更後</strong></p>
+
+<p>```</p>
+
+<h1>EXTM3U</h1>
+
+<p>hoge/fuga.mp3
+hoge/fugafuga.mp3
+```</p>
+
+<p>つまり、うまく認識させるためには相互変換できるようなものがあればよいということになります</p>
+
+<h3>何故Groovy?</h3>
+
+<hr />
+
+<p>以下の打算があったので、Groovyでやってみました</p>
+
+<ul>
+<li>iSyncrはAndroidアプリなので、コンバーターもAndroidアプリでやれば運用が楽になるのではないか</li>
+<li>AndroidはJavaで動作し、JVM言語であるGroovyが動作することも確認取れている</li>
+<li>GroovyはJavaよりもライトに(Clojureを活用してですが)ファイル変更処理を実装することができる</li>
+<li>ライトにできるので実装モック作成も割りと早めにできるのではないか</li>
+</ul>
+
+
+<p>が、結局Android上での外部ストレージ周りのファイル操作の挙動が変わってる(DocumentFileを通したファイル作成、変更がスクリプトと相性悪い為)ので<br/>
+後述のスクリプト処理が活用しづらいのでアプリ内での変換処理は諦めました</p>
+
+<p>なのでコマンドラインツールとして実装&amp;運用する方向としました<br/>
+(運用できなくなるのが困るので、多少の労力(SDの抜き差し回数が増える)ぐらいなら労力を割いてもいい方向にしました)</p>
+
+<h3>iSyncr向けのプレイリストからWALKMAN向けのプレイリストに変換</h3>
+
+<hr />
+
+<p>少し手間ですが、以下のような形をとりました</p>
+
+<ol>
+<li>WALKMAN向けのプレイリストファイルを作成する(この時点では一時ファイルとして)</li>
+<li>iSyncr向けのプレイリストファイルを開く</li>
+<li>iSyncr向けのプレイリストファイルの内容をWALKMAN向けのプレイリストファイルに書き込む</li>
+<li>このとき行の先頭文字が<code>/</code>で始まっている場合、空文字に置換</li>
+<li>ファイル名を正しいもの変更する</li>
+<li>iSyncr向けプレイリストは、識別可能なファイル名に変更</li>
+<li>一時ファイルのWALKMAN向けのプレイリストファイルは、正しいプレイリストファイル名になるよう変更</li>
+</ol>
+
+
+<p>これらを実装したものが以下になります</p>
+
+<p>```
+def isyncrToWalkman() {
+  def sdCardDirPath = "/Volumes/WALKMAN/syncr"
+  def files = new File(sdCardDirPath).listFiles()</p>
+
+<p>  playList = files.findAll { it.getName() =~ /.*.m3u$/ }
+  if (playList.empty) {</p>
+
+<pre><code>println "PlayList not found!"
+return
+</code></pre>
+
+<p>  }</p>
+
+<p>  playList.each { file -></p>
+
+<pre><code>def playListName = file.canonicalPath
+
+def newPlayListName = "${file.canonicalPath}.new"
+def newPlayListFile = new File(newPlayListName)
+
+newPlayListFile.withWriter('UTF-8') { writer -&gt;
+  file.newReader().transformLine(writer) { line -&gt;
+    if (line.startsWith("/")){
+      line.replaceFirst(/\//,"")
+    } else {
+      line
+    }
+  }
+}
+
+file.renameTo("${file.canonicalPath}.isyncr")
+newPlayListFile.renameTo("${playListName}")
+</code></pre>
+
+<p>  }
+  println "Convert iSyncr To WALKMAN Complete!!"
+}
+```</p>
+
+<h3>WALKMAN向けのプレイリストからiSyncr向けのプレイリストに変換</h3>
+
+<hr />
+
+<p>こちらは以下を実装するだけでよいので簡単です</p>
+
+<ol>
+<li>WALKMAN向けのプレイリストを削除</li>
+<li>iSyncr用のプレイリストの名前を変更</li>
+</ol>
+
+
+<p>上記を実装したものが以下になります</p>
+
+<p>```
+def walkmanToIsyncr() {
+  def sdCardDirPath = "/Volumes/WALKMAN/syncr"
+  def files = new File(sdCardDirPath).listFiles()</p>
+
+<p>  def isyncrPlayList = files.findAll { it.getName() =~ /.*.m3u.isyncr$/ }
+  if (isyncrPlayList.empty) {</p>
+
+<pre><code>println "PlayList not found!"
+return
+</code></pre>
+
+<p>  }</p>
+
+<p>  def walkmanPlayList = files.findAll { it.getName() =~ /.*.m3u$/ }
+  walkmanPlayList.each { file -> file.delete() }</p>
+
+<p>  isyncrPlayList.each { file -></p>
+
+<pre><code>def name = file.canonicalPath.replaceFirst(/\.isyncr$/, "")
+file.renameTo(name)
+</code></pre>
+
+<p>  }
+  println "Convert WALKMAN TO iSyncr Complete!!"
+}
+```</p>
+
+<h3>コマンドライン部分</h3>
+
+<hr />
+
+<p>こちらはGroovyのBuilderを実装している<code>CliBuilder</code>を活用しました
+これは、コマンドラインから実行する際、どちらの変換を実行するかを選択させるようにしたかった為です。</p>
+
+<p>```
+def cli = new CliBuilder(usage:"PlayList Converter")
+cli.w("Playlist : iSyncr TO WALKMAN")
+cli.i("Playlist : WALKMAN TO iSyncr")</p>
+
+<p>def opt = cli.parse(args)
+if (opt.w) {
+  isyncrToWalkman()
+  return
+}</p>
+
+<p>if (opt.i) {
+  walkmanToIsyncr()
+  return
+}
+cli.usage()
+```</p>
+
+<p>コードみれば非常に簡単なのですが・・・</p>
+
+<p>オプションに<code>w</code>を付けて実行すると、前述のiSyncrのプレイリストからWALKMAN向けのプレイリストに変換する処理を実施<br/>
+オプションに<code>i</code>を付けて実行すると、前述のWALKMAN向けのプレイリストからiSyncrのプレイリストに変換する処理を実施<br/>
+何もつけなければ、実行方法を表示するようになっています</p>
+
+<h3>運用</h3>
+
+<hr />
+
+<p><strong>前提</strong></p>
+
+<ol>
+<li>PCが認識するSDカードのパスが<code>/Volume/WALKMAN</code>になるように設定</li>
+<li>前述のコードをまとめたGroovyファイルを<code>playlist_converter.groovy</code>とする</li>
+<li>sdkmanを使って、Groovyをインストール</li>
+</ol>
+
+
+<p><strong>運用手順</strong></p>
+
+<ol>
+<li>iSyncrでAndroid上のSDカードとプレイリストを同期</li>
+<li>同期完了後、AndroidのSDカードを取外しPCにSDを接続</li>
+<li>WALKMAN向けプレイリストになるように以下のコマンドで変換</li>
+<li><code>$ groovy playlist_converter.groovy -w</code></li>
+<li>WALKMANにSDカードをさして、ミュージックを楽しむ</li>
+<li>WALKMANからSDを取り外し、PCにSDを接続</li>
+<li>WALKMAN向けプレイリストになるように以下のコマンドで変換</li>
+<li><code>$ groovy playlist_converter.groovy -i</code></li>
+<li>AndroidにSDをさして、更にプレイリストの同期を実施</li>
+</ol>
+
+
+<p>少し煩雑な感じもしますが、手作業でプレイリストを修正するよりも多少マシかなぁと思ってます<br/>
+(実際に自分は運用できてます)</p>
+]]></content>
+  </entry>
+  
+</feed>
