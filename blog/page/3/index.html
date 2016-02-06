@@ -9,7 +9,7 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="備忘録的に TimeCapsuleのIPアドレスを固定にしたかったので、MACアドレスを調べる必要が出てきた また同じことにならないようにメモしておく 確認方法 下記の図のように、AirMacユーティリティを開き機器のタイトルを選択すると表示されます ">
+  <meta name="description" content="はじめに 常々、画像ファイルってどう表示するのだっけ？と思っていたのでやってみた感じ ファイルの格納先 octopress/source/imagesディレクトリに画像ファイルを格納する themeで表示している画像が最初から格納されているので、ビビらず画像ファイルを格納すること 指定方法 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/28/octopress-picture/">Octopressでの画像の表示</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-01-28T00:55:00+09:00" pubdate data-updated="true">Jan 28<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>常々、画像ファイルってどう表示するのだっけ？と思っていたのでやってみた感じ</p>
+
+<h3>ファイルの格納先</h3>
+
+<hr />
+
+<p><code>octopress/source/images</code>ディレクトリに画像ファイルを格納する</p>
+
+<p>themeで表示している画像が最初から格納されているので、ビビらず画像ファイルを格納すること</p>
+
+<h3>指定方法</h3>
+
+<hr />
+
+<p><a href="http://octopress.org/docs/plugins/image-tag/">公式</a>を参照すればできる模様</p>
+
+<p>そのため前述の格納先を相対URLで指定すると、以下の形になる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>![hoge](/images/hoge.jpg)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じでやると画像を表示できる</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1105,174 +1167,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/23/rails-consts/">Railsで定数を定義する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-23T20:34:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>Railsで定数を作るとき、いつもどうしてたっけ？っていう個人まとめをつくってみました。</p>
-
-<p>決定版みたいなものが無い感じというのもあったりするので参照用という感じです。</p>
-
-<h3>グローバルな定数定義</h3>
-
-<hr />
-
-<p>以下のような感じの内容で、「config/initializers」に適当なRubyファイルを作成して定義します</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>HOGE = "HOGE"
-</span><span class='line'>FUGA = "FUGA"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>もしくは、yamlに定数を切り出して、実行タイミング(Rails起動時)にロードという方式でもいいかもしれません。<br/>
-# yamlに切り出すと管理が大変になるかも・・・という欠点は無きにしもあらずですね。</p>
-
-<p>欠点は以下が考えられます。</p>
-
-<ul>
-<li>namespaceの概念が無いので少々使いづらい</li>
-<li>環境ごとに値を変更したい場合、切り替え処理を自前でやる必要がある</li>
-</ul>
-
-
-<p>特に、環境差分とか無ければこれでいいかもしれませんね。<br/>
-# 尤も、namespaceを使わなくて済む程度という前提が付きますが・・・</p>
-
-<h3>コントローラー内で共通な定数定義</h3>
-
-<hr />
-
-<p>以下のような感じで、app/controllers/application_controller.rb 内で定義します</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class ApplicationController &lt; ActionController::Base
-</span><span class='line'>  HOGE = "HOGE"
-</span><span class='line'>  FUGA = "FUGA"
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>単にApplicationControllerがすべてのcontrollerのスーパークラスになっているから参照できるというだけの話です。
-# あまりここに定義はしたくないですね。</p>
-
-<h3>rails_configを使って環境ごとに変更する</h3>
-
-<hr />
-
-<p><a href="https://github.com/railsjedi/rails_config">rails_config</a>というgemを使う方法ですね。</p>
-
-<p>以下をGemfileに記述し、インストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem 'rails_config'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>rails_configを使うように初期設定をします(ただのインストールですが)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$rails g rails_config:install</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ファイルに関しては以下の通り</p>
-
-<table>
-<thead>
-<tr>
-<th align="left">環境</th>
-<th align="left">ファイルパス</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left">全ての環境で共通</td>
-<td align="left">config/settings.yml</td>
-</tr>
-<tr>
-<td align="left">ローカル環境</td>
-<td align="left">config/settings.local.yml</td>
-</tr>
-<tr>
-<td align="left">開発環境</td>
-<td align="left">config/settings/development.yml</td>
-</tr>
-<tr>
-<td align="left">テスト環境</td>
-<td align="left">config/settings/test.yml</td>
-</tr>
-<tr>
-<td align="left">本番環境</td>
-<td align="left">config/settings/production.yml</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>YAMLの記述は以下のような感じで行います</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>hoge:
-</span><span class='line'>  fuga: 'fugafuga'
-</span><span class='line'>  test: 'test'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>使用する場合は、以下のようなコードで出来ます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Settings.hoge[:fuga]
-</span><span class='line'>Settings.hoge['fuga']
-</span><span class='line'>Settings[:hoge][:fuga]</span></code></pre></td></tr></table></div></figure>
-
-
-<p>他に、同じようなことをする有名なgemに、「settingslogic」があります。<br/>
-以下の感想でsettingslogicはあまりつかわないです。</p>
-
-<ul>
-<li>一つのファイルで全て定義なのでファイルが肥大化しそう</li>
-<li>クラス定義も作る必要があるので若干面倒(シンプルに使えない)</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1294,6 +1188,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/30/walkman-playlist-converter/">GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
       </li>
     
@@ -1309,15 +1207,11 @@
         <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 133.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
 </section
 
 
@@ -1331,7 +1225,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - kurobara -
+  Copyright &copy; 2016 - kurobara -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -9,9 +9,7 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="このまえ、友人とデザインパターンの話をしてたような気がするので書いてみた。 SingletonはGOFのデザインパターンの一つです。
-使い所は、システム内で絶対に一つにしておかないといけないもの仕組みのものに使います。
-例えば、アプリの設定とか見た目(Look&amp;Feel) &hellip;">
+  <meta name="description" content="なんてことはない、ただの整理です。 通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。 Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。 以下のようなModuleクラスにあるものを使います &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +71,133 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/25/ruby-accessor/">Rubyでアクセス用のメソッドを定義する(アクセッサ)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-25T20:56:00+09:00" pubdate data-updated="true">Jul 25<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>なんてことはない、ただの整理です。</p>
+
+<p>通常インスタンス変数を外部から参照する方法は、インスタンス変数を操作するgetter/setterメソッドを作ります。</p>
+
+<p>Rubyでは、このアクセス用のメソッド(アクセッサ)を簡単に作る機能があります。</p>
+
+<p>以下のようなModuleクラスにあるものを使います</p>
+
+<ul>
+<li>attr_reader : 参照(読み出し)できるようにする(getter)</li>
+<li>attr_writer : 代入(書き込み)できるようにする(setter)</li>
+<li>attr_accessor : 参照、代入の両方できるようにする(getter/setter)</li>
+</ul>
+
+
+<p>それぞれ、使い方は以下のような形になります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Accessor
+</span><span class='line'>
+</span><span class='line'>    attr_reader :name,:hoge
+</span><span class='line'>    attr_writer :fuga,:piyo
+</span><span class='line'>    attr_accessor :access
+</span><span class='line'>    
+</span><span class='line'>    def initialize
+</span><span class='line'>        @name = "kurobara"
+</span><span class='line'>        @hoge = "hogehoge"
+</span><span class='line'>        @fuga = "fugafuga"
+</span><span class='line'>        @piyo = "piypiyo"
+</span><span class='line'>        @access = "OK"
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>    def print_fuga_piyo
+</span><span class='line'>        p '---------------------'
+</span><span class='line'>        puts "fuga = " + @fuga
+</span><span class='line'>        puts "piyo = " + @piyo
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>a = Accessor.new()
+</span><span class='line'>puts a.name
+</span><span class='line'>puts a.hoge  
+</span><span class='line'>a.print_fuga_piyo
+</span><span class='line'>p "代入操作"
+</span><span class='line'>a.fuga = "fuga2fuga2"
+</span><span class='line'>a.piyo = "piyo2piyo2"
+</span><span class='line'>a.print_fuga_piyo
+</span><span class='line'>p '---------------------'
+</span><span class='line'>puts 'a.access = ' + a.access
+</span><span class='line'>p "代入操作"
+</span><span class='line'>a.access = "OKOK"
+</span><span class='line'>puts 'a.access = ' + a.access</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで使えちゃいます。。。<br/>
+今更初心者みたいなことしてんなって突っ込まれそうだけど・・・<br/>
+attr_accessorばっかり使うので、attr_reader,att_writerを忘れてましたｗ</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1690,123 +1815,6 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/06/08/use-rubymine/">Rubymineを使ってみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-06-08T17:26:00+09:00" pubdate data-updated="true">Jun 8<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>皆さんはRubyやRailsでアプリを書くときどのようなエディタを使いますでしょうか？</p>
-
-<h6>僕は、Emacsで書いていることが多いです。。。</h6>
-
-<p>多いのですが・・・<br/>
-こんな感じで若干面倒な面もあってですね。</p>
-
-<ul>
-<li>設定がともかく面倒くさい・・・。</li>
-<li>色々設定を追加しているので、重くなってきた(僕の設定が悪いのかもしれませんが・・・)</li>
-<li>補完周りも効くのか効かないのか微妙な時も(僕の設定が悪いry)</li>
-<li>オムニ補完が・・・効きすぎてお節介すぎる(僕の設定がry)</li>
-<li>その他色々。。。</li>
-</ul>
-
-
-<p>良い面もありまして、僕が思う良い面はこんな感じ。</p>
-
-<ul>
-<li>キーバインドがカスタムできるよ</li>
-<li>画面が分割できるので、TDDにも向いてるよ</li>
-<li>オムニ補完が良い感じに効いたときは、さくさくコードが書ける</li>
-<li>タブやフォーマットとか「{ }」の自動補完とかきっちりやってくれる</li>
-<li>あとは、タグを使ってソースからソースへのコードジャンプができる</li>
-</ul>
-
-
-<p>殆ど、Emacsの機能ですねw</p>
-
-<p>で、面倒くさい面もあるのでRuby開発に限ってはEmacsを卒業してもいいのではないかと最近思うようになりました。</p>
-
-<p>なので、Rubyをスムーズに開発できるエディタってなんだろうとか気になりだした訳です。<br/>
-エディタとして候補が挙げれたものは・・・</p>
-
-<ul>
-<li>Vim</li>
-<li>Text Mate</li>
-<li>Sublime text2</li>
-<li>Coda</li>
-<li>Aptana Studio(Eclipse)</li>
-<li>RubyMine</li>
-</ul>
-
-
-<p>自分が観測できた範囲だとこんだけ。</p>
-
-<p>色々ありますね。とりかえず今回はRubyMineを使ってみます。</p>
-
-<h6>Rails コマンド</h6>
-
-<p>「$rails migration」とか実行する場合、「Ctrl + Option + G」<br/>
-よく使いそうなものは大体実行できます。<br/>
-主に以下のようなことができる。(ここでは一部のみ記載)</p>
-
-<ul>
-<li>scaffold</li>
-<li>migration</li>
-<li>helper</li>
-<li>controller</li>
-<li>その他色々</li>
-</ul>
-
-
-<h6>Rails Server</h6>
-
-<p>サーバを起動する場合、「Option + Shift + F10」<br/>
-デバッグ実行やプロダクション起動、リリース</p>
-
-<h6>リファクタリング</h6>
-
-<p>変更箇所をカーソルで選択後「Shift + F6」<br/>
-プレビューが表示されるので、「Do Refactor」を実行しましょう。<br/>
-いちいち、「Do Refactor」ボタンを押さないといけないところに操作性のムカツキを感じる。</p>
-
-<h6>その他</h6>
-
-<p>エディタ自身の設定でデフォルトで有効になっている「フリーカーソール」をOFFにしたい。(余白をクリックすると、行の末尾にいかない)<br/>
-設定項目のエディタ設定で、「Vertual Space」を見つけます。</p>
-
-<h6>「Allow Placement of caret after the end of line」のチェックボックスを外します。</h6>
-
-<p>そうすると、余白をクリックしても行の末尾にいくようになります</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/8/">&larr; Older</a>
@@ -1828,6 +1836,10 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/30/walkman-playlist-converter/">GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
       </li>
     
@@ -1843,15 +1855,11 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
         <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 133.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
 </section
 
 
@@ -1865,7 +1873,7 @@ HTML5といいJQuery,CoffieScript,Dart等、言語の発展が最近めざまし
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - kurobara -
+  Copyright &copy; 2016 - kurobara -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

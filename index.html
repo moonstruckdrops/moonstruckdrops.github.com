@@ -9,9 +9,17 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 自分の楽曲管理なのですが、以下で行っていました Macを使っている&amp;元iPhoneユーザーのためiTunes
-現状はAndroidユーザーでXperiaZ3Compactを活用
-iTunesとの連携にはiSyncrアプリでAndroidアプリを連携 ここ最近、 &hellip;">
+  <meta name="description" content="あったこと 表題のようにsshでX11 Forwardingでコマンドを実行したところ
+下記のようなエラーになった 1
+2
+3
+4
+5
+6
+7
+$ ssh -XY -l hoge xxx.xxx.xxx.xxx
+$ sudo virt-manager
+** (virt-manager:3166 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +81,84 @@ iTunesとの連携にはiSyncrアプリでAndroidアプリを連携 ここ最近
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-02-07T01:11:00+09:00" pubdate data-updated="true">Feb 7<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>あったこと</h3>
+
+<hr />
+
+<p>表題のようにsshでX11 Forwardingでコマンドを実行したところ<br/>
+下記のようなエラーになった</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ssh -XY -l hoge xxx.xxx.xxx.xxx
+</span><span class='line'>$ sudo virt-manager
+</span><span class='line'>** (virt-manager:3166): WARNING **: Could not open X display
+</span><span class='line'>X11 connection rejected because of wrong authentication.
+</span><span class='line'>X11 connection rejected because of wrong authentication.
+</span><span class='line'>(virt-manager:3166): Gtk-CRITICAL **: gtk_settings_get_for_screen: assertion 'GDK_IS_SCREEN (screen)' failed
+</span><span class='line'>(virt-manager:3166): Gtk-CRITICAL **: _gtk_settings_get_style_cascade: assertion 'GTK_IS_SETTINGS (settings)' failed</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どうやら認可が正しくできていない模様<br/>
+(GTKのSCREEN系のエラーっぽく見えるところが、ややこしさに拍車かけてると思う・・・)</p>
+
+<h3>解決案</h3>
+
+<hr />
+
+<p>sudoコマンドを実行する際、Xauthorityを読み込むようにして実行する<br/>
+(下記では、念の為xauthをインストールしている)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ssh -XY -l hoge xxx.xxx.xxx.xxx
+</span><span class='line'>$ sudo yum install xorg-x11-xauth
+</span><span class='line'>$ sudo  XAUTHORITY=~/.Xauthority virt-manager</span></code></pre></td></tr></table></div></figure>
+
+
+<p>強引に認可させているので、セキュリティ的に果たしてこれでいいのかという疑問は残りますね<br/>
+何れにせよ、ローカルネットワーク内で実行するだけなのでこれでいいかなと。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1923,78 +2009,6 @@ rails配下にあるgemspecファイルに目を通しておけば、インス�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/04/unixtime-to-datetime/">unixtimestampをDatetimeに変更する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-04T12:54:00+09:00" pubdate data-updated="true">Oct 4<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>とあるログファイルを解析する必要があったわけなのですが<br/>
-以下の状況のようなファイルでした</p>
-
-<ul>
-<li>中途半端にDateTimeが出力されている</li>
-<li>但し、unixtimpstampであれば確実に出力されている</li>
-</ul>
-
-
-<p>なので、正確に発生日時を調べる必要が出てきました</p>
-
-<h3>変換コマンド</h3>
-
-<hr />
-
-<p>Linuxの場合であれば、以下を実行するだけなのでそんなに難しくない</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ date --date '@1443883848'
-</span><span class='line'>2015年 10月  3日 土曜日 23:50:48 JST</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Macの場合であれば、Homebrewで<code>coreutils</code>をインストールしてあれば以下を実行するだけ
-(以下のような形でフォーマットの設定が必要ですが・・・)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ gdate --date '@1443883848' +'%Y/%m/%d %H:%M'
-</span><span class='line'>2015/10/03 23:50</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ログ解析用のバッチにこのコマンドを仕掛ければ簡単に使えそうですね</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2014,6 +2028,10 @@ rails配下にあるgemspecファイルに目を通しておけば、インス�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/30/walkman-playlist-converter/">GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
       </li>
     
@@ -2029,15 +2047,11 @@ rails配下にあるgemspecファイルに目を通しておけば、インス�
         <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(10)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 133.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
 </section
 
 
@@ -2051,7 +2065,7 @@ rails配下にあるgemspecファイルに目を通しておけば、インス�
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - kurobara -
+  Copyright &copy; 2016 - kurobara -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

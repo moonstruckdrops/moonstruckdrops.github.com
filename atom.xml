@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2015-12-30T15:21:20+09:00</updated>
+  <updated>2016-02-07T01:31:18+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,57 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[sshでX11 Forwardingをsudoコマンド時に実施する方法]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2016/02/07/sudo-and-x-and-ssh/"/>
+    <updated>2016-02-07T01:11:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2016/02/07/sudo-and-x-and-ssh</id>
+    <content type="html"><![CDATA[<h3>あったこと</h3>
+
+<hr />
+
+<p>表題のようにsshでX11 Forwardingでコマンドを実行したところ<br/>
+下記のようなエラーになった</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ssh -XY -l hoge xxx.xxx.xxx.xxx
+</span><span class='line'>$ sudo virt-manager
+</span><span class='line'>** (virt-manager:3166): WARNING **: Could not open X display
+</span><span class='line'>X11 connection rejected because of wrong authentication.
+</span><span class='line'>X11 connection rejected because of wrong authentication.
+</span><span class='line'>(virt-manager:3166): Gtk-CRITICAL **: gtk_settings_get_for_screen: assertion 'GDK_IS_SCREEN (screen)' failed
+</span><span class='line'>(virt-manager:3166): Gtk-CRITICAL **: _gtk_settings_get_style_cascade: assertion 'GTK_IS_SETTINGS (settings)' failed</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どうやら認可が正しくできていない模様<br/>
+(GTKのSCREEN系のエラーっぽく見えるところが、ややこしさに拍車かけてると思う・・・)</p>
+
+<h3>解決案</h3>
+
+<hr />
+
+<p>sudoコマンドを実行する際、Xauthorityを読み込むようにして実行する<br/>
+(下記では、念の為xauthをインストールしている)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ssh -XY -l hoge xxx.xxx.xxx.xxx
+</span><span class='line'>$ sudo yum install xorg-x11-xauth
+</span><span class='line'>$ sudo  XAUTHORITY=~/.Xauthority virt-manager</span></code></pre></td></tr></table></div></figure>
+
+
+<p>強引に認可させているので、セキュリティ的に果たしてこれでいいのかという疑問は残りますね<br/>
+何れにせよ、ローカルネットワーク内で実行するだけなのでこれでいいかなと。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[GroovyでWALKMAN用のプレイリストコンバーターを作成した]]></title>
@@ -3134,41 +3185,6 @@ Herokuではこのタスクが必要なようです。</p>
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Octopressでの画像の表示]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/01/28/octopress-picture/"/>
-    <updated>2015-01-28T00:55:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/01/28/octopress-picture</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>常々、画像ファイルってどう表示するのだっけ？と思っていたのでやってみた感じ</p>
-
-<h3>ファイルの格納先</h3>
-
-<hr />
-
-<p><code>octopress/source/images</code>ディレクトリに画像ファイルを格納する</p>
-
-<p>themeで表示している画像が最初から格納されているので、ビビらず画像ファイルを格納すること</p>
-
-<h3>指定方法</h3>
-
-<hr />
-
-<p><a href="http://octopress.org/docs/plugins/image-tag/">公式</a>を参照すればできる模様</p>
-
-<p>そのため前述の格納先を相対URLで指定すると、以下の形になる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>![hoge](/images/hoge.jpg)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こんな感じでやると画像を表示できる</p>
 ]]></content>
   </entry>
   

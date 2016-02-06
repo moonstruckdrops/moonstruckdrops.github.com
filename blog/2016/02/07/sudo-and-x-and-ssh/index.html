@@ -5,14 +5,21 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>iTerm2のMetaキーを変更する - kurobaraのブログ</title>
+  <title>sshでX11 Forwardingをsudoコマンド時に実施する方法 - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに MetaキーはEmacsライクのように使いたい人です。
-変更と書けば物凄く大げさな内容です。 変更方法 iTerm2の環境設定で変更します。 Profiles
-Left option key acts asで+Escを選択
-Right option key acts asで+Escを選択 &hellip;">
+  <meta name="description" content="あったこと 表題のようにsshでX11 Forwardingでコマンドを実行したところ
+下記のようなエラーになった 1
+2
+3
+4
+5
+6
+7
+$ ssh -XY -l hoge xxx.xxx.xxx.xxx
+$ sudo virt-manager
+** (virt-manager:3166 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +28,7 @@ Right option key acts asで+Escを選択 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2016/02/07/sudo-and-x-and-ssh/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +84,7 @@ Right option key acts asで+Escを選択 &hellip;">
   
   <header>
     
-      <h1 class="entry-title">iTerm2のMetaキーを変更する</h1>
+      <h1 class="entry-title">sshでX11 Forwardingをsudoコマンド時に実施する方法</h1>
     
     
       <p class="meta">
@@ -93,51 +100,56 @@ Right option key acts asで+Escを選択 &hellip;">
   
 
 
-<time datetime="2013-08-25T13:11:00+09:00" pubdate data-updated="true">Aug 25<span>th</span>, 2013</time>
+<time datetime="2016-02-07T01:11:00+09:00" pubdate data-updated="true">Feb 7<span>th</span>, 2016</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h3>はじめに</h3>
+<div class="entry-content"><h3>あったこと</h3>
 
 <hr />
 
-<p>MetaキーはEmacsライクのように使いたい人です。<br/>
-変更と書けば物凄く大げさな内容です。</p>
+<p>表題のようにsshでX11 Forwardingでコマンドを実行したところ<br/>
+下記のようなエラーになった</p>
 
-<h3>変更方法</h3>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ssh -XY -l hoge xxx.xxx.xxx.xxx
+</span><span class='line'>$ sudo virt-manager
+</span><span class='line'>** (virt-manager:3166): WARNING **: Could not open X display
+</span><span class='line'>X11 connection rejected because of wrong authentication.
+</span><span class='line'>X11 connection rejected because of wrong authentication.
+</span><span class='line'>(virt-manager:3166): Gtk-CRITICAL **: gtk_settings_get_for_screen: assertion 'GDK_IS_SCREEN (screen)' failed
+</span><span class='line'>(virt-manager:3166): Gtk-CRITICAL **: _gtk_settings_get_style_cascade: assertion 'GTK_IS_SETTINGS (settings)' failed</span></code></pre></td></tr></table></div></figure>
+
+
+<p>どうやら認可が正しくできていない模様<br/>
+(GTKのSCREEN系のエラーっぽく見えるところが、ややこしさに拍車かけてると思う・・・)</p>
+
+<h3>解決案</h3>
 
 <hr />
 
-<p>iTerm2の環境設定で変更します。</p>
+<p>sudoコマンドを実行する際、Xauthorityを読み込むようにして実行する<br/>
+(下記では、念の為xauthをインストールしている)</p>
 
-<ol>
-<li>Profiles</li>
-<li>Left option key acts asで+Escを選択</li>
-<li>Right option key acts asで+Escを選択</li>
-<li>閉じる</li>
-</ol>
-
-
-<p>これだけ。<br/>
-これで、optionキーがMetaキーとして動作します。</p>
-
-<h3>他の方法は？</h3>
-
-<hr />
-
-<p>方法としては幾らでもあって思いつくだけでもこんだけですね。</p>
-
-<ol>
-<li>Keyremap4macbookを使って変更する</li>
-<li>inputrcファイルを作成する</li>
-</ol>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ssh -XY -l hoge xxx.xxx.xxx.xxx
+</span><span class='line'>$ sudo yum install xorg-x11-xauth
+</span><span class='line'>$ sudo  XAUTHORITY=~/.Xauthority virt-manager</span></code></pre></td></tr></table></div></figure>
 
 
-<p>神保町でお安くOreiiy本(入門bash)をゲットしたので<br/>
-ちょっと気になることとかやってるうちに小ネタが出ましたw</p>
+<p>強引に認可させているので、セキュリティ的に果たしてこれでいいのかという疑問は残りますね<br/>
+何れにせよ、ローカルネットワーク内で実行するだけなのでこれでいいかなと。</p>
 </div>
 
 
@@ -160,12 +172,12 @@ Right option key acts asで+Escを選択 &hellip;">
   
 
 
-<time datetime="2013-08-25T13:11:00+09:00" pubdate data-updated="true">Aug 25<span>th</span>, 2013</time>
+<time datetime="2016-02-07T01:11:00+09:00" pubdate data-updated="true">Feb 7<span>th</span>, 2016</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/mac/'>Mac</a>
+    <a class='category' href='/blog/categories/linux/'>Linux</a>
   
 </span>
 
@@ -174,7 +186,7 @@ Right option key acts asで+Escを選択 &hellip;">
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/08/25/iterm-meta-key/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2016/02/07/sudo-and-x-and-ssh/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2016/02/07/sudo-and-x-and-ssh/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -187,10 +199,8 @@ Right option key acts asで+Escを選択 &hellip;">
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/22/ssh-config-setting/" title="Previous Post: SSHで複数の鍵を管理する">&laquo; SSHで複数の鍵を管理する</a>
+        <a class="basic-alignment left" href="/blog/2015/12/30/walkman-playlist-converter/" title="Previous Post: GroovyでWALKMAN用のプレイリストコンバーターを作成した">&laquo; GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/09/08/retire-sier/" title="Next Post: SIerを退職しました">SIerを退職しました &raquo;</a>
       
     </p>
   </footer>
