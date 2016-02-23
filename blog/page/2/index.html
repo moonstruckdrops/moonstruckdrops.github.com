@@ -9,9 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに とあるログファイルを解析する必要があったわけなのですが
-以下の状況のようなファイルでした 中途半端にDateTimeが出力されている
-但し、unixtimpstampであれば確実に出力されている なので、正確に発生日時を調べる必要が出てきました 変換コマンド Linuxの場合であれば、 &hellip;">
+  <meta name="description" content="はじめに 緯度と経度はわかるものの、住所がわからなくて困りまったことがありました。
+特にGoogleMapのI/Fからは住所が導き出せなったので、ほとほと困り果てました。
+ふと、その時ドキュメントを覗いたときに逆Geocodingができる記述があったのでやってみました。 リクエストパラメータ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,120 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/10/16/reverse-geocoding/">GoogleMapで逆Geocodingをしたい</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-16T11:08:00+09:00" pubdate data-updated="true">Oct 16<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>緯度と経度はわかるものの、住所がわからなくて困りまったことがありました。<br/>
+特にGoogleMapのI/Fからは住所が導き出せなったので、ほとほと困り果てました。<br/>
+ふと、その時ドキュメントを覗いたときに逆Geocodingができる記述があったのでやってみました。</p>
+
+<h3>リクエストパラメータ</h3>
+
+<hr />
+
+<p>以下の表のように設定する</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">パラメータ </th>
+<th align="left"> 説明 </th>
+<th align="left"> 指定方法 </th>
+<th align="left"> 必須</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">address</td>
+<td align="left">取得対象の住所</td>
+<td align="left">テキスト</td>
+<td align="left">latlngかどちらかを指定</td>
+</tr>
+<tr>
+<td align="left">latlng</td>
+<td align="left">取得対象の緯度軽度</td>
+<td align="left">テキスト</td>
+<td align="left">addressかどちらかを指定</td>
+</tr>
+<tr>
+<td align="left">sensor</td>
+<td align="left">位置センサーからのリクエストか</td>
+<td align="left">boolean</td>
+<td align="left">必ず指定する</td>
+</tr>
+<tr>
+<td align="left">bounds</td>
+<td align="left">ビューポートの境界ボックス(境界ボックスの南西と北東の角の緯度・経度で指定)</td>
+<td align="left">テキスト</td>
+<td align="left">  </td>
+</tr>
+<tr>
+<td align="left">region</td>
+<td align="left">地域コード(ccTLDの２文字)</td>
+<td align="left">テキスト</td>
+<td align="left">  </td>
+</tr>
+<tr>
+<td align="left">language</td>
+<td align="left">結果取得時の言語</td>
+<td align="left">言語コード</td>
+<td align="left">  </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>boundsは以下のような形で指定する(緯度、経度がそれぞれどっちに向いてるのかを指定すると思えばよい)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>36.798805,-120.498805|136.733332,-130.498805</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>実行する</h3>
+
+<p>以下のようにすることでjsonが返却される</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ curl -v http://maps.google.com/maps/api/geocode/json?latlng=36.798805,%20136.733332&sensor=false |jq .</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1748,120 +1862,6 @@ Herokuではこのタスクが必要なようです。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/02/18/linux-login-check/">Linuxのログイン履歴確認</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-02-18T01:20:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>毎度なんだっけ？ってなって思い出すのが面倒なので、備忘録的にログイン履歴確認方法を記録</p>
-
-<h3>最近ログインしたアカウント一覧</h3>
-
-<hr />
-
-<p>以下のコマンドで確認できる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$last</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果(上に行くほど最新)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root     tty1                          Tue May  6 18:59 - crash  (00:16)
-</span><span class='line'>root     tty1                          Tue May  6 18:58 - 18:59  (00:00)
-</span><span class='line'>reboot   system boot  2.6.32-431.11.2. Tue May  6 17:16 - 21:21  (04:04)</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>ログファイルから確認する</h3>
-
-<hr />
-
-<p>もう少し細かく見る場合はログファイルを確認する<br/>
-バイナリなので中を見たいときはwhoコマンドを使用する</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$who /var/log/wtmp</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果(ログファイルなので、ファイル末尾が新しい)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root     tty1         2014-05-06 18:58
-</span><span class='line'>root     tty1         2014-05-06 18:59
-</span><span class='line'>root     tty1         2014-05-06 19:19</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>各アカウントの最終ログインの一覧</h3>
-
-<hr />
-
-<p>普段利用していないアカウントでログインされていないか確認できる<br/>
-以下のコマンドで確認できる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$lastlog</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果(各アカウントの最終ログインが表示)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ユーザ名         ポート   場所             最近のログイン
-</span><span class='line'>root             tty1                      **一度もログインしていません**
-</span><span class='line'>bin                                        **一度もログインしていません**
-</span><span class='line'>daemon                                     **一度もログインしていません**
-</span><span class='line'>adm                                        **一度もログインしていません**
-</span><span class='line'>lp                                         **一度もログインしていません**
-</span><span class='line'>sync                                       **一度もログインしていません**
-</span><span class='line'>shutdown                                   **一度もログインしていません**</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1883,6 +1883,10 @@ Herokuではこのタスクが必要なようです。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
       </li>
     
@@ -1898,15 +1902,11 @@ Herokuではこのタスクが必要なようです。</p>
         <a href="/blog/2015/12/13/ruby-kaigi/">RubyKaigi3日目に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 133.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
 </section
 
 

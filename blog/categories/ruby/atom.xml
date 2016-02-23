@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2016-02-07T01:31:18+09:00</updated>
+  <updated>2016-02-24T01:34:55+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Railsのリクエストヘッダーを調べる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2016/02/23/rails-mimetype/"/>
+    <updated>2016-02-23T19:30:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2016/02/23/rails-mimetype</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>リクエストヘッダーの中身を見ようとしたときの備忘録<br/>
+ヘッダーを利用してゴニョゴニョしてた時とかに使ってましたｗ</p>
+
+<h3>Railsのリクエストで一覧を取得</h3>
+
+<hr />
+
+<p>requestで来たhederの一覧を調べる場合、以下のコードを<code>before_action</code>に仕込んでおく</p>
+
+<p><code>
+request.headers.sort.map { |k, v| logger.info "#{k}:#{v}" }
+</code></p>
+
+<h3>特定のヘッダーの内容確認</h3>
+
+<hr />
+
+<p><code>HTTP_ACCEPT</code>を見たい場合は、以下のコードを<code>before_action</code>に仕込んでおく<br/>
+(多分このコードはよく使うかも)</p>
+
+<p><code>
+accept = request.headers['HTTP_ACCEPT']
+</code></p>
+
+<h3>利用可能なMIME Typeの確認</h3>
+
+<p>Railsで定義されているMIME Typeを観る場合は以下のコードを利用する<br/>
+以下はjsonに対応したMIME Typeを確認するコード</p>
+
+<p><code>
+Mime::EXTENSION_LOOKUP.each { |m| puts m}
+Mime::Type.lookup_by_extension(:json)
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RubyKaigi3日目に行ってきた]]></title>
@@ -566,152 +611,6 @@ webappの分野ではトップ近くまでなれた<br/>
 <li>メモリを大量に使うけど、消費量をおさえるようにはしたい</li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rails5を使ってみる]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/11/06/edge-rails5/"/>
-    <updated>2015-11-06T00:16:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/11/06/edge-rails5</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>とある要件があり、使用するFramework最近ブログネタに賑わっているRailsでということになった<br/>
-せっかくなので、開発開始&amp;リリースはいつになるのかという噂のRails5を使ってみることにした</p>
-
-<p>開発変更時期にRails5もリリースされているだろうという多少の先を見越す形でもありますがｗ</p>
-
-<h3>準備</h3>
-
-<hr />
-
-<p>どうやら、後方互換とはなんだったのかの勢いで最新っぽいので、以下を準備します。</p>
-
-<ul>
-<li>Ruby2.2.2以降のインストール</li>
-<li>railsのリポジトリをclone</li>
-</ul>
-
-
-<p>なにはともあれ、現時点の最新版だとスッキリした気分ですねw</p>
-
-<p><code>
-$git clone https://github.com/rails/rails.git
-</code></p>
-
-<h3>まずはバージョン情報</h3>
-
-<hr />
-
-<p>昔は<code>railties/bin/rails</code>だったのですが、<code>railties/exe/rails</code>変更になったようです<br/>
-ちょっと焦りましたw</p>
-
-<p><code>``
-$./rails/railties/exe/rails -v
-/usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in</code>require': cannot load such file -- concurrent/map (LoadError)</p>
-
-<pre><code>from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
-from /Users/moonstruckdrops/rails/activesupport/lib/active_support/inflector/inflections.rb:1:in `&lt;top (required)&gt;'
-from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
-from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
-from /Users/moonstruckdrops/rails/activesupport/lib/active_support/inflections.rb:1:in `&lt;top (required)&gt;'
-(省略)
-</code></pre>
-
-<p>```</p>
-
-<p>どうやら、<code>activesupport/activesupport.gemspec</code>を見ると、<br/>
-<code>concurrent-ruby</code>が足りなかったようなので追加します(正式版では無く、alpha版が必要です)</p>
-
-<p><code>
-$gem install concurrent-ruby -v 1.0.0.pre5 --no-ri --no-rdoc
-</code></p>
-
-<p>気を取り直してもう一度実行すると動作します</p>
-
-<p><code>
-$./rails/railties/exe/rails -v
-Rails 5.0.0.alpha
-</code></p>
-
-<h3>プロジェクト生成</h3>
-
-<hr />
-
-<p>せっかくなのでRails-APIオプションを使います<br/>
-(api以外のオプションはお好みで設定してください)</p>
-
-<p><code>
-$./rails/railties/exe/rails new my_app --api -d mysql -T --skip-javascript --skip-test-unit --skip-turbolinks
-</code></p>
-
-<p>が、そのまま実行してもエラーになりますのでGemfileを修正します</p>
-
-<ul>
-<li><code>rails</code>は、cloneしたソースコードになるようにする</li>
-<li><code>rack</code>,<code>arel</code>はgit or cloneしたソースコードになるようにする</li>
-</ul>
-
-
-<p>最終的にGemfileを以下のようにする(コメントのみ削除)</p>
-
-<p>```
-source 'https://rubygems.org'</p>
-
-<p>gem 'rack', path: '../rack'
-gem 'arel', path: '../arel'</p>
-
-<p>gem 'rails', '5.0.0.alpha', path: '../rails'
-gem 'mysql2', '>= 0.3.18', '&lt; 0.5'</p>
-
-<h1>gem 'bcrypt', '~> 3.1.7'</h1>
-
-<h1>gem 'unicorn'</h1>
-
-<h1>gem 'capistrano-rails', group: :development</h1>
-
-<p>gem 'active_model_serializers', '~> 0.10.0.rc2'</p>
-
-<h1>gem 'rack-cors'</h1>
-
-<p>group :development, :test do
-  gem 'byebug'
-end</p>
-
-<p>group :development do
-  gem 'spring'
-end</p>
-
-<p>gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-```</p>
-
-<h3>起動する</h3>
-
-<hr />
-
-<p>ここは普段どおりにrackで起動します
-rails</p>
-
-<p><code>
-$cd my_app
-$bin/rails s
-=&gt; Booting WEBrick
-=&gt; Rails 5.0.0.alpha application starting in development on http://localhost:3000
-=&gt; Run `rails server -h` for more startup options
-=&gt; Ctrl-C to shutdown server
-[2015-11-06 00:00:05] INFO  WEBrick 1.3.1
-[2015-11-06 00:00:05] INFO  ruby 2.2.2 (2015-04-13) [x86_64-darwin14]
-[2015-11-06 00:00:05] INFO  WEBrick::HTTPServer#start: pid=14583 port=3000
-</code></p>
-
-<h3>ポイント</h3>
-
-<hr />
-
-<p>特に挙げることもないですが、
-rails配下にあるgemspecファイルに目を通しておけば、インストールや起動に必須なgemがわかるので問題解決が早くなるということぐらいでしょうか</p>
 ]]></content>
   </entry>
   

@@ -9,9 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="旧ブログから移行しますよっと。 正直なところ、旧ブログは記事を書くのが大変でした。
-マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。
-旧ブログの記事はおいおい引っ越すことにします。 という訳で、Octpressの使い方メモを書いておきます。( &hellip;">
+  <meta name="description" content="Emacsでmarkdown-modeを使用してみます。
+markdownの編集で使えるモードで結構便利なので紹介してみます。 インストール Emacsのパッケージインストーラからインストールをします。
+以下を実行します。 1
+M-x package-list-packages markdown- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,171 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/24/markdown-mode/">Emacsでmarkdown-modeを使用する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-24T00:38:00+09:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Emacsでmarkdown-modeを使用してみます。<br/>
+markdownの編集で使えるモードで結構便利なので紹介してみます。</p>
+
+<h4>インストール</h4>
+
+<hr />
+
+<p>Emacsのパッケージインストーラからインストールをします。<br/>
+以下を実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>M-x package-list-packages</span></code></pre></td></tr></table></div></figure>
+
+
+<p>markdown-modeを選択してインストールを実施します。</p>
+
+<p>他にmarkdownコマンドが使用できるようにする必要がありますので、合わせてインストールします。<br/>
+MacOSXだとHomebrewを使用すれば一発でインストール出来ます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$brew install markdown</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>設定</h4>
+
+<hr />
+
+<ul>
+<li>markdown-modeを使用できるように「.emacs.d/init.el」に以下を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>markdown-modeで使用できる拡張子を追加</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上の設定では、.markdownと付くファイルは、markdown-modeを使用する設定です。<br/>
+他に使用したいmarkdown-modeを使用したい拡張子があれば、同じようにして追加します。(下は.txtと付くファイルをmarkdown-modeで開きます)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq auto-mode-alist (cons '("\\.txt" . markdown-mode) auto-mode-alist))</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>エラー対処</h4>
+
+<hr />
+
+<p>プレビューを実行しようとすると、以下のようなエラーが発生します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/bin/bash: markdown: command not found</span></code></pre></td></tr></table></div></figure>
+
+
+<p>原因は、以下の２点が考えられます。</p>
+
+<ol>
+<li>markdownコマンドがインストールされていない</li>
+<li>Emacsが認識しているパスと環境変数のパスが異なる</li>
+</ol>
+
+
+<p>1に関しては、markdownコマンドをインストールをすれば解決します。<br/>
+2に関してですが、以下のようにしてEmacs側にパスを通してやれば解決できます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(dolist (dir (list
+</span><span class='line'>              "/sbin"
+</span><span class='line'>              "/usr/sbin"
+</span><span class='line'>              "/bin"
+</span><span class='line'>              "/usr/bin"
+</span><span class='line'>              "/opt/local/bin"
+</span><span class='line'>              "/sw/bin"
+</span><span class='line'>              "/usr/local/bin"
+</span><span class='line'>              (expand-file-name "~/bin")
+</span><span class='line'>              (expand-file-name "~/.emacs.d/bin")
+</span><span class='line'>              ))
+</span><span class='line'> (when (and (file-exists-p dir) (not (member dir exec-path)))
+</span><span class='line'>   (setenv "PATH" (concat dir ":" (getenv "PATH")))
+</span><span class='line'>   (setq exec-path (append (list dir) exec-path))))</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>プレビュー</h4>
+
+<hr />
+
+<ul>
+<li><em>markdown-output</em>バッファでプレビューを確認する</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c m</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>ブラウザでプレビューを確認する(一時ファイルを作成します)</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>C-c C-c v</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://jblevins.org/projects/markdown-mode/">公式</a>にその他の使用方法が掲載されていますので、その他の機能はそちらを参照してください。</p>
+
+<p>ブラウザでプレビューしていて、かつOctpress用の記事を編集する場合、注意してください。</p>
+
+<p>そのままデプロイするとhtmlファイルまでアップロードされてしまうので、２重投稿になるので気をつけてください。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -711,6 +877,10 @@ p &#8216;Hello!!&#8217;<br/>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
       </li>
     
@@ -726,15 +896,11 @@ p &#8216;Hello!!&#8217;<br/>
         <a href="/blog/2015/12/13/ruby-kaigi/">RubyKaigi3日目に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 133.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
 </section
 
 

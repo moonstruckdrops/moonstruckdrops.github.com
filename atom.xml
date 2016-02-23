@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2016-02-07T01:31:18+09:00</updated>
+  <updated>2016-02-24T01:34:15+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,54 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Railsのリクエストヘッダーを調べる]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2016/02/23/rails-mimetype/"/>
+    <updated>2016-02-23T19:30:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2016/02/23/rails-mimetype</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>リクエストヘッダーの中身を見ようとしたときの備忘録<br/>
+ヘッダーを利用してゴニョゴニョしてた時とかに使ってましたｗ</p>
+
+<h3>Railsのリクエストで一覧を取得</h3>
+
+<hr />
+
+<p>requestで来たhederの一覧を調べる場合、以下のコードを<code>before_action</code>に仕込んでおく</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>request.headers.sort.map { |k, v| logger.info "#{k}:#{v}" }</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>特定のヘッダーの内容確認</h3>
+
+<hr />
+
+<p><code>HTTP_ACCEPT</code>を見たい場合は、以下のコードを<code>before_action</code>に仕込んでおく<br/>
+(多分このコードはよく使うかも)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>accept = request.headers['HTTP_ACCEPT']</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>利用可能なMIME Typeの確認</h3>
+
+<p>Railsで定義されているMIME Typeを観る場合は以下のコードを利用する<br/>
+以下はjsonに対応したMIME Typeを確認するコード</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Mime::EXTENSION_LOOKUP.each { |m| puts m}
+</span><span class='line'>Mime::Type.lookup_by_extension(:json)</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[sshでX11 Forwardingをsudoコマンド時に実施する方法]]></title>
@@ -3098,93 +3146,6 @@ Herokuではこのタスクが必要なようです。</p>
 
 <p># モバイル向けAPIの場合、ユーザー体験に直結するので仕様として予め考えておく(モバイル向けの場合、APIの停止はトレンドを見つつ行うこと)
 # アプリのアップデートを促すようにしておく(強制アップデートは好まれないが、使えなくなるよりも遥かにマシ)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Linuxのログイン履歴確認]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/02/18/linux-login-check/"/>
-    <updated>2015-02-18T01:20:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/02/18/linux-login-check</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>毎度なんだっけ？ってなって思い出すのが面倒なので、備忘録的にログイン履歴確認方法を記録</p>
-
-<h3>最近ログインしたアカウント一覧</h3>
-
-<hr />
-
-<p>以下のコマンドで確認できる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$last</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果(上に行くほど最新)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root     tty1                          Tue May  6 18:59 - crash  (00:16)
-</span><span class='line'>root     tty1                          Tue May  6 18:58 - 18:59  (00:00)
-</span><span class='line'>reboot   system boot  2.6.32-431.11.2. Tue May  6 17:16 - 21:21  (04:04)</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>ログファイルから確認する</h3>
-
-<hr />
-
-<p>もう少し細かく見る場合はログファイルを確認する<br/>
-バイナリなので中を見たいときはwhoコマンドを使用する</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$who /var/log/wtmp</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果(ログファイルなので、ファイル末尾が新しい)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root     tty1         2014-05-06 18:58
-</span><span class='line'>root     tty1         2014-05-06 18:59
-</span><span class='line'>root     tty1         2014-05-06 19:19</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>各アカウントの最終ログインの一覧</h3>
-
-<hr />
-
-<p>普段利用していないアカウントでログインされていないか確認できる<br/>
-以下のコマンドで確認できる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$lastlog</span></code></pre></td></tr></table></div></figure>
-
-
-<p>実行結果(各アカウントの最終ログインが表示)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ユーザ名         ポート   場所             最近のログイン
-</span><span class='line'>root             tty1                      **一度もログインしていません**
-</span><span class='line'>bin                                        **一度もログインしていません**
-</span><span class='line'>daemon                                     **一度もログインしていません**
-</span><span class='line'>adm                                        **一度もログインしていません**
-</span><span class='line'>lp                                         **一度もログインしていません**
-</span><span class='line'>sync                                       **一度もログインしていません**
-</span><span class='line'>shutdown                                   **一度もログインしていません**</span></code></pre></td></tr></table></div></figure>
-
-
-
 ]]></content>
   </entry>
   

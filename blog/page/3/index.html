@@ -9,7 +9,11 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 常々、画像ファイルってどう表示するのだっけ？と思っていたのでやってみた感じ ファイルの格納先 octopress/source/imagesディレクトリに画像ファイルを格納する themeで表示している画像が最初から格納されているので、ビビらず画像ファイルを格納すること 指定方法 &hellip;">
+  <meta name="description" content="はじめに 毎度なんだっけ？ってなって思い出すのが面倒なので、備忘録的にログイン履歴確認方法を記録 最近ログインしたアカウント一覧 以下のコマンドで確認できる 1
+$last 実行結果(上に行くほど最新) 1
+2
+3
+root tty1 Tue May 6 18:59 - crash (00:16 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +75,120 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/18/linux-login-check/">Linuxのログイン履歴確認</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-18T01:20:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>毎度なんだっけ？ってなって思い出すのが面倒なので、備忘録的にログイン履歴確認方法を記録</p>
+
+<h3>最近ログインしたアカウント一覧</h3>
+
+<hr />
+
+<p>以下のコマンドで確認できる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$last</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行結果(上に行くほど最新)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root     tty1                          Tue May  6 18:59 - crash  (00:16)
+</span><span class='line'>root     tty1                          Tue May  6 18:58 - 18:59  (00:00)
+</span><span class='line'>reboot   system boot  2.6.32-431.11.2. Tue May  6 17:16 - 21:21  (04:04)</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ログファイルから確認する</h3>
+
+<hr />
+
+<p>もう少し細かく見る場合はログファイルを確認する<br/>
+バイナリなので中を見たいときはwhoコマンドを使用する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$who /var/log/wtmp</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行結果(ログファイルなので、ファイル末尾が新しい)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root     tty1         2014-05-06 18:58
+</span><span class='line'>root     tty1         2014-05-06 18:59
+</span><span class='line'>root     tty1         2014-05-06 19:19</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>各アカウントの最終ログインの一覧</h3>
+
+<hr />
+
+<p>普段利用していないアカウントでログインされていないか確認できる<br/>
+以下のコマンドで確認できる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$lastlog</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行結果(各アカウントの最終ログインが表示)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ユーザ名         ポート   場所             最近のログイン
+</span><span class='line'>root             tty1                      **一度もログインしていません**
+</span><span class='line'>bin                                        **一度もログインしていません**
+</span><span class='line'>daemon                                     **一度もログインしていません**
+</span><span class='line'>adm                                        **一度もログインしていません**
+</span><span class='line'>lp                                         **一度もログインしていません**
+</span><span class='line'>sync                                       **一度もログインしていません**
+</span><span class='line'>shutdown                                   **一度もログインしていません**</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -802,371 +920,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/23/abc-2014-spring/">Android Bazaar and Conference 2014 Springに行ってきた</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-23T22:12:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>もう殆ど、Androidをやっていない身ですが情報追っかけ程度に参加してきました。</p>
-
-<p>因みに、当日は寝坊してやべぇって言ってたのは内緒w</p>
-
-<p>興味が湧いたセッションは2つぐらいだったので、それさえ聴ければいいかなーぐらいの感覚で行ってきました。</p>
-
-<p>というわけで、当日のメモに加筆修正したものを残します。</p>
-
-<h3>UI/UXデザイントレンド 2014</h3>
-
-<hr />
-
-<h4>デザイントレンド</h4>
-
-<ul>
-<li>質感がわかるようなデザインに変わりつつ</li>
-<li>スキュモーフィズムからフラットデザインへ
-
-<ul>
-<li>装飾を外してシンプルに</li>
-<li>flatvsrealism.com</li>
-</ul>
-</li>
-<li>フラットのほうが意図が伝わりやすい
-
-<ul>
-<li>Androidのデザインガイドラインもフラットなものに変わっている</li>
-<li>Googleも力を入れていることがわかる</li>
-</ul>
-</li>
-</ul>
-
-
-<h4>Androido UI</h4>
-
-<h5>2011年のTrend</h5>
-
-<ul>
-<li>派手</li>
-<li>白いテキスト</li>
-<li>リアルで立体的なアイコン</li>
-<li>この当時はiPhoneが流行っていたので、似たようなデザインになるような感じ</li>
-</ul>
-
-
-<h5>2012年のTrend</h5>
-
-<ul>
-<li>黒やダークな背景</li>
-<li>ダークやマットな色</li>
-<li>水色や白のテキスト</li>
-<li>レイアウトがグリッドスタイル</li>
-<li>ON/OFFボタンなど、ルールが破綻してるところもあった</li>
-<li>ボーダレスUI(ひと目でボタンなのかわからないようなものを指す)</li>
-</ul>
-
-
-<h5>2013年のTrend</h5>
-
-<ul>
-<li>白や明るい背景</li>
-<li>カードスタイル(Googleの殆どのアプリが対応)</li>
-<li>影を入れたりして立体感を出している
-
-<ul>
-<li>(GooglePlayでの)評価が上がりやすい</li>
-<li>platformとの統一感が重要</li>
-</ul>
-</li>
-<li>ボーダレスUIは健在・・・</li>
-<li>シンプルなアイコンやイラスト</li>
-</ul>
-
-
-<h4>2014年(1Q)のTrend</h4>
-
-<ul>
-<li>Yahoo weatheアプリのような感じになりつつある
-
-<ul>
-<li>カードスタイルから変わる</li>
-</ul>
-</li>
-<li>端末のスペックが上がってきたから対応できるようになってきた
-
-<ul>
-<li>写真やグラデーション</li>
-</ul>
-</li>
-</ul>
-
-
-<h4>Android wear</h4>
-
-<ul>
-<li>サークルUI
-
-<ul>
-<li>アイコンが丸くなっているものが増えてきた</li>
-<li>フラットで押したりする領域が分からないという問題への回答かも</li>
-</ul>
-</li>
-<li>より大きな書体</li>
-<li>写真やビジュアルリッチに</li>
-</ul>
-
-
-<h4>webサイトデザインとの違い</h4>
-
-<ul>
-<li>スケーラブル、モニターによっての情報量が違う
-
-<ul>
-<li>スマホ向けは、シンプル・単機能・担当直入な処理デザインに</li>
-</ul>
-</li>
-</ul>
-
-
-<h4>QAメモ</h4>
-
-<ul>
-<li>アプリのUIデザインはどうするの？
-
-<ul>
-<li>ゲームUIとアプリUIとは全く違うので、機能を入れ過ぎないようにする</li>
-</ul>
-</li>
-<li>インタラクションにもデザイナーが関わってやっていくほうがよい
-
-<ul>
-<li>ダサいものになりづらい</li>
-<li>エンジニアも積極的にデザイナーと一緒にやっていく</li>
-</ul>
-</li>
-<li>流行を追っかけるためのデザインサイト
-
-<ul>
-<li>Android niceties</li>
-</ul>
-</li>
-<li>デザインにも事業戦略が必要
-
-<ul>
-<li>古い端末もサポートするのか？など
-
-<ul>
-<li>2.x系はもう切ってもいいかも</li>
-<li>１つで全部の対応は難しいので避けたほうがよい</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>トレンドの変遷(最近のAndroidアプリのトレンドについて)</h3>
-
-<hr />
-
-<h4>はじめに</h4>
-
-<ul>
-<li>セッションはAndroid Pattern Cookbookの解説&amp;補足</li>
-<li><a href="https://play.google.com/store/apps/details?id=yanzm.products.patterncookbook">AndroidPatternCoockbookのデモアプリ</a>あるので確認しながらだと理解進むかも</li>
-<li>最近の開発は、タブレット対応も必須</li>
-</ul>
-
-
-<h4>ダッシュボードデザイン</h4>
-
-<ul>
-<li>メインコンテンツが複数ある場合、機能が視認しやすいので優位</li>
-<li>1回操作挟むのは、ダメじゃね？</li>
-</ul>
-
-
-<h4>タブ</h4>
-
-<ul>
-<li>スワイプでタブ間の行き来ができるように</li>
-<li>各コンテンツのスワイプはできない・・・</li>
-</ul>
-
-
-<h4>NvigationDrawer</h4>
-
-<ul>
-<li>ガイドライン化</li>
-<li>メジャーなものは大体NvigationDrawerを使ってる</li>
-<li>アイコン左、カウンターは右</li>
-</ul>
-
-
-<h4>アプリの世界観も重要</h4>
-
-<ul>
-<li>FeedlyやEvernoteが筆頭
-
-<ul>
-<li>出しすぎなところもあるけど・・・</li>
-</ul>
-</li>
-</ul>
-
-
-<h4>上部にユーザー情報を表示が多い</h4>
-
-<ul>
-<li>アカウント切り替えが難しいタイプも・・・</li>
-</ul>
-
-
-<h4>オリジナリティを出す</h4>
-
-<ul>
-<li>黒はデザインが難しい</li>
-</ul>
-
-
-<h4>アクションバー</h4>
-
-<ul>
-<li>アクションバーとコンテンツの配色は雰囲気になる
-
-<ul>
-<li>白だと明るい、清潔感が出やすい</li>
-<li>白+黒だと引き締まる</li>
-</ul>
-</li>
-<li>アクションバーの背景
-
-<ul>
-<li>下に影をつけるものも多い</li>
-</ul>
-</li>
-<li>フレームワークのアクションバーを使ったほうがよい
-
-<ul>
-<li>アプリの世界観次第で独自路線があるならいいけど。</li>
-</ul>
-</li>
-</ul>
-
-
-<h4>フォント</h4>
-
-<ul>
-<li>ライセンス問題になりやすいので、フォントはアプリに内蔵しないほうがいい</li>
-<li>fontFamilyを使うと改善できる可能性がある
-
-<ul>
-<li>font同士を組み合わせて使うほうといい</li>
-</ul>
-</li>
-</ul>
-
-
-<h4>ヘルプポップアップ</h4>
-
-<ul>
-<li>注目させたい場合、アニメーションを使うと注目させやすい</li>
-</ul>
-
-
-<h4>インストラクション</h4>
-
-<ul>
-<li>「ここを押す」などの表示を入れやすい</li>
-</ul>
-
-
-<h4>チュートリアル</h4>
-
-<ul>
-<li>読む？テキスト量は減らしたほうがいい</li>
-<li>画像で伝え、1行ぐらいがいい</li>
-<li>無くてもいいかの検討も重要</li>
-</ul>
-
-
-<h4>viewpager</h4>
-
-<ul>
-<li>スクロールできるタブ</li>
-<li>タイトルストリップ</li>
-<li>インジケータ
-
-<ul>
-<li>ページの移動でアイコンが変わるもの</li>
-</ul>
-</li>
-<li>ページ切り替えでエフェクト</li>
-</ul>
-
-
-<h4>タブレット対応</h4>
-
-<ul>
-<li>スケールアップは微妙な対応
-
-<ul>
-<li>データ量が無ければ、それでもいいかも</li>
-<li>画像入れるなりで、余白を減らす</li>
-</ul>
-</li>
-<li>macroreflow
-
-<ul>
-<li>グリッドの並び替え
-
-<ul>
-<li>数も重要になる</li>
-</ul>
-</li>
-<li>スマホはリストで対応してやるといい</li>
-</ul>
-</li>
-<li>master/detailパターン
-
-<ul>
-<li>gmailアプリとかgoogle playアプリ</li>
-</ul>
-</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1188,6 +941,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
       </li>
     
@@ -1203,15 +960,11 @@
         <a href="/blog/2015/12/13/ruby-kaigi/">RubyKaigi3日目に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/12/ruby-kaigi/">RubyKaigi2日目に行ってきた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 127.0%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 106.0%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 103.0%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 103.0%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 115.0%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 103.0%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 112.0%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 103.0%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 103.0%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 103.0%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 103.0%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 103.0%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 103.0%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 121.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 103.0%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 133.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 118.0%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 118.0%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 103.0%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 103.0%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(20)</a> <a href='/blog/categories/shellscript' style='font-size: 103.0%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 103.0%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 124.0%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
 </section
 
 
