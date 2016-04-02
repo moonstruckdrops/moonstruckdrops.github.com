@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2016-02-24T01:34:15+09:00</updated>
+  <updated>2016-04-02T22:36:52+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,336 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Kotlin 1.0リリース記念勉強会 in 京都に行ってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2016/04/02/kotlin-study-for-kansai/"/>
+    <updated>2016-04-02T19:30:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2016/04/02/kotlin-study-for-kansai</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>界隈の情報を収集しておきたかったので行ってきました</p>
+
+<p>結論的なところを言ってしまうと、<br/>
+もうプロダクトに放り込んでも良さそうという印象でした<br/>
+(kobaltやKotolin for JSのようなエコシステムはまだまだですが・・・)</p>
+
+<p>とはいえ、多少は混ぜるな危険(nullとか)もあるようなので<br/>
+<strong>ビジネスロジック</strong>や<strong>データクラス</strong>(所謂JavaBeanとか)からやり進めたほうがいいかなという感覚です<br/>
+(swiftでobj-C混ぜて大変なことになったのは、大体一年前の話w)</p>
+
+<p>AndroidだとActivityとかコアなところをやるのではなくロジック周りからかな<br/>
+# 新規に作る場合、その限りではない</p>
+
+<p>JetBrainsさん、<a href="http://blog.jetbrains.com/kotlin/2016/03/kotlins-android-roadmap/">ロードマップ</a>出すぐらいに本気！！<br/>
+(大したことでは無いが唯一の懸念としてあるとすれば、Androidに限ればGoogle本家のサポートでは無いというところぐらいかな)</p>
+
+<h3>SIerアーキテクト視点でみたKotlinの紹介</h3>
+
+<hr />
+
+<p><strong>期待</strong></p>
+
+<ul>
+<li>新しく覚えることを少なくできる</li>
+<li>一番期待しているのは後方互換性(コンパイラは古いバイナリを使える)</li>
+</ul>
+
+
+<p><strong>機能</strong></p>
+
+<ul>
+<li>NullSafe(no-null type / nullable type)
+
+<ul>
+<li>言語レベルでnull safeサポート</li>
+<li>Java8のOptionalは使い勝手がよくなかった(バッドコードが生まれやすかった)</li>
+</ul>
+</li>
+<li>Dataクラス
+
+<ul>
+<li>valueオブジェクトとして使ったほうがよい</li>
+</ul>
+</li>
+<li>smartcast
+
+<ul>
+<li>ソースの文脈で、判断してくれる</li>
+<li>型分岐で処理するのがやりやすい(instanceof &amp; キャストしなくていい)</li>
+</ul>
+</li>
+<li>extension
+
+<ul>
+<li>既存クラスを拡張することが可能
+
+<ul>
+<li>swiftとだいたい同じ</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>delegation
+
+<ul>
+<li>インターフェースだけ可能</li>
+<li>移譲プロパティ
+
+<ul>
+<li>遅延評価とか可能</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>演算子のオーバーロード
+
+<ul>
+<li>BigDecimapを演算子で計算可能</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>まとめ</strong></p>
+
+<ul>
+<li>実用的で使いやすい</li>
+<li>後方互換性がある(サポートすることを名言している)</li>
+<li>webで勉強できる</li>
+</ul>
+
+
+<h3>kotilinはじめました</h3>
+
+<hr />
+
+<ul>
+<li>scalaとかswiftやってれば似ているのでやりやすい</li>
+<li>scalaのoptionalとkotolinのnull safeは似ているようで微妙に違う</li>
+<li>scalaからbetter javaを抜き出してシュリンクした感じ</li>
+<li>言語仕様が少ないので覚えやすい</li>
+<li>scalaの入り口にはなりやすい(基本構文が似ていることがいい)</li>
+<li>swiftっぽい感(構文似ているけど、違うことはそれなりにある)</li>
+<li><code>?:</code>はエルビス演算子(scalaのgetOrElse)って言うんだよ！</li>
+</ul>
+
+
+<h3>kotlinとjavaee</h3>
+
+<hr />
+
+<ul>
+<li>インジェクションがちょっと面倒そう(明示的に)</li>
+<li>none null型にはcdiで注入するのが面倒
+
+<ul>
+<li>コンストラクタで初期化するとか</li>
+<li>lateinit修飾子をつけるとか工夫が必要</li>
+</ul>
+</li>
+<li>JAX-RSはjavaのコードをそのままで
+
+<ul>
+<li>継承するためにopenアノテーション必要</li>
+</ul>
+</li>
+<li>JPA
+
+<ul>
+<li>static fieldはcompanionオブジェクトにする(static backing field)</li>
+</ul>
+</li>
+<li>混ぜるな危険はあんまり無さそう
+
+<ul>
+<li>どう書くかというのは悩むことは非常に多いかも</li>
+</ul>
+</li>
+<li>少しずつkotolinに置換は現実的かも</li>
+<li>古いドキュメントが多いので注意</li>
+</ul>
+
+
+<h3>springboot + kotlin</h3>
+
+<hr />
+
+<ul>
+<li>springbootでkotlinが使えるようになった模様</li>
+<li>DIはlateinit使え！</li>
+<li>JRebel(ホットスポットVMかな)
+
+<ul>
+<li>問題無く動く</li>
+</ul>
+</li>
+<li>Spring AOP
+
+<ul>
+<li>finalになっているのでopenにすることが必要</li>
+<li>@Beanはfunc hoge() = &#8220;hoge&#8221;でかけるとおもいきやopen</li>
+</ul>
+</li>
+<li>getter/setter書かなくてよいのですっきり</li>
+<li>none null対策にはいい
+
+<ul>
+<li>@NonNullアノテーションは書かないやつでてくるので、none nullを強制できる</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>kotlinとモダンライブラリを使ってアプリを作る</h3>
+
+<hr />
+
+<ul>
+<li>dagger2と相性良さそう
+
+<ul>
+<li>そこそこ記述量が減ってる</li>
+<li>登壇者もActivity書いたりやcontextの引き回しは気になる模様</li>
+</ul>
+</li>
+<li>databinding
+
+<ul>
+<li>プロパティクラス使えばいい</li>
+<li>java同様に普通に使える</li>
+<li>lazyやnone null、delegateでデータ作らないと表示されないかも</li>
+</ul>
+</li>
+<li>property observer
+
+<ul>
+<li>変更監視可能なプロパティ</li>
+<li>ListViewとかで有効
+
+<ul>
+<li>データが更新される</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>binding adapter
+
+<ul>
+<li>JvmStaticアノテーションでstaicなメソッドになる</li>
+</ul>
+</li>
+<li>value converter
+
+<ul>
+<li>kotolinでは使えなかった模様</li>
+<li>javaで書くしかない</li>
+</ul>
+</li>
+<li>JetBrainのankoというライブラリが素敵
+
+<ul>
+<li>context, serviceとかに便利拡張がある</li>
+<li>dslはデータバインディングと組み合わせは辛い(相性があまり良くない模様)</li>
+</ul>
+</li>
+<li>ハマりどころあるものの大体使える
+
+<ul>
+<li>Javaのライブラリもそのまま使える模様</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Kotlinこんなん出ましたけど</h3>
+
+<hr />
+
+<ul>
+<li>kotlin as JS
+
+<ul>
+<li>JVM側はメジャーリリースで仕様が大体固まった</li>
+<li>JSはもうちょい変更入る</li>
+</ul>
+</li>
+<li>kobalt
+
+<ul>
+<li>gradleライク</li>
+<li>kobaltプロジェクトを参考するといい模様</li>
+<li>ドキュメント生成可能だけど、フォーマット</li>
+</ul>
+</li>
+<li>エコシステムも作ろうとしている模様
+
+<ul>
+<li>Androidだけに注力している訳ではない</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Dataクラスから始めるKotlin / JetBrains行ってきたよ！</h3>
+
+<hr />
+
+<ul>
+<li>groovy柔軟性を引き換えにパフォーマンスと型安全が犠牲</li>
+<li>scalaは別の世界</li>
+<li>kotolinはスムーズ</li>
+<li>lombokプラグインは時々壊れる</li>
+<li>データクラスからの以降がよい</li>
+<li>ロジックに集中して、細かいところを以降していくといい</li>
+<li>java to kotlinはたまに失敗することがある
+
+<ul>
+<li>コンバート後のコンパイルに失敗</li>
+<li>修正過程で勉強になるとポジティブに捉えるといいかも</li>
+</ul>
+</li>
+<li>Jankinsでビルドががが
+
+<ul>
+<li>サブモジュールの.ktが見つからない</li>
+</ul>
+</li>
+<li>突然のillegalstateexception
+
+<ul>
+<li>javaの世界からnullが渡されると起きる</li>
+<li>javaからも使うフィールドはnone nullにするか慎重になる必要</li>
+</ul>
+</li>
+<li>おしいところ
+
+<ul>
+<li>shift + commnad + enterが効かない</li>
+</ul>
+</li>
+<li>ゆるやかに以降できる</li>
+<li>データオブジェクトとかビジネスロジックから手をつけて以降するのがオススメ</li>
+</ul>
+
+
+<h3>攻めるラムダ式禁止おじさん</h3>
+
+<hr />
+
+<ul>
+<li>関数参照を使えば、ラムダ式を消せる</li>
+<li>引数を取らないものもできる</li>
+<li>引数を２つとるものは、かりー化</li>
+<li>メソッド参照</li>
+<li>java的なメソッド参照は使えないけど、かりー化使えば対応可能</li>
+<li>ラムダ式をきちんと使う方向で・・・</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Railsのリクエストヘッダーを調べる]]></title>
@@ -2990,162 +3320,6 @@ Herokuではこのタスクが必要なようです。</p>
 
 
 <p>所謂、餅は餅屋ということですな</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[APIを作る際のAPIバージョンに関するメモ]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/02/18/api-life-cycle/"/>
-    <updated>2015-02-18T23:19:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/02/18/api-life-cycle</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>APIを作るときにどうするか？を開発チーム内で議論したので、備忘録的なメモ</p>
-
-<p>発端となった会話は、こんな感じだったはず</p>
-
-<p>「マイクロアーキテクチャなサービスを作ったときってAPIを作ると思うけど、ライフサイクルって考えてる？」<br/>
-「APIを利用するフロントは更新できるけど、APIは依存されるものが多いから簡単には更新できないよね？」<br/>
-「APIってモバイルアプリからも利用した場合、修正しづらくない？バージョン管理でもするの？」</p>
-
-<h3>APIの種別</h3>
-
-<hr />
-
-<p>以下の３つぐらいになりそう</p>
-
-<ul>
-<li>外部公開向け</li>
-<li>モバイルアプリ向け</li>
-<li>webサービス向け</li>
-</ul>
-
-
-<h3>外部公開向け</h3>
-
-<hr />
-
-<ul>
-<li>API変更の影響が大きい</li>
-<li>ドキュメント更新必須</li>
-<li>利用者が離れるのでドラスティックな変更はできない</li>
-<li>利用者への周知が必須</li>
-</ul>
-
-
-<h3>モバイルアプリ向け</h3>
-
-<hr />
-
-<ul>
-<li>アプリのみが影響を受けるので、API変更における影響は少ない</li>
-<li>アプリバージョンによるので自由にAPI更新ができない</li>
-<li>OSバージョンによってアプリのアップデートができないことが多いので、更新によって使えなくなる可能性有</li>
-<li>更新API対応のアプリであっても、アプリが更新されることは無いと思ったほうがよい</li>
-</ul>
-
-
-<h3>webサービス向け</h3>
-
-<hr />
-
-<ul>
-<li>クライアントもAPIに合わせて最新にできるので、変更しやすい</li>
-<li>キャッシュされたクライアントのコードとのデータ不整合が起きやすい</li>
-<li>キャッシュに振り回される(iOSのwebview等)</li>
-</ul>
-
-
-<h3>バージョニング方式</h3>
-
-<hr />
-
-<p>APIのバージョン管理方式は以下のものが採用される傾向にある</p>
-
-<ol>
-<li>アクセス先URIそのものを大きく変更する</li>
-<li>URIにバージョンを埋め込む</li>
-<li>クエリに使用APIバージョンを入れる</li>
-<li>メディアタイプにバージョンを指定する</li>
-</ol>
-
-
-<p>世間的には、2のパターンが比較的多く採用される傾向</p>
-
-<h3>URIにバージョンを埋め込み方式</h3>
-
-<hr />
-
-<ul>
-<li>「v1」のように「v」をつけてバージョンを明確にすることが多い</li>
-<li>日付やリリースバージョン(ハッシュ等)をバージョンにするAPIもある(twillo等)</li>
-<li>URIに組み込むバージョンは、メジャー番号のみを含める</li>
-<li>APIの修正は、後方互換を保ちつつ対応する</li>
-</ul>
-
-
-<p>バージョニングは以下のセマンティックバージョニング方式を取ることが多い</p>
-
-<ul>
-<li>パッチバージョンは、ソフトウェアのAPIに変更がないバグ修正を行ったときに増える</li>
-<li>マイナーバージョンは後方互換がある機能変更、特定の機能追加のときに増える</li>
-<li>メジャーバージョンは後方互換が無い変更の時に増える</li>
-</ul>
-
-
-<h3>メディアタイプにバージョンを指定する</h3>
-
-<hr />
-
-<ul>
-<li>「Accept: application/vnd.example.v2+json」のような形で規定する</li>
-<li>URIがリソースを表しているので、HTTPの文法に則っている</li>
-<li>「Content-Type」の指定誤りで、サーバ、クライアント側ともにエラーになりやすい傾向</li>
-</ul>
-
-
-<h3>バージョン変更指針</h3>
-
-<hr />
-
-<ul>
-<li>APIは基本変更しないほうがよい</li>
-<li>変更は後方互換を保ちつつ対応できる場合は、マイナーバージョンアップ(可能な限りこちらを選択)</li>
-<li>後方互換が保てない修正の場合はメジャーバージョンアップ</li>
-<li>レスポンスデータ整合性/整理のためであれば、バージョンは上げない(後方互換を維持し続け、ドキュメント整理で対応)</li>
-</ul>
-
-
-<h3>メジャーバージョンアップ指針</h3>
-
-<hr />
-
-<p>後方互換が保てない場合のみ実施し、バージョンアップのルールを整理してから行う</p>
-
-<ul>
-<li>セキュリティ/権限などのAPI使用ルール変更</li>
-<li>認証方式の変更</li>
-<li>乱雑に作った(ルールが無い)APIを使いやすくするための整備</li>
-</ul>
-
-
-<h3>APIの提供終了</h3>
-
-<hr />
-
-<ul>
-<li>API提供終了前に提供終了日時のアナウンスをする(提供終了後、半年ほどは動かしておくこと)</li>
-<li>提供終了までにAPIを利用できなくするブラックアウトテストを数回実施する</li>
-<li>API提供終了の仕様をドキュメントに盛り込んでおく(HTTPのステータスコード410(Gone)を返すなど)</li>
-<li>利用期限をAPI提供開始時に決めておく</li>
-<li>古いAPIを叩いたときに、新APIへのリダイレクトは、混乱を招くので避けたほうがよい</li>
-</ul>
-
-
-<p># モバイル向けAPIの場合、ユーザー体験に直結するので仕様として予め考えておく(モバイル向けの場合、APIの停止はトレンドを見つつ行うこと)
-# アプリのアップデートを促すようにしておく(強制アップデートは好まれないが、使えなくなるよりも遥かにマシ)</p>
 ]]></content>
   </entry>
   

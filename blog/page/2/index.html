@@ -9,9 +9,18 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 緯度と経度はわかるものの、住所がわからなくて困りまったことがありました。
-特にGoogleMapのI/Fからは住所が導き出せなったので、ほとほと困り果てました。
-ふと、その時ドキュメントを覗いたときに逆Geocodingができる記述があったのでやってみました。 リクエストパラメータ &hellip;">
+  <meta name="description" content="はじめに AWSのLamdaを使ったのですが、どうも日本語が文字化けする形の模様
+これをライトに解決したい
+数が多いと使えないですが、少量の文字であれば直接Unicode Escapeする形にする やり方 Pythonの対話側インターフェースでライトに行う 1
+2
+3
+4
+5
+6
+7
+8
+9
+10 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +82,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/10/24/unicode-escape/">Pythonで文字変換</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-24T13:23:00+09:00" pubdate data-updated="true">Oct 24<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>AWSのLamdaを使ったのですが、どうも日本語が文字化けする形の模様<br/>
+これをライトに解決したい<br/>
+数が多いと使えないですが、少量の文字であれば直接Unicode Escapeする形にする</p>
+
+<h3>やり方</h3>
+
+<hr />
+
+<p>Pythonの対話側インターフェースでライトに行う</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$python
+</span><span class='line'>Python 2.7.10 (default, Jul 14 2015, 19:46:27)
+</span><span class='line'>[GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.39)] on darwin
+</span><span class='line'>Type "help", "copyright", "credits" or "license" for more information.
+</span><span class='line'>&gt;&gt;&gt; s =  u'2015年春'
+</span><span class='line'>&gt;&gt;&gt; s.encode('unicode_escape')
+</span><span class='line'>'2015\\u5e74\\u6625'
+</span><span class='line'>&gt;&gt;&gt; unicode('2015年春', 'UTF-8')
+</span><span class='line'>u'2015\u5e74\u6625'
+</span><span class='line'>&gt;&gt;&gt; exit
+</span><span class='line'>Use exit() or Ctrl-D (i.e. EOF) to exit</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ、別にAWS絡みではなくてもライトに使える</p>
+
+<p>逆にデコードする場合、<code>s.decode('unicode-escape')</code>でできる</p>
+
+<p>簡単ですね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1679,189 +1766,6 @@ Herokuではこのタスクが必要なようです。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/02/18/api-life-cycle/">APIを作る際のAPIバージョンに関するメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-02-18T23:19:00+09:00" pubdate data-updated="true">Feb 18<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>APIを作るときにどうするか？を開発チーム内で議論したので、備忘録的なメモ</p>
-
-<p>発端となった会話は、こんな感じだったはず</p>
-
-<p>「マイクロアーキテクチャなサービスを作ったときってAPIを作ると思うけど、ライフサイクルって考えてる？」<br/>
-「APIを利用するフロントは更新できるけど、APIは依存されるものが多いから簡単には更新できないよね？」<br/>
-「APIってモバイルアプリからも利用した場合、修正しづらくない？バージョン管理でもするの？」</p>
-
-<h3>APIの種別</h3>
-
-<hr />
-
-<p>以下の３つぐらいになりそう</p>
-
-<ul>
-<li>外部公開向け</li>
-<li>モバイルアプリ向け</li>
-<li>webサービス向け</li>
-</ul>
-
-
-<h3>外部公開向け</h3>
-
-<hr />
-
-<ul>
-<li>API変更の影響が大きい</li>
-<li>ドキュメント更新必須</li>
-<li>利用者が離れるのでドラスティックな変更はできない</li>
-<li>利用者への周知が必須</li>
-</ul>
-
-
-<h3>モバイルアプリ向け</h3>
-
-<hr />
-
-<ul>
-<li>アプリのみが影響を受けるので、API変更における影響は少ない</li>
-<li>アプリバージョンによるので自由にAPI更新ができない</li>
-<li>OSバージョンによってアプリのアップデートができないことが多いので、更新によって使えなくなる可能性有</li>
-<li>更新API対応のアプリであっても、アプリが更新されることは無いと思ったほうがよい</li>
-</ul>
-
-
-<h3>webサービス向け</h3>
-
-<hr />
-
-<ul>
-<li>クライアントもAPIに合わせて最新にできるので、変更しやすい</li>
-<li>キャッシュされたクライアントのコードとのデータ不整合が起きやすい</li>
-<li>キャッシュに振り回される(iOSのwebview等)</li>
-</ul>
-
-
-<h3>バージョニング方式</h3>
-
-<hr />
-
-<p>APIのバージョン管理方式は以下のものが採用される傾向にある</p>
-
-<ol>
-<li>アクセス先URIそのものを大きく変更する</li>
-<li>URIにバージョンを埋め込む</li>
-<li>クエリに使用APIバージョンを入れる</li>
-<li>メディアタイプにバージョンを指定する</li>
-</ol>
-
-
-<p>世間的には、2のパターンが比較的多く採用される傾向</p>
-
-<h3>URIにバージョンを埋め込み方式</h3>
-
-<hr />
-
-<ul>
-<li>「v1」のように「v」をつけてバージョンを明確にすることが多い</li>
-<li>日付やリリースバージョン(ハッシュ等)をバージョンにするAPIもある(twillo等)</li>
-<li>URIに組み込むバージョンは、メジャー番号のみを含める</li>
-<li>APIの修正は、後方互換を保ちつつ対応する</li>
-</ul>
-
-
-<p>バージョニングは以下のセマンティックバージョニング方式を取ることが多い</p>
-
-<ul>
-<li>パッチバージョンは、ソフトウェアのAPIに変更がないバグ修正を行ったときに増える</li>
-<li>マイナーバージョンは後方互換がある機能変更、特定の機能追加のときに増える</li>
-<li>メジャーバージョンは後方互換が無い変更の時に増える</li>
-</ul>
-
-
-<h3>メディアタイプにバージョンを指定する</h3>
-
-<hr />
-
-<ul>
-<li>「Accept: application/vnd.example.v2+json」のような形で規定する</li>
-<li>URIがリソースを表しているので、HTTPの文法に則っている</li>
-<li>「Content-Type」の指定誤りで、サーバ、クライアント側ともにエラーになりやすい傾向</li>
-</ul>
-
-
-<h3>バージョン変更指針</h3>
-
-<hr />
-
-<ul>
-<li>APIは基本変更しないほうがよい</li>
-<li>変更は後方互換を保ちつつ対応できる場合は、マイナーバージョンアップ(可能な限りこちらを選択)</li>
-<li>後方互換が保てない修正の場合はメジャーバージョンアップ</li>
-<li>レスポンスデータ整合性/整理のためであれば、バージョンは上げない(後方互換を維持し続け、ドキュメント整理で対応)</li>
-</ul>
-
-
-<h3>メジャーバージョンアップ指針</h3>
-
-<hr />
-
-<p>後方互換が保てない場合のみ実施し、バージョンアップのルールを整理してから行う</p>
-
-<ul>
-<li>セキュリティ/権限などのAPI使用ルール変更</li>
-<li>認証方式の変更</li>
-<li>乱雑に作った(ルールが無い)APIを使いやすくするための整備</li>
-</ul>
-
-
-<h3>APIの提供終了</h3>
-
-<hr />
-
-<ul>
-<li>API提供終了前に提供終了日時のアナウンスをする(提供終了後、半年ほどは動かしておくこと)</li>
-<li>提供終了までにAPIを利用できなくするブラックアウトテストを数回実施する</li>
-<li>API提供終了の仕様をドキュメントに盛り込んでおく(HTTPのステータスコード410(Gone)を返すなど)</li>
-<li>利用期限をAPI提供開始時に決めておく</li>
-<li>古いAPIを叩いたときに、新APIへのリダイレクトは、混乱を招くので避けたほうがよい</li>
-</ul>
-
-
-<p># モバイル向けAPIの場合、ユーザー体験に直結するので仕様として予め考えておく(モバイル向けの場合、APIの停止はトレンドを見つつ行うこと)
-# アプリのアップデートを促すようにしておく(強制アップデートは好まれないが、使えなくなるよりも遥かにマシ)</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1883,6 +1787,10 @@ Herokuではこのタスクが必要なようです。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/04/02/kotlin-study-for-kansai/">Kotlin 1.0リリース記念勉強会 in 京都に行ってきた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
       </li>
     
@@ -1898,15 +1806,11 @@ Herokuではこのタスクが必要なようです。</p>
         <a href="/blog/2015/12/20/android-groovy/">AndroidでGroovyを使ってみる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/13/ruby-kaigi/">RubyKaigi3日目に行ってきた</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.85714285714286%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
 </section
 
 

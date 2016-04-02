@@ -1,0 +1,576 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Kotlin 1.0リリース記念勉強会 in 京都に行ってきた - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
+
+  
+  <meta name="description" content="はじめに 界隈の情報を収集しておきたかったので行ってきました 結論的なところを言ってしまうと、
+もうプロダクトに放り込んでも良さそうという印象でした
+(kobaltやKotolin for JSのようなエコシステムはまだまだですが・・・) とはいえ、多少は混ぜるな危険(nullとか) &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2016/04/02/kotlin-study-for-kansai/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <!--
+  <li><a href="/about">About me</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Kotlin 1.0リリース記念勉強会 in 京都に行ってきた</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-04-02T19:30:00+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>界隈の情報を収集しておきたかったので行ってきました</p>
+
+<p>結論的なところを言ってしまうと、<br/>
+もうプロダクトに放り込んでも良さそうという印象でした<br/>
+(kobaltやKotolin for JSのようなエコシステムはまだまだですが・・・)</p>
+
+<p>とはいえ、多少は混ぜるな危険(nullとか)もあるようなので<br/>
+<strong>ビジネスロジック</strong>や<strong>データクラス</strong>(所謂JavaBeanとか)からやり進めたほうがいいかなという感覚です<br/>
+(swiftでobj-C混ぜて大変なことになったのは、大体一年前の話w)</p>
+
+<p>AndroidだとActivityとかコアなところをやるのではなくロジック周りからかな<br/>
+# 新規に作る場合、その限りではない</p>
+
+<p>JetBrainsさん、<a href="http://blog.jetbrains.com/kotlin/2016/03/kotlins-android-roadmap/">ロードマップ</a>出すぐらいに本気！！<br/>
+(大したことでは無いが唯一の懸念としてあるとすれば、Androidに限ればGoogle本家のサポートでは無いというところぐらいかな)</p>
+
+<h3>SIerアーキテクト視点でみたKotlinの紹介</h3>
+
+<hr />
+
+<p><strong>期待</strong></p>
+
+<ul>
+<li>新しく覚えることを少なくできる</li>
+<li>一番期待しているのは後方互換性(コンパイラは古いバイナリを使える)</li>
+</ul>
+
+
+<p><strong>機能</strong></p>
+
+<ul>
+<li>NullSafe(no-null type / nullable type)
+
+<ul>
+<li>言語レベルでnull safeサポート</li>
+<li>Java8のOptionalは使い勝手がよくなかった(バッドコードが生まれやすかった)</li>
+</ul>
+</li>
+<li>Dataクラス
+
+<ul>
+<li>valueオブジェクトとして使ったほうがよい</li>
+</ul>
+</li>
+<li>smartcast
+
+<ul>
+<li>ソースの文脈で、判断してくれる</li>
+<li>型分岐で処理するのがやりやすい(instanceof &amp; キャストしなくていい)</li>
+</ul>
+</li>
+<li>extension
+
+<ul>
+<li>既存クラスを拡張することが可能
+
+<ul>
+<li>swiftとだいたい同じ</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>delegation
+
+<ul>
+<li>インターフェースだけ可能</li>
+<li>移譲プロパティ
+
+<ul>
+<li>遅延評価とか可能</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>演算子のオーバーロード
+
+<ul>
+<li>BigDecimapを演算子で計算可能</li>
+</ul>
+</li>
+</ul>
+
+
+<p><strong>まとめ</strong></p>
+
+<ul>
+<li>実用的で使いやすい</li>
+<li>後方互換性がある(サポートすることを名言している)</li>
+<li>webで勉強できる</li>
+</ul>
+
+
+<h3>kotilinはじめました</h3>
+
+<hr />
+
+<ul>
+<li>scalaとかswiftやってれば似ているのでやりやすい</li>
+<li>scalaのoptionalとkotolinのnull safeは似ているようで微妙に違う</li>
+<li>scalaからbetter javaを抜き出してシュリンクした感じ</li>
+<li>言語仕様が少ないので覚えやすい</li>
+<li>scalaの入り口にはなりやすい(基本構文が似ていることがいい)</li>
+<li>swiftっぽい感(構文似ているけど、違うことはそれなりにある)</li>
+<li><code>?:</code>はエルビス演算子(scalaのgetOrElse)って言うんだよ！</li>
+</ul>
+
+
+<h3>kotlinとjavaee</h3>
+
+<hr />
+
+<ul>
+<li>インジェクションがちょっと面倒そう(明示的に)</li>
+<li>none null型にはcdiで注入するのが面倒
+
+<ul>
+<li>コンストラクタで初期化するとか</li>
+<li>lateinit修飾子をつけるとか工夫が必要</li>
+</ul>
+</li>
+<li>JAX-RSはjavaのコードをそのままで
+
+<ul>
+<li>継承するためにopenアノテーション必要</li>
+</ul>
+</li>
+<li>JPA
+
+<ul>
+<li>static fieldはcompanionオブジェクトにする(static backing field)</li>
+</ul>
+</li>
+<li>混ぜるな危険はあんまり無さそう
+
+<ul>
+<li>どう書くかというのは悩むことは非常に多いかも</li>
+</ul>
+</li>
+<li>少しずつkotolinに置換は現実的かも</li>
+<li>古いドキュメントが多いので注意</li>
+</ul>
+
+
+<h3>springboot + kotlin</h3>
+
+<hr />
+
+<ul>
+<li>springbootでkotlinが使えるようになった模様</li>
+<li>DIはlateinit使え！</li>
+<li>JRebel(ホットスポットVMかな)
+
+<ul>
+<li>問題無く動く</li>
+</ul>
+</li>
+<li>Spring AOP
+
+<ul>
+<li>finalになっているのでopenにすることが必要</li>
+<li>@Beanはfunc hoge() = &#8220;hoge&#8221;でかけるとおもいきやopen</li>
+</ul>
+</li>
+<li>getter/setter書かなくてよいのですっきり</li>
+<li>none null対策にはいい
+
+<ul>
+<li>@NonNullアノテーションは書かないやつでてくるので、none nullを強制できる</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>kotlinとモダンライブラリを使ってアプリを作る</h3>
+
+<hr />
+
+<ul>
+<li>dagger2と相性良さそう
+
+<ul>
+<li>そこそこ記述量が減ってる</li>
+<li>登壇者もActivity書いたりやcontextの引き回しは気になる模様</li>
+</ul>
+</li>
+<li>databinding
+
+<ul>
+<li>プロパティクラス使えばいい</li>
+<li>java同様に普通に使える</li>
+<li>lazyやnone null、delegateでデータ作らないと表示されないかも</li>
+</ul>
+</li>
+<li>property observer
+
+<ul>
+<li>変更監視可能なプロパティ</li>
+<li>ListViewとかで有効
+
+<ul>
+<li>データが更新される</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>binding adapter
+
+<ul>
+<li>JvmStaticアノテーションでstaicなメソッドになる</li>
+</ul>
+</li>
+<li>value converter
+
+<ul>
+<li>kotolinでは使えなかった模様</li>
+<li>javaで書くしかない</li>
+</ul>
+</li>
+<li>JetBrainのankoというライブラリが素敵
+
+<ul>
+<li>context, serviceとかに便利拡張がある</li>
+<li>dslはデータバインディングと組み合わせは辛い(相性があまり良くない模様)</li>
+</ul>
+</li>
+<li>ハマりどころあるものの大体使える
+
+<ul>
+<li>Javaのライブラリもそのまま使える模様</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Kotlinこんなん出ましたけど</h3>
+
+<hr />
+
+<ul>
+<li>kotlin as JS
+
+<ul>
+<li>JVM側はメジャーリリースで仕様が大体固まった</li>
+<li>JSはもうちょい変更入る</li>
+</ul>
+</li>
+<li>kobalt
+
+<ul>
+<li>gradleライク</li>
+<li>kobaltプロジェクトを参考するといい模様</li>
+<li>ドキュメント生成可能だけど、フォーマット</li>
+</ul>
+</li>
+<li>エコシステムも作ろうとしている模様
+
+<ul>
+<li>Androidだけに注力している訳ではない</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Dataクラスから始めるKotlin / JetBrains行ってきたよ！</h3>
+
+<hr />
+
+<ul>
+<li>groovy柔軟性を引き換えにパフォーマンスと型安全が犠牲</li>
+<li>scalaは別の世界</li>
+<li>kotolinはスムーズ</li>
+<li>lombokプラグインは時々壊れる</li>
+<li>データクラスからの以降がよい</li>
+<li>ロジックに集中して、細かいところを以降していくといい</li>
+<li>java to kotlinはたまに失敗することがある
+
+<ul>
+<li>コンバート後のコンパイルに失敗</li>
+<li>修正過程で勉強になるとポジティブに捉えるといいかも</li>
+</ul>
+</li>
+<li>Jankinsでビルドががが
+
+<ul>
+<li>サブモジュールの.ktが見つからない</li>
+</ul>
+</li>
+<li>突然のillegalstateexception
+
+<ul>
+<li>javaの世界からnullが渡されると起きる</li>
+<li>javaからも使うフィールドはnone nullにするか慎重になる必要</li>
+</ul>
+</li>
+<li>おしいところ
+
+<ul>
+<li>shift + commnad + enterが効かない</li>
+</ul>
+</li>
+<li>ゆるやかに以降できる</li>
+<li>データオブジェクトとかビジネスロジックから手をつけて以降するのがオススメ</li>
+</ul>
+
+
+<h3>攻めるラムダ式禁止おじさん</h3>
+
+<hr />
+
+<ul>
+<li>関数参照を使えば、ラムダ式を消せる</li>
+<li>引数を取らないものもできる</li>
+<li>引数を２つとるものは、かりー化</li>
+<li>メソッド参照</li>
+<li>java的なメソッド参照は使えないけど、かりー化使えば対応可能</li>
+<li>ラムダ式をきちんと使う方向で・・・</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-04-02T19:30:00+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2016</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/kotlin/'>Kotlin</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2016/04/02/kotlin-study-for-kansai/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2016/04/02/kotlin-study-for-kansai/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/02/23/rails-mimetype/" title="Previous Post: Railsのリクエストヘッダーを調べる">&laquo; Railsのリクエストヘッダーを調べる</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/04/02/kotlin-study-for-kansai/">Kotlin 1.0リリース記念勉強会 in 京都に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/30/walkman-playlist-converter/">GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/20/android-groovy/">AndroidでGroovyを使ってみる</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.85714285714286%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
