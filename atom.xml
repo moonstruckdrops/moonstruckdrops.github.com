@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2016-04-02T22:36:52+09:00</updated>
+  <updated>2016-06-16T21:46:04+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,91 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[gitのブランチ系コマンドでよく使うもの]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2016/06/16/use-git-branch-command/"/>
+    <updated>2016-06-16T21:20:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2016/06/16/use-git-branch-command</id>
+    <content type="html"><![CDATA[<h3>はじめに</h3>
+
+<hr />
+
+<p>たまになんだっけ？ってなるものがあるのでメモしておく<br/>
+基本的に削除系</p>
+
+<h3>ブランチ作成</h3>
+
+<hr />
+
+<p>普通に作る</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<p>別のやり方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git checkout -b hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ローカルブランチの削除</h3>
+
+<hr />
+
+<p>マージ済みのものを削除</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -d hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マージされていないものを強制削除</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git checkout -D hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>リモートブランチの削除</h3>
+
+<hr />
+
+<p>pushの逆をするだけ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git push origin :hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>マージ済みブランチの探索</h3>
+
+<hr />
+
+<p>こんな感じで難しくない</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -r --list --merged</span></code></pre></td></tr></table></div></figure>
+
+
+<p>オプションを変更するだけで、未マージも見つかる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -r --list --no-merged</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>リモートブランチとの同期</h3>
+
+<hr />
+
+<p>誰かがリモートブランチが削除したとしても、その前にfetchしていたら自分のローカルブランチには残っているので同期をする<br/>
+これは、放置しておくとよく忘れるやつ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git remote prune origin</span></code></pre></td></tr></table></div></figure>
+
+
+<p># ぶっちゃけ、よく忘れる一番最後のだけ書きたかった</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Kotlin 1.0リリース記念勉強会 in 京都に行ってきた]]></title>
@@ -3268,58 +3353,6 @@ Herokuではこのタスクが必要なようです。</p>
 
 
 <p>一度環境さえ準備できれば開発に専念できるようになるので、非常に楽ですね</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[なぜApacheとTomcatを連携させるのか]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/03/17/apache-plus-tomcat/"/>
-    <updated>2015-03-17T00:12:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/03/17/apache-plus-tomcat</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>同僚とApacheとTomcatって何で連携させるんだっけ？<br/>
-という話が出たので備忘録的に記載しておきます</p>
-
-<p>ぶっちゃけ、今更感がすごい内容ですが・・・</p>
-
-<h3>Apache</h3>
-
-<hr />
-
-<p>ざっくり言うと、クライアントのブラウザからアクセスし、サービスを提供するためのWebサーバソフトウェア</p>
-
-<h3>Tomcat</h3>
-
-<hr />
-
-<p>こちらもざっくり言うと、以下のもの</p>
-
-<ul>
-<li>「サーブレット・コンテナ」(Servlet等を動作させるために必要なWebアプリケーションサーバ)</li>
-<li>Servletのインスタンス管理やセッションの管理</li>
-<li>Webサーバ機能有り(主に開発とデバッグ用)</li>
-</ul>
-
-
-<h3>連携理由</h3>
-
-<hr />
-
-<p>開発、デバッグ用途としてWebサーバ機能があるので、問題はないのですが
-そもそもとして、ApacheなどのWebサーバの性能と同等に捌けるかは疑問があったりするところ</p>
-
-<p>なので、以下の処理分担としたほうが効率よく捌けるため連携をさせることが多い</p>
-
-<ul>
-<li>静的コンテンツ(HTMLや画像ファイルなど)の処理はApacheが担当(何故なら、高速でTomcatに比べて高速に処理できるから)</li>
-<li>動的コンテンツに関しての処理をTomcatが担当</li>
-</ul>
-
-
-<p>所謂、餅は餅屋ということですな</p>
 ]]></content>
   </entry>
   

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: git | kurobaraのブログ]]></title>
+  <title><![CDATA[Category: Git | kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2016-04-02T22:36:52+09:00</updated>
+  <updated>2016-06-16T21:46:49+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -14,305 +14,87 @@
 
   
   <entry>
-    <title type="html"><![CDATA[マージが起きたらさっさと解消しようという教訓]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo/"/>
-    <updated>2014-02-18T02:00:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/02/18/git-merge-conflict-memo</id>
+    <title type="html"><![CDATA[gitのブランチ系コマンドでよく使うもの]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2016/06/16/use-git-branch-command/"/>
+    <updated>2016-06-16T21:20:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2016/06/16/use-git-branch-command</id>
     <content type="html"><![CDATA[<h3>はじめに</h3>
 
 <hr />
 
-<p>Gitを使って開発してるのですが・・・</p>
+<p>たまになんだっけ？ってなるものがあるのでメモしておく<br/>
+基本的に削除系</p>
 
-<p>複数人で1つのプロダクト開発を行ってたらコンフリクトは起こることはよく有ります</p>
-
-<p>俗に言うマージコンフリクトですね</p>
-
-<p>今回はそんなマージコンフリクトで起こった事を備忘録的に残します</p>
-
-<h3>まず結論・・・</h3>
+<h3>ブランチ作成</h3>
 
 <hr />
 
-<p>気づいた時点(Github,gitlab,stashとか)で、さっさとコンフリクトは解消しましょう</p>
+<p>普通に作る</p>
 
-<p>後にまとめて行うのは、無謀もいいとこです</p>
-
-<p>1つ2つのコミット差分ならまだしも<br/>
-10個のコミットが積み上げられ、かつその大半がコンフリクト起こすような状況だと直すのに苦労します</p>
-
-<p># 解消に1時間かかりましたorz</p>
-
-<p>なので、さっさと直してしまいましょう(他人の書いたコードまでは責任取れないよw)</p>
-
-<h3>コンフリクト解消時に起こったこと</h3>
-
-<hr />
-
-<p>上記のことだけなら、反省だけで次回からは行わないようにすればいいだけの話です</p>
-
-<p>ですが、コンフリクト解消時に奇妙なことが起こりました</p>
-
-<p>以下のような状態でmasterのコードをブランチにとりこんだ時(実際はもう少しコンフリクト解消することがありました)<br/>
-```
-(master) : (起点) - [コンフリクト有(1)] - [コンフリクト有(2)] - [コンフリクト有(3)] - [ファイル移動] - [コンフリクト有(4)] - [コンフリクト無]</p>
-
-<pre><code>          |  
-</code></pre>
-
-<p>(branch) :   [A] - [B] - [C]
-```
-コンフリクト有(2)のコンフリクトを解消した瞬間に、ブランチの状態(merge/CONFLICT)だけでも、マージの継続をすることが出来なくなりました</p>
-
-<p>このコマンドだけが使えました</p>
-
-<ul>
-<li>continueは受け付け無い</li>
-<li>abortとskipは受け付ける</li>
-</ul>
-
-
-<p>そのため、一度abort→再マージをしたのですが・・・<br/>
-今度は、コンフリクト(3)で同じ現象。。。</p>
-
-<p>諦めてskipをしましたorz<br/>
-そうすると、マージが全てブランチに取り込まれました・・・(ファイル移動は取り込まれてないので別途実施)</p>
-
-<p>こういう恐ろしい事態(マージがうまくいかない)があったので、気をつけようねという自戒と対処結果のメモでしたw</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[gitkeepを作成、及び削除をするshellを作った]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2014/01/18/shell-gitkeep/"/>
-    <updated>2014-01-18T00:02:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2014/01/18/shell-gitkeep</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
-
-<hr />
-
-<p>以下のようなディレクトリ構成のときに.gitkeepを作りたかったのです。</p>
-
-<p>```
-└── test</p>
-
-<pre><code>├── test1
-│   └── test2
-└── test3
-</code></pre>
-
-<p>```</p>
-
-<p>ですが、これを手で一つ一つ用意するのは非常に面倒なわけでして・・・<br/>
-ついカッとなって用意しました。</p>
-
-<p># chefお前のことだ!!<br/>
-# Railsなんかはきっちり用意してくれてるのにね</p>
-
-<h3>コード本体</h3>
-
-<hr />
-
-<p>以下のコードをコピペして適当に実行権を与えたファイルにしてください。</p>
-
-<p>```</p>
-
-<h1>!/bin/bash</h1>
-
-<p>function create() {</p>
-
-<pre><code>dir=$1
-if [ ! -f "${dir}/.gitkeep" ]&amp;&amp;[ ! -z "${dir}" ]; then
-    touch ${dir}/.gitkeep
-    echo  "Create .gitkeep in `pwd`/${dir}"
-fi
-</code></pre>
-
-<p>}</p>
-
-<p>function remove() {</p>
-
-<pre><code>dir=$1
-if [ -f "${dir}/.gitkeep" ]&amp;&amp;[ ! -z "${dir}" ]; then
-    rm ${dir}/.gitkeep
-    echo  "Remove .gitkeep in `pwd`/${dir}"
-fi
-</code></pre>
-
-<p>}</p>
-
-<p>function start() {</p>
-
-<pre><code>command=$1
-for DIR in * ; do
-    if [ -d "${DIR}" ]; then
-        if [ "${command}" = "create" ]; then
-            create $DIR;
-        fi
-        if [ "${command}" = "remove" ]; then
-            remove $DIR;
-        fi
-        (cd "${DIR}"; start $command;)
-    fi
-done
-</code></pre>
-
-<p>}</p>
-
-<p>command=$1
-if [ -z "${command}" ]; then</p>
-
-<pre><code>command="create"
-</code></pre>
-
-<p>fi</p>
-
-<p>if [ "${command}" != "remove" -a "${command}" != "create" ]; then</p>
-
-<pre><code>echo "Usage : ./gitkeep.sh create or ./gitkeep.sh remove"
-exit 1
-</code></pre>
-
-<p>fi</p>
-
-<p>if ! git rev-parse 2> /dev/null; then</p>
-
-<pre><code>echo "Abort!!"
-echo "This directory is not git repository!!"
-exit 1
-</code></pre>
-
-<p>fi</p>
-
-<p>start $command;
-```</p>
-
-<h3>使い方</h3>
-
-<hr />
-
-<p>上記のコードをgittkeep.shとして保存していたと仮定した場合</p>
-
-<p>.gitkeepファイル作成する場合は、以下のコマンド
-<code>
-$sh gitkeep.sh create
+<p><code>
+$ git branch hoge
 </code></p>
 
-<p>.gitkeepファイルを削除する場合は、以下のコマンド
-<code>
-$sh gitkeep.sh remove
-</code></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Octpressで記事を一度公開停止→再公開をしたい場合の方法]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page/"/>
-    <updated>2013-10-19T10:24:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/10/19/fix-octpress-page</id>
-    <content type="html"><![CDATA[<p>何個か前の記事を加筆修正したときの手順をまとめます。<br/>
-但し、このやり方はpush内容を残したくないときのやり方に加えて、<br/>
-ハッシュ値を知ってれば参照できてしまうという点があります。<br/>
-(公開されているページは修正されたものが表示されます)</p>
+<p>別のやり方</p>
 
-<h3>記事の公開停止方法</h3>
+<p><code>
+$ git checkout -b hoge
+</code></p>
+
+<h3>ローカルブランチの削除</h3>
 
 <hr />
 
-<p>以下の順序で変更を行います</p>
+<p>マージ済みのものを削除</p>
 
-<ol>
-<li>octpressでgithubにpushしているディレクトリに移動する</li>
-<li>gitコマンドで記事をpushしたコミットまで遡って、 変更取り消しを行う</li>
-</ol>
-
-
-<p>それぞれコマンドは以下のようになります
-<code>
-$cd ~/octpress/_deploy
-$git push -f origin master:HEAD^^
+<p><code>
+$ git branch -d hoge
 </code></p>
 
-<p>これで、２つ前の記事公開の状態まで変更することができました。
-同じ方法をとれば、記事の順序を入れ替え(削除)した状態で公開することも出来ると思います。<br/>
-(git rebase後にpush origin masterなどすればです)</p>
+<p>マージされていないものを強制削除</p>
 
-<h3>再公開方法</h3>
+<p><code>
+$ git checkout -D hoge
+</code></p>
+
+<h3>リモートブランチの削除</h3>
 
 <hr />
 
-<p>普通に記事を生成して再度サーバにpushして下さい。<br/>
-ファイルの日付や記事の日付を修正していなければ、
-公開停止前と同じURLになります。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Gitを教えたときの話]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2013/05/28/git-talk/"/>
-    <updated>2013-05-28T20:33:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2013/05/28/git-talk</id>
-    <content type="html"><![CDATA[<h3>前置き</h3>
+<p>pushの逆をするだけ</p>
+
+<p><code>
+$ git push origin :hoge
+</code></p>
+
+<h3>マージ済みブランチの探索</h3>
 
 <hr />
 
-<p>事の発端はある人と作業してたことから始まりました。。。<br/>
-というのも、自分が海外に行ってるいる間、作業をお願いしていました。</p>
+<p>こんな感じで難しくない</p>
 
-<p>作業をお願いしていたのはいいのですが<br/>
-彼は普段使っていないGitを使ってみたかったようです。</p>
+<p><code>
+$ git branch -r --list --merged
+</code></p>
 
-<p>今回は、そのとき伝えたことをネタにします。<br/>
-もっとネタにするものはありますが(ぉぃ</p>
+<p>オプションを変更するだけで、未マージも見つかる</p>
 
-<h3>基本操作以外に覚えて欲しいと伝えたこと</h3>
+<p><code>
+$ git branch -r --list --no-merged
+</code></p>
+
+<h3>リモートブランチとの同期</h3>
 
 <hr />
 
-<ul>
-<li>GitのGUIツールを捨てろ(言い過ぎだと思うし、賛否両論あると思っている)</li>
-<li>状態は常に確認するようにしよう</li>
-<li>ファイルを編集前状態に戻すやり方</li>
-<li>マージやリベースで、ファイル競合状態になったときの対処(エラーログとか読んでみる)</li>
-<li>ヘッド位置の意識</li>
-<li>ヘッドの操作方法やヘッドの位置がどこにあるのか</li>
-<li>落ち着いてブランチを切って、Git操作を試してみる(カジュアルに作れるので、作ったブランチで操作を試してみる)</li>
-<li>masterでのファイル編集をやめる</li>
-</ul>
+<p>誰かがリモートブランチが削除したとしても、その前にfetchしていたら自分のローカルブランチには残っているので同期をする<br/>
+これは、放置しておくとよく忘れるやつ</p>
 
-
-<p>コミットの取り消しや歴史の改変とかも覚えてて貰いたいけどな</p>
-
-<p>教えたはいいけど、自分もまだまだ使いこなせてないのでは？と思ったりしてます。</p>
-
-<h3>伝えた元に戻す系のコマンド類</h3>
-
-<hr />
-
-<p>元に戻し方とかそんな感じのことを以下にメモレベルで記載</p>
-
-<p>ファイルをインデックス(元々のヘッド状態)の状態に戻す
-<code>
-$git checkout -- &lt;元に戻したいファイル&gt;
+<p><code>
+$ git remote prune origin
 </code></p>
 
-<p>ワークツリーとインデックスをコミットIDに指定した状態に戻す
-<code>
-$git reset --hard &lt;コミットID&gt;
-</code></p>
-
-<p>現在のコミットからブランチを作成する<br/>
-作業はここでしちゃいましょう。
-<code>
-$git checkout -b &lt;ブランチ名&gt;
-</code></p>
-
-<p>リベースでおかしなこと(ファイルの競合とか)が起きた時に元に戻す
-<code>
-$git rebase --abort
-</code></p>
-
-<p>ここに書いた以外のやり方なんていくらでもあるので、参考程度で。</p>
+<p># ぶっちゃけ、よく忘れる一番最後のだけ書きたかった</p>
 ]]></content>
   </entry>
   

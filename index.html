@@ -9,9 +9,11 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 界隈の情報を収集しておきたかったので行ってきました 結論的なところを言ってしまうと、
-もうプロダクトに放り込んでも良さそうという印象でした
-(kobaltやKotolin for JSのようなエコシステムはまだまだですが・・・) とはいえ、多少は混ぜるな危険(nullとか) &hellip;">
+  <meta name="description" content="はじめに たまになんだっけ？ってなるものがあるのでメモしておく
+基本的に削除系 ブランチ作成 普通に作る 1
+$ git branch hoge 別のやり方 1
+$ git checkout -b hoge ローカルブランチの削除 マージ済みのものを削除 1
+$ git branch -d &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +75,118 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/16/use-git-branch-command/">Gitのブランチ系コマンドでよく使うもの</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-06-16T21:20:00+09:00" pubdate data-updated="true">Jun 16<span>th</span>, 2016</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>たまになんだっけ？ってなるものがあるのでメモしておく<br/>
+基本的に削除系</p>
+
+<h3>ブランチ作成</h3>
+
+<hr />
+
+<p>普通に作る</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<p>別のやり方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git checkout -b hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ローカルブランチの削除</h3>
+
+<hr />
+
+<p>マージ済みのものを削除</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -d hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<p>マージされていないものを強制削除</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git checkout -D hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>リモートブランチの削除</h3>
+
+<hr />
+
+<p>pushの逆をするだけ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git push origin :hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>マージ済みブランチの探索</h3>
+
+<hr />
+
+<p>こんな感じで難しくない</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -r --list --merged</span></code></pre></td></tr></table></div></figure>
+
+
+<p>オプションを変更するだけで、未マージも見つかる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -r --list --no-merged</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>リモートブランチとの同期</h3>
+
+<hr />
+
+<p>誰かがリモートブランチが削除したとしても、その前にfetchしていたら自分のローカルブランチには残っているので同期をする<br/>
+これは、放置しておくとよく忘れるやつ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git remote prune origin</span></code></pre></td></tr></table></div></figure>
+
+
+<p># ぶっちゃけ、よく忘れる一番最後のだけ書きたかった</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2031,216 +2145,6 @@ webappの分野ではトップ近くまでなれた<br/>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/11/06/edge-rails5/">Rails5を使ってみる</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-11-06T00:16:00+09:00" pubdate data-updated="true">Nov 6<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>とある要件があり、使用するFramework最近ブログネタに賑わっているRailsでということになった<br/>
-せっかくなので、開発開始&amp;リリースはいつになるのかという噂のRails5を使ってみることにした</p>
-
-<p>開発変更時期にRails5もリリースされているだろうという多少の先を見越す形でもありますがｗ</p>
-
-<h3>準備</h3>
-
-<hr />
-
-<p>どうやら、後方互換とはなんだったのかの勢いで最新っぽいので、以下を準備します。</p>
-
-<ul>
-<li>Ruby2.2.2以降のインストール</li>
-<li>railsのリポジトリをclone</li>
-</ul>
-
-
-<p>なにはともあれ、現時点の最新版だとスッキリした気分ですねw</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$git clone https://github.com/rails/rails.git</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>まずはバージョン情報</h3>
-
-<hr />
-
-<p>昔は<code>railties/bin/rails</code>だったのですが、<code>railties/exe/rails</code>変更になったようです<br/>
-ちょっと焦りましたw</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$./rails/railties/exe/rails -v
-</span><span class='line'>/usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require': cannot load such file -- concurrent/map (LoadError)
-</span><span class='line'>  from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
-</span><span class='line'>  from /Users/moonstruckdrops/rails/activesupport/lib/active_support/inflector/inflections.rb:1:in `&lt;top (required)&gt;'
-</span><span class='line'>  from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
-</span><span class='line'>  from /usr/local/var/rbenv/versions/2.2.2/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
-</span><span class='line'>  from /Users/moonstruckdrops/rails/activesupport/lib/active_support/inflections.rb:1:in `&lt;top (required)&gt;'
-</span><span class='line'>    (省略)</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どうやら、<code>activesupport/activesupport.gemspec</code>を見ると、<br/>
-<code>concurrent-ruby</code>が足りなかったようなので追加します(正式版では無く、alpha版が必要です)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$gem install concurrent-ruby -v 1.0.0.pre5 --no-ri --no-rdoc</span></code></pre></td></tr></table></div></figure>
-
-
-<p>気を取り直してもう一度実行すると動作します</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$./rails/railties/exe/rails -v
-</span><span class='line'>Rails 5.0.0.alpha</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>プロジェクト生成</h3>
-
-<hr />
-
-<p>せっかくなのでRails-APIオプションを使います<br/>
-(api以外のオプションはお好みで設定してください)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$./rails/railties/exe/rails new my_app --api -d mysql -T --skip-javascript --skip-test-unit --skip-turbolinks</span></code></pre></td></tr></table></div></figure>
-
-
-<p>が、そのまま実行してもエラーになりますのでGemfileを修正します</p>
-
-<ul>
-<li><code>rails</code>は、cloneしたソースコードになるようにする</li>
-<li><code>rack</code>,<code>arel</code>はgit or cloneしたソースコードになるようにする</li>
-</ul>
-
-
-<p>最終的にGemfileを以下のようにする(コメントのみ削除)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>source 'https://rubygems.org'
-</span><span class='line'>
-</span><span class='line'>gem 'rack', path: '../rack'
-</span><span class='line'>gem 'arel', path: '../arel'
-</span><span class='line'>
-</span><span class='line'>gem 'rails', '5.0.0.alpha', path: '../rails'
-</span><span class='line'>gem 'mysql2', '&gt;= 0.3.18', '&lt; 0.5'
-</span><span class='line'># gem 'bcrypt', '~&gt; 3.1.7'
-</span><span class='line'>
-</span><span class='line'># gem 'unicorn'
-</span><span class='line'>
-</span><span class='line'># gem 'capistrano-rails', group: :development
-</span><span class='line'>
-</span><span class='line'>gem 'active_model_serializers', '~&gt; 0.10.0.rc2'
-</span><span class='line'>
-</span><span class='line'># gem 'rack-cors'
-</span><span class='line'>
-</span><span class='line'>group :development, :test do
-</span><span class='line'>  gem 'byebug'
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>group :development do
-</span><span class='line'>  gem 'spring'
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>起動する</h3>
-
-<hr />
-
-<p>ここは普段どおりにrackで起動します
-rails</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$cd my_app
-</span><span class='line'>$bin/rails s
-</span><span class='line'>=&gt; Booting WEBrick
-</span><span class='line'>=&gt; Rails 5.0.0.alpha application starting in development on http://localhost:3000
-</span><span class='line'>=&gt; Run `rails server -h` for more startup options
-</span><span class='line'>=&gt; Ctrl-C to shutdown server
-</span><span class='line'>[2015-11-06 00:00:05] INFO  WEBrick 1.3.1
-</span><span class='line'>[2015-11-06 00:00:05] INFO  ruby 2.2.2 (2015-04-13) [x86_64-darwin14]
-</span><span class='line'>[2015-11-06 00:00:05] INFO  WEBrick::HTTPServer#start: pid=14583 port=3000</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>ポイント</h3>
-
-<hr />
-
-<p>特に挙げることもないですが、
-rails配下にあるgemspecファイルに目を通しておけば、インストールや起動に必須なgemがわかるので問題解決が早くなるということぐらいでしょうか</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2260,6 +2164,10 @@ rails配下にあるgemspecファイルに目を通しておけば、インス�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/06/16/use-git-branch-command/">gitのブランチ系コマンドでよく使うもの</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/04/02/kotlin-study-for-kansai/">Kotlin 1.0リリース記念勉強会 in 京都に行ってきた</a>
       </li>
     
@@ -2275,15 +2183,11 @@ rails配下にあるgemspecファイルに目を通しておけば、インス�
         <a href="/blog/2015/12/30/walkman-playlist-converter/">GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/20/android-groovy/">AndroidでGroovyを使ってみる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.85714285714286%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.85714285714286%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.85714285714286%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
 </section
 
 

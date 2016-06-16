@@ -5,11 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>findのexecオプションとxargsコマンドについて - kurobaraのブログ</title>
+  <title>gitのブランチ系コマンドでよく使うもの - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに 年が明けましたね。 せっかくの休みなので、今まで溜め込んだファイルの整理をすることにしました。 無駄なファイルが山ほどあって、検索からの削除を便利にしよう そう思ったのが今回の発端です。 さて、やります。 ファイル検索といえば findコマンドを使いますね。 &hellip;">
+  <meta name="description" content="はじめに たまになんだっけ？ってなるものがあるのでメモしておく
+基本的に削除系 ブランチ作成 普通に作る 1
+$ git branch hoge 別のやり方 1
+$ git checkout -b hoge ローカルブランチの削除 マージ済みのものを削除 1
+$ git branch -d &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2014/01/01/find-delete/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2016/06/16/use-git-branch-command/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -74,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">Findのexecオプションとxargsコマンドについて</h1>
+      <h1 class="entry-title">Gitのブランチ系コマンドでよく使うもの</h1>
     
     
       <p class="meta">
@@ -90,7 +94,7 @@
   
 
 
-<time datetime="2014-01-01T21:36:00+09:00" pubdate data-updated="true">Jan 1<span>st</span>, 2014</time>
+<time datetime="2016-06-16T21:20:00+09:00" pubdate data-updated="true">Jun 16<span>th</span>, 2016</time>
         
       </p>
     
@@ -101,78 +105,79 @@
 
 <hr />
 
-<p>年が明けましたね。</p>
+<p>たまになんだっけ？ってなるものがあるのでメモしておく<br/>
+基本的に削除系</p>
 
-<p>せっかくの休みなので、今まで溜め込んだファイルの整理をすることにしました。</p>
-
-<p>無駄なファイルが山ほどあって、検索からの削除を便利にしよう</p>
-
-<p>そう思ったのが今回の発端です。</p>
-
-<p>さて、やります。</p>
-
-<h3>ファイル検索といえば</h3>
+<h3>ブランチ作成</h3>
 
 <hr />
 
-<p>findコマンドを使いますね。</p>
-
-<p>execオプションやパイプとともにxargsコマンドを駆使して検索したファイルに対して処理をします。</p>
-
-<p>今回の要件ファイル削除系だとこんな感じですね。</p>
+<p>普通に作る</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -exec rm {} \;</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch hoge</span></code></pre></td></tr></table></div></figure>
 
 
-<p>xargsを使う場合だと、こっちですね。</p>
+<p>別のやり方</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -print0 | xargs -0 -n1 rm</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git checkout -b hoge</span></code></pre></td></tr></table></div></figure>
 
 
-<p>因みに、print0オプションを有効にすると区切り文字がスペースから \0 に変更されます。<br/>
-ファイル名にスペースがあるかもしれない場合とかはつけておくことがよいと思います。</p>
-
-<p>他にxargsの-0オプションも上記同様のものです。-n&lt;数字>は1 コマンドラインにつき最大の数字分ずつ引数として使用するという意味になります。</p>
-
-<h3>execオプションでxargsと同様の処理</h3>
+<h3>ローカルブランチの削除</h3>
 
 <hr />
 
-<p>これをする場合は、+を使えばよいようです。</p>
+<p>マージ済みのものを削除</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -exec rm {}+</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -d hoge</span></code></pre></td></tr></table></div></figure>
 
 
-<p>これだけだと意味があるような、ないような<sup>^;;</sup></p>
+<p>マージされていないものを強制削除</p>
 
-<h3>findのdeleteオプション</h3>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git checkout -D hoge</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>リモートブランチの削除</h3>
 
 <hr />
 
-<p>OS依存になるようですが、findコマンドにはdeleteオプションがあるようです。<br/>
-これを使えば、上記のようにコマンドの組み合わせをせずともファイル検索→ファイル削除も同時にできるようです。</p>
+<p>pushの逆をするだけ</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -name "*.dummy" -print0 -delete</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git push origin :hoge</span></code></pre></td></tr></table></div></figure>
 
 
-<p>検索と同時に削除なので、危険な感じがしますが、便利に使えると思います。</p>
-
-<h3>まとめ</h3>
+<h3>マージ済みブランチの探索</h3>
 
 <hr />
 
-<p>大したことでもないですが、こんな感じですね</p>
+<p>こんな感じで難しくない</p>
 
-<ul>
-<li>findとxargsを組み合わせる場合、find側はprint0オプション、xargs側は-0オプションを付けたほうが安全</li>
-<li>findコマンドでxargsと同様のことがしたい場合、execオプションの末尾を;から+に変更する</li>
-<li>検索+削除の場合、findコマンドのdeleteオプションを使うと便利</li>
-</ul>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -r --list --merged</span></code></pre></td></tr></table></div></figure>
 
+
+<p>オプションを変更するだけで、未マージも見つかる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git branch -r --list --no-merged</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>リモートブランチとの同期</h3>
+
+<hr />
+
+<p>誰かがリモートブランチが削除したとしても、その前にfetchしていたら自分のローカルブランチには残っているので同期をする<br/>
+これは、放置しておくとよく忘れるやつ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git remote prune origin</span></code></pre></td></tr></table></div></figure>
+
+
+<p># ぶっちゃけ、よく忘れる一番最後のだけ書きたかった</p>
 </div>
 
 
@@ -195,12 +200,12 @@
   
 
 
-<time datetime="2014-01-01T21:36:00+09:00" pubdate data-updated="true">Jan 1<span>st</span>, 2014</time>
+<time datetime="2016-06-16T21:20:00+09:00" pubdate data-updated="true">Jun 16<span>th</span>, 2016</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/linux/'>Linux</a>
+    <a class='category' href='/blog/categories/git/'>Git</a>
   
 </span>
 
@@ -209,7 +214,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2014/01/01/find-delete/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2014/01/01/find-delete/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2016/06/16/use-git-branch-command/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2016/06/16/use-git-branch-command/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -222,10 +227,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/12/31/2013-summary/" title="Previous Post: 2013年の振り返り">&laquo; 2013年の振り返り</a>
+        <a class="basic-alignment left" href="/blog/2016/04/02/kotlin-study-for-kansai/" title="Previous Post: Kotlin 1.0リリース記念勉強会 in 京都に行ってきた">&laquo; Kotlin 1.0リリース記念勉強会 in 京都に行ってきた</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/01/02/write-android-rom/" title="Next Post: Android端末のROM焼きをやってみる">Android端末のROM焼きをやってみる &raquo;</a>
       
     </p>
   </footer>
