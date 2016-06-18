@@ -9,8 +9,7 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="DI(Dependency Injection)について、あるところで聞かれたので回答したときのメモでも残します。 簡単に言うと、よく言われる「依存性の注入」といいます。 が、なんのことかさっぱりわからないですね。
-少し言い換えてあげると 「 &hellip;">
+  <meta name="description" content="特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも Structクラス Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・) 平たく言うと、Classクラスに似ているものです。 じゃー違いは何なの？ってなります。 newしたとき、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +71,203 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/02/ruby-struct/">RubyのStructクラスが便利</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-02T01:15:00+09:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>特にちょっとしたデータ構造を作成したいときなんかは非常に有効な手段かも</p>
+
+<h3>Structクラス</h3>
+
+<hr />
+
+<p>Rubyの組み込みクラスです。(Classに比べて影が薄いですが・・・)</p>
+
+<p>平たく言うと、Classクラスに似ているものです。</p>
+
+<p>じゃー違いは何なの？ってなります。</p>
+
+<ol>
+<li>newしたとき、引数で指定したアクnセッサをもつクラスを生成する</li>
+<li>第一引数の文字列がクラス名となるが、指定がない場合は無名のクラスになる</li>
+</ol>
+
+
+<p>これだけ。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new("Point", :x, :y)
+</span><span class='line'>item = Point.new(100,200)
+</span><span class='line'>p item =&gt; #&lt;struct Struct::Point x=100, y=200&gt;
+</span><span class='line'>p item.x =&gt; 100</span></code></pre></td></tr></table></div></figure>
+
+
+<p>無名クラスだと、こんな感じ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point2 = Struct.new(:z)
+</span><span class='line'>Point2.class =&gt; Class
+</span><span class='line'>item2 = Point2.new(300)
+</span><span class='line'>p item2 =&gt; #&lt;struct Point2 z=300&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ドキュメントに無い機能</h3>
+
+<hr />
+
+<p>ブロックを使うことができることです。<br/>
+ブロック内では、独自のメソッドを定義することができます。</p>
+
+<p>こんな感じです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Point = Struct.new(:x, :y) do
+</span><span class='line'>  def sum
+</span><span class='line'>        x + y
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  def minus
+</span><span class='line'>        x - y 
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>p Point.new(600, 700).sum =&gt; 1300
+</span><span class='line'>p Point.new(800,900).minus =&gt; -100</span></code></pre></td></tr></table></div></figure>
+
+
+<p>他にも、superを使うことで、上位のコンストラクタを実行することができます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
+</span><span class='line'>  def initialize(x, y)
+</span><span class='line'>    z = x + y
+</span><span class='line'>    super(z, y)
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>item = Point.new(400, 500)
+</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使いどころ</h3>
+
+<hr />
+
+<p>正直、あんまり無いような気がしなくもないですが、自分だと以下で使います。</p>
+
+<ul>
+<li>csvファイルとか読み込むとき、ちょっとしたデータ構造を定義するとき</li>
+<li>ちょっとしたデータのソート</li>
+<li>ちょっとしたアルゴリズムの追加</li>
+<li>ハッシュの代わりとか(既にデータ構造が分かってる場合など)</li>
+</ul>
+
+
+<p>データソートする場合の例</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Point &lt; Struct.new(:x, :y)
+</span><span class='line'>  def initialize(x, y)
+</span><span class='line'>    z = x + y
+</span><span class='line'>    super(z, y)
+</span><span class='line'>  end
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>item = Point.new(400, 500)
+</span><span class='line'>item2 = Point.new(200,300)
+</span><span class='line'>
+</span><span class='line'>p item =&gt; #&lt;struct Point x=900, y=500&gt;
+</span><span class='line'>p item2 =&gt; #&lt;struct Point x=500, y=300&gt;
+</span><span class='line'>
+</span><span class='line'>array = []
+</span><span class='line'>array &lt;&lt; item
+</span><span class='line'>array &lt;&lt; item2
+</span><span class='line'>
+</span><span class='line'>p array =&gt; [#&lt;struct Point x=900, y=500&gt;, #&lt;struct Point x=500, y=300&gt;]
+</span><span class='line'>
+</span><span class='line'>result = array.sort{ |item1,item2|
+</span><span class='line'>                    item1.x &lt;=&gt; item2.x
+</span><span class='line'>               }
+</span><span class='line'>p result =&gt; [#&lt;struct Point x=500, y=300&gt;, #&lt;struct Point x=900, y=500&gt;]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>書き捨てみたいなRubyコードを書くときにはちょうどいいのかもしれないですね。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1333,53 +1529,6 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/22/zip-pass/">コマンドで暗号化Zipファイルを作成する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-22T23:48:00+09:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>暗号化Zipファイル作成</h3>
-
-<hr />
-
-<p>大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。<br/>
-以下のようにzipコマンドのeオプションを使うだけで簡単にできます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>恥ずかしながらあんまりやらないので、いざというときには忘れてしまいます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/9/">&larr; Older</a>
@@ -1401,6 +1550,10 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/06/19/auth-gem/">認証系のgemをちょっと見てみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/06/16/use-git-branch-command/">gitのブランチ系コマンドでよく使うもの</a>
       </li>
     
@@ -1416,15 +1569,11 @@ T-mobileであれば、会場の近辺に店があります。(Powel Streetに�
         <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/30/walkman-playlist-converter/">GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.85714285714286%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.85714285714286%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 124.54545454545455%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.45454545454545%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.72727272727273%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.72727272727273%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.63636363636364%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.72727272727273%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.72727272727273%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.72727272727273%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.72727272727273%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.72727272727273%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.72727272727273%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.72727272727273%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.72727272727273%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 119.0909090909091%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.72727272727273%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.72727272727273%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 116.36363636363636%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 116.36363636363636%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.72727272727273%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.72727272727273%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(22)</a> <a href='/blog/categories/shellscript' style='font-size: 102.72727272727273%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.72727272727273%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 121.81818181818181%'>戯言(8)</a> </span>
 </section
 
 

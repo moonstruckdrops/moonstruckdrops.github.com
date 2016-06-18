@@ -5,13 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Octpress始めました - kurobaraのブログ</title>
+  <title>認証系のgemをちょっと見てみた - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="旧ブログから移行しますよっと。 正直なところ、旧ブログは記事を書くのが大変でした。
-マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。
-旧ブログの記事はおいおい引っ越すことにします。 という訳で、Octpressの使い方メモを書いておきます。( &hellip;">
+  <meta name="description" content="はじめに だいたいのwebサービスにはユーザー登録をしてはじめて使用することが多いと思います ご多分にもれずに、これから実装しようとしたものでメンバースキルを鑑みるとRailsという形ですすむことになりました。 では、Railsでアプリを書くときに認証系のgemって、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2016/06/19/auth-gem/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,7 +74,7 @@
   
   <header>
     
-      <h1 class="entry-title">Octpress始めました</h1>
+      <h1 class="entry-title">認証系のgemをちょっと見てみた</h1>
     
     
       <p class="meta">
@@ -92,137 +90,87 @@
   
 
 
-<time datetime="2013-03-21T23:36:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+<time datetime="2016-06-19T01:34:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2016</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://moonstruckdrops.blogspot.jp/">旧ブログ</a>から移行しますよっと。</p>
-
-<p>正直なところ、旧ブログは記事を書くのが大変でした。<br/>
-マークダウン記法が使えるブログに移行したいなーと前から思ってたので、思い切って移行することにしました。<br/>
-旧ブログの記事はおいおい引っ越すことにします。</p>
-
-<p>という訳で、Octpressの使い方メモを書いておきます。(主に自分用ですがw)</p>
-
-<h4>インストール</h4>
+<div class="entry-content"><h3>はじめに</h3>
 
 <hr />
 
-<p><a href="http://octopress.org/docs/setup/">公式サイト</a>を見ながら実行します。<br/>
-特に難しいことはないです。<br/>
-強いて挙げるとすると、rubyのバージョンを1.9.3にしておくことでしょうか。<br/>
-が、それもrbenv使用していれば問題無いでしょう。</p>
+<p>だいたいのwebサービスにはユーザー登録をしてはじめて使用することが多いと思います</p>
 
-<h4>テーマの変更</h4>
+<p>ご多分にもれずに、これから実装しようとしたものでメンバースキルを鑑みるとRailsという形ですすむことになりました。</p>
 
-<hr />
+<p>では、Railsでアプリを書くときに認証系のgemって、今は何が使えるものだろうかということを軽く見てみました。</p>
 
-<p>これは、結構めんどかったような記憶がしています。<br/>
-といってもコマンド打つだけですがw</p>
+<p># ちょっと実装してよと軽く言われるものの困ったものですorz</p>
 
-<ol>
-<li><a href="https://github.com/imathis/octopress/wiki/3rd-Party-Octopress-Themes">ここから</a>テーマの選択を行います。自分は、justin-kellyを選択しました。</li>
-<li>以下のコマンドを実行します。</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone git@github.com:wallace/justin-kelly-theme.git .themes/justin-kelly
-</span><span class='line'>$ rake install['justin-kelly']
-</span><span class='line'>$ rake generate</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あ、ちなみにテーマ変更したら何か初期化されてしまって面倒なことになった覚えがあるので気を付けましょう。</p>
-
-<h4>ブログの設定変更</h4>
+<h3>RubyToolboxを眺める</h3>
 
 <hr />
 
-<p>_config.ymlで行います。<br/>
-<a href="http://octopress.org/docs/configuring/">公式</a>に設定方法が書いてありますので、問題は無いでしょう。(多分)</p>
-
-<h4>記事の作成</h4>
-
-<hr />
-
-<p>投稿用のテンプレートを作成します。<br/>
-指定する文字列はURLに使われるので、英数だけで指定します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake new_post['post title']</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コマンドを実行すると、以下のような感じでテンプレートができます。</p>
+<p>自分の個人内の観測範囲でよく聞くもの</p>
 
 <ul>
-<li>source/_posts/yyyy-MM-dd-post-title.markdown</li>
+<li>warden</li>
+<li>devise</li>
+<li>Authlogic</li>
+<li>Sorcery</li>
+<li>doorkeeper</li>
+<li>OmniAuth</li>
 </ul>
 
 
-<p>テンプレートができるので、好きなエディタで編集します。<br/>
-おすすめのエディタは、以下のものです。</p>
+<p># provider提供も関係無く書いてますが、話と毛色が違う感あるのでこの後は出てきません</p>
+
+<h3>メンテ厳しいらしいもの</h3>
+
+<hr />
+
+<p>この２つの模様</p>
 
 <ul>
-<li>Mou(リアルタイムでプレビューできます)</li>
-<li>Emacs+markdown-mode(コマンドを実行すればプレビューできます)</li>
+<li><a href="https://github.com/binarylogic/authlogic/issues/487">Authlogic</a></li>
+<li>Sorcery(<code>Currently Sorcery project is not actively maintained.</code>という文章がREADMEにあった)</li>
 </ul>
 
 
-<p>※Emacsのmarkdown-modeはそのうち記事を書くつもりです。</p>
+<p>PR眺める限り、Authlogicは対応させようと頑張っている模様
+Sorceryは、ちょっと厳しそうかな(とはいえ、一応動く&amp;issueとPRをあげたら対応自体はしてくれる模様)</p>
 
-<h4>記事の生成</h4>
-
-<hr />
-
-<p>以下のコマンドを実行して、htmlファイルを生成します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake generate</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>記事のプレビュー</h4>
-
-<p>以下のコマンドを実行して<a href="http;//localhost:4000">localhost:4000</a>にアクセスします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake preview</span></code></pre></td></tr></table></div></figure>
-
-
-<p>エディタのプレビューで書きながら確認しつつ、記事投稿前の最終確認で使用するとよいと思います。<br/>
-プレビュー状態だと、投稿してないですからね。</p>
-
-<h4>記事を投稿</h4>
+<h3>devise&amp;warden</h3>
 
 <hr />
 
-<p>以下のコマンドを実行して投稿(デプロイ)します。</p>
+<p><a href="https://github.com/plataformatec/devise/blob/master/CHANGELOG.md">changelog</a>見ると、<br/>
+4.0.0rc1からRails5に対応していました<br/>
+流石ですね。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake deploy</span></code></pre></td></tr></table></div></figure>
+<p># が、多機能で便利でいいのですが癖が強いのとdeviseのレールから外れた瞬間悲惨な目に遭うので避けたいところ</p>
 
-
-<h4>投稿の削除</h4>
-
-<hr />
-
-<p>削除したい「source/_posts/yyyy-MM-dd-post-title.markdown」を削除します。<br/>
-削除後、記事の生成を行なってから再度deployを実施します。<br/>
-これで、表示するブログからは消えます。。。<br/>
-ですが、githubにdeployしているのでgithub上では残ってしまいます。<br/>
-なので、完全に削除したい場合は、デプロイしたコミットログも削除しましょう。<br/>
-(そこまでひどいものを書くほうが問題だと思いますが)</p>
-
-<h4>まとめ</h4>
+<h3>他に無いか？</h3>
 
 <hr />
 
-<p>意外と簡単に導入できるので、おすすめです。<br/>
-マークダウン記法が使えて楽に書けるところもいいですね。(bloggerが書きにくすぎるのが問題だと思うのですけど)</p>
+<p>個人的に良さそうかなと思ったのは、<a href="https://github.com/halogenandtoast/monban">monban</a>ですかね。<br/>
+(ちょっとgithubのスター数が少ないのは気になりますが・・・)</p>
+
+<p>Rails使ってるなぁと思ってみたら、殆どconcern(helper)と初期ロード&amp;設定(railtie&amp;configure)だけだった模様<br/>
+案外Railsのアップデート影響も少なそうな印象でした。</p>
+
+<p>実装や設定内容を読む限り、拡張の幅も広いので好印象でした<br/>
+実際、Rails5でカスタム実装してみましたが問題なく認証させることができました</p>
+
+<p>肌感&amp;経験上ですが、認証機能自身はサービスによって独自の仕様、または既存機能との併用となることが多いので<br/>
+拡張しやすいgemの方が対応のさせやすさ、メンテナンスさせやすいほうがやりやすいかなと思ってます</p>
+
+<p>そういう意味では、(余計な機能が無いという意味で)軽量かつ、拡張可能、機能の置き換え可能なmonbanはいいなと思いました</p>
+
+<p># ぶっちゃけ、monbanカワイイよってことだけが言いたかったｗ</p>
 </div>
 
 
@@ -245,12 +193,12 @@
   
 
 
-<time datetime="2013-03-21T23:36:00+09:00" pubdate data-updated="true">Mar 21<span>st</span>, 2013</time>
+<time datetime="2016-06-19T01:34:00+09:00" pubdate data-updated="true">Jun 19<span>th</span>, 2016</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/markdown/'>markdown</a>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
 </span>
 
@@ -259,7 +207,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2013/03/21/start-octpress/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2016/06/19/auth-gem/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2016/06/19/auth-gem/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -272,10 +220,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/17/octopress-sidebar/" title="Previous Post: octopressのサイドバーにタグクラウドを表示する">&laquo; octopressのサイドバーにタグクラウドを表示する</a>
+        <a class="basic-alignment left" href="/blog/2016/06/16/use-git-branch-command/" title="Previous Post: gitのブランチ系コマンドでよく使うもの">&laquo; gitのブランチ系コマンドでよく使うもの</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/24/markdown-mode/" title="Next Post: Emacsでmarkdown-modeを使用する">Emacsでmarkdown-modeを使用する &raquo;</a>
       
     </p>
   </footer>

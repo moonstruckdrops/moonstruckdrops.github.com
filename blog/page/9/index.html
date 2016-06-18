@@ -9,11 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Emacsのscratchバッファってすごく便利ですよね。 特に以下のことによく使います。 ちょっとしたメモしたり
-URLメモを取ったり
-ちょっとした引用メモの整形とか
-マクロの実験とか まぁよく使うわけです・・・
-が、ついうっかりでEmacsを終了したりとか、 &hellip;">
+  <meta name="description" content="暗号化Zipファイル作成 大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。
+以下のようにzipコマンドのeオプションを使うだけで簡単にできます。 1
+$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +73,53 @@ URLメモを取ったり
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/22/zip-pass/">コマンドで暗号化Zipファイルを作成する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-22T23:48:00+09:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>暗号化Zipファイル作成</h3>
+
+<hr />
+
+<p>大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。<br/>
+以下のようにzipコマンドのeオプションを使うだけで簡単にできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>恥ずかしながらあんまりやらないので、いざというときには忘れてしまいます。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1290,101 +1335,6 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/28/ruby-web-file/">Rubyで画像ファイルをダウンロードする</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-28T23:34:00+09:00" pubdate data-updated="true">Mar 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>少しばかり、やることがあったのでやってみた。<br/>
-煩悩丸出しですいませんw</p>
-
-<h3>HTTP Responseのbodyを利用する</h3>
-
-<hr />
-
-<p>直感的ではないけど、素直なやりかた</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>urlで接続したbodyデータをファイルに書き込む</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
-</span><span class='line'>   filename = File.basename(url)
-</span><span class='line'>   open(filename, "wb") do  |file|
-</span><span class='line'>          file.puts Net::HTTP.get_response(URI.parse(url)).body
-</span><span class='line'>   end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>open-uriを使用する方法</h3>
-
-<hr />
-
-<p>説明しやすいのでこっちのほうがわかりやすいかもしれない。</p>
-
-<ol>
-<li>書き込みモードでファイルを開く</li>
-<li>書き込みモードで開いたファイルに対して、urlで接続したデータを書き込む</li>
-</ol>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>def save_file(url)
-</span><span class='line'>    filename = File.basename(url)
-</span><span class='line'>    open(filename, 'wb') do |file|
-</span><span class='line'>        open(url) do |data|
-</span><span class='line'>            file.write(data.read)
-</span><span class='line'>      end
-</span><span class='line'>    end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>真面目にやるなら、レスポンスコードもチェックしたほうがいいかもしれないですね</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -1406,6 +1356,10 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/06/19/auth-gem/">認証系のgemをちょっと見てみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/06/16/use-git-branch-command/">gitのブランチ系コマンドでよく使うもの</a>
       </li>
     
@@ -1421,15 +1375,11 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
         <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/12/30/walkman-playlist-converter/">GroovyでWALKMAN用のプレイリストコンバーターを作成した</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 125.71428571428572%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.71428571428571%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.85714285714286%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.85714285714286%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 114.28571428571429%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.85714285714286%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 111.42857142857143%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.85714285714286%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.85714285714286%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.85714285714286%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.85714285714286%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.85714285714286%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.85714285714286%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.85714285714286%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 120.0%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.85714285714286%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.85714285714286%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 131.42857142857142%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 117.14285714285714%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 117.14285714285714%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.85714285714286%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.85714285714286%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(21)</a> <a href='/blog/categories/shellscript' style='font-size: 102.85714285714286%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.85714285714286%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 122.85714285714286%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 124.54545454545455%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.45454545454545%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.72727272727273%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.72727272727273%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.63636363636364%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.72727272727273%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.72727272727273%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.72727272727273%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.72727272727273%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.72727272727273%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.72727272727273%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.72727272727273%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.72727272727273%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 119.0909090909091%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.72727272727273%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.72727272727273%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 116.36363636363636%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 116.36363636363636%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.72727272727273%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.72727272727273%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(22)</a> <a href='/blog/categories/shellscript' style='font-size: 102.72727272727273%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.72727272727273%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 121.81818181818181%'>戯言(8)</a> </span>
 </section
 
 
