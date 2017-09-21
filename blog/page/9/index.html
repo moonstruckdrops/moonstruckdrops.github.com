@@ -9,9 +9,10 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="暗号化Zipファイル作成 大概GUIありのツールでやってしまうのですが、必要に駆られたのでコマンドでやることになりました。
-以下のようにzipコマンドのeオプションを使うだけで簡単にできます。 1
-$zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt; &hellip;">
+  <meta name="description" content="すごくド基礎なのですが・・・。
+ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。 ユーザーアカウントの追加 基本中の基本ですね。
+以下のコマンドのような感じで追加します。 1
+$useradd -u 500 -g wheel -m kurobara &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,114 @@ $zip -e &lt;zipファイル名&gt; &lt;圧縮対象のファイル&gt; &hellip;"
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/24/linux-user-add/">Linux上にあるユーザーアカウントの追加と削除をする</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T23:40:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>すごくド基礎なのですが・・・。<br/>
+ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。</p>
+
+<h3>ユーザーアカウントの追加</h3>
+
+<hr />
+
+<p>基本中の基本ですね。<br/>
+以下のコマンドのような感じで追加します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$useradd -u 500 -g wheel -m kurobara</span></code></pre></td></tr></table></div></figure>
+
+
+<p>以下の表によく使用するオプションを記載します。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">オプション</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">c コメント      </td>
+<td align="left">ユーザーのコメントを設定</td>
+</tr>
+<tr>
+<td align="left">d ディレクトリ  </td>
+<td align="left">ユーザーのログインディレクトリを指定</td>
+</tr>
+<tr>
+<td align="left">e mm/dd/yy </td>
+<td align="left">ユーザーの有効期限をmm/dd/yy形式で指定</td>
+</tr>
+<tr>
+<td align="left">g グループ   </td>
+<td align="left">ユーザーの所属するイニシャル・グループを指定</td>
+</tr>
+<tr>
+<td align="left">G グループ    </td>
+<td align="left">ユーザーの所属するグループを指定します(「,」で複数指定可能)</td>
+</tr>
+<tr>
+<td align="left">u ユーザーID </td>
+<td align="left">ユーザーのユーザーIDを指定</td>
+</tr>
+<tr>
+<td align="left">s シェル </td>
+<td align="left">ユーザーのログインシェルを指定</td>
+</tr>
+<tr>
+<td align="left">m        </td>
+<td align="left">ホームディレクトリの作成を自動で行う</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>ユーザーアカウントの削除</h3>
+
+<hr />
+
+<p>以下のコマンドでユーザーアカウントの削除ができます。<br/>
+なお、オプションにrを付与すると、ホームディレクトリまで削除してくれます。<br/>
+但し、他のファイルシステムにあるファイル等は探しだして手動で削除する必要があります。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$userdel &lt;ユーザーアカウント名&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>常識ですね(ぉぃ</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1224,117 +1333,6 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/30/octpress-image-tag/">Octpressで画像ファイルを扱う</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-30T01:47:00+09:00" pubdate data-updated="true">Mar 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Octpressで画像を扱う場合、どうすればよかったっけな？ってなりましたのでメモしておきます。</p>
-
-<h3>画像の格納ディレクトリ</h3>
-
-<hr />
-
-<p>画像の格納場所は、</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>~source/images</span></code></pre></td></tr></table></div></figure>
-
-
-<p>に格納すればよい</p>
-
-<p>imagesディレクトリの配下にも、blogというディレクトリがあるのでブログ用の画像はそちらに格納すればよいっぽい。</p>
-
-<h3>Octpress公式の手順</h3>
-
-<hr />
-
-<p><a href="http://octopress.org/docs/plugins/image-tag/">公式の手順</a></p>
-
-<p>以下の書式に従って記載すれば、いいらしい。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img [class names] /path/to/image [width] [height] [title text [alt text]] \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>そのため、画像サイズを640x480で表示させたい場合、以下のように書くことができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{\% img left /images/picture.png 640 480 \%}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>コード上の「\」は不要です。(何故か、エスケープが正しく動作しなかった)</p>
-
-<h3>markdownを使用した方法</h3>
-
-<hr />
-
-<p>これは、前にも書いたように以下のようにすればよいでしょう。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[テスト画像](/images/picture.png "title")</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但し、画像サイズは指定できないという欠点があります。<br/>
-画像は、加工するしかないようですね。</p>
-
-<h3>htmlを直接記載する方法</h3>
-
-<hr />
-
-<p>以下のような感じで、htmlを使用した書き方もできるようです。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;img src="/images/picture.png" alt="alt" title="title" width="640" height="480"&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意する点があるとすれば、必ず前後に<p>タグが挿入されてしまうことです。<br/>
-インラインで使用することは、できないっぽいです。</p>
-
-<h3>まとめ</h3>
-
-<hr />
-
-<p>個人的な見解は以下のような感じ</p>
-
-<ul>
-<li>基本はmarkdown記法で記載</li>
-<li>画像サイズを変更したい場合、Octpressの記法に従う</li>
-<li>汎用的にしたい場合、htmlで記載する</li>
-<li>ブログ記事用の画像の場合、「souce/images/blog」の下に格納する</li>
-<li>ブログ記事以外の画像の場合、「source/images」の下に格納する</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -1356,6 +1354,10 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/09/21/ruby-kaigi/">ruby-kaigi</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/06/19/auth-gem/">認証系のgemをちょっと見てみた</a>
       </li>
     
@@ -1371,15 +1373,11 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
         <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 124.54545454545455%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.45454545454545%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.72727272727273%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.72727272727273%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.63636363636364%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.72727272727273%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.72727272727273%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.72727272727273%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.72727272727273%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.72727272727273%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.72727272727273%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.72727272727273%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.72727272727273%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 119.0909090909091%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.72727272727273%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.72727272727273%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 116.36363636363636%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 116.36363636363636%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.72727272727273%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.72727272727273%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(22)</a> <a href='/blog/categories/shellscript' style='font-size: 102.72727272727273%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.72727272727273%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 121.81818181818181%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 123.47826086956522%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.21739130434783%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.6086956521739%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.6086956521739%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.04347826086956%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.6086956521739%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.43478260869566%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.6086956521739%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.6086956521739%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.6086956521739%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.6086956521739%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.6086956521739%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.6086956521739%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.6086956521739%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 118.26086956521739%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.6086956521739%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.6086956521739%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 128.69565217391303%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 115.65217391304348%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 115.65217391304348%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.6086956521739%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.6086956521739%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(23)</a> <a href='/blog/categories/shellscript' style='font-size: 102.6086956521739%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.6086956521739%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 120.86956521739131%'>戯言(8)</a> </span>
 </section
 
 
@@ -1393,7 +1391,7 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - kurobara -
+  Copyright &copy; 2017 - kurobara -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

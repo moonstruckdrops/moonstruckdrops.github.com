@@ -1,24 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Ruby | kurobaraのブログ]]></title>
-  <link href="http://moonstruckdrops.github.com/blog/categories/ruby/atom.xml" rel="self"/>
-  <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2017-09-21T22:22:42+09:00</updated>
-  <id>http://moonstruckdrops.github.com/</id>
-  <author>
-    <name><![CDATA[kurobara]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ruby-kaigi - kurobaraのブログ</title>
+  <meta name="author" content="kurobara">
 
   
-  <entry>
-    <title type="html"><![CDATA[ruby-kaigi]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2017/09/21/ruby-kaigi/"/>
-    <updated>2017-09-21T21:32:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2017/09/21/ruby-kaigi</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
+  <meta name="description" content="はじめに Rubykaigi2017に参加してきましたので、メモを共有しておきます Keynote Nobuさんの発表 ゆるふわRuby生活 デバッグ
+新機能
+バグ作成 リポジトリ Rubyのgithubはミラーなのであんまり見ない
+移行コスト(svn to git)
+hashが明確でない( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2017/09/21/ruby-kaigi/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="kurobaraのブログ" type="application/atom+xml">
+  <link href="/stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:moonstruckdrops.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+    <li><a href="/">
+        <span class="blue_light">
+            kurobaraのブログ
+        </span>
+       
+           <span class="blue_dark">
+             〜ネタを書き散らすだけのようなブログ〜
+           </span>
+       
+    </a></li>
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <!--
+  <li><a href="/about">About me</a></li>
+  -->
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ruby-kaigi</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-09-21T21:32:00+09:00" pubdate data-updated="true">Sep 21<span>st</span>, 2017</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>はじめに</h3>
 
 <hr />
 
@@ -115,11 +198,12 @@
 </ul>
 
 
-<p>```
-p = 2
-p (-1.3).abs #=> 1.3</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>p = 2
+</span><span class='line'>p (-1.3).abs #=&gt; 1.3
+</span></code></pre></td></tr></table></div></figure>
 
-<p>```</p>
 
 <ul>
 <li>カッコの前にspaceを置く</li>
@@ -140,7 +224,7 @@ p (-1.3).abs #=> 1.3</p>
 <li>string.intern(symbol作成)の再定義するとsymbolにならない
 
 <ul>
-<li>:"#{aaa}"みたいな書き方で、refineでstring.internを上書きしたのだとsymbolにならない</li>
+<li>:&#8221;#{aaa}&#8221;みたいな書き方で、refineでstring.internを上書きしたのだとsymbolにならない</li>
 </ul>
 </li>
 <li>2.5にnew featureはないのか？
@@ -1162,7 +1246,7 @@ tendorlover/heap-utils</li>
 <li>sourceの名前付けをショートカットさせる(:githubみたいな指定)
 
 <ul>
-<li>gem 'rack' github: 'user/repo'</li>
+<li>gem &#8216;rack&#8217; github: &#8216;user/repo&#8217;</li>
 <li>ブロック指定もできる</li>
 </ul>
 </li>
@@ -1272,503 +1356,156 @@ tendorlover/heap-utils</li>
 <p>久しぶりな方々ともお会いできて、新たな刺激がありました
 印象深いのが型、parser周りの話が多かった印象です<br/>
 来年は仙台なので、広島よりは都内から近いですね</p>
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[認証系のgemをちょっと見てみた]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2016/06/19/auth-gem/"/>
-    <updated>2016-06-19T01:34:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2016/06/19/auth-gem</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
 
-<hr />
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
 
-<p>だいたいのwebサービスにはユーザー登録をしてはじめて使用することが多いと思います</p>
-
-<p>ご多分にもれずに、これから実装しようとしたものでメンバースキルを鑑みるとRailsという形ですすむことになりました。</p>
-
-<p>では、Railsでアプリを書くときに認証系のgemって、今は何が使えるものだろうかということを軽く見てみました。</p>
-
-<p># ちょっと実装してよと軽く言われるものの困ったものですorz</p>
-
-<h3>RubyToolboxを眺める</h3>
-
-<hr />
-
-<p>自分の個人内の観測範囲でよく聞くもの</p>
-
-<ul>
-<li>warden</li>
-<li>devise</li>
-<li>Authlogic</li>
-<li>Sorcery</li>
-<li>doorkeeper</li>
-<li>OmniAuth</li>
-</ul>
+      
 
 
-<p># provider提供も関係無く書いてますが、話と毛色が違う感あるのでこの後は出てきません</p>
-
-<h3>メンテ厳しいらしいもの</h3>
-
-<hr />
-
-<p>この２つの模様</p>
-
-<ul>
-<li><a href="https://github.com/binarylogic/authlogic/issues/487">Authlogic</a></li>
-<li>Sorcery(<code>Currently Sorcery project is not actively maintained.</code>という文章がREADMEにあった)</li>
-</ul>
 
 
-<p>PR眺める限り、Authlogicは対応させようと頑張っている模様
-Sorceryは、ちょっと厳しそうかな(とはいえ、一応動く&amp;issueとPRをあげたら対応自体はしてくれる模様)</p>
 
-<h3>devise&amp;warden</h3>
 
-<hr />
 
-<p><a href="https://github.com/plataformatec/devise/blob/master/CHANGELOG.md">changelog</a>見ると、<br/>
-4.0.0rc1からRails5に対応していました<br/>
-流石ですね。</p>
 
-<p># が、多機能で便利でいいのですが癖が強いのとdeviseのレールから外れた瞬間悲惨な目に遭うので避けたいところ</p>
-
-<h3>他に無いか？</h3>
-
-<hr />
-
-<p>個人的に良さそうかなと思ったのは、<a href="https://github.com/halogenandtoast/monban">monban</a>ですかね。<br/>
-(ちょっとgithubのスター数が少ないのは気になりますが・・・)</p>
-
-<p>Rails使ってるなぁと思ってみたら、殆どconcern(helper)と初期ロード&amp;設定(railtie&amp;configure)だけだった模様<br/>
-案外Railsのアップデート影響も少なそうな印象でした。</p>
-
-<p>実装や設定内容を読む限り、拡張の幅も広いので好印象でした<br/>
-実際、Rails5でカスタム実装してみましたが問題なく認証させることができました</p>
-
-<p>肌感&amp;経験上ですが、認証機能自身はサービスによって独自の仕様、または既存機能との併用となることが多いので<br/>
-拡張しやすいgemの方が対応のさせやすさ、メンテナンスさせやすいほうがやりやすいかなと思ってます</p>
-
-<p>そういう意味では、(余計な機能が無いという意味で)軽量かつ、拡張可能、機能の置き換え可能なmonbanはいいなと思いました</p>
-
-<p># ぶっちゃけ、monbanカワイイよってことだけが言いたかったｗ</p>
-]]></content>
-  </entry>
   
-  <entry>
-    <title type="html"><![CDATA[Railsのリクエストヘッダーを調べる]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2016/02/23/rails-mimetype/"/>
-    <updated>2016-02-23T19:30:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2016/02/23/rails-mimetype</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
 
-<hr />
 
-<p>リクエストヘッダーの中身を見ようとしたときの備忘録<br/>
-ヘッダーを利用してゴニョゴニョしてた時とかに使ってましたｗ</p>
+<time datetime="2017-09-21T21:32:00+09:00" pubdate data-updated="true">Sep 21<span>st</span>, 2017</time>
+      
 
-<h3>Railsのリクエストで一覧を取得</h3>
-
-<hr />
-
-<p>requestで来たhederの一覧を調べる場合、以下のコードを<code>before_action</code>に仕込んでおく</p>
-
-<p><code>
-request.headers.sort.map { |k, v| logger.info "#{k}:#{v}" }
-</code></p>
-
-<h3>特定のヘッダーの内容確認</h3>
-
-<hr />
-
-<p><code>HTTP_ACCEPT</code>を見たい場合は、以下のコードを<code>before_action</code>に仕込んでおく<br/>
-(多分このコードはよく使うかも)</p>
-
-<p><code>
-accept = request.headers['HTTP_ACCEPT']
-</code></p>
-
-<h3>利用可能なMIME Typeの確認</h3>
-
-<p>Railsで定義されているMIME Typeを観る場合は以下のコードを利用する<br/>
-以下はjsonに対応したMIME Typeを確認するコード</p>
-
-<p><code>
-Mime::EXTENSION_LOOKUP.each { |m| puts m}
-Mime::Type.lookup_by_extension(:json)
-</code></p>
-]]></content>
-  </entry>
+<span class="categories">
   
-  <entry>
-    <title type="html"><![CDATA[RubyKaigi3日目に行ってきた]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/12/13/ruby-kaigi/"/>
-    <updated>2015-12-13T11:24:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/12/13/ruby-kaigi</id>
-    <content type="html"><![CDATA[<h3>The OMR GC Talk</h3>
-
-<hr />
-
-<p>OMRというランタイム</p>
-
-<ul>
-<li>多くの言語に対応している</li>
-<li>(plugin機構で実現？)</li>
-</ul>
-
-
-<p>調査はこれを使っていた模様
-https://www.ibm.com/developerworks/jp/java/library/j-ibmtools5/</p>
-
-<p>allocationを早くした</p>
-
-<ul>
-<li>スレッドローカルヒープ</li>
-<li>ロック無しでallocate</li>
-</ul>
-
-
-<p>可変長のバッファを作る
-OMRのランタイム上で動作するGCがMRIに比べてよかった</p>
-
-<p>GCのmark速度は早い(MRI)</p>
-
-<p>OMR GCを確認するのはこれ
-https://github.com/rubyomr-preview/rubyomr-preview</p>
-
-<h3>Refinements - the Worst Feature You Ever Loved</h3>
-
-<hr />
-
-<p>method aliasとかモンキーパッチだと元の動きの振る舞いが全体に影響するからよくない</p>
-
-<p>assertとかの振る舞いもかわってしまう</p>
-
-<p>refinementsなら影響範囲を制御できる</p>
-
-<p>スコープは働くので継承とかcalss_evalでも有効</p>
-
-<p>文字列で与えたもので使えるeval 'using SomeClass; hoge.fuga'みたいな感じなの</p>
-
-<h3>Discussion on Thread between version 1.8.6 and 2.2.3</h3>
-
-<hr />
-
-<p>Thread#status
-スレッドの状態が取れないような状況が起きた
-→mission crtalなシステムでも使えるThreadの使い方</p>
-
-<ul>
-<li>子スレッドでforを同期的に上がった場合</li>
-<li>同期的にraiseが上がった場合</li>
-</ul>
-
-
-<p>Ruby2.2.3でも早くなったけど、CPU負荷も上がった
-実行回数は変わらなかった</p>
-
-<p>raiseのインスタンスは重い
-メモリ消費は少ない
-selectで対応することができる</p>
-
-<p>早くなったけど、リソース消費も多いのでスレッドとかはメモリ消費量を意識したほうがよい</p>
-
-<h3>Plugin-based software design with Ruby and RubyGems</h3>
-
-<hr />
-
-<ul>
-<li>多くの機能</li>
-<li>コアコードがシンプル</li>
-<li>testが簡単</li>
-<li>developerコミュニティが活発</li>
-</ul>
-
-
-<p>デザインパターン</p>
-
-<ol>
-<li>ホストアプリを拡張する(拡張ポイントを用意している、コールバックで実行)</li>
-<li>DIでプラグインを追加(I/Fとか決めてDIコンテナを置き換え、ホストからアプリを実行)</li>
-<li>動的にプラグインをロードする方法</li>
-<li>1と2を組み合わせる方法</li>
-</ol>
-
-
-<p>プラグインのバージョンコントロール(依存ライブラリのコンフリクト解消)</p>
-
-<p>fluentdは動的にpluguin
-emblukは組み合わせ</p>
-
-<h3>Actor, Thread and me</h3>
-
-<hr />
-
-<p>アクター</p>
-
-<ul>
-<li>メッセージを適当なタイミングで送る</li>
-<li>レシーブ</li>
-<li>仕事をする</li>
-</ul>
-
-
-<p>破綻の予兆</p>
-
-<ul>
-<li>複数のイベントを待つ</li>
-<li>DBへの問い合わせとか</li>
-<li>資源の協調</li>
-</ul>
-
-]]></content>
-  </entry>
+    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
   
-  <entry>
-    <title type="html"><![CDATA[RubyKaigi2日目に行ってきた]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/12/12/ruby-kaigi/"/>
-    <updated>2015-12-12T13:24:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/12/12/ruby-kaigi</id>
-    <content type="html"><![CDATA[<h3>はじめに</h3>
+</span>
 
-<hr />
 
-<p>RubyKaigi2日目に参加してきました。</p>
-
-<p>気になるセッションもチラホラあり期待していました</p>
-
-<p>ただ、盛大に寝坊しましたorz</p>
-
-<p>という訳で、メモ</p>
-
-<h3>Data Analytics Service Company and Its Ruby Usage</h3>
-
-<hr />
-
-<p>ミドルウェア
-* データ処理をする上でスループットが重要
-* 一度書いたものはそのまま運用されるので、固めにつくることが多い</p>
-
-<p>集めてくるところとか、加工整形した結果などは固くつくる必要はない
-(書捨ても多いから)</p>
-
-<p>要素</p>
-
-<ul>
-<li>データを集めて保存</li>
-<li>総うさするコンソr−るapi</li>
-<li>データしゅべつ、型だとかのスキーマ管理</li>
-<li>計算処理(batch,query)-> Java</li>
-<li>キューイングやスケジュール処理</li>
-<li>データを格納&amp;エクスポート</li>
-</ul>
-
-
-<p>キューとワーカーの話</p>
-
-<p>perfedtsched(スケジューラー)
-→SPOFのないcrontabと思えばよい
-→1回も実行されないよりも２回実行されたほうがよい(別途担保が必要だが・・・)</p>
-
-<p>リトライ可能かは、状況やエラー内容による
-実行時間
-jobの実行内容が重いものやら軽いものまで</p>
-
-<p>perfectqueue(キュー)</p>
-
-<ul>
-<li>優先どの高いキューは高いものは素早く処理</li>
-<li>graceful restart(字工事のjobは分離して実行)</li>
-<li>RDBMSのようなinsertで実現</li>
-<li>RDS(MySQL)を使ってる</li>
-</ul>
-
-
-<p>パフォーマンスコントロールとかでジョブ実行を制御している
-安全側に倒している(顧客情報のisolationとか)</p>
-
-<p>何故Rubyを使っているか</p>
-
-<ul>
-<li>ワーカーのコードが複雑だけど重要</li>
-<li>テストが一番重要なので、書きやすいのでrspecを採用</li>
-<li>テストコードの書きやすさが重要だった(可読性とか、オーバーライドとか)</li>
-<li>新しい機能とか新しいライブラリは使っていく</li>
-</ul>
-
-
-<p>スケジューラーとキュー気になる</p>
-
-<h3>Ruby for one day game programming camp for beginners</h3>
-
-<hr />
-
-<p>京大マイコンクラブで事例</p>
-
-<p>Windowsの環境が殆どなので以下を実行するようにした</p>
-
-<ul>
-<li>Ruby1.8.4(starter kit)</li>
-<li>MyGame and Ruby/SDL(ゲーム用)</li>
-<li>sakura editor</li>
-</ul>
-
-
-<p>インストールして終わりぐらいの単純なものがよい</p>
-
-<ul>
-<li>講義みたいなことはしない</li>
-<li>1対1のペアプロ</li>
-<li>楽しいRubyが教本</li>
-</ul>
-
-
-<p>プログラム未経験の参加者の8割が大体できる
-→やる気に繋がる
-→自信によって自分が勉強する</p>
-
-<p>考察してみる</p>
-
-<ul>
-<li>教えかたが勉強できる</li>
-<li>つくるものが決まっている</li>
-<li>締め切り</li>
-<li>教えるものが少ない(基本的な制御構造)</li>
-</ul>
-
-
-<h3>Ruby and PostgreSQL, a love story</h3>
-
-<hr />
-
-<p>plmruby
-zombodb</p>
-
-<ul>
-<li>producael language handler(他の言語のサポート)</li>
-<li>indexがすぐれてる(通常indexだけなく、elastic searchとかのラッパーにもできる)</li>
-<li>foreginData(他にデータが投げられる, csvなりなんなりにｄけいる)</li>
-</ul>
-
-
-<p>postgresql fdl</p>
-
-<ul>
-<li>callbackルーチンで駆動するライフサイクル(コールバックチェーンかな)</li>
-<li>rubyがサポートする</li>
-</ul>
-
-
-<p>holycorn</p>
-
-<h3>Rhebok, High Performance Rack Handler</h3>
-
-<hr />
-
-<p>Rhebok</p>
-
-<ul>
-<li>rack handler</li>
-<li>unicorn比較で1.5x</li>
-<li>gazelle(perlnのpluck)の置き換え</li>
-</ul>
-
-
-<p>使いドコロ</p>
-
-<ul>
-<li>高いトラフィックのあるところ</li>
-<li>最適化が進んでるところに最適(SNS, gameとか)</li>
-<li>rackがネックになったとき</li>
-</ul>
-
-
-<p>使えないところ</p>
-
-<ul>
-<li>websocket</li>
-<li>streaming</li>
-<li>リバースプロキシかまさないといけない</li>
-</ul>
-
-
-<p>性能</p>
-
-<ul>
-<li>http1.1(keepaliveは未サポート)</li>
-<li>unix socket</li>
-<li>ホットデプロイ可能</li>
-<li>rackアプリの起動でOK</li>
-</ul>
-
-
-<p>Rack</p>
-
-<ul>
-<li>仕様(webserverとF/WをつなぐI/F)</li>
-<li>middleware</li>
-<li>Rack::Handlerの名前空間の下に同時実装をすれば自動認識できる</li>
-</ul>
-
-
-<p>パフォーマンス上げる</p>
-
-<ul>
-<li>マルチプロセス</li>
-<li>マルチスレッド</li>
-<li>IO多重化</li>
-</ul>
-
-
-<p>timeoutの実現</p>
-
-<ul>
-<li>IO.selectを使用する</li>
-<li>pollを使うことで実現</li>
-</ul>
-
-
-<p>parser</p>
-
-<ul>
-<li>pico_http_parserに渡すように変更</li>
-</ul>
-
-
-<p>tcp</p>
-
-<ul>
-<li>tco_nodelayをオフにする</li>
-<li>バッファリング遅延対策</li>
-<li>tcpのやり取りが増えるのでフラグメンテーションいっぱい</li>
-<li>書き込み回数を1回にしておく</li>
-</ul>
-
-
-<h3>Pragmatic Testing of Ruby Core</h3>
-
-<p>テストを実行してみる
-テストが落ちた報告をするといい</p>
-
-<p>Makefleにテストがなく、common.mkにある
-btest-ruby => bootstraptest
-sample/test.rbが通った後に実行(runner.rb経由で実行)
-make test-allなどは、標準ライブラリのテスト</p>
-
-<p>make test-all TESTS="-j4"すると並列で動く</p>
-
-<p>test/ruby : 組み込み
-test/logger : 添付ライブラリ
-test/-ext- : C拡張</p>
-
-<p>envutil.rb &lt;- ヤバイ
-leakchecker.rb</p>
-
-<p>rubyspecは現行の振る舞いだけしか書いてないので、
-言語仕様ではない(by Matz)</p>
-]]></content>
-  </entry>
+    </p>
+    
+      <div class="sharing">
   
-</feed>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2017/09/21/ruby-kaigi/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2017/09/21/ruby-kaigi/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/06/19/auth-gem/" title="Previous Post: 認証系のgemをちょっと見てみた">&laquo; 認証系のgemをちょっと見てみた</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p>どうやらSEをやっているらしい。</p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/09/21/ruby-kaigi/">ruby-kaigi</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/06/19/auth-gem/">認証系のgemをちょっと見てみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/06/16/use-git-branch-command/">gitのブランチ系コマンドでよく使うもの</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/04/02/kotlin-study-for-kansai/">Kotlin 1.0リリース記念勉強会 in 京都に行ってきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Tag Cloud</h1>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 123.47826086956522%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.21739130434783%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.6086956521739%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.6086956521739%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.04347826086956%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.6086956521739%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.43478260869566%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.6086956521739%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.6086956521739%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.6086956521739%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.6086956521739%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.6086956521739%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.6086956521739%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.6086956521739%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 118.26086956521739%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.6086956521739%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.6086956521739%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 128.69565217391303%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 115.65217391304348%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 115.65217391304348%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.6086956521739%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.6086956521739%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(23)</a> <a href='/blog/categories/shellscript' style='font-size: 102.6086956521739%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.6086956521739%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 120.86956521739131%'>戯言(8)</a> </span>
+</section
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - kurobara -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

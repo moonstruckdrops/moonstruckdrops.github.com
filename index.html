@@ -9,7 +9,11 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに だいたいのwebサービスにはユーザー登録をしてはじめて使用することが多いと思います ご多分にもれずに、これから実装しようとしたものでメンバースキルを鑑みるとRailsという形ですすむことになりました。 では、Railsでアプリを書くときに認証系のgemって、 &hellip;">
+  <meta name="description" content="はじめに Rubykaigi2017に参加してきましたので、メモを共有しておきます Keynote Nobuさんの発表 ゆるふわRuby生活 デバッグ
+新機能
+バグ作成 リポジトリ Rubyのgithubはミラーなのであんまり見ない
+移行コスト(svn to git)
+hashが明確でない( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +75,1296 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2017/09/21/ruby-kaigi/">Ruby-kaigi</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-09-21T21:32:00+09:00" pubdate data-updated="true">Sep 21<span>st</span>, 2017</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>はじめに</h3>
+
+<hr />
+
+<p>Rubykaigi2017に参加してきましたので、メモを共有しておきます</p>
+
+<h3>Keynote</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/n0kada.html">Nobuさんの発表</a></p>
+
+<ul>
+<li>ゆるふわRuby生活
+
+<ul>
+<li>デバッグ</li>
+<li>新機能</li>
+<li>バグ作成</li>
+</ul>
+</li>
+<li>リポジトリ
+
+<ul>
+<li>Rubyのgithubはミラーなのであんまり見ない</li>
+<li>移行コスト(svn to git)</li>
+<li>hashが明確でない(リビジョン番号と比較して)</li>
+<li>gitがwindows非サポート</li>
+</ul>
+</li>
+<li>issue
+
+<ul>
+<li>redmine</li>
+<li>mailinglist</li>
+</ul>
+</li>
+<li>meeting
+
+<ul>
+<li>(物理で会う場合)バグチケットの棚卸し</li>
+</ul>
+</li>
+<li>build
+
+<ul>
+<li>out-of-place-build
+
+<ul>
+<li>configureのオプション</li>
+</ul>
+</li>
+<li>baseruby
+
+<ul>
+<li>ソース生成したりなど</li>
+</ul>
+</li>
+<li>miniruby
+
+<ul>
+<li>ビルド時の中間生成物</li>
+<li>拡張ライブラリ</li>
+<li>共有ライブラリの非サポート
+
+<ul>
+<li>単独で動かせる</li>
+<li>エンコードが固定</li>
+<li>共有ライブラリの機能が無理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>extconfのビルドが遅い
+
+<ul>
+<li>別プロセスでビルドするようにした(2.5以降)
+
+<ul>
+<li>依存関係がなければ</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ヘッダーや共有ライブラリの位置</li>
+<li>trace_var
+
+<ul>
+<li>ビルド時に変数の代わり内容をhookする</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>bug?</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>p = 2
+</span><span class='line'>p (-1.3).abs #=&gt; 1.3
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>カッコの前にspaceを置く</li>
+<li>キーワード引数の名前を内部的にはラベルと呼称</li>
+<li>parse_ident()
+
+<ul>
+<li>小文字で始まってるか識別する</li>
+</ul>
+</li>
+<li>lavr_ident
+
+<ul>
+<li>既に定義済みかチェック</li>
+</ul>
+</li>
+<li>lvar_definedを外せば多分意図通りになって直るけど・・・</li>
+<li>string.intern(symbol作成)の再定義するとsymbolにならない
+
+<ul>
+<li>:&#8221;#{aaa}&#8221;みたいな書き方で、refineでstring.internを上書きしたのだとsymbolにならない</li>
+</ul>
+</li>
+<li>2.5にnew featureはないのか？
+
+<ul>
+<li>rescure inside do-end</li>
+<li>hash,transform_keys</li>
+</ul>
+</li>
+<li>議論中
+
+<ul>
+<li>メソッドオブジェクトを作るためのメソッドみたいなのは議論中</li>
+<li>右代入(rightward assignment)</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Fiber in the 10th year</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/ko1.html">ko1さんの発表</a></p>
+
+<ul>
+<li>suspend/continueはprocはできないけどfiberならできる</li>
+<li>Fiberの応用
+
+<ul>
+<li>使うところ
+
+<ul>
+<li>ブロックの仲で繰り返す</li>
+<li>ブロックの外で制御</li>
+</ul>
+</li>
+<li>ゲームのキャラクタごとにパラメータ制御</li>
+<li>IOscheduler(none-blockingio)
+
+<ul>
+<li>timerがない</li>
+<li>ioblockingでも切り替え無し</li>
+<li>共有データの同期処理を書く必要がおそらく無い</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>当初、Fiberは任意のFiberに処理を渡すpassというAPIだけを持っていた(coroutineだった)。</li>
+<li>coroutineは強すぎて管理が難しい。</li>
+<li>contextの切替
+
+<ul>
+<li>thread state</li>
+<li>vm stack</li>
+<li>machine stack</li>
+</ul>
+</li>
+<li>昔はコピー
+
+<ul>
+<li>コードを参考にできた</li>
+<li>殆どの環境で使える</li>
+<li>スタックが深いと領域が必要で時間かかる</li>
+</ul>
+</li>
+<li>その次
+
+<ul>
+<li>nativeのスタック領域を使うように</li>
+</ul>
+</li>
+<li>今
+
+<ul>
+<li>ポインター切替で実行
+
+<ul>
+<li>5%早くなった</li>
+<li>30%メモリ消費減った(但し、局所的)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>autofiber
+
+<ul>
+<li>既存コード変更不要</li>
+<li>blockimgioを勝手に切り替える(ioblockのみ)</li>
+<li>fiberの指定不要</li>
+<li>同期処理を書く必要が出て来る</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>How Close is Ruby 3x3 For Production Web Apps?</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/codefolio.html">Noah Gibbsさんの発表</a></p>
+
+<ul>
+<li>Real Web Appsはproductionで人々に使われていることで、fasterはベンチマークテスト結果を改善</li>
+<li>くりかえしすることを実行</li>
+<li>通常アクションを記録</li>
+<li>optcarrotでwarmup</li>
+<li>discurseで採取(https://github.com/discourse/discourse)</li>
+<li>Ruby2.0.0からRuby2.4.1で速度はどうなったか。途中でDiscourse自体がv1.5からv1.8に変わってしまったが、同バージョンの中ではRuby Versionが上がるにつれて着実に改善</li>
+<li>DiscourseでのベンチマークではRuby2.0.0 -> Ruby 2.4.1にかけて150%ほど速くなっている</li>
+<li>ウォームアップについて。MRIでもwarmupについれてスループットが改善する。どのRubyバージョンでも同程度。5000</li>
+<li>warmup iterationで5-7%程度の改善。</li>
+<li>firstrequestは2.0.0に比較して30%確実に早くなている</li>
+<li>https://github.com/noahgibbs/rails_ruby_bench</li>
+<li>https://docs.google.com/presentation/d/1tUQpblTufP0IWiZSfnky56y9WvYeqMQF9ve45yIcpYY/edit</li>
+</ul>
+
+
+<h3>Gemification for Ruby 2.5/3.0</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/hsbt.html">hsbtさんの発表</a></p>
+
+<ul>
+<li>現状と展望について
+
+<ul>
+<li>raa</li>
+<li>rubyforge</li>
+<li>gems.github.com</li>
+<li>gemcutter.org</li>
+<li>rubygems.org</li>
+<li>bundler &lt;= イマココ</li>
+</ul>
+</li>
+<li>標準添付ライブラリ
+
+<ul>
+<li>requireしなくても使えるもの</li>
+<li>standard libraries
+
+<ul>
+<li>svnと一致しているもの</li>
+</ul>
+</li>
+<li>default gems
+
+<ul>
+<li>rubyと一致orメンテナがリリース</li>
+</ul>
+</li>
+<li>bundled gems
+
+<ul>
+<li>メンテナがリリース</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>default gems
+
+<ul>
+<li>openssl
+
+<ul>
+<li>githubで開発</li>
+<li>あるタイミングでsvn側に取り込み</li>
+<li>rubyのバージョン違っていても、使える</li>
+</ul>
+</li>
+<li>psych
+
+<ul>
+<li>jruby/crubyの互換性確保</li>
+</ul>
+</li>
+<li>rdoc</li>
+</ul>
+</li>
+<li>bundledgems
+
+<ul>
+<li>testunit/minitest</li>
+<li>ビルド時にinstallするもの</li>
+<li>rake
+
+<ul>
+<li>標準添付する必要があんまりないので</li>
+</ul>
+</li>
+<li>デメリット
+
+<ul>
+<li>開発中のrubyでbundledgemsが動くかも保証もできない</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>gemfication
+
+<ul>
+<li>standaradのもをgemで配布していく</li>
+<li>標準添付ライブラリをgemとして切り出していく</li>
+<li>2.5,2.6で追加したものを2.4でも使える可能性ある</li>
+</ul>
+</li>
+<li>問題
+
+<ul>
+<li>標準添付ライブラリ間の依存関係</li>
+<li>バックポートによるメンテナの負担がヤバイ</li>
+<li>メンテナが古いのでも使えうように頑張る必要でてくる
+
+<ul>
+<li>1.8.7のサポート対応</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>rubygems/rubygems.org
+
+<ul>
+<li>サイト</li>
+</ul>
+</li>
+<li>rubygems/rubygems
+
+<ul>
+<li>ライブラリ周り(bundlerチーム)</li>
+</ul>
+</li>
+<li>rubyfication
+
+<ul>
+<li>rubygems上に名前空間周りでバッティングして調整して上書き</li>
+</ul>
+</li>
+<li>3.0へ向けて
+
+<ul>
+<li>bundlerはデフォルトgemになる</li>
+<li>標準添付は全てgemにしておきたい</li>
+<li>標準ライブラリのバージョン周りでもしかしたらバージョンの不具合起きるかも</li>
+<li>Bundler がないと RubyGems 2.7 の動きが怪しい</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Development of Data Science Ecosystem for Ruby</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/mrkn.html">mrknさんの発表</a></p>
+
+<ul>
+<li>現在
+
+<ul>
+<li>Rubyだけで頑張る方法
+
+<ul>
+<li>データ処理部分</li>
+</ul>
+</li>
+<li>併用する方法
+
+<ul>
+<li>メイン処理に関わる箇所でｍデータの受け渡し処理</li>
+<li>2重変更が必要(データ処理とメイン処理)</li>
+<li>pythonやrを呼び出すとデータ交換コストが高く、データ形式の変更時などは両方に変更が必要</li>
+</ul>
+</li>
+<li>rubyからpythonを呼び出す方法</li>
+<li>rails上でpandasで表示
+
+<ul>
+<li>パフォーマンスに問題ありそうだけど、pandas呼べてる</li>
+</ul>
+</li>
+<li>rubyからpythonを呼び出すことに不自然ではない
+
+<ul>
+<li>先入観では？</li>
+<li>RPy2みたいなものも存在している
+
+<ul>
+<li>大体のことがPythonでできるから、Pythonになっている</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>issue登録が欲しい</li>
+</ul>
+</li>
+<li>将来への展望
+
+<ul>
+<li>未来を見据えてPycallでないようにしたい</li>
+<li>一つの言語では完結しない
+
+<ul>
+<li>pysparとはいえ、spark自信はscala,java</li>
+</ul>
+</li>
+<li>apache arrowを例にとっても、bindingを作っておけば将来apache arrowが流行れば使われるようになる</li>
+<li>red data toolsに参加してもらいたい</li>
+<li>pycallにissue/prが欲しい</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Ruby Committers vs the World</h3>
+
+<hr />
+
+<ul>
+<li>型注釈、結局コミッターはどう思ってるのか？
+
+<ul>
+<li>全体的に「別にあってもいいんじゃないの」って空気感</li>
+</ul>
+</li>
+<li>右代入？
+
+<ul>
+<li>matz右代入ありなんだけど、いい記号がない。。。</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>keynote</h3>
+
+<hr />
+
+<p>Matzによるkeynote</p>
+
+<ul>
+<li>言語愛が最大の要因</li>
+<li>プログラミング言語面白い</li>
+<li>例外なくプログラミング言語が好き</li>
+<li>他の言語を貶めることは無い</li>
+<li>simula(一番最初と言われるオブジェクト指向言語)
+
+<ul>
+<li>inheritance</li>
+<li>差分プログラミング</li>
+</ul>
+</li>
+<li>simulaからではなくlisp, smalltalkから影響を受けているのでsimulaから直接ではない</li>
+<li>super classは２つでは？</li>
+<li>roleは複数持ってるのでは？</li>
+<li>単一継承ではなく多重継承
+
+<ul>
+<li>Lisp(flavors)の世界から</li>
+<li>自然な拡張だが、複雑化しやすい
+
+<ul>
+<li>daiamond継承など</li>
+<li>c3 linialization algorizm(線形化アルゴリズムで、継承順序を決定する)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>mix-in
+
+<ul>
+<li>lisp内ではflavorsと呼ばれる
+
+<ul>
+<li>バニラアイスに、チョコチップやミントの味を追加するみたいな意味
+
+<ul>
+<li>アイスクリームはインスタンスにできるが、チョコチップはできない</li>
+<li>混ぜた味(ミントアイスクリーム)はインスタンスにできる</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>モジュールはmixinの単位</li>
+<li>Rubyではグループ分けの単位として使われてる
+
+<ul>
+<li>Net::HTTPのNetなど</li>
+</ul>
+</li>
+<li>singletonとしても使われている
+
+<ul>
+<li>FileUtilsなど</li>
+</ul>
+</li>
+<li>メソッドや機能の集まりとして使われている
+
+<ul>
+<li>Mathモジュールなど
+
+<ul>
+<li>includeすると直接使えるようになる(モジュールファンクション)</li>
+<li>メソッドをコピーしてオブジェクトに注入</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>メソッド結合としての単位
+
+<ul>
+<li>alias method chain
+
+<ul>
+<li>メソッドの別名をつけて、置き換えることができる</li>
+</ul>
+</li>
+<li>module prepend
+
+<ul>
+<li>dynamicに変更することができなくなる</li>
+</ul>
+</li>
+<li>最初は入れる気がなかったが考える事で入れるようになった
+
+<ul>
+<li>lispのメソッドコンビネーション</li>
+<li>classにおけるaround hook</li>
+<li>aspect思考からも影響</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>refinement
+
+<ul>
+<li>open classの機能はあった
+
+<ul>
+<li>monkey patching機能(昔はgerilla -> gorilla -> monky)</li>
+<li>ActiveSupport</li>
+</ul>
+</li>
+<li>グローバルに影響与える
+
+<ul>
+<li>selector namaspaceも候補にあった</li>
+<li>usingを都度書く必要があるので、イマイチ使われていない？</li>
+</ul>
+</li>
+<li>スコープを区切ったmonkey patch</li>
+<li>レキシカル</li>
+<li>使い方
+
+<ul>
+<li>C#のエクステンション</li>
+<li>既存のメソッドを置き換える
+
+<ul>
+<li>ローカル里バインディングがない</li>
+<li>想定外に置き換わることもない</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>structural signature
+
+<ul>
+<li>type check
+
+<ul>
+<li>Javaのインターフェースでは?</li>
+</ul>
+</li>
+<li>まだ導入されていない</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>performanace
+
+<ul>
+<li>Benchmark suite</li>
+<li>MJIT</li>
+<li>Rubex</li>
+</ul>
+</li>
+<li>concurrency
+
+<ul>
+<li>fiber</li>
+<li>autofiber</li>
+<li>guild</li>
+</ul>
+</li>
+<li>static analytics</li>
+</ul>
+
+
+<h3>An introduction and future of Ruby coverage library</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/mametter.html">mameさんの発表</a></p>
+
+<ul>
+<li>型システムだけではなくカバレッジ方面でも活躍していく</li>
+<li>カバレッジ
+
+<ul>
+<li>コード</li>
+<li>未テストのコード検出</li>
+<li>テストスイートの良さ体語</li>
+<li>function coverage
+
+<ul>
+<li>簡単可視化しやすい</li>
+<li>関数の中はみないので指標として弱い</li>
+</ul>
+</li>
+<li>line coverage &lt;= Rubyはこちらのみサポート
+
+<ul>
+<li>簡単可視化しやすい</li>
+<li>関数の中はみないので指標として弱い</li>
+<li>後置ifなど見落としやすい</li>
+</ul>
+</li>
+<li>branch coverage
+
+<ul>
+<li>網羅的に検証できている</li>
+<li>可視化が難しい(多くのツールでサポートできてない)</li>
+<li>更に細かいcondition coverageがある</li>
+</ul>
+</li>
+<li>C0/C1/C2の指す内容については人によって異なる可能性あるので注意</li>
+</ul>
+</li>
+<li>理解してつかっていくには
+
+<ul>
+<li>よいテストスイートは？
+
+<ul>
+<li>仕様を満たしているかは取れない
+
+<ul>
+<li>設計に対する網羅性はない</li>
+</ul>
+</li>
+<li>間違えてたしてもテストコードがありカバレッジがあるとないとでは大違い
+
+<ul>
+<li>カバレッジは指標なので、100%を目指してもダメ</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>未テストを理解</li>
+<li>テストデザインを考える
+
+<ul>
+<li>特に観点が重要</li>
+</ul>
+</li>
+<li>どれくらい網羅性があれば？
+
+<ul>
+<li>重要なものに関しては100%を目指す(ぐらいの温度感)</li>
+<li>費用対効果も考慮に入れて考える
+
+<ul>
+<li>ioとかテストしにくいものは、割に合うか考えてやる</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ライブラリの現状と展望
+
+<ul>
+<li>simplecov
+
+<ul>
+<li>coverage.soのラッパー</li>
+<li>htmlで結果出力</li>
+<li>テストの一番最初に呼ばないと、それ以前に呼ばれたものは測定対象にならないことに注意</li>
+<li>関数定義も実行対象になってしまうので、意味が無いことに注意(メソッドが呼ばれてない場合)</li>
+</ul>
+</li>
+<li>concov
+
+<ul>
+<li>時系列カバレッジ</li>
+<li>追加されたコードに対してテストがされているかのチェック</li>
+</ul>
+</li>
+<li>other lang
+
+<ul>
+<li>C/c++
+
+<ul>
+<li>gcov/lcov</li>
+</ul>
+</li>
+<li>java
+
+<ul>
+<li>covertura emma, clover, jacoco</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>今後の計画と展望
+
+<ul>
+<li>function / branch coveargeの測定追加
+
+<ul>
+<li>issueにコメント欲しい</li>
+<li>互換性を持って作っている</li>
+</ul>
+</li>
+<li>100%既存に互換性</li>
+<li>他のcoverageツールも参考
+
+<ul>
+<li>lcovなど</li>
+</ul>
+</li>
+<li>overhead
+
+<ul>
+<li>現状ruby本体だと5倍弱時間がかかる</li>
+<li>railsだと2倍くらい？の見込み</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>workshop</h3>
+
+<hr />
+
+<p>前日のmrknさんが発表されていたPycallについてのworkshop<br/>
+リポジトリは<a href="https://github.com/rubydata/rubykaigi2017.git">こちら</a><br/>
+docker runをすることで、workshopの内容が出てきます</p>
+
+<h3>Ruby Language Server</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/mtsmfm.html">mtsmfm</a>さんの発表</p>
+
+<ul>
+<li>lanugageserver
+
+<ul>
+<li>エディタの補完</li>
+<li>メソッド定義</li>
+<li>ビルド</li>
+<li>languageserverプロトコル</li>
+<li>ドキュメントの整形</li>
+</ul>
+</li>
+<li>今までのものはエディタ向けのもの
+
+<ul>
+<li>viならvi, emacsならemacs</li>
+</ul>
+</li>
+<li>msが仕様を公開している
+
+<ul>
+<li>でもvsコードの拡張プラグイン向け</li>
+</ul>
+</li>
+<li>Languageserverprotocol
+
+<ul>
+<li>汎用と専用がある</li>
+</ul>
+</li>
+<li>rubyで書くには？
+
+<ul>
+<li>基本はnode</li>
+<li>JSON-RPCでアクセスができればOK
+
+<ul>
+<li>但し、クライアントがうまくサーバと通信できるようにする必要がある</li>
+</ul>
+</li>
+<li>gemでlanguage_server-protocolとして公開している</li>
+</ul>
+</li>
+<li>内容
+
+<ul>
+<li>rocodetoolsで補完
+
+<ul>
+<li>動的解析に利用、副作用とか到達不能な場合は無力</li>
+<li>インスタンスレベルの補完はできてない(静的解析)</li>
+</ul>
+</li>
+<li>エラーメッセージは実行して(wcオプション)、正規表現で結果取得</li>
+</ul>
+</li>
+<li>将来
+
+<ul>
+<li>静的解析の改良</li>
+<li>ドキュメント</li>
+<li>rubocop</li>
+<li>syntax highlight</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Compacting GC in MRI</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/tenderlove.html">Aaron</a>さんの発表</p>
+
+<ul>
+<li>copy on write最適化
+
+<ul>
+<li>性質や定義に注意</li>
+<li>コピーしたものは、複製元のメモリ上の場所だけを持ってる
+
+<ul>
+<li>配列も同じだが、hashはできない</li>
+<li>コピー元に変更があったら、コピー先に掛かれる</li>
+<li>プロセスforkだとコピーしない</li>
+<li>Copy on Writeは何かの変更が起きない限り、コピーを作る必要はなく、必要になったときにはじめてコピーを作る</li>
+<li>unicornは親プロセスをforkしている
+
+<ul>
+<li>unicornはforkして子プロスを立てるので、Railsが子プロセスで別々に読み込まれてつらい</li>
+<li>子プロセスは親プロセスのメモリを指してるのでメモリ使用量を減少させることができる
+
+<ul>
+<li>子で書き込むとコピーされる</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>pagefault(共有メモリの変更が原因 => GC)
+
+<ul>
+<li>GCのobject allocationでpage faultが起きる。ruby objectのサイズはOSのpageよりも小さいので、object割り当てをするとページまるごとコピーされるし、無駄に使用量がどんどん増える</li>
+<li>オブジェクトのサイズはページサイズより小さいので1オブジェクトの変更でも1ページ分のメモリコピーが行われて非効率</li>
+</ul>
+</li>
+<li>heap compaction
+
+<ul>
+<li>two finger compaction(単純なクイックソートアルゴリズム)
+
+<ul>
+<li>欠点 ランダムに移動するので遅い</li>
+<li>利点 他のアルゴリズムよりに簡単に実装できる(下記の２つしかない)
+
+<ul>
+<li>オブジェクトの移動</li>
+<li>更新</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>gc
+
+<ul>
+<li>ヘルパー関数を用意した</li>
+<li>移動できないビットテーブル</li>
+<li>rb_gc_mark
+
+<ul>
+<li>lowlevelでC拡張</li>
+</ul>
+</li>
+<li>GC.compaction
+
+<ul>
+<li>rb_gc_mark以外が対象</li>
+</ul>
+</li>
+<li>難しいもの
+
+<ul>
+<li>hash key</li>
+<li>２重参照</li>
+<li>global変数</li>
+<li>rb_class_define
+
+<ul>
+<li>gcはglobal変数を変更することはできない</li>
+</ul>
+</li>
+<li>string literalの移動するとbytecode更新が続いているので対応が難しい</li>
+<li>結局、何も動かせていないような・・・
+
+<ul>
+<li>とはいえRailsでも46%程度削減できている</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>inspect memory
+
+<ul>
+<li>object_space.dump_all
+
+<ul>
+<li>rubyのメモリ</li>
+<li>address: 位置</li>
+<li>reference: 参照先メモリ</li>
+<li>size: メモリサイズ</li>
+</ul>
+</li>
+<li>グラフを作成して変化を追ってみるといいかも
+tendorlover/heap-utils</li>
+<li>spaps</li>
+<li>pss</li>
+</ul>
+</li>
+<li>conclusion
+
+<ul>
+<li>プロダクションでテスト中</li>
+<li>小さいものでは全然効かない</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Ruby for Distributed Storage System</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/tagomoris.html">tagomoris</a>さんの発表</p>
+
+<ul>
+<li>disk &amp; networkioがボトルネックではなくなってきてる
+
+<ul>
+<li>storageは最近早いのでネックではない</li>
+<li>networkはクラウド事業者のものが早い</li>
+</ul>
+</li>
+<li>disk/networkioには、serialization/deseriazationが走る</li>
+<li>分散ストレージの場合はさらにレプリケーションが発生する
+
+<ul>
+<li>検証やネットワークioの非同期化</li>
+<li>これらをこなすためのさらなるThreadなど</li>
+</ul>
+</li>
+<li>quoram
+
+<ul>
+<li>最低２つのレプリカをできればよいというもの
+
+<ul>
+<li>短いレイテンシ
+
+<ul>
+<li>最後のレスポンスは無視する</li>
+</ul>
+</li>
+<li>非同期処理のコストを下げる</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>bigdam(TD)
+
+<ul>
+<li>データ入力系(pipeline)の見直しのPJ名
+
+<ul>
+<li>小さいデータから大きいものまで</li>
+</ul>
+</li>
+<li>世界中に配備する</li>
+<li>bigdam-pool
+
+<ul>
+<li>分散key-value storage</li>
+<li>buffer pool
+
+<ul>
+<li>S3は使わなくてもよいように</li>
+</ul>
+</li>
+<li>MB単位くらいをそうてい</li>
+<li>追記も可能にする</li>
+<li>同一データを書き込みできないようにしている</li>
+<li>replicationもする
+
+<ul>
+<li>無くなったデータの補充みたいなのは内</li>
+</ul>
+</li>
+<li>edge locationで一度受けて、center locationに置くうような仕組みを取ってる</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>design bigdom
+
+<ul>
+<li>mockから先につくたり、IFを全部先に用意</li>
+<li>ここをRubyで実装
+
+<ul>
+<li>柔軟なので、作って足りない場合に修正したりしてた</li>
+<li>手早く</li>
+</ul>
+</li>
+<li>integration /interface test
+
+<ul>
+<li>hashっぽいものを書くにはjavaは辛い</li>
+<li>さっさとシリアライズ、デシリアライズでサクッと使えて嬉しい</li>
+<li>Rubyだと型がないのでシリアライズ、デシリアライズが書きやすく、Mockやテストが書きやすかった。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>bigdum-pool-ruby
+
+<ul>
+<li>java版と同じものを用意している</li>
+</ul>
+</li>
+<li>非同期networkio
+
+<ul>
+<li>eventmachine</li>
+<li>cool.io</li>
+<li>celluloid::id</li>
+</ul>
+</li>
+<li>thread/timer
+
+<ul>
+<li>javaのほうが若干便利かも</li>
+<li>executerservie(Java)</li>
+</ul>
+</li>
+<li>monitormixin
+
+<ul>
+<li>mutexと似ているもの</li>
+</ul>
+</li>
+<li>resourcecontrol
+
+<ul>
+<li>try-with-resourceがrubyにはない</li>
+<li>begin_with_rescueが2.5から追加される</li>
+</ul>
+</li>
+<li>型
+
+<ul>
+<li>型を混ぜてしまうこと(ArrayにIntegerやStringを混ぜるなど)
+
+<ul>
+<li>多言語に対応させるときには・・・・</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>アプリケーションサーバ
+
+<ul>
+<li>Rubyだと基本webサーバしか・・・</li>
+<li>ストレージで動かせるとか汎用があると嬉しい</li>
+</ul>
+</li>
+</ul>
+
+
+<h3>Bundler 2</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/0xColby.html">0xColby</a>さんの発表</p>
+
+<ul>
+<li>bundle addコマンド経由でできるようになる</li>
+<li>plugin機構を取り入れて、事前処理や後処理も追加できる</li>
+<li>エラーメッセージの改良</li>
+<li>1.16が1.x系最終</li>
+<li>Bundler2は2.3以上</li>
+<li>sourceの名前付けをショートカットさせる(:githubみたいな指定)
+
+<ul>
+<li>gem &#8216;rack&#8217; github: &#8216;user/repo&#8217;</li>
+<li>ブロック指定もできる</li>
+</ul>
+</li>
+<li>bundle infoやbundle gemの情報が出て来る</li>
+<li>bundle packageがbundle cacheに変更</li>
+<li>bundler 1.xとの後方互換製ない</li>
+<li>bundlerは今後1年ごとにメジャーリリース（メジャーバージョンアップという意味ではなく)
+
+<ul>
+<li>ruby2.5ではruby側に同梱</li>
+</ul>
+</li>
+<li>bundler2でGemfile.lockが解釈できるが逆はできない(だったかな)</li>
+</ul>
+
+
+<h3>Memory Fragmentation and Bloat in Ruby</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/nateberkopec.html">nateberkopec</a>さんの発表</p>
+
+<ul>
+<li>512MBのDYNOでRails動かしてる場合は50%くらい(？)はMemory-constrained</li>
+<li>Rubyでのメモリ確保の挙動はレイヤーが深くて難しい、みたいな話をしてる。Ruby Code自体/Ruby Runtime/Allocator/MMU/実メモリ配置</li>
+<li>Rubyコード自体からランタイム、アロケーター、MMU、RAM構造まで考えること沢山</li>
+<li>freeは本当にfreeするわけではない。OSに領域を返すわけではない.初期化コストかかるのでガバッと拾ってしまってる</li>
+<li>web request allocation pattern</li>
+<li>http requestが終われば関連するメモリ全部捨てられる</li>
+<li>確保したメモリを更に小分けにして、リクエストごとに割り当ててレスポンスが終わったらまとめてfreeして再利用</li>
+<li>全てのオブジェクトには40ByteのRVALUEが与えられている。また、実際にmallocされて割り当てられた実際のオブジェクトデータへのポインタを持つ</li>
+<li>文字列も短いとRVALUEに入り大きければmallocで確保された場所へのポインタ</li>
+<li>GC.statの:heap_live_slotsでスロット数が、:heap_eden_pagesでページ数が取れる。GC::INTERNAL_CONSTANTS[:HEAP_PAGE_OBJ_LIMIT]でページごとの上限が取れる</li>
+<li>eden_pages * slots_per_pageで確保できるオブジェクトの上限が取れる。live_slotsをこれで割れば使用率が出せる</li>
+<li>PUMAはUnicornより多くのメモリを使ったり、Sidekiqがリークしたりする。スレッドごとのメモリ領域がメインスレッドのメモリ領域に還元</li>
+<li>スレッドごとにメモリ領域を確保した後、スレッドが終了しても開放されずにメインスレッドのメモリに統合される</li>
+<li>MALLOC_ALENA_MAXを指定すると確保するメモリ領域の上限を制限できるけど、速度とトレードオフになる</li>
+</ul>
+
+
+<h3>Writing Lint for Ruby</h3>
+
+<hr />
+
+<p><a href="http://rubykaigi.org/2017/presentations/p_ck_.html">p_ck_</a>さんの発表</p>
+
+<ul>
+<li>ripper</li>
+<li>Rubyのparserはほかにもある。標準のRipper。パースのRubyと実行するRubyが同じバージョンになってしまう問題</li>
+<li>ASTのトラバースでも無視するnilの可能性</li>
+<li>Traverserパターンで解析をする。nodeとvisitorを受け取り再帰的に呼び出していますね。</li>
+<li>node.source で括弧の有無など AST で欠損するソースそのものの情報を入手することができる</li>
+<li>lintの限界
+
+<ul>
+<li>ローカル変数の中身はparserは知らない
+
+<ul>
+<li>要はエラーがあったものを代入して回避なおｄ</li>
+</ul>
+</li>
+<li>method呼び出しで定義がわからない
+
+<ul>
+<li>静的解析とRubyの相性がイマイチよくない</li>
+</ul>
+</li>
+<li>monkypatch / params(rails) / evalだとLintではできない
+
+<ul>
+<li>実行できないという制約</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>構造が理解ができる
+
+<ul>
+<li>全てのケースに対して警告出せる</li>
+</ul>
+</li>
+<li>解析時間が短い
+
+<ul>
+<li>実行したりしないので</li>
+</ul>
+</li>
+<li>rubocopは汎用ルールなので、こっち使ったほうが楽</li>
+<li>Rubocop(Lintのルール)の作り方。rakeタスクがある。lintの実装とテストのテンプレートを作ってくれる
+
+<ul>
+<li>rubocop-plugin(特化したもの)</li>
+</ul>
+</li>
+<li>Lintはバグ検出に使えるもの</li>
+<li>解析は、ASTトラバースして見つける</li>
+<li>静的解析にはいくつか方法はある</li>
+</ul>
+
+
+<h3>終わりに</h3>
+
+<hr />
+
+<p>スピーカー、スタッフの皆様ありがとうございました</p>
+
+<p>久しぶりな方々ともお会いできて、新たな刺激がありました
+印象深いのが型、parser周りの話が多かった印象です<br/>
+来年は仙台なので、広島よりは都内から近いですね</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2006,78 +3300,6 @@ leakchecker.rb</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/12/12/ar-default-timezone/">ActiveRecord単体で使用した際に単一モデルにdefault_timezoneを設定する</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-12-12T12:50:00+09:00" pubdate data-updated="true">Dec 12<span>th</span>, 2015</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>はじめに</h3>
-
-<hr />
-
-<p>DBアクセスがあるような検証用のプログラムを書いたりするときってActiveRecord便利ですよね</p>
-
-<p>このとき、timezoneの設定がうまくいって無くてすごく嵌ったので備忘録代わりにメモしておきます</p>
-
-<h3>設定方法</h3>
-
-<hr />
-
-<p>単純にこれだけです</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class TestModel &lt; ActiveRecord::Base
-</span><span class='line'>  self.default_timezone = :local
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>もしくはこちらでもよいかと</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>class TestModel &lt; ActiveRecord::Base
-</span><span class='line'>  def self.default_timezone
-</span><span class='line'>    :local
-</span><span class='line'>  end
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>簡単でしたね</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2097,6 +3319,10 @@ leakchecker.rb</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/09/21/ruby-kaigi/">ruby-kaigi</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/06/19/auth-gem/">認証系のgemをちょっと見てみた</a>
       </li>
     
@@ -2112,15 +3338,11 @@ leakchecker.rb</p>
         <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/02/07/sudo-and-x-and-ssh/">sshでX11 Forwardingをsudoコマンド時に実施する方法</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 124.54545454545455%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.45454545454545%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.72727272727273%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.72727272727273%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.63636363636364%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.72727272727273%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.9090909090909%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.72727272727273%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.72727272727273%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.72727272727273%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.72727272727273%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.72727272727273%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.72727272727273%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.72727272727273%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 119.0909090909091%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.72727272727273%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.72727272727273%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 130.0%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 116.36363636363636%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 116.36363636363636%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.72727272727273%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.72727272727273%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(22)</a> <a href='/blog/categories/shellscript' style='font-size: 102.72727272727273%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.72727272727273%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 121.81818181818181%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 123.47826086956522%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.21739130434783%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.6086956521739%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.6086956521739%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.04347826086956%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.6086956521739%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.43478260869566%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.6086956521739%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.6086956521739%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.6086956521739%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.6086956521739%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.6086956521739%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.6086956521739%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.6086956521739%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 118.26086956521739%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.6086956521739%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.6086956521739%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 128.69565217391303%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 115.65217391304348%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 115.65217391304348%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.6086956521739%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.6086956521739%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(23)</a> <a href='/blog/categories/shellscript' style='font-size: 102.6086956521739%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.6086956521739%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 120.86956521739131%'>戯言(8)</a> </span>
 </section
 
 
@@ -2134,7 +3356,7 @@ leakchecker.rb</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - kurobara -
+  Copyright &copy; 2017 - kurobara -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
