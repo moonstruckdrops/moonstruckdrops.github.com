@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: DevOps - kurobaraのブログ</title>
+  <title>shibuya.apk主催のGoogleI/O 2018報告会にいってきた - kurobaraのブログ</title>
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="Category: DevOps">
+  <meta name="description" content="まぁなんとかやってます 久々にブログ書きます。
+というか、勉強会も行ってきたの久しぶりかもしれない。。。
+という訳なので、勉強会で取ったメモメモ
+(資料はどこかに上がってる) Slices氏 資料 (端末の検索)検索結果の中に自分のアプリのアクションを出せる &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://moonstruckdrops.github.comblog/categories/devops/">
+  <link rel="canonical" href="http://moonstruckdrops.github.com/blog/2018/05/26/shibuya-aab/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -70,35 +73,188 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: DevOps</h1>
+    
+      <h1 class="entry-title">shibuya.apk主催のGoogleI/O 2018報告会にいってきた</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-05-26T01:01:00+09:00" pubdate data-updated="true">May 26<span>th</span>, 2018</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><h3>まぁなんとかやってます</h3>
 
-  
-  <h2>2013</h2>
+<hr />
 
-<article>
-  
-<h1><a href="/blog/2013/10/16/packer-basic/">packerを使用して、VirtualMachineで動くVagrant用のBoxファイルを作成した</a></h1>
-<time datetime="2013-10-16T00:23:00+09:00" pubdate><span class='month'>Oct</span> <span class='day'>16</span> <span class='year'>2013</span></time>
+<p>久々にブログ書きます。<br/>
+というか、勉強会も行ってきたの久しぶりかもしれない。。。<br/>
+という訳なので、勉強会で取ったメモメモ
+(資料はどこかに上がってる)</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/devops/'>DevOps</a></span>
-</footer>
+<h3>Slices氏</h3>
+
+<hr />
+
+<p><a href="https://speakerdeck.com/wasabeef/how-to-develop-slices-apps">資料</a></p>
+
+<ul>
+<li>(端末の検索)検索結果の中に自分のアプリのアクションを出せる</li>
+<li><p>push通知とかホームスクリーンで出せるようになる</p></li>
+<li><p>確認用のアプリがあるので、エミュレータで専用のアプリを必要</p></li>
+<li><p>4.4以上</p></li>
+<li><p>SliceManager #&lt;= 作れるけどあんまりないと思う</p></li>
+<li><p>SliceProvider #&lt;= 実装は大体こっち</p></li>
+<li><p>manifestにproviderタグ</p></li>
+<li>contentproviderを継承したもの</li>
+<li>builderpatternで色々設定</li>
+<li>sliceaction(実際はpendingintentみたいなもの)</li>
+<li><p>sliceviewで画面</p></li>
+<li><p>adb shellで動作検証する</p></li>
+<li><p>初回だけパーミッション確認ある</p></li>
+<li><p>manifestに書くのはcontentprovider</p></li>
+<li><p>authoritiesは後々に重要になる</p></li>
+<li><p>contentprovider(sliceprovider)</p></li>
+<li>onBindingSliceが重要</li>
+<li>中で実装したパスによって動きが変わる</li>
+<li>authoritiesはここで使う</li>
+<li>builderはここで実装</li>
+<li>slice-content://<authorities>/&lt;provider定義のpath>でadb起動</li>
+<li><p>sliceactionで起動したいintentとか</p></li>
+<li><p>動的に更新もできる</p></li>
+<li>contentresolver.notifyChangeにsliceのuriを設定すればOK</li>
+</ul>
 
 
-</article>
+<h3>Android Test は “Write once, run everywhere.” の夢を見るか</h3>
+
+<hr />
+
+<p><a href="https://docs.google.com/presentation/d/1M_WMloMI18MNUYBSx9xHH3HiGktZIcTk4gG1PPfD_mg/edit?usp=sharing">資料</a></p>
+
+<ul>
+<li>robolectricとinstrumentedテストのAPIが似てたので統一された</li>
+<li>instrumentedテストのAPIがローカルで動く(robolectricが必要)</li>
+<li>テストの実行方法も統一したい = nitrogen pj</li>
+<li>flavorとかリセットとかその他辛いので、実行環境を抽象化とかしたもの</li>
+<li>googleのサポートの信頼性は高い(リリースはまだされてない)</li>
+</ul>
+
+
+<h3>Android App Bundle</h3>
+
+<hr />
+
+<ul>
+<li>5.0以上でsplit apk</li>
+<li>base apk, configuration apk, dynamic featureapk</li>
+<li>base apkは基本機能でユーザーが最初にインストールするもの</li>
+<li>configuration apkは特定の画面サイズとか言語のネイティブコードとか</li>
+<li>gradleでbundleセクションでlanguageとかdensityとか設定する</li>
+<li>dynamic feature apkは初回に必要にないものすべて</li>
+<li>manifestでmodukeを設定</li>
+<li>4.4以下では、dist:fusing=true</li>
+<li>dependencyにbaseを設定する</li>
+<li>base側はdynamicを読む設定を入れる</li>
+<li>base側にはmoduleをインストールする実装が必要>&lt;</li>
+<li>端末に合わせたアプリにできるようになる</li>
+<li>最適化されてるので小型のアプリにできる</li>
+<li>後から追加してもいいものが対象</li>
+<li>cliではbase:bundleみたいなのを打つといい</li>
+<li>play consoleのアップロードはちょっと面倒</li>
+<li>100MBとかbata program登録</li>
+<li>play側の署名できるようにしておく</li>
+<li>bundleツールでローカルテスト</li>
+<li>bundletoolsでインストールとか端末設定抽出とかして自動で個別設定いれる</li>
+<li>端末設定を変更すると追加の設定がインストールされる</li>
+<li>playが古いと4.4以前と変わらない動きになることに注意</li>
+<li>dynamic feature modukeは大規模でないと実装コスパが悪そうだけどモジュール化は重要かも</li>
+</ul>
+
+
+<h3>Material Components</h3>
+
+<hr />
+
+<ul>
+<li>materail theme editor = skitch plugin</li>
+<li>material components = 新しいsupport design library</li>
+<li>designライブラリにあったものは全部同梱されている(名前が変わったものがあるCardとか)</li>
+<li>chips = gmailとか送信とかにでてくる小さいタグっぽいview</li>
+<li>textfieldもアウトラインとか縁が簡単に囲まれたものができる</li>
+</ul>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">kurobara</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-05-26T01:01:00+09:00" pubdate data-updated="true">May 26<span>th</span>, 2018</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/android/'>Android</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://moonstruckdrops.github.com/blog/2018/05/26/shibuya-aab/" data-via="" data-counturl="http://moonstruckdrops.github.com/blog/2018/05/26/shibuya-aab/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/09/21/ruby-kaigi/" title="Previous Post: RuubyKaigi2017に参加してきた">&laquo; RuubyKaigi2017に参加してきた</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

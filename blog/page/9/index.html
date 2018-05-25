@@ -9,10 +9,9 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="すごくド基礎なのですが・・・。
-ユーザーアカウント削除ってどうやるんだっけな？ってなったのでついでにメモしておく。 ユーザーアカウントの追加 基本中の基本ですね。
-以下のコマンドのような感じで追加します。 1
-$useradd -u 500 -g wheel -m kurobara &hellip;">
+  <meta name="description" content="前置き 事の発端はある人と作業してたことから始まりました。。。
+というのも、自分が海外に行ってるいる間、作業をお願いしていました。 作業をお願いしていたのはいいのですが
+彼は普段使っていないGitを使ってみたかったようです。 今回は、そのとき伝えたことをネタにします。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +73,106 @@ $useradd -u 500 -g wheel -m kurobara &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/28/git-talk/">Gitを教えたときの話</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-28T20:33:00+09:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>前置き</h3>
+
+<hr />
+
+<p>事の発端はある人と作業してたことから始まりました。。。<br/>
+というのも、自分が海外に行ってるいる間、作業をお願いしていました。</p>
+
+<p>作業をお願いしていたのはいいのですが<br/>
+彼は普段使っていないGitを使ってみたかったようです。</p>
+
+<p>今回は、そのとき伝えたことをネタにします。<br/>
+もっとネタにするものはありますが(ぉぃ</p>
+
+<h3>基本操作以外に覚えて欲しいと伝えたこと</h3>
+
+<hr />
+
+<ul>
+<li>GitのGUIツールを捨てろ(言い過ぎだと思うし、賛否両論あると思っている)</li>
+<li>状態は常に確認するようにしよう</li>
+<li>ファイルを編集前状態に戻すやり方</li>
+<li>マージやリベースで、ファイル競合状態になったときの対処(エラーログとか読んでみる)</li>
+<li>ヘッド位置の意識</li>
+<li>ヘッドの操作方法やヘッドの位置がどこにあるのか</li>
+<li>落ち着いてブランチを切って、Git操作を試してみる(カジュアルに作れるので、作ったブランチで操作を試してみる)</li>
+<li>masterでのファイル編集をやめる</li>
+</ul>
+
+
+<p>コミットの取り消しや歴史の改変とかも覚えてて貰いたいけどな</p>
+
+<p>教えたはいいけど、自分もまだまだ使いこなせてないのでは？と思ったりしてます。</p>
+
+<h3>伝えた元に戻す系のコマンド類</h3>
+
+<hr />
+
+<p>元に戻し方とかそんな感じのことを以下にメモレベルで記載</p>
+
+<p>ファイルをインデックス(元々のヘッド状態)の状態に戻す</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git checkout -- &lt;元に戻したいファイル&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ワークツリーとインデックスをコミットIDに指定した状態に戻す</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git reset --hard &lt;コミットID&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>現在のコミットからブランチを作成する<br/>
+作業はここでしちゃいましょう。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git checkout -b &lt;ブランチ名&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>リベースでおかしなこと(ファイルの競合とか)が起きた時に元に戻す</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$git rebase --abort</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここに書いた以外のやり方なんていくらでもあるので、参考程度で。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1210,129 +1309,6 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/31/find-command/">Findコマンドのメモ</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-31T00:04:00+09:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>普段から常用しているコマンドなのですが、今更という感じです。</p>
-
-<p>滅多に使用しないオプションを今回使用することになったので、記録しておこうかと思った次第です。<br/>
-※今回、使ったのは日時オプションです</p>
-
-<table>
-<thead>
-<tr>
-<th align="left"> コマンドオプション    </th>
-<th align="center"> 機能          </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"> -name [filename]    </td>
-<td align="center"> 指定した文字でファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -user [username]    </td>
-<td align="center"> 指定したユーザーが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -group [groupname]  </td>
-<td align="center"> 指定したグループが所有するファイル、ディレクトリを検索</td>
-</tr>
-<tr>
-<td align="left"> -type [type]        </td>
-<td align="center"> ファイルの種類を指定して検索(b：ブロック型特殊ファイル　c：キャラクタ型特殊ファイル　d：ディレクトリ　l：シンボリックリンク　f：通常ファイル)</td>
-</tr>
-<tr>
-<td align="left"> -atime (+/-)n       </td>
-<td align="center"> 最後にアクセスしたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -ctime (+/-)n       </td>
-<td align="center"> 最後にステータスが変更されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mtime (+/-)n       </td>
-<td align="center"> 最後にデータが修正されたのがn日前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -mmin (+/-)n        </td>
-<td align="center"> 最後にデータが修正されたのがn分前で検索(+をつけると~日以上、-をつけると~日以下)</td>
-</tr>
-<tr>
-<td align="left"> -newer [filename]   </td>
-<td align="center"> 指定したファイルよりも後に更新されているものを検索対象にする</td>
-</tr>
-<tr>
-<td align="left"> -size n[c/k/b]      </td>
-<td align="center"> nのサイズのファイルを検索(c:バイト、k:キロバイト、b:ブロック)</td>
-</tr>
-<tr>
-<td align="left"> -ls                 </td>
-<td align="center"> 検索結果のファイル、ディレクトリの詳細を表示する(lsコマンドと同じ)</td>
-</tr>
-<tr>
-<td align="left"> -print              </td>
-<td align="center"> 検索結果を標準出力に出す(元々結果表示されるんで不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -fprint [filename]  </td>
-<td align="center"> 検索結果をファイルに出力する(>でファイル出力できるので不要かも)</td>
-</tr>
-<tr>
-<td align="left"> -exec [command] {}\;</td>
-<td align="center"> 検索結果を指定コマンドにの引数に設定して実行する</td>
-</tr>
-</tbody>
-</table>
-
-
-<p>(例)カレントディレクトリ配下のファイルに「hogehoge」という文字が含まれているかどうか調べる</p>
-
-<p>以下のコマンドで調べることができます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f -exec grep hogehoge {}\;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>こちらでも同じ結果を得られます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$find . -type f |xargs grep "hogehoge"</span></code></pre></td></tr></table></div></figure>
-
-
-<p>どちらでもいいと思いますが、自分はよく後者を利用しますね。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/10/">&larr; Older</a>
@@ -1354,6 +1330,10 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/05/26/shibuya-aab/">shibuya.apk主催のGoogleI/O 2018報告会にいってきた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/09/21/ruby-kaigi/">RuubyKaigi2017に参加してきた</a>
       </li>
     
@@ -1369,15 +1349,11 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
         <a href="/blog/2016/04/02/kotlin-study-for-kansai/">Kotlin 1.0リリース記念勉強会 in 京都に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 123.47826086956522%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.21739130434783%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.6086956521739%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.6086956521739%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.04347826086956%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.6086956521739%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.43478260869566%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.6086956521739%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.6086956521739%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.6086956521739%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.6086956521739%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.6086956521739%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.6086956521739%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.6086956521739%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 118.26086956521739%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.6086956521739%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.6086956521739%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 128.69565217391303%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 115.65217391304348%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 115.65217391304348%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.6086956521739%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.6086956521739%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(23)</a> <a href='/blog/categories/shellscript' style='font-size: 102.6086956521739%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.6086956521739%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 120.86956521739131%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.08695652173913%'>Android(10)</a> <a href='/blog/categories/api' style='font-size: 105.21739130434783%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.6086956521739%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.6086956521739%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.04347826086956%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.6086956521739%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.43478260869566%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.6086956521739%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.6086956521739%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.6086956521739%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.6086956521739%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.6086956521739%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.6086956521739%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.6086956521739%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 118.26086956521739%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.6086956521739%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.6086956521739%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 128.69565217391303%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 115.65217391304348%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 115.65217391304348%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.6086956521739%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.6086956521739%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(23)</a> <a href='/blog/categories/shellscript' style='font-size: 102.6086956521739%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.6086956521739%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 120.86956521739131%'>戯言(8)</a> </span>
 </section
 
 
@@ -1391,7 +1367,7 @@ ACLやBasic認証とかもここで設定できますが、最低限動作なの
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - kurobara -
+  Copyright &copy; 2018 - kurobara -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

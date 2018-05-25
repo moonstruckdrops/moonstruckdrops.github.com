@@ -9,16 +9,8 @@
   <meta name="author" content="kurobara">
 
   
-  <meta name="description" content="はじめに WebAPIと連携するようなAndroidアプリを作っているのですが
-開発と本番で接続先を切り替える必要が出てきました。 それのライトな対応方法をメモ build.gradleを編集 以下のような形で記載 1
-2
-3
-4
-5
-6
-7
-8
-buildTypes { debug { &hellip;">
+  <meta name="description" content="めちゃくちゃ基礎的な内容なのですが、備忘録を兼ねてメモしておく DBまるごと よくやるmysqldumpコマンド 1
+$mysqldump -u root -p development_db &gt; db_backup.sql テーブル単位 tオプションは、「テーブル作成情報（CREATE &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +72,69 @@ buildTypes { debug { &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/05/06/mysqldump/">テーブル単位のmysqldump</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-05-06T23:39:00+09:00" pubdate data-updated="true">May 6<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>めちゃくちゃ基礎的な内容なのですが、備忘録を兼ねてメモしておく</h2>
+
+<h3>DBまるごと</h3>
+
+<p>よくやるmysqldumpコマンド</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqldump -u root -p development_db  &gt; db_backup.sql</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>テーブル単位</h3>
+
+<p>tオプションは、「テーブル作成情報（CREATE TABLE ステートメント）を書き込まない」という内容を指す<br/>
+migrationなどで先にテーブルを作った場合とかに有効活用できる</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqldump -u root -p -t development_db my_table1 my_table2 &gt; table_backup.sql</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上のコマンドのようにテーブル名は複数指定可能(my_table1, my_table2などが該当)</p>
+
+<h3>リストア</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mysql -u root -p development_db &lt; summaries.sql</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1321,195 +1376,6 @@ Herokuではこのタスクが必要なようです。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/22/web-api-good-parts-2/">Web API the Good Parts2章</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-12-22T23:18:00+09:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>前置き</h2>
-
-<h4>近況</h4>
-
-<hr />
-
-<p>ざっくりと書くと、お前エンジニアなのに勉強しなくていいの？という状態</p>
-
-<ol>
-<li>免許が取れたので単車を乗り回している(運転が楽しくて毎日、運転しているような)</li>
-<li>昨年よりも比較的、仲がいい友人(男女問わず)と遊ぶ機会が多くなったかも&#8230;</li>
-<li>気の合う仲間と組んで、(Swiftで)アプリ作っている</li>
-<li>その気の合う仲間への技術指導していたり&#8230;</li>
-</ol>
-
-
-<p>なんだか、教えることが多くなって自分が学習している時間が比較的減ってきているそんな感じががが</p>
-
-<h4>そういう訳なので</h4>
-
-<hr />
-
-<p>本屋でざっくりと見かけてツボに嵌った本を読んでいこうかと</p>
-
-<p>「Web API The Good Parts」</p>
-
-<p>なのですが、上記3,4が結構あるので中々進まないという(ぉぃ</p>
-
-<p>ということなので、なるたけ気になるところ(覚えておくべきところ)だけまとめていこうかなと</p>
-
-<p>斜め読みした感じでは、結構ツボに嵌る内容なので自分のバイブルに入選してもいいかなと思ってたり。</p>
-
-<h2>エンドポイント設計</h2>
-
-<ol>
-<li>公開する機能を先に設計する</li>
-<li>覚えやすく、どんな機能を持つURIかひと目で分かるようにする</li>
-<li>HTTPメソッドの活用</li>
-<li>設計の注意点</li>
-<li>クエリパラメータ</li>
-<li>ログインや認証</li>
-<li>ホスト名とエンドポイント</li>
-</ol>
-
-
-<h4>1に関して</h4>
-
-<hr />
-
-<p>どんなAPIが必要かどうかを先に洗い出しておく</p>
-
-<h4>2に関して</h4>
-
-<hr />
-
-<ul>
-<li>短く入力しやすいURI</li>
-<li>人間が読んで理解できるURI</li>
-<li>大文字、小文字が混在しないURI</li>
-<li>改造しやすいURI</li>
-<li>サーバ側アーキテクチャが反映されていないURI</li>
-<li>ルールが統一されたURI</li>
-</ul>
-
-
-<h4>3に関して</h4>
-
-<hr />
-
-<p>HTTPメソッドを有効活用</p>
-
-<ul>
-<li>Restfulな形で活用すれば、一般的な形</li>
-</ul>
-
-
-<h4>4に関して</h4>
-
-<hr />
-
-<ul>
-<li>複数形の名詞を利用する</li>
-<li>利用する単語に気をつける((ProgramableWeb)[http://www.programmableweb.com/]等、他のサービスを参考に)</li>
-<li>スペースやエンコードが必要な文字は避ける</li>
-<li>単語をつなげる場合はハイフンにする(SEO的に有利なことも)</li>
-</ul>
-
-
-<h4>5に関して</h4>
-
-<hr />
-
-<ul>
-<li>相対位置を使用する場合、データ数が多くなると取得件数が減ること、更新頻度が高いものは不整合が起きやすくなることに注意</li>
-<li>絶対位置を使用する場合、クエリパラメータが「x以降」,「この日付よりも古いもの」という形でクエリパラメータをもたせたほうがよい</li>
-<li>日付の形式は、RFC3339に規定されている「1970-01-01T00:00:00Z」の形にする</li>
-<li>絞り込みのパラメータは、「q」のような形は曖昧検索に取られやすいので完全一致の場合は適切なパラメータにすること</li>
-<li>一意なリソースを表すのに必要な情報: パス</li>
-<li>省略可能: クエリパラメータ</li>
-</ul>
-
-
-<h4>6に関して</h4>
-
-<hr />
-
-<ul>
-<li>OAuthを使用して、標準的な形にする</li>
-</ul>
-
-
-<p>標準的なOAuthに則るとエラーメッセージ(RFC6749, RFC6750)は、以下のような形式となる
-(当然ながらhttpステータスは401)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>{
-</span><span class='line'>  "error": "invalid_token"
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>7に関して</h4>
-
-<hr />
-
-<ul>
-<li>ホスト名にapiを入れるのが主流</li>
-<li>企業で複数のサービスをホストする場合、例外的なホスト名</li>
-<li>サービスとしてのapiの場合はホスト名にapiをいれたほうがよい(外部から使われるため)</li>
-<li>プラットフォームの場合、service等をホスト名にいれる</li>
-</ul>
-
-
-<h2>まとめ</h2>
-
-<hr />
-
-<ul>
-<li>一般的なURI設計がそのまま適用できる</li>
-<li>APIならではのルール、デファクトスタンダードがある</li>
-<li>URIはリソースを表すものなので、URIとHTTPメソッドの組み合わせで処理の対象と内容を設計をする</li>
-</ul>
-
-
-<h4>Good</h4>
-
-<ul>
-<li>覚えやすく、どんな機能を持つかが一目で分かるようにエンドポイントにする</li>
-<li>適切なHTTPメソッドを利用する</li>
-<li>適切な英単語を利用し、単数形、複数形にも注意する</li>
-<li>認証はOAuth2.0を使う</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1531,6 +1397,10 @@ Herokuではこのタスクが必要なようです。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/05/26/shibuya-aab/">shibuya.apk主催のGoogleI/O 2018報告会にいってきた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/09/21/ruby-kaigi/">RuubyKaigi2017に参加してきた</a>
       </li>
     
@@ -1546,15 +1416,11 @@ Herokuではこのタスクが必要なようです。</p>
         <a href="/blog/2016/04/02/kotlin-study-for-kansai/">Kotlin 1.0リリース記念勉強会 in 京都に行ってきた</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/02/23/rails-mimetype/">Railsのリクエストヘッダーを調べる</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Tag Cloud</h1>
-  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 123.47826086956522%'>Android(9)</a> <a href='/blog/categories/api' style='font-size: 105.21739130434783%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.6086956521739%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.6086956521739%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.04347826086956%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.6086956521739%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.43478260869566%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.6086956521739%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.6086956521739%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.6086956521739%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.6086956521739%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.6086956521739%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.6086956521739%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.6086956521739%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 118.26086956521739%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.6086956521739%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.6086956521739%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 128.69565217391303%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 115.65217391304348%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 115.65217391304348%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.6086956521739%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.6086956521739%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(23)</a> <a href='/blog/categories/shellscript' style='font-size: 102.6086956521739%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.6086956521739%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 120.86956521739131%'>戯言(8)</a> </span>
+  <span id="tag-cloud"><a href='/blog/categories/android' style='font-size: 126.08695652173913%'>Android(10)</a> <a href='/blog/categories/api' style='font-size: 105.21739130434783%'>API(2)</a> <a href='/blog/categories/devlove' style='font-size: 102.6086956521739%'>DevLove(1)</a> <a href='/blog/categories/devops' style='font-size: 102.6086956521739%'>DevOps(1)</a> <a href='/blog/categories/emacs' style='font-size: 113.04347826086956%'>Emacs(5)</a> <a href='/blog/categories/gas' style='font-size: 102.6086956521739%'>GAS(1)</a> <a href='/blog/categories/git' style='font-size: 110.43478260869566%'>git(4)</a> <a href='/blog/categories/git' style='font-size: 102.6086956521739%'>Git(1)</a> <a href='/blog/categories/go' style='font-size: 102.6086956521739%'>Go(1)</a> <a href='/blog/categories/googlemap' style='font-size: 102.6086956521739%'>GoogleMap(1)</a> <a href='/blog/categories/groovy' style='font-size: 102.6086956521739%'>Groovy(1)</a> <a href='/blog/categories/hackathon' style='font-size: 102.6086956521739%'>Hackathon(1)</a> <a href='/blog/categories/ide' style='font-size: 102.6086956521739%'>IDE(1)</a> <a href='/blog/categories/ios' style='font-size: 102.6086956521739%'>iOS(1)</a> <a href='/blog/categories/java' style='font-size: 118.26086956521739%'>Java(7)</a> <a href='/blog/categories/javascript' style='font-size: 102.6086956521739%'>JavaScript(1)</a> <a href='/blog/categories/kotlin' style='font-size: 102.6086956521739%'>Kotlin(1)</a> <a href='/blog/categories/linux' style='font-size: 128.69565217391303%'>Linux(11)</a> <a href='/blog/categories/mac' style='font-size: 115.65217391304348%'>Mac(6)</a> <a href='/blog/categories/markdown' style='font-size: 115.65217391304348%'>markdown(6)</a> <a href='/blog/categories/mysql' style='font-size: 102.6086956521739%'>MySQL(1)</a> <a href='/blog/categories/python' style='font-size: 102.6086956521739%'>Python(1)</a> <a href='/blog/categories/ruby' style='font-size: 160.0%'>Ruby(23)</a> <a href='/blog/categories/shellscript' style='font-size: 102.6086956521739%'>ShellScript(1)</a> <a href='/blog/categories/solr' style='font-size: 102.6086956521739%'>Solr(1)</a> <a href='/blog/categories/戯言' style='font-size: 120.86956521739131%'>戯言(8)</a> </span>
 </section
 
 
@@ -1568,7 +1434,7 @@ Herokuではこのタスクが必要なようです。</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - kurobara -
+  Copyright &copy; 2018 - kurobara -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

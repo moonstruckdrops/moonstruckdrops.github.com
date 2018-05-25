@@ -4,7 +4,7 @@
   <title><![CDATA[kurobaraのブログ]]></title>
   <link href="http://moonstruckdrops.github.com/atom.xml" rel="self"/>
   <link href="http://moonstruckdrops.github.com/"/>
-  <updated>2017-09-21T22:25:18+09:00</updated>
+  <updated>2018-05-26T01:10:15+09:00</updated>
   <id>http://moonstruckdrops.github.com/</id>
   <author>
     <name><![CDATA[kurobara]]></name>
@@ -12,6 +12,115 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[shibuya.apk主催のGoogleI/O 2018報告会にいってきた]]></title>
+    <link href="http://moonstruckdrops.github.com/blog/2018/05/26/shibuya-aab/"/>
+    <updated>2018-05-26T01:01:00+09:00</updated>
+    <id>http://moonstruckdrops.github.com/blog/2018/05/26/shibuya-aab</id>
+    <content type="html"><![CDATA[<h3>まぁなんとかやってます</h3>
+
+<hr />
+
+<p>久々にブログ書きます。<br/>
+というか、勉強会も行ってきたの久しぶりかもしれない。。。<br/>
+という訳なので、勉強会で取ったメモメモ
+(資料はどこかに上がってる)</p>
+
+<h3>Slices氏</h3>
+
+<hr />
+
+<p><a href="https://speakerdeck.com/wasabeef/how-to-develop-slices-apps">資料</a></p>
+
+<ul>
+<li>(端末の検索)検索結果の中に自分のアプリのアクションを出せる</li>
+<li><p>push通知とかホームスクリーンで出せるようになる</p></li>
+<li><p>確認用のアプリがあるので、エミュレータで専用のアプリを必要</p></li>
+<li><p>4.4以上</p></li>
+<li><p>SliceManager #&lt;= 作れるけどあんまりないと思う</p></li>
+<li><p>SliceProvider #&lt;= 実装は大体こっち</p></li>
+<li><p>manifestにproviderタグ</p></li>
+<li>contentproviderを継承したもの</li>
+<li>builderpatternで色々設定</li>
+<li>sliceaction(実際はpendingintentみたいなもの)</li>
+<li><p>sliceviewで画面</p></li>
+<li><p>adb shellで動作検証する</p></li>
+<li><p>初回だけパーミッション確認ある</p></li>
+<li><p>manifestに書くのはcontentprovider</p></li>
+<li><p>authoritiesは後々に重要になる</p></li>
+<li><p>contentprovider(sliceprovider)</p></li>
+<li>onBindingSliceが重要</li>
+<li>中で実装したパスによって動きが変わる</li>
+<li>authoritiesはここで使う</li>
+<li>builderはここで実装</li>
+<li>slice-content://<authorities>/&lt;provider定義のpath>でadb起動</li>
+<li><p>sliceactionで起動したいintentとか</p></li>
+<li><p>動的に更新もできる</p></li>
+<li>contentresolver.notifyChangeにsliceのuriを設定すればOK</li>
+</ul>
+
+
+<h3>Android Test は “Write once, run everywhere.” の夢を見るか</h3>
+
+<hr />
+
+<p><a href="https://docs.google.com/presentation/d/1M_WMloMI18MNUYBSx9xHH3HiGktZIcTk4gG1PPfD_mg/edit?usp=sharing">資料</a></p>
+
+<ul>
+<li>robolectricとinstrumentedテストのAPIが似てたので統一された</li>
+<li>instrumentedテストのAPIがローカルで動く(robolectricが必要)</li>
+<li>テストの実行方法も統一したい = nitrogen pj</li>
+<li>flavorとかリセットとかその他辛いので、実行環境を抽象化とかしたもの</li>
+<li>googleのサポートの信頼性は高い(リリースはまだされてない)</li>
+</ul>
+
+
+<h3>Android App Bundle</h3>
+
+<hr />
+
+<ul>
+<li>5.0以上でsplit apk</li>
+<li>base apk, configuration apk, dynamic featureapk</li>
+<li>base apkは基本機能でユーザーが最初にインストールするもの</li>
+<li>configuration apkは特定の画面サイズとか言語のネイティブコードとか</li>
+<li>gradleでbundleセクションでlanguageとかdensityとか設定する</li>
+<li>dynamic feature apkは初回に必要にないものすべて</li>
+<li>manifestでmodukeを設定</li>
+<li>4.4以下では、dist:fusing=true</li>
+<li>dependencyにbaseを設定する</li>
+<li>base側はdynamicを読む設定を入れる</li>
+<li>base側にはmoduleをインストールする実装が必要>&lt;</li>
+<li>端末に合わせたアプリにできるようになる</li>
+<li>最適化されてるので小型のアプリにできる</li>
+<li>後から追加してもいいものが対象</li>
+<li>cliではbase:bundleみたいなのを打つといい</li>
+<li>play consoleのアップロードはちょっと面倒</li>
+<li>100MBとかbata program登録</li>
+<li>play側の署名できるようにしておく</li>
+<li>bundleツールでローカルテスト</li>
+<li>bundletoolsでインストールとか端末設定抽出とかして自動で個別設定いれる</li>
+<li>端末設定を変更すると追加の設定がインストールされる</li>
+<li>playが古いと4.4以前と変わらない動きになることに注意</li>
+<li>dynamic feature modukeは大規模でないと実装コスパが悪そうだけどモジュール化は重要かも</li>
+</ul>
+
+
+<h3>Material Components</h3>
+
+<hr />
+
+<ul>
+<li>materail theme editor = skitch plugin</li>
+<li>material components = 新しいsupport design library</li>
+<li>designライブラリにあったものは全部同梱されている(名前が変わったものがあるCardとか)</li>
+<li>chips = gmailとか送信とかにでてくる小さいタグっぽいview</li>
+<li>textfieldもアウトラインとか縁が簡単に囲まれたものができる</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RuubyKaigi2017に参加してきた]]></title>
@@ -4157,42 +4266,6 @@ ManもWomanも関係なく取得したい(両方をまとめて扱いたい)場�
 <li><a href="http://railsdoc.com/model">モデル(model)</a></li>
 <li><a href="http://railsdoc.com/migration">マイグレーション(migration)</a></li>
 </ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[テーブル単位のmysqldump]]></title>
-    <link href="http://moonstruckdrops.github.com/blog/2015/05/06/mysqldump/"/>
-    <updated>2015-05-06T23:39:00+09:00</updated>
-    <id>http://moonstruckdrops.github.com/blog/2015/05/06/mysqldump</id>
-    <content type="html"><![CDATA[<h2>めちゃくちゃ基礎的な内容なのですが、備忘録を兼ねてメモしておく</h2>
-
-<h3>DBまるごと</h3>
-
-<p>よくやるmysqldumpコマンド</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqldump -u root -p development_db  &gt; db_backup.sql</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>テーブル単位</h3>
-
-<p>tオプションは、「テーブル作成情報（CREATE TABLE ステートメント）を書き込まない」という内容を指す<br/>
-migrationなどで先にテーブルを作った場合とかに有効活用できる</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqldump -u root -p -t development_db my_table1 my_table2 &gt; table_backup.sql</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上のコマンドのようにテーブル名は複数指定可能(my_table1, my_table2などが該当)</p>
-
-<h3>リストア</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$mysql -u root -p development_db &lt; summaries.sql</span></code></pre></td></tr></table></div></figure>
-
-
 
 ]]></content>
   </entry>
